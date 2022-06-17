@@ -1,0 +1,11 @@
+{
+  "name": "atom-community-server-backend-JS",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "No Test Specified."
+  },
+  "author": "confused-Techie",
+  "license": "TBD"
+}
