@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 
 var query = require("./query.js");
+var error = require("./error.js");
 
 // this will in time use a YAML config file to retreive details, since if the Hosting ends up in Google Cloud, thats were it stores variables.
 // This method will allow us to detect local testing environments vs production environments by seeing if Google Cloud Run has entered our YAML variables into ENV variables.
@@ -15,8 +16,7 @@ app.use((req, res, next) => {
 });
 
 app.get('/', (req, res) => {
-  console.log(query.page(req));
-  console.log(req.query.test);
+  // this is to display the ability to use this as the normal web page handler as well.
   res.send("Hello World");
 });
 
@@ -28,14 +28,15 @@ app.get("/api/packages", (req, res) => {
     direction: query.dir(req),
   };
 
-
 });
 
 app.post("/api/packages", (req, res) => {
   var params = {
     repository: query.repo(req),
+    auth: req.get('Authorization'),
   };
 
+  error.UnsupportedJSON(res);
 });
 
 // Searching Endpoints
@@ -58,15 +59,24 @@ app.get("/api/packages/:packageName", (req, res) => {
 });
 
 app.delete("/api/packages/:packageName", (req, res) => {
+  var params = {
+    auth: req.get('Authorization'),
+  };
 
 });
 
 // Package Star Slug Endpoints
 app.post("/api/packages/:packageName/star", (req, res) => {
+  var params = {
+    auth: req.get('Authorization'),
+  };
 
 });
 
 app.delete("/api/packages/:packageName/star", (req, res) => {
+  var params = {
+    auth: req.get('Authorization'),
+  };
 
 });
 
@@ -80,8 +90,9 @@ app.post("/api/packages/:packageName/versions", (req, res) => {
   var params = {
     tag: query.tag(req),
     rename: query.rename(req),
+    auth: req.get('Authorization'),
   };
-  
+
 });
 
 // Package Versions Endpoint
@@ -90,6 +101,9 @@ app.get("/api/packages/:packageName/versions/:versionName", (req, res) => {
 });
 
 app.delete("/api/packages/:packageName/versions/:versionName", (req, res) => {
+  var params = {
+    auth: req.get('Authorization'),
+  };
 
 });
 
@@ -100,12 +114,21 @@ app.get("/api/users/:login/stars", (req, res) => {
 
 // List Authenticated User's Starred Packages
 app.get("/api/stars", (req, res) => {
+  var params = {
+    auth: req.get('Authorization'),
+  };
 
 });
 
 // Listing Atom-Community Updates
 app.get("/api/updates", (req, res) => {
 
+});
+
+app.use((req, res) => {
+  // Having this as the last route, will handle all other unknown routes.
+  // Ensure to leave this at the very last position to handle properly.
+  error.SiteWide404(res);
 });
 
 app.listen(port, () => {
