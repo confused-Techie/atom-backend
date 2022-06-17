@@ -51,5 +51,5 @@ Additionally will list the creation date, and last modified date.
 But these values will be removed before returning via the API.
 
 #### users.json
-An array of user objects. Where their username is the key to the object, and inside will be (once we determine how to handle auth) any valid keys for the user, which is used to check authenticated requests,
+A large user object. Where their username is the key to the object, and inside will be (once we determine how to handle auth) any valid keys for the user, which is used to check authenticated requests,
 additionally which will contain an array of every package they have stared. This value can use the packages name, as long as it then uses the pointer to find the package data.

@@ -3,6 +3,7 @@ const app = express();
 
 var query = require("./query.js");
 var error = require("./error.js");
+var users = require("./users.js");
 
 // this will in time use a YAML config file to retreive details, since if the Hosting ends up in Google Cloud, thats were it stores variables.
 // This method will allow us to detect local testing environments vs production environments by seeing if Google Cloud Run has entered our YAML variables into ENV variables.
@@ -107,7 +108,7 @@ app.delete("/api/packages/:packageName/versions/:versionName", (req, res) => {
 
 });
 
-// Get User's Starred Packages
+// Get Any User's Starred Packages
 app.get("/api/users/:login/stars", (req, res) => {
 
 });
@@ -117,6 +118,10 @@ app.get("/api/stars", (req, res) => {
   var params = {
     auth: req.get('Authorization'),
   };
+
+  users.VerifyAuth(params.auth, (user) => {
+    console.log(user);
+  });
 
 });
 
