@@ -7,5 +7,8 @@
     "test": "No Test Specified."
   },
   "author": "confused-Techie",
-  "license": "TBD"
+  "license": "TBD",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
 }
