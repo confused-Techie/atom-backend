@@ -34,22 +34,22 @@ The proposed solution to this issue:
 
 A possible way to solve this issue while not having to work with complex data types.
 
-package_pointer.json
-  This file will act as a pointer to the specific data of each package.
-  With each key being a packages name, and pointing to its raw file location.
-  If a package changes name a new entry will be created under the new name, pointing to the same file.
-  This also means if we don't remove the previous entry, the old name will still point to the file.
+#### package_pointer.json
+This file will act as a pointer to the specific data of each package.
+With each key being a packages name, and pointing to its raw file location.
+If a package changes name a new entry will be created under the new name, pointing to the same file.
+This also means if we don't remove the previous entry, the old name will still point to the file.
 
-package_repo files
-  These JSON files will be saved under a UUID like so `UUIDv4.json` allowing any content inside to change
-  while always pointing to the same file.
-  This UUIDv4.json will also be the location the package_pointer.json index will refer to.
+#### package_repo files
+These JSON files will be saved under a UUID like so `UUIDv4.json` allowing any content inside to change
+while always pointing to the same file.
+This UUIDv4.json will also be the location the package_pointer.json index will refer to.
 
-  Within each package file will be additional data not retreived in the API. Including a list of all users
-    that have stared the package, listed by their username.
-    Additionally will list the creation date, and last modified date.
-    But these values will be removed before returning via the API.
+Within each package file will be additional data not retreived in the API. Including a list of all users
+that have stared the package, listed by their username.
+Additionally will list the creation date, and last modified date.
+But these values will be removed before returning via the API.
 
-users.json
-  An array of user objects. Where their username is the key to the object, and inside will be (once we determine how to handle auth) any valid keys for the user, which is used to check authenticated requests,
-  additionally which will contain an array of every package they have stared. This value can use the packages name, as long as it then uses the pointer to find the package data.
+#### users.json
+An array of user objects. Where their username is the key to the object, and inside will be (once we determine how to handle auth) any valid keys for the user, which is used to check authenticated requests,
+additionally which will contain an array of every package they have stared. This value can use the packages name, as long as it then uses the pointer to find the package data.
