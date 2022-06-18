@@ -4,7 +4,9 @@
 
 ## Documentation
 
-To view researched information and the behavior that will be mirrored from the original Backend is available [here](/docs/overview.md);
+To view researched information and the behavior that will be mirrored from the original Backend is available [here](/docs/overview.md).
+
+If you would like to read more about the routes available defined by the OpenAPI Spec those are available [here](/docs/openapi.md).
 
 Please note that for the time being this documentation of the Read Me is overly verbose to allow easy communication while in development.
 

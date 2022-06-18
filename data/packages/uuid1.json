@@ -3,5 +3,7 @@
   "readme": "Hello all, this is a fake readme!",
   "created": "unkown",
   "updated": "today?",
-  "star_gazers": [ ]
+  "star_gazers": [ ],
+  "downloads": 10,
+  "stargazers_count": 2
 }

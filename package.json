@@ -4,11 +4,15 @@
   "description": "",
   "main": "src/main.js",
   "scripts": {
-    "test": "No Test Specified."
+    "test": "No Test Specified.",
+    "api-docs": "quick-webserver-docs -i ./src/main.js -o ./docs/api.md"
   },
   "author": "confused-Techie",
   "license": "TBD",
   "dependencies": {
     "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "@confused-techie/quick-webserver-docs": "0.0.1"
   }
 }

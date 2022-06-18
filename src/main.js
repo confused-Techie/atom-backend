@@ -16,12 +16,28 @@ app.use((req, res, next) => {
   next();
 });
 
+/**
+* @swagger
+* /:
+*   get:
+*     description: Test Root Request.
+*/
 app.get('/', (req, res) => {
   // this is to display the ability to use this as the normal web page handler as well.
   res.send("Hello World");
 });
 
 // Package Slug Endpoints
+/**
+* @web
+* @path /api/packages
+* @desc List all packages.
+* @method GET
+* @paramdef {query|integer} [page=1] - Indicate the page number to return.
+* @paramdef {query|string} [sort="downloads","created_at","updated_at","stars"] - Method to sort the results. Default: "downloads".
+* @paramdef {query|string} [direction="asc","desc"] - Direction to list results. Defaults: "desc"
+* @response {200} [application/json] - Array of Package Objects.
+*/
 app.get("/api/packages", (req, res) => {
   var params = {
     page: query.page(req),
@@ -31,6 +47,12 @@ app.get("/api/packages", (req, res) => {
 
 });
 
+/**
+* @swagger
+* /api/packages:
+*   post:
+*     summary: Publish new Package.
+*/
 app.post("/api/packages", (req, res) => {
   var params = {
     repository: query.repo(req),
@@ -121,6 +143,7 @@ app.get("/api/stars", (req, res) => {
 
   users.VerifyAuth(params.auth, (user) => {
     console.log(user);
+    console.log(params);
   });
 
 });
