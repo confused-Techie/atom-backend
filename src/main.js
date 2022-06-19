@@ -33,10 +33,33 @@ app.get('/', (req, res) => {
 * @path /api/packages
 * @desc List all packages.
 * @method GET
-* @paramdef {query|integer} [page=1] - Indicate the page number to return.
-* @paramdef {query|string} [sort="downloads","created_at","updated_at","stars"] - Method to sort the results. Default: "downloads".
-* @paramdef {query|string} [direction="asc","desc"] - Direction to list results. Defaults: "desc"
-* @response {200} [application/json] - Array of Package Objects.
+* @auth false
+* @param
+*   @name page
+*   @location query
+*   @Ptype integer
+*   @default 1
+*   @required false
+*   @Pdesc Indicate the page number to return.
+* @param
+*   @name sort
+*   @Ptype string
+*   @location query
+*   @default downloads
+*   @valid downloads, created_at, updated_at, stars
+*   @required false
+*   @Pdesc The method to sort the returned pacakges by.
+* @param
+*   @name direction
+*   @Ptype string
+*   @default desc
+*   @valid desc, asc
+*   @required false
+*   @Pdesc Which direction to list the results. If sorting by stars, can only be sorted by desc.
+* @response
+*   @status 200
+*   @Rtype application/json
+*   @Rdesc Returns a list of all packages. Paginated 30 at a time. Links to the next and last pages are in the 'Link' Header.
 */
 app.get("/api/packages", (req, res) => {
   var params = {
@@ -48,12 +71,42 @@ app.get("/api/packages", (req, res) => {
 });
 
 /**
-* @swagger
-* /api/packages:
-*   post:
-*     summary: Publish new Package.
+* @web
+* @path /api/packages
+* @desc Publishes a new Package.
+* @todo With auth not setup, nor atombot setup, this is non-functional.
+* @method POST
+* @auth true
+* @param
+*   @name repository
+*   @Ptype string
+*   @location query
+*   @required true
+*   @Pdesc The repository containing the plugin, in the form 'owner/repo'.
+* @param
+*   @name Authentication
+*   @Ptype string
+*   @location header
+*   @required true
+*   @Pdesc A valid Atom.io token, in the 'Authorization' Header.
+* @response
+*   @status 201
+*   @Rtype application/json
+*   @Rdesc Successfully created, return created package.
+* @response
+*   @status 400
+*   @Rtype application/json
+*   @Rdesc Repository is inaccessible, nonexistant, not an atom package. Could be different errors returned.
+*   @Rexample { "message": "That repo does not exist, ins't an atom package, or atombot does not have access." }, { "message": "The packagge.json at owner/repo isn't valid." }
+* @response
+*   @status 409
+*   @Rtype application/json
+*   @Rdesc A package by that name already exists.
 */
 app.post("/api/packages", (req, res) => {
+  // possible error messages for response 400 include:
+  // - That repo does not exist, ins't an atom package, or atombot does not have access.
+  // - The package.json at owner/repo isn't valid.
   var params = {
     repository: query.repo(req),
     auth: req.get('Authorization'),
@@ -63,6 +116,45 @@ app.post("/api/packages", (req, res) => {
 });
 
 // Searching Endpoints
+/**
+* @web
+* @path /api/packages/search
+* @desc Searches all Packages.
+* @method GET
+* @auth false
+* @param
+*   @name q
+*   @Ptype string
+*   @required true
+*   @location query
+*   @Pdesc Search query.
+* @param
+*   @name page
+*   @Ptype integer
+*   @required false
+*   @location query
+*   @Pdesc The page of search results to return.
+* @param
+*   @name sort
+*   @Ptype string
+*   @required false
+*   @valid downloads, created_at, updated_at, stars
+*   @default relevance
+*   @location query
+*   @Pdesc Method to sort the results.
+* @param
+*   @name direction
+*   @Ptype string
+*   @required false
+*   @valid asc, desc
+*   @default desc
+*   @location query
+*   @Pdesc Direction to list search results.
+* @response
+*   @status 200
+*   @Rtype application/json
+*   @Rdesc Same format as listing packages.
+*/
 app.get("/api/packages/search", (req, res) => {
   var params = {
     sort: query.sort(req, "relevance"),
@@ -74,6 +166,29 @@ app.get("/api/packages/search", (req, res) => {
 });
 
 // Package Name Slug Endpoints
+/**
+* @web
+* @path /api/packages/:packageName
+* @desc Show package details.
+* @method GET
+* @auth false
+* @param
+*   @name packageName
+*   @location path
+*   @Ptype string
+*   @Pdesc The name of the package to return details for. URL escaped.
+*   @required true
+* @param
+*   @name engine
+*   @location query
+*   @Ptype string
+*   @Pdesc Only show packages compatible with this Atom version. Must be valid SemVer.
+*   @required false
+* @response
+*   @status 200
+*   @Rtype application/json
+*   @Rdesc Returns package details and versions for a single package.
+*/
 app.get("/api/packages/:packageName", (req, res) => {
   var params = {
     engine: query.engine(req),
@@ -81,6 +196,39 @@ app.get("/api/packages/:packageName", (req, res) => {
 
 });
 
+/**
+* @web
+* @path /api/packages/:packageName
+* @method DELETE
+* @auth true
+* @desc Delete a package.
+* @param
+*   @name packageName
+*   @location path
+*   @Ptype string
+*   @Pdesc The name of the package to delete.
+*   @required true
+* @param
+*   @name Authorization
+*   @location header
+*   @Ptype string
+*   @Pdesc A valid Atom.io token, in the 'Authorization' Header.
+*   @required true
+* @response
+*   @status 204
+*   @Rtype application/json
+*   @Rdesc Successfully deleted package.
+*   @Rexample { "message": "Success" }
+* @response
+*   @status 400
+*   @Rtype application/json
+*   @Rdesc Repository is inaccessible.
+*   @Rexample { "message": "Respository is inaccessible." }
+* @response
+*   @status 401
+*   @Rtype application/json
+*   @Rdesc Unauthorized.
+*/
 app.delete("/api/packages/:packageName", (req, res) => {
   var params = {
     auth: req.get('Authorization'),
