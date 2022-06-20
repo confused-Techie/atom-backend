@@ -8,42 +8,25 @@ var data = require("./data.js");
 * @param {string} token Provided Token to check against all valid users.
 * @param {function} [callback] Optional function to invoke passing the matched user.
 */
-async function VerifyAuth(token, callback) {
-  data.GetUsers()
-    .then((users) => {
+async function VerifyAuth(token) {
+  const users = await data.GetUsers();
+  if (users.ok) {
+    for (const user in users.content) {
+      var usrToken = users.content[user].tokens;
 
-      for (var user in users) {
-        if (users.hasOwnProperty(user)) {
-          // ensure we are getting a proper key from the object rather than a prototype.
-
-          // now we need to get all of the users tokens
-          var usrToken = users[user].tokens;
-
-          if (typeof usrToken != "undefined") {
-            // now that we have the users tokens and we know they are defined, we can check if our token is
-            // in their array
-            if (usrToken.includes(token)) {
-              // the token is included and must be valid, granted this means no two users can ever have the
-              // same token but that seems a valid assumption.
-              // VerifyAuth will then return the user name
-              if (typeof callback === "function") {
-                callback(users[user]);
-                return;
-              } else {
-                return users[user];
-              }
-            }
-          } // else we know this cant be the authenticated user since the user has no tokens.
+      if (typeof usrToken != "undefined") {
+        if (usrToken.includes(token)) {
+          return { ok: true, content: users.content[user] };
         }
       }
-      // if the users token is never found, we want to return null
-      if (typeof callback === "function") {
-        callback(null);
-        return;
-      } else {
-        return null;
-      }
-    });
+    }
+    return { ok: false, content: "No valid token found.", short: "Bad Auth" };
+  } else {
+    return users;
+  }
+
 }
 
-module.exports = { VerifyAuth };
+module.exports = {
+  VerifyAuth,
+};

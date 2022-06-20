@@ -19,7 +19,7 @@ function ServerErrorJSON(res) {
 
 function UnsupportedJSON(res) {
   // this is only an interm response while the server is under development.
-  res.status(500).json({ message: "While under development this feature is not supported."});
+  res.status(501).json({ message: "While under development this feature is not supported."});
 }
 
 module.exports = { NotFoundJSON, SiteWide404, MissingAuthJSON, ServerErrorJSON, UnsupportedJSON };
