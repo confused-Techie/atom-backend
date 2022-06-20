@@ -306,8 +306,25 @@ app.delete("/api/packages/:packageName/star", (req, res) => {
 /**
 * https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#listing-a-packages-stargazers
 */
-app.get("/api/packages/:packageName/stargazers", (req, res) => {
-  // TODO: all of it.
+app.get("/api/packages/:packageName/stargazers", async (req, res) => {
+  var params = {
+    packageName: req.params.packageName,
+  };
+  var package = await data.GetPackageByName(params.packageName);
+
+  if (package.ok) {
+    // then we can just directly return the star_gazers object.
+    res.status(200).json(package.content.star_gazers);
+    logger.HTTPLog(req, res);
+  } else {
+    if (package.short == "Not Found") {
+      error.NotFoundJSON(res);
+      logger.HTTPLog(req, res);
+    } else {
+      error.ServerErrorJSON(res);
+      logger.HTTPLog(req, res);
+    }
+  }
 });
 
 // Package New Version Endpoint
