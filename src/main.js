@@ -20,12 +20,6 @@ app.use((req, res, next) => {
   next();
 });
 
-/**
-* @swagger
-* /:
-*   get:
-*     description: Test Root Request.
-*/
 app.get('/', (req, res) => {
   // this is to display the ability to use this as the normal web page handler as well.
   // TODO: remove this, or modify as needed.
@@ -288,6 +282,9 @@ app.delete("/api/packages/:packageName", (req, res) => {
 });
 
 // Package Star Slug Endpoints
+/**
+* https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#starring-a-package
+*/
 app.post("/api/packages/:packageName/star", (req, res) => {
   var params = {
     auth: req.get('Authorization'),
@@ -295,6 +292,9 @@ app.post("/api/packages/:packageName/star", (req, res) => {
   // TODO: all of it.
 });
 
+/**
+* https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#delete-apipackagesnamestar
+*/
 app.delete("/api/packages/:packageName/star", (req, res) => {
   var params = {
     auth: req.get('Authorization'),
@@ -303,11 +303,17 @@ app.delete("/api/packages/:packageName/star", (req, res) => {
 });
 
 // Package Stargazers Slug Endpoints
+/**
+* https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#listing-a-packages-stargazers
+*/
 app.get("/api/packages/:packageName/stargazers", (req, res) => {
   // TODO: all of it.
 });
 
 // Package New Version Endpoint
+/**
+* https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#post-apipackagespackage_nameversions
+*/
 app.post("/api/packages/:packageName/versions", (req, res) => {
   var params = {
     tag: query.tag(req),
@@ -318,10 +324,16 @@ app.post("/api/packages/:packageName/versions", (req, res) => {
 });
 
 // Package Versions Endpoint
+/**
+* https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#get-apipackagespackage_nameversionsversion_name
+*/
 app.get("/api/packages/:packageName/versions/:versionName", (req, res) => {
   // TODO: all of it.
 });
 
+/**
+* https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#delete-apipackagespackage_nameversionsversion_name
+*/
 app.delete("/api/packages/:packageName/versions/:versionName", (req, res) => {
   var params = {
     auth: req.get('Authorization'),
@@ -342,7 +354,7 @@ app.delete("/api/packages/:packageName/versions/:versionName", (req, res) => {
 *   @Pdesc The username of who to list their stars.
 * @response
 *   @status 200
-*   @Rdesc Return value is similar to GET /api/packages 
+*   @Rdesc Return value is similar to GET /api/packages
 */
 app.get("/api/users/:login/stars", (req, res) => {
   // TODO: all of it.
