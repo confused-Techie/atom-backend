@@ -1,0 +1,7 @@
+{
+  "excludepattern": "node_modules",
+  "filepattern": "\\.js$",
+  "output": "./reporting/complexity-report.md",
+  "format": "markdown",
+  "dirpattern": "src"
+}

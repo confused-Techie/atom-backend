@@ -1,0 +1,9 @@
+# Ignore Markdown
+*.md
+# Ignore all JSON data
+data/
+# Ignore obvious stuff
+node_modules/
+.git/
+.gitignore
+.gitattributes
