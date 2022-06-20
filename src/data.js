@@ -9,7 +9,7 @@ function GetUsers() {
   try {
     const users = fs.readFileSync("./data/users.json", "utf8");
     return { ok: true, content: JSON.parse(users) };
-  } catch(err) {
+  } catch (err) {
     if (err.code === "ENOENT") {
       return { ok: false, content: err, short: "File Not Found" };
     } else {
@@ -18,15 +18,13 @@ function GetUsers() {
   }
 }
 
-function SetUsers() {
-
-}
+function SetUsers() {}
 
 function GetPackagePointer() {
   try {
     const pointers = fs.readFileSync("./data/package_pointer.json", "utf8");
     return { ok: true, content: JSON.parse(pointers) };
-  } catch(err) {
+  } catch (err) {
     if (err.code === "ENOENT") {
       return { ok: false, content: err, short: "File Not Found" };
     } else {
@@ -35,15 +33,13 @@ function GetPackagePointer() {
   }
 }
 
-function SetPackagePointer() {
-
-}
+function SetPackagePointer() {}
 
 function GetPackageByID(id) {
   try {
     const package = fs.readFileSync(`./data/packages/${id}`, "utf8");
     return { ok: true, content: JSON.parse(package) };
-  } catch(err) {
+  } catch (err) {
     if (err.code === "ENOENT") {
       return { ok: false, content: err, short: "File Not Found" };
     } else {
@@ -93,7 +89,11 @@ async function GetAllPackages() {
         if (package.short != "Not Found") {
           return package;
         } else {
-          logger.WarningLog(undefined, undefined, `Missing Package during GetAllPackages: ${pointers.content[pointer]}`);
+          logger.WarningLog(
+            undefined,
+            undefined,
+            `Missing Package during GetAllPackages: ${pointers.content[pointer]}`
+          );
           //console.log(`Missing Package during GetAllPackages: ${pointers.content[pointer]}`);
         }
       }
@@ -117,7 +117,11 @@ async function GetPackageCollection(packages) {
         // this will only return an error if the error is not "Not Found", meaning that otherwise it will just continue on.
         return pack;
       } else {
-        logger.WarningLog(undefined, undefined, `Missing Package During GetPackageCollection: ${packages[i]}`);
+        logger.WarningLog(
+          undefined,
+          undefined,
+          `Missing Package During GetPackageCollection: ${packages[i]}`
+        );
         //console.log(`Missing Package During GetPackageCollection: ${packages[i]}`);
       }
     }
@@ -143,5 +147,5 @@ module.exports = {
   GetAllPackages,
   GetPackageCollection,
   SetPackage,
-  NewPackage
+  NewPackage,
 };

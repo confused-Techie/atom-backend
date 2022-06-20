@@ -24,7 +24,7 @@ function sort(req, def = "downloads") {
   // using sort with a default def value of downloads, means when using the generic sort parameter
   // it will default to downloads, but if we pass the default, such as during search we can provide
   // the default relevance
-  var valid = [ "downloads", "created_at", "updated_at", "stars"];
+  var valid = ["downloads", "created_at", "updated_at", "stars"];
 
   var prov = req.query.sort;
 
@@ -42,7 +42,7 @@ function sort(req, def = "downloads") {
 
 function dir(req) {
   var def = "desc";
-  var valid = [ "asc", "desc"];
+  var valid = ["asc", "desc"];
   var prov = req.query.direction;
 
   if (typeof prov != "undefined") {

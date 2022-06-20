@@ -5,13 +5,9 @@ async function Sort(packages, method) {
   if (method == "downloads") {
     return packages;
   } else if (method == "created_at") {
-
   } else if (method == "updated_at") {
-
   } else if (method == "stars") {
-
   } else if (method == "relevance") {
-
   } else {
     return "Unrecognized Sorting Method!";
   }
