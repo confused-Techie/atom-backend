@@ -7,7 +7,7 @@
     "test": "No Test Specified.",
     "api-docs": "quick-webserver-docs -i ./src/main.js -o ./docs/api.md",
     "lint": "prettier --check -u -w .",
-    "complex": "cr --config .complexrc ."
+    "complex": "cr --newmi --config .complexrc ."
   },
   "author": "confused-Techie",
   "license": "TBD",
