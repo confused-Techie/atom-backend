@@ -189,3 +189,57 @@ Unauthorized.
 
 
 ---
+# **[GET]** /api/users/:login/stars
+List a user's starred packages.
+
+Auth: `FALSE`
+Parameters:
+---
+* login _(required)_ `[string]`   
+  - The username of who to list their stars.
+
+
+---
+Responses:
+---
+**HTTP Status Code:** `200 OK`
+
+Return value is similar to GET /api/packages
+
+
+---
+# **[GET]** /api/stars
+List the authenticated user's starred packages.
+
+Auth: `true`
+Parameters:
+---
+* auth _(required)_ `[string]` | Location: `header`  
+  - Authorization Header of valid Atom.io Token.
+
+
+---
+Responses:
+---
+**HTTP Status Code:** `200 OK`
+
+**Type:** `[application/json]`
+
+Return value similar to GET /api/packages, an array of package objects.
+
+
+---
+# **[GET]** /api/updates
+List Atom Updates.
+
+Auth: `FALSE`
+Responses:
+---
+**HTTP Status Code:** `200 OK`
+
+**Type:** `[application/json]`
+
+Atom update feed, following the format expected by Squirrel.
+
+
+---

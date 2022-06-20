@@ -1,4 +1,5 @@
 var fs = require("fs");
+var logger = require("./logger.js");
 
 // Ideally in the future, reading from these files can be adstracted away, to aid in caching data to reduce
 // disk reads, while additionally allowing methods of reading from the cloud and such.
@@ -92,7 +93,8 @@ async function GetAllPackages() {
         if (package.short != "Not Found") {
           return package;
         } else {
-          console.log(`Missing Package during GetAllPackages: ${pointers.content[pointer]}`);
+          logger.WarningLog(undefined, undefined, `Missing Package during GetAllPackages: ${pointers.content[pointer]}`);
+          //console.log(`Missing Package during GetAllPackages: ${pointers.content[pointer]}`);
         }
       }
     }
@@ -115,7 +117,8 @@ async function GetPackageCollection(packages) {
         // this will only return an error if the error is not "Not Found", meaning that otherwise it will just continue on.
         return pack;
       } else {
-        console.log(`Missing Package During GetPackageCollection: ${packages[i]}`);
+        logger.WarningLog(undefined, undefined, `Missing Package During GetPackageCollection: ${packages[i]}`);
+        //console.log(`Missing Package During GetPackageCollection: ${packages[i]}`);
       }
     }
   }

@@ -83,9 +83,9 @@ app.get("/api/packages", async (req, res) => {
     res.status(200).json(packages);
     logger.HTTPLog(req, res);
   } else {
-    console.log(all_packages.content);
     error.ServerErrorJSON(res);
     logger.HTTPLog(req, res);
+    logger.ErrorLog(req, res, all_packages.content);
   }
 });
 
@@ -140,6 +140,7 @@ app.post("/api/packages", async (req, res) => {
     } else {
       error.ServerErrorJSON(res);
       logger.HTTPLog(req, res);
+      logger.ErrorLogger(req, res, user.content);
     }
   }
 });
@@ -237,6 +238,7 @@ app.get("/api/packages/:packageName", async (req, res) => {
     } else if (package.short == "Server Error") {
       error.ServerErrorJSON(res);
       logger.HTTPLog(req, res);
+      logger.ErrorLog(req, res, package.content);
     }
   }
 });
@@ -323,6 +325,7 @@ app.get("/api/packages/:packageName/stargazers", async (req, res) => {
     } else {
       error.ServerErrorJSON(res);
       logger.HTTPLog(req, res);
+      logger.ErrorLog(req, res, package.content);
     }
   }
 });
@@ -408,6 +411,7 @@ app.get("/api/stars", async (req, res) => {
     } else {
       error.ServerErrorJSON(res);
       logger.HTTPLog(req, res);
+      logger.ErrorLog(req, res, packageCollection.content);
     }
   } else {
     if (user.short == "Bad Auth") {
@@ -416,6 +420,7 @@ app.get("/api/stars", async (req, res) => {
     } else {
       error.ServerErrorJSON(res);
       logger.HTTPLog(res, req);
+      logger.ErrorLog(req, res, user.content);
     }
   }
 });
@@ -442,5 +447,5 @@ app.use((req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Atom Server Listening on port ${port}`);
+  logger.InfoLog(`Atom Server Listening on port ${port}`);
 });
