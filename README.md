@@ -6,7 +6,15 @@
 
 To view researched information and the behavior that will be mirrored from the original Backend is available [here](/docs/overview.md).
 
-If you would like to read more about the routes available defined by the OpenAPI Spec those are available [here](/docs/api.md).
+If you would like to read more about the routes available those are available [here](/docs/api.md).
+
+There's a crash course guide to any new contributors available [develpers.md](/docs/developers.md).
+
+Additionally for any bug hunters [Complexity Reports](/docs/complexity-report.md) are generated. Keep in mind since the tools underlying AST generator doesn't support ES6 not everything is included currently.
+
+Finally there are many `TODO::`s scattered around for things that still need to be done. Otherwise a collection of 'Good First Issues' are [available](https://github.com/confused-Techie/atom-community-server-backend-JS/issues).
+
+If you'd like to help [Atom-Community Core](https://github.com/atom-community/atom) there is still much work to be done.
 
 Please note that for the time being this documentation of the Read Me is overly verbose to allow easy communication while in development.
 
