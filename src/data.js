@@ -37,8 +37,8 @@ function SetPackagePointer() {}
 
 function GetPackageByID(id) {
   try {
-    const package = fs.readFileSync(`./data/packages/${id}`, "utf8");
-    return { ok: true, content: JSON.parse(package) };
+    const pack = fs.readFileSync(`./data/packages/${id}`, "utf8");
+    return { ok: true, content: JSON.parse(pack) };
   } catch (err) {
     if (err.code === "ENOENT") {
       return { ok: false, content: err, short: "File Not Found" };
@@ -57,11 +57,11 @@ async function GetPackageByName(name) {
     // now that we have the name we are after we can just check if it exists in the object.
     if (pointers.content[name]) {
       // we know we have a valid object now and can grab the data.
-      const package = await GetPackageByID(pointers.content[name]);
-      if (package.ok) {
-        return { ok: true, content: package.content };
+      const pack = await GetPackageByID(pointers.content[name]);
+      if (pack.ok) {
+        return { ok: true, content: pack.content };
       } else {
-        return { ok: false, content: package.content, short: "Server Error" };
+        return { ok: false, content: pack.content, short: "Server Error" };
       }
     } else {
       return { ok: false, content: "Not Found", short: "Not Found" };
@@ -81,13 +81,13 @@ async function GetAllPackages() {
     var package_collection = [];
     for (const pointer in pointers.content) {
       // now with the key of a value, we can grab the actual package.
-      var package = await GetPackageByID(pointers.content[pointer]);
-      if (package.ok) {
-        package_collection.push(package.content);
+      var pack = await GetPackageByID(pointers.content[pointer]);
+      if (pack.ok) {
+        package_collection.push(pack.content);
       } else {
         // this will prioritize giving a response, so if a single package isn't found, it'll log it. Then move on.
-        if (package.short != "Not Found") {
-          return package;
+        if (pack.short != "Not Found") {
+          return pack;
         } else {
           logger.WarningLog(
             undefined,

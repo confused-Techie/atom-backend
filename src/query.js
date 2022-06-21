@@ -64,7 +64,7 @@ function query(req) {
   if (typeof prov != "undefined") {
     return prov;
   } else {
-    return false;
+    return "";
   }
 }
 

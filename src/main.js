@@ -222,22 +222,22 @@ app.get("/api/packages/:packageName", async (req, res) => {
     engine: query.engine(req),
     name: req.params.packageName,
   };
-  const package = await data.GetPackageByName(params.name);
+  const pack = await data.GetPackageByName(params.name);
 
-  if (package.ok) {
+  if (pack.ok) {
     // from here we now have the package and just want to prune data from it
-    var pack = collection.Prune(package.content);
+    var pack = collection.Prune(pack.content);
     // TODO: filter by atom engine version.
     res.status(200).json(pack);
     logger.HTTPLog(req, res);
   } else {
-    if (package.short == "Not Found") {
+    if (pack.short == "Not Found") {
       error.NotFoundJSON(res);
       logger.HTTPLog(req, res);
-    } else if (package.short == "Server Error") {
+    } else if (pack.short == "Server Error") {
       error.ServerErrorJSON(res);
       logger.HTTPLog(req, res);
-      logger.ErrorLog(req, res, package.content);
+      logger.ErrorLog(req, res, pack.content);
     }
   }
 });
@@ -314,20 +314,20 @@ app.get("/api/packages/:packageName/stargazers", async (req, res) => {
   var params = {
     packageName: req.params.packageName,
   };
-  var package = await data.GetPackageByName(params.packageName);
+  var pack = await data.GetPackageByName(params.packageName);
 
-  if (package.ok) {
+  if (pack.ok) {
     // then we can just directly return the star_gazers object.
-    res.status(200).json(package.content.star_gazers);
+    res.status(200).json(pack.content.star_gazers);
     logger.HTTPLog(req, res);
   } else {
-    if (package.short == "Not Found") {
+    if (pack.short == "Not Found") {
       error.NotFoundJSON(res);
       logger.HTTPLog(req, res);
     } else {
       error.ServerErrorJSON(res);
       logger.HTTPLog(req, res);
-      logger.ErrorLog(req, res, package.content);
+      logger.ErrorLog(req, res, pack.content);
     }
   }
 });

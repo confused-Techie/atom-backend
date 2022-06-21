@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/main.js",
   "scripts": {
-    "test": "No Test Specified.",
+    "test": "jest",
     "api-docs": "quick-webserver-docs -i ./src/main.js -o ./docs/api.md",
     "lint": "prettier --check -u -w .",
     "complex": "cr --newmi --config .complexrc ."
