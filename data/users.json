@@ -1,7 +1,11 @@
 {
   "confused-Techie": {
     "name": "confused-Techie",
-    "tokens": [ "valid_token" ],
-    "stars": [ "what-a-package", "starsss" ]
+    "atom_token": "valid_token",
+    "github_token": "gho_valid_token",
+    "stars": [ "what-a-package", "starsss" ],
+    "published_packages": [ ],
+    "published_themes": [],
+    "created_at": "today??"
   }
 }

@@ -12,10 +12,10 @@ async function VerifyAuth(token) {
   const users = await data.GetUsers();
   if (users.ok) {
     for (const user in users.content) {
-      var usrToken = users.content[user].tokens;
+      var usrToken = users.content[user].atom_token;
 
       if (typeof usrToken != "undefined") {
-        if (usrToken.includes(token)) {
+        if (usrToken == token) {
           return { ok: true, content: users.content[user] };
         }
       }
@@ -46,8 +46,14 @@ async function Prune(userObj) {
   // Based on my current research delete only deletes the objects reference to the value, not the value itself.
   // Meaning delete can be used on the shallow copy of data without affecting the original copy. This will need to be tested.
 
-  // Remove User Tokens
-  delete userObj.tokens;
+  // But as research and clarification goes on, there may never be an endpoint that returns full user objects, and this may be useless.
+
+  // Remove User Atom Token
+  delete userObj.atom_token;
+  // Remove User Github Token
+  delete userObj.github_token;
+  // Remove User created at time
+  delete userObj.created_at;
 
   // Return the object.
   return userObj;

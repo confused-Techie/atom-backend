@@ -436,6 +436,7 @@ app.get("/api/users/:login/stars", async (req, res) => {
 
   if (user.ok) {
     // since currently user tokens are stored within the user object, they must be pruned, before returning.
+    // TODO this is returning the entire user object. Needs to only return a list of their stars.
     res.status(200).json(users.Prune(user.content));
     logger.HTTPLog(req, res);
   } else {
