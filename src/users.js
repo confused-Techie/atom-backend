@@ -42,7 +42,14 @@ async function GetUser(username) {
 }
 
 async function Prune(userObj) {
-  // TODO: Prune properly, reason fro creation is to prune user tokens, stored within user object.
+  // WARNING!! : Here I will use the delete operator on the object to prune data, not suitable to the end user.
+  // Based on my current research delete only deletes the objects reference to the value, not the value itself.
+  // Meaning delete can be used on the shallow copy of data without affecting the original copy. This will need to be tested.
+
+  // Remove User Tokens
+  delete userObj.tokens;
+
+  // Return the object.
   return userObj;
 }
 

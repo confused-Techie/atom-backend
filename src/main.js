@@ -58,6 +58,7 @@ app.get("/", (req, res) => {
  *   @status 200
  *   @Rtype application/json
  *   @Rdesc Returns a list of all packages. Paginated 30 at a time. Links to the next and last pages are in the 'Link' Header.
+ * @ignore
  */
 app.get("/api/packages", async (req, res) => {
   var params = {
@@ -75,8 +76,8 @@ app.get("/api/packages", async (req, res) => {
     // And finally we would need to modify our headers, to include links for current, next, and last.
     // TODO: Link Headers
     var packages = await collection.Sort(all_packages.content, params.sort);
-    var packages = await collection.Direction(packages, params.direction);
-    var packages = await collection.Prune(packages);
+    packages = await collection.Direction(packages, params.direction);
+    packages = await collection.Prune(packages);
     // One note of concern with chaining all of these together, is that this will potentially loop
     // through the entire array of packages 3 times, resulting in a
     // linear time complexity of O(3). But testing will have to determine how much that is a factor of concern.
@@ -121,6 +122,7 @@ app.get("/api/packages", async (req, res) => {
  *   @status 409
  *   @Rtype application/json
  *   @Rdesc A package by that name already exists.
+ * @ignore
  */
 app.post("/api/packages", async (req, res) => {
   var params = {
@@ -183,6 +185,7 @@ app.post("/api/packages", async (req, res) => {
  *   @status 200
  *   @Rtype application/json
  *   @Rdesc Same format as listing packages.
+ * @ignore
  */
 app.get("/api/packages/search", (req, res) => {
   var params = {
@@ -216,6 +219,7 @@ app.get("/api/packages/search", (req, res) => {
  *   @status 200
  *   @Rtype application/json
  *   @Rdesc Returns package details and versions for a single package.
+ * @ignore
  */
 app.get("/api/packages/:packageName", async (req, res) => {
   var params = {
@@ -226,8 +230,8 @@ app.get("/api/packages/:packageName", async (req, res) => {
 
   if (pack.ok) {
     // from here we now have the package and just want to prune data from it
-    var pack = collection.Prune(pack.content);
-    // TODO: filter by atom engine version.
+    pack = await collection.Prune(pack.content);
+    pack = await collection.EngineFilter(pack);
     res.status(200).json(pack);
     logger.HTTPLog(req, res);
   } else {
@@ -274,6 +278,7 @@ app.get("/api/packages/:packageName", async (req, res) => {
  *   @status 401
  *   @Rtype application/json
  *   @Rdesc Unauthorized.
+ * @ignore
  */
 app.delete("/api/packages/:packageName", (req, res) => {
   var params = {
@@ -285,14 +290,48 @@ app.delete("/api/packages/:packageName", (req, res) => {
 
 // Package Star Slug Endpoints
 /**
- * https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#starring-a-package
+ * @web
+ * @path /api/packages/:packageName/star
+ * @method POST
+ * @auth true
+ * @desc Star a packge.
+ * @param
+ *    @name packageName
+ *    @location path
+ *    @Ptype string
+ *    @Pdesc The name of the package to star.
+ *    @required true
+ * @param
+ *    @name Authorization
+ *    @location header
+ *    @Ptype string
+ *    @Pdesc A valid Atom.io token, in the 'Authorization' Header
+ *    @required true
+ * @response
+ *    @status 200
+ *    @Rtype application/json
+ *    @Rdesc Returns the package that was stared.
+ * @ignore
  */
-app.post("/api/packages/:packageName/star", (req, res) => {
+app.post("/api/packages/:packageName/star", async (req, res) => {
   var params = {
     auth: req.get("Authorization"),
     packageName: req.params.packageName,
   };
-  // TODO: all of it.
+  var user = await users.VerifyAuth(params.auth);
+
+  if (user.ok) {
+    // TODO: Need to star the package, and figure out how auth will actually work.
+  } else {
+    if (user.short == "Bad Auth") {
+      error.MissingAuthJSON(res);
+      logger.HTTPLog(res, req);
+    } else {
+      error.ServerErrorJSON(res);
+      logger.HTTPLog(res, req);
+      logger.ErrorLog(req, res, user.content);
+    }
+  }
 });
 
 /**
@@ -387,6 +426,7 @@ app.delete("/api/packages/:packageName/versions/:versionName", (req, res) => {
  * @response
  *  @status 404
  *  @Rdesc If the login does not exist, a 404 is returned.
+ * @ignore
  */
 app.get("/api/users/:login/stars", async (req, res) => {
   var params = {
@@ -426,6 +466,7 @@ app.get("/api/users/:login/stars", async (req, res) => {
  *   @status 200
  *   @Rdesc Return value similar to GET /api/packages, an array of package objects.
  *   @Rtype application/json
+ * @ignore
  */
 app.get("/api/stars", async (req, res) => {
   var params = {
@@ -464,6 +505,7 @@ app.get("/api/stars", async (req, res) => {
  *   @status 200
  *   @Rtype application/json
  *   @Rdesc Atom update feed, following the format expected by Squirrel.
+ * @ignore
  */
 app.get("/api/updates", (req, res) => {
   // TODO: all of it.

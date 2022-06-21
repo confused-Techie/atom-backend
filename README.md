@@ -8,7 +8,7 @@ To view researched information and the behavior that will be mirrored from the o
 
 If you would like to read more about the routes available those are available [here](/docs/api.md).
 
-There's a crash course guide to any new contributors available [develpers.md](/docs/developers.md).
+There's a crash course guide to any new contributors available [develpers.md](/docs/developers.md). As well as JSDoc generated [documentation](/docs/JavaScript.md) of the source code.
 
 Additionally for any bug hunters [Complexity Reports](/docs/complexity-report.md) are generated. Keep in mind since the tools underlying AST generator doesn't support ES6 not everything is included currently.
 
