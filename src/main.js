@@ -278,6 +278,7 @@ app.get("/api/packages/:packageName", async (req, res) => {
 app.delete("/api/packages/:packageName", (req, res) => {
   var params = {
     auth: req.get("Authorization"),
+    packageName: req.params.packageName,
   };
   // TODO: all of it.
 });
@@ -289,6 +290,7 @@ app.delete("/api/packages/:packageName", (req, res) => {
 app.post("/api/packages/:packageName/star", (req, res) => {
   var params = {
     auth: req.get("Authorization"),
+    packageName: req.params.packageName,
   };
   // TODO: all of it.
 });
@@ -299,6 +301,7 @@ app.post("/api/packages/:packageName/star", (req, res) => {
 app.delete("/api/packages/:packageName/star", (req, res) => {
   var params = {
     auth: req.get("Authorization"),
+    packageName: req.params.packageName,
   };
   // TODO: all of it.
 });
@@ -338,6 +341,7 @@ app.post("/api/packages/:packageName/versions", (req, res) => {
     tag: query.tag(req),
     rename: query.rename(req),
     auth: req.get("Authorization"),
+    packageName: req.params.packageName,
   };
   // TODO: all of it.
 });
@@ -347,6 +351,10 @@ app.post("/api/packages/:packageName/versions", (req, res) => {
  * https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#get-apipackagespackage_nameversionsversion_name
  */
 app.get("/api/packages/:packageName/versions/:versionName", (req, res) => {
+  var params = {
+    packageName: req.params.packageName,
+    versionName: req.params.versionName,
+  };
   // TODO: all of it.
 });
 
@@ -356,6 +364,8 @@ app.get("/api/packages/:packageName/versions/:versionName", (req, res) => {
 app.delete("/api/packages/:packageName/versions/:versionName", (req, res) => {
   var params = {
     auth: req.get("Authorization"),
+    packageName: req.params.packageName,
+    versionName: req.params.versionName,
   };
   // TODO: all of it.
 });

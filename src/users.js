@@ -42,6 +42,7 @@ async function GetUser(username) {
 }
 
 async function Prune(userObj) {
+  // TODO: Prune properly, reason fro creation is to prune user tokens, stored within user object.
   return userObj;
 }
 
