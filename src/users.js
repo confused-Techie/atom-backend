@@ -26,6 +26,27 @@ async function VerifyAuth(token) {
   }
 }
 
+async function GetUser(username) {
+  const users = await data.GetUsers();
+  if (users.ok) {
+    if (users.content[username]) {
+      // user has been found, and we have a user object available.
+      return { ok: true, content: users.content[username] };
+    } else {
+      // user isn't found.
+      return { ok: false, content: "Not Found", short: "Not Found" };
+    }
+  } else {
+    return users;
+  }
+}
+
+async function Prune(userObj) {
+  return userObj;
+}
+
 module.exports = {
   VerifyAuth,
+  GetUser,
+  Prune,
 };

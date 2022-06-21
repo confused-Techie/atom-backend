@@ -44,3 +44,5 @@ This is implemented as a method of 'bubbling up' any errors, to let the server r
 
 * VerifyAuth(): "Bad Auth"
   - Bubbles from GetUsers()
+* GetUser(): "Not Found"
+  - Bubbles from GetUsers()

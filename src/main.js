@@ -374,9 +374,30 @@ app.delete("/api/packages/:packageName/versions/:versionName", (req, res) => {
  * @response
  *   @status 200
  *   @Rdesc Return value is similar to GET /api/packages
+ * @response
+ *  @status 404
+ *  @Rdesc If the login does not exist, a 404 is returned.
  */
-app.get("/api/users/:login/stars", (req, res) => {
-  // TODO: all of it.
+app.get("/api/users/:login/stars", async (req, res) => {
+  var params = {
+    login: req.params.login,
+  };
+  var user = await users.GetUser(params.login);
+
+  if (user.ok) {
+    // since currently user tokens are stored within the user object, they must be pruned, before returning.
+    res.status(200).json(users.Prune(user.content));
+    logger.HTTPLog(req, res);
+  } else {
+    if (user.short == "Not Found") {
+      error.NotFoundJSON(res);
+      logger.HTTPLog(req, res);
+    } else {
+      error.ServerErrorJSON(res);
+      logger.HTTPLog(req, res);
+      logger.ErrorLog(req, res, user.content);
+    }
+  }
 });
 
 /**
