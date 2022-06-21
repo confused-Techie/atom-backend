@@ -28,6 +28,7 @@ app.get("/", (req, res) => {
 
 /**
  * @web
+ * @ignore
  * @path /api/packages
  * @desc List all packages.
  * @method GET
@@ -58,7 +59,6 @@ app.get("/", (req, res) => {
  *   @status 200
  *   @Rtype application/json
  *   @Rdesc Returns a list of all packages. Paginated 30 at a time. Links to the next and last pages are in the 'Link' Header.
- * @ignore
  */
 app.get("/api/packages", async (req, res) => {
   var params = {
@@ -92,6 +92,7 @@ app.get("/api/packages", async (req, res) => {
 
 /**
  * @web
+ * @ignore
  * @path /api/packages
  * @desc Publishes a new Package.
  * @todo With auth not setup, nor atombot setup, this is non-functional.
@@ -122,7 +123,6 @@ app.get("/api/packages", async (req, res) => {
  *   @status 409
  *   @Rtype application/json
  *   @Rdesc A package by that name already exists.
- * @ignore
  */
 app.post("/api/packages", async (req, res) => {
   var params = {
@@ -149,6 +149,7 @@ app.post("/api/packages", async (req, res) => {
 
 /**
  * @web
+ * @ignore
  * @path /api/packages/search
  * @desc Searches all Packages.
  * @method GET
@@ -185,7 +186,6 @@ app.post("/api/packages", async (req, res) => {
  *   @status 200
  *   @Rtype application/json
  *   @Rdesc Same format as listing packages.
- * @ignore
  */
 app.get("/api/packages/search", (req, res) => {
   var params = {
@@ -199,6 +199,7 @@ app.get("/api/packages/search", (req, res) => {
 
 /**
  * @web
+ * @ignore
  * @path /api/packages/:packageName
  * @desc Show package details.
  * @method GET
@@ -219,7 +220,6 @@ app.get("/api/packages/search", (req, res) => {
  *   @status 200
  *   @Rtype application/json
  *   @Rdesc Returns package details and versions for a single package.
- * @ignore
  */
 app.get("/api/packages/:packageName", async (req, res) => {
   var params = {
@@ -248,6 +248,7 @@ app.get("/api/packages/:packageName", async (req, res) => {
 
 /**
  * @web
+ * @ignore
  * @path /api/packages/:packageName
  * @method DELETE
  * @auth true
@@ -278,7 +279,6 @@ app.get("/api/packages/:packageName", async (req, res) => {
  *   @status 401
  *   @Rtype application/json
  *   @Rdesc Unauthorized.
- * @ignore
  */
 app.delete("/api/packages/:packageName", (req, res) => {
   var params = {
@@ -291,6 +291,7 @@ app.delete("/api/packages/:packageName", (req, res) => {
 // Package Star Slug Endpoints
 /**
  * @web
+ * @ignore
  * @path /api/packages/:packageName/star
  * @method POST
  * @auth true
@@ -311,7 +312,6 @@ app.delete("/api/packages/:packageName", (req, res) => {
  *    @status 200
  *    @Rtype application/json
  *    @Rdesc Returns the package that was stared.
- * @ignore
  */
 app.post("/api/packages/:packageName/star", async (req, res) => {
   var params = {
@@ -411,6 +411,7 @@ app.delete("/api/packages/:packageName/versions/:versionName", (req, res) => {
 
 /**
  * @web
+ * @ignore
  * @path /api/users/:login/stars
  * @method GET
  * @auth false
@@ -426,7 +427,6 @@ app.delete("/api/packages/:packageName/versions/:versionName", (req, res) => {
  * @response
  *  @status 404
  *  @Rdesc If the login does not exist, a 404 is returned.
- * @ignore
  */
 app.get("/api/users/:login/stars", async (req, res) => {
   var params = {
@@ -452,6 +452,7 @@ app.get("/api/users/:login/stars", async (req, res) => {
 
 /**
  * @web
+ * @ignore
  * @path /api/stars
  * @method GET
  * @desc List the authenticated user's starred packages.
@@ -466,7 +467,6 @@ app.get("/api/users/:login/stars", async (req, res) => {
  *   @status 200
  *   @Rdesc Return value similar to GET /api/packages, an array of package objects.
  *   @Rtype application/json
- * @ignore
  */
 app.get("/api/stars", async (req, res) => {
   var params = {
@@ -498,6 +498,7 @@ app.get("/api/stars", async (req, res) => {
 
 /**
  * @web
+ * @ignore
  * @path /api/updates
  * @method GET
  * @desc List Atom Updates.
@@ -505,7 +506,6 @@ app.get("/api/stars", async (req, res) => {
  *   @status 200
  *   @Rtype application/json
  *   @Rdesc Atom update feed, following the format expected by Squirrel.
- * @ignore
  */
 app.get("/api/updates", (req, res) => {
   // TODO: all of it.

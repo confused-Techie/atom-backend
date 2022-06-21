@@ -12,12 +12,10 @@ function SiteWide404(res) {
 }
 
 function MissingAuthJSON(res) {
-  res
-    .status(401)
-    .json({
-      message:
-        "Requires authentication. Please update your token if you haven't done so recently.",
-    });
+  res.status(401).json({
+    message:
+      "Requires authentication. Please update your token if you haven't done so recently.",
+  });
 }
 
 function ServerErrorJSON(res) {
@@ -26,11 +24,9 @@ function ServerErrorJSON(res) {
 
 function UnsupportedJSON(res) {
   // this is only an interm response while the server is under development.
-  res
-    .status(501)
-    .json({
-      message: "While under development this feature is not supported.",
-    });
+  res.status(501).json({
+    message: "While under development this feature is not supported.",
+  });
 }
 
 module.exports = {

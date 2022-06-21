@@ -2,13 +2,13 @@
 // returned to the end user.
 
 /**
-* @desc Intended for use for a collection of Packages, sort them according to any valid Sorting method.
-* @async
-* @function Sort
-* @param {string} method - The Method to Sort By
-* @param {object} packages - The Packages in which to sort.
-* @return {object} The provided packages now sorted accordingly.
-*/
+ * @desc Intended for use for a collection of Packages, sort them according to any valid Sorting method.
+ * @async
+ * @function Sort
+ * @param {string} method - The Method to Sort By
+ * @param {object} packages - The Packages in which to sort.
+ * @return {object} The provided packages now sorted accordingly.
+ */
 async function Sort(packages, method) {
   if (method == "downloads") {
     return packages;
@@ -49,7 +49,6 @@ async function Prune(packages) {
 
   // Prune may also encounter an array of items, or a single item.
   if (Array.isArray(packages)) {
-
     for (var i = 0; i < packages.length; i++) {
       // Reference below non-array argument for each removed value.
       delete packages[i].star_gazers;
@@ -59,7 +58,6 @@ async function Prune(packages) {
 
     return packages;
   } else {
-
     // Remove star_gazers
     delete packages.star_gazers;
     // Remove updated

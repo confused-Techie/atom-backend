@@ -1,13 +1,33 @@
 # Complexity report, 6/20/2022
 
-* Mean per-function logical LOC: 3.9166666666666665
-* Mean per-function parameter count: 1.4583333333333333
-* Mean per-function cyclomatic complexity: 1.75
-* Mean per-function Halstead effort: 452.4917323943452
-* Mean per-module maintainability index: 76.76933160427579
+* Mean per-function logical LOC: 13.35
+* Mean per-function parameter count: 1.075
+* Mean per-function cyclomatic complexity: 1.65
+* Mean per-function Halstead effort: 3709.5000382964004
+* Mean per-module maintainability index: 68.2749437806157
 * First-order density: 0%
-* Change cost: 33.33333333333333%
+* Change cost: 20%
 * Core size: 0%
+
+## D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\__mocks__\fs.js
+
+* Physical LOC: 21
+* Logical LOC: 13
+* Mean parameter count: 1
+* Cyclomatic complexity: 2
+* Cyclomatic complexity density: 15.384615384615385%
+* Maintainability index: 67.08422861541993
+* Dependency count: 1
+* Function: **__setMockFiles**
+    * Line No.: 7
+    * Physical LOC: 11
+    * Logical LOC: 7
+    * Parameter count: 1
+    * Cyclomatic complexity: 2
+    * Cyclomatic complexity density: 28.57142857142857%
+    * Halstead difficulty: 7.333333333333333
+    * Halstead volume: 181.52097998526924
+    * Halstead effort: 1331.1538532253078
 
 ## D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\error.js
 
@@ -208,4 +228,14 @@
     * Halstead difficulty: 8.636363636363637
     * Halstead volume: 180.0850143339292
     * Halstead effort: 1555.2796692475704
+
+## D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\tests\query.test.js
+
+* Physical LOC: 68
+* Logical LOC: 48
+* Mean parameter count: 0
+* Cyclomatic complexity: 1
+* Cyclomatic complexity density: 2.083333333333333%
+* Maintainability index: 43.98249547483119
+* Dependency count: 1
 
