@@ -62,6 +62,40 @@ async function AddUserStar(packageName, userName) {
   }
 }
 
+async function RemoveUserStar(packageName, userName) {
+  var user = await GetUser(userName);
+
+  if (user.ok) {
+    // find the index of the star in the users stars array
+    var starIdx = -1;
+    for (var i = 0; i < user.content.stars.length; i++) {
+      if (user.content.stars[i] == packageName) {
+        starIdx = i;
+        break;
+      }
+    }
+    if (starIdx != -1) {
+      // now to remove
+      user.content.stars.splice(starIdx, 1);
+
+      // then to write the new user data
+      var write = data.SetUsers(user.content);
+
+      if (write.ok) {
+        return { ok: true };
+      } else {
+        // failed to write
+        return write;
+      }
+    } else {
+      // failed to find the star in the user star array
+      return { ok: false, content: "Not Found", short: "Not Found" };
+    }
+  } else {
+    return user;
+  }
+}
+
 async function Prune(userObj) {
   // WARNING!! : Here I will use the delete operator on the object to prune data, not suitable to the end user.
   // Based on my current research delete only deletes the objects reference to the value, not the value itself.
@@ -85,4 +119,5 @@ module.exports = {
   GetUser,
   Prune,
   AddUserStar,
+  RemoveUserStar,
 };

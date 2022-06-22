@@ -142,7 +142,7 @@ app.post("/api/packages", async (req, res) => {
     } else {
       error.ServerErrorJSON(res);
       logger.HTTPLog(req, res);
-      logger.ErrorLogger(req, res, user.content);
+      logger.ErrorLog(req, res, user.content);
     }
   }
 });
@@ -340,21 +340,21 @@ app.post("/api/packages/:packageName/star", async (req, res) => {
           // since it still failed to star as originally intended, return error.
           error.ServerErrorJSON(res);
           logger.HTTPLog(req, res);
-          logger.ErrorLogger(req, res, star.content);
+          logger.ErrorLog(req, res, star.content);
         } else {
           // unstarring after a failed staring, failed again. Oh jeez...
           error.ServerErrorJSON(res);
           logger.HTTPLog(req, res);
-          logger.ErrorLogger(req, res, "Failed to unstar package after failing to add star to user. Unstar error, followed by User Star error to follow...");
-          logger.ErrorLogger(req, res, unstar.content);
-          logger.ErrorLogger(req, res, star.content);
+          logger.ErrorLog(req, res, "Failed to unstar package after failing to add star to user. Unstar error, followed by User Star error to follow...");
+          logger.ErrorLog(req, res, unstar.content);
+          logger.ErrorLog(req, res, star.content);
         }
       }
     } else {
       // the users star was not applied properly to the package, and we can return without further action.
       error.ServerErrorJSON(res);
       logger.HTTPLog(req, res);
-      logger.ErrorLogger(req, res, pack.content);
+      logger.ErrorLog(req, res, pack.content);
     }
   } else {
     if (user.short == "Bad Auth") {
@@ -376,7 +376,65 @@ app.delete("/api/packages/:packageName/star", async (req, res) => {
     auth: req.get("Authorization"),
     packageName: req.params.packageName,
   };
-  // TODO: all of it.
+  var user = await users.VerifyAuth(params.auth);
+
+  if (user.ok) {
+    // now to unstar the package, by first removing the users star from the package itself.
+    var pack = await data.UnStarPackageByName(params.packageName, user.content.name);
+
+    if (pack.ok) {
+      // we have removed the star from the package, now remove it from the user.
+      var unstar = await users.RemoveUserStar(params.packageName, user.content.name);
+
+      if (unstar.ok) {
+        // now the star is successfully removed from the user, and from the package
+        // respond according to spec.
+        res.status(201);
+      } else {
+        // else an error has occured.
+        // BUT important to note, the star was already removed from the package itself, so this means the package doesn't
+        // list the user, but the user still lists the package, so we would need to restar the package
+        // to allow this whole flow to try again, else it will fail to unstar the package on a second attempt, leaving the user
+        // no way to actually remove the star later on.
+        var restar = await data.StarPackageByName(params.packageName, user.content.name);
+
+        if (restar.ok) {
+          // we restared to allow the workflow to restart later, but the request still failed.
+          error.ServerErrorJSON(res);
+          logger.HTTPLog(req, res);
+          logger.ErrorLog(req, res, unstar.content);
+        } else {
+          // We failed to restar the package after failing to unstar the user, rough...
+          error.ServerErrorJSON(res);
+          logger.HTTPLog(req, res);
+          logger.ErrorLog(req, res, "Failed to restar the package, after failing to unstar the user. Unstar logs followed by Restar logs...");
+          logger.ErrorLog(req, res, unstar.content);
+          logger.ErrorLog(req, res, restar.content);
+        }
+      }
+    } else {
+      // unable to remove the star from the package, respond with error.
+      if (pack.short == "Not Found") {
+        // this means the user had never stared this package, or we were unable to find it. So lets move from the original
+        // spec and return not found.
+        error.NotFoundJSON(res);
+        logger.HTTPLog(req, res);
+      } else {
+        error.ServerErrorJSON(res);
+        logger.HTTPLog(req, res);
+        logger.ErrorLog(req, res, pack.content);
+      }
+    }
+  } else {
+    if (user.short == "Bad Auth") {
+      error.MissingAuthJSON(res);
+      logger.HTTPLog(req, res);
+    } else {
+      error.ServerErrorJSON(res);
+      logger.HTTPLog(req, res);
+      logger.ErrorLog(req, res, user.content);
+    }
+  }
 });
 
 // Package Stargazers Slug Endpoints
