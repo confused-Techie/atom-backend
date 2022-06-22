@@ -41,6 +41,27 @@ async function GetUser(username) {
   }
 }
 
+async function AddUserStar(packageName, userName) {
+  // this lets us add the packageName to the users list of stars.
+  var user = await GetUser(userName);
+
+  if (user.ok) {
+    // with the user, lets add the package
+    user.content.stars.push(packageName);
+    // then write the user data.
+    var write = data.SetUsers(user.content);
+
+    if (write.ok) {
+      return { ok: true };
+    } else {
+      // unsuccessful write
+      return write;
+    }
+  } else {
+    return user;
+  }
+}
+
 async function Prune(userObj) {
   // WARNING!! : Here I will use the delete operator on the object to prune data, not suitable to the end user.
   // Based on my current research delete only deletes the objects reference to the value, not the value itself.
@@ -63,4 +84,5 @@ module.exports = {
   VerifyAuth,
   GetUser,
   Prune,
+  AddUserStar,
 };

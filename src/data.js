@@ -18,7 +18,14 @@ function GetUsers() {
   }
 }
 
-function SetUsers() {}
+function SetUsers(data) {
+  try {
+    fs.writeFileSync("./data/users.json", JSON.stringify(data, null, 4));
+    return { ok: true };
+  } catch(err) {
+    return { ok: false, content: error, short: "Server Error" };
+  }
+}
 
 function GetPackagePointer() {
   try {
@@ -63,6 +70,21 @@ async function GetPackageByName(name) {
       } else {
         return { ok: false, content: pack.content, short: "Server Error" };
       }
+    } else {
+      return { ok: false, content: "Not Found", short: "Not Found" };
+    }
+  }
+}
+
+async function GetPackagePointerByName(name) {
+  const pointers = await GetPackagePointer();
+
+  if (!pointers.ok) {
+    return pointers;
+  } else {
+    if (pointers.content[name]) {
+      // we know the package by this name exists
+      return { ok: true, content: pointers.content[name] };
     } else {
       return { ok: false, content: "Not Found", short: "Not Found" };
     }
@@ -128,8 +150,89 @@ async function GetPackageCollection(packages) {
   return { ok: true, content: packageCollection };
 }
 
-function SetPackage(id) {
+async function StarPackageByName(packageName, userName) {
+  // we need the package pointer to later write the file, and we need the package file to modify,
+  // which after modification we want to write the data, and return the package itself.
+
+  var point = await GetPackagePointerByName(packageName);
+
+  if (point.ok) {
+    // now with the pointer, we can get the package
+    var pack = await GetPackageByID(point.content);
+
+    if (pack.ok) {
+      // now we have the package
+      pack.content.star_gazers.push({ login: userName });
+
+      var write = await SetPackageByID(point.content, pack.content);
+
+      if (write.ok) {
+        // on successful completion we want to return the package.
+        return { ok: true, content: pack.content };
+      } else {
+        // write unsuccessful.
+        return write;
+      }
+    } else {
+      return pack;
+    }
+  } else {
+    return point;
+  }
+}
+
+async function UnStarPackageByName(packageName, userName) {
+  var point = await GetPackagePointerByName(packageName);
+
+  if (point.ok) {
+    var pack = await GetPackageByID(point.content);
+
+    if (pack.ok) {
+      // now we need to find the index in the array of the user we want to unstar.
+      var usrIdx = -1;
+      for (var i = 0; i < pack.content.star_gazers.length; i++) {
+        if (pack.content.star_gazers[i].login == userName) {
+          usrIdx = i;
+          // since we know we only are looking once, lets just break the loop once we assign the idx
+          break;
+        }
+      }
+
+      // after done looping, then we can check our IDX.
+      if (usrIdx != -1) {
+        // now we can remove that element from the array.
+        pack.content.star_gazers.splice(usrIdx, 1);
+
+        // now to write the content.
+        var write = await SetPackageByID(point.content, pack.content);
+
+        if (write.ok) {
+          // and we will return the new content.
+          return { ok: true, content: pack.content };
+        } else {
+          // write was unsuccessful
+          return write;
+        }
+      } else {
+        // if it does still equal -1, then we were never able to find our user on the star_gazers list.
+        return { ok: false, content: "Not Found", short: "Not Found" };
+      }
+    } else {
+      return pack;
+    }
+  } else {
+    return point;
+  }
+}
+
+async function SetPackageByID(id, data) {
   // used to update EXISITNG package
+  try {
+    fs.writeFileSync(`../data/packages/${id}`, JSON.stringify(data, null, 4));
+    return { ok: true };
+  } catch(err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
 }
 
 function NewPackage() {
@@ -145,6 +248,9 @@ module.exports = {
   GetPackageByName,
   GetAllPackages,
   GetPackageCollection,
-  SetPackage,
+  SetPackageByID,
   NewPackage,
+  StarPackageByName,
+  UnStarPackageByName,
+  GetPackagePointerByName,
 };

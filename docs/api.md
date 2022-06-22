@@ -189,6 +189,32 @@ Unauthorized.
 
 
 ---
+# **[POST]** /api/packages/:packageName/star
+Star a packge.
+
+Auth: `true`
+Parameters:
+---
+* packageName _(required)_ `[string]` | Location: `path`  
+  - The name of the package to star.
+
+
+---
+* Authorization _(required)_ `[string]` | Location: `header`  
+  - A valid Atom.io token, in the 'Authorization' Header
+
+
+---
+Responses:
+---
+**HTTP Status Code:** `200 OK`
+
+**Type:** `[application/json]`
+
+Returns the package that was stared.
+
+
+---
 # **[GET]** /api/users/:login/stars
 List a user's starred packages.
 
@@ -205,6 +231,12 @@ Responses:
 **HTTP Status Code:** `200 OK`
 
 Return value is similar to GET /api/packages
+
+
+---
+**HTTP Status Code:** `404 Not Found`
+
+If the login does not exist, a 404 is returned.
 
 
 ---

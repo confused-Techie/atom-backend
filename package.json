@@ -16,7 +16,7 @@
     "express": "^4.18.1"
   },
   "devDependencies": {
-    "@confused-techie/quick-webserver-docs": "^0.1.2",
+    "@confused-techie/quick-webserver-docs": "^0.1.6",
     "complexity-report": "^2.0.0-alpha",
     "jsdoc-to-markdown": "^7.1.1",
     "prettier": "^2.7.1"

@@ -187,7 +187,7 @@ app.post("/api/packages", async (req, res) => {
  *   @Rtype application/json
  *   @Rdesc Same format as listing packages.
  */
-app.get("/api/packages/search", (req, res) => {
+app.get("/api/packages/search", async (req, res) => {
   var params = {
     sort: query.sort(req, "relevance"),
     page: query.page(req),
@@ -280,7 +280,7 @@ app.get("/api/packages/:packageName", async (req, res) => {
  *   @Rtype application/json
  *   @Rdesc Unauthorized.
  */
-app.delete("/api/packages/:packageName", (req, res) => {
+app.delete("/api/packages/:packageName", async (req, res) => {
   var params = {
     auth: req.get("Authorization"),
     packageName: req.params.packageName,
@@ -288,7 +288,6 @@ app.delete("/api/packages/:packageName", (req, res) => {
   // TODO: all of it.
 });
 
-// Package Star Slug Endpoints
 /**
  * @web
  * @ignore
@@ -322,13 +321,48 @@ app.post("/api/packages/:packageName/star", async (req, res) => {
 
   if (user.ok) {
     // TODO: Need to star the package, and figure out how auth will actually work.
+    // with user.ok we already know the user has valid authentication credentails, and we can allow changes.
+    var pack = await data.StarPackageByName(params.packageName, user.content.name);
+
+    if (pack.ok) {
+      // now with staring the package successfully, we also want to add this package to the user list stars.
+      var star = await users.AddUserStar(params.packageName, user.content.name);
+      // this lets us add the star to the users profile.
+      if (star.ok) {
+        // now that we know the star has been added to the users profile, we can return the package, with success
+        res.status(200).json(pack.content);
+        logger.HTTPLog(req, res);
+      } else {
+        // the users star was not applied properly to their profile, and we would likely want to remove their star from the package before returning.
+        var unstar = await data.UnStarPackageByName(params.packageName, user.content.name);
+
+        if (unstar.ok) {
+          // since it still failed to star as originally intended, return error.
+          error.ServerErrorJSON(res);
+          logger.HTTPLog(req, res);
+          logger.ErrorLogger(req, res, star.content);
+        } else {
+          // unstarring after a failed staring, failed again. Oh jeez...
+          error.ServerErrorJSON(res);
+          logger.HTTPLog(req, res);
+          logger.ErrorLogger(req, res, "Failed to unstar package after failing to add star to user. Unstar error, followed by User Star error to follow...");
+          logger.ErrorLogger(req, res, unstar.content);
+          logger.ErrorLogger(req, res, star.content);
+        }
+      }
+    } else {
+      // the users star was not applied properly to the package, and we can return without further action.
+      error.ServerErrorJSON(res);
+      logger.HTTPLog(req, res);
+      logger.ErrorLogger(req, res, pack.content);
+    }
   } else {
     if (user.short == "Bad Auth") {
       error.MissingAuthJSON(res);
-      logger.HTTPLog(res, req);
+      logger.HTTPLog(req, res);
     } else {
       error.ServerErrorJSON(res);
-      logger.HTTPLog(res, req);
+      logger.HTTPLog(req, res);
       logger.ErrorLog(req, res, user.content);
     }
   }
@@ -337,7 +371,7 @@ app.post("/api/packages/:packageName/star", async (req, res) => {
 /**
  * https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#delete-apipackagesnamestar
  */
-app.delete("/api/packages/:packageName/star", (req, res) => {
+app.delete("/api/packages/:packageName/star", async (req, res) => {
   var params = {
     auth: req.get("Authorization"),
     packageName: req.params.packageName,
@@ -347,6 +381,7 @@ app.delete("/api/packages/:packageName/star", (req, res) => {
 
 // Package Stargazers Slug Endpoints
 /**
+ * @ignore
  * https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#listing-a-packages-stargazers
  */
 app.get("/api/packages/:packageName/stargazers", async (req, res) => {
@@ -373,9 +408,10 @@ app.get("/api/packages/:packageName/stargazers", async (req, res) => {
 
 // Package New Version Endpoint
 /**
+ * @ignore
  * https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#post-apipackagespackage_nameversions
  */
-app.post("/api/packages/:packageName/versions", (req, res) => {
+app.post("/api/packages/:packageName/versions", async (req, res) => {
   var params = {
     tag: query.tag(req),
     rename: query.rename(req),
@@ -387,9 +423,10 @@ app.post("/api/packages/:packageName/versions", (req, res) => {
 
 // Package Versions Endpoint
 /**
+ * @ignore
  * https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#get-apipackagespackage_nameversionsversion_name
  */
-app.get("/api/packages/:packageName/versions/:versionName", (req, res) => {
+app.get("/api/packages/:packageName/versions/:versionName", async (req, res) => {
   var params = {
     packageName: req.params.packageName,
     versionName: req.params.versionName,
@@ -398,9 +435,10 @@ app.get("/api/packages/:packageName/versions/:versionName", (req, res) => {
 });
 
 /**
+ * @ignore
  * https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#delete-apipackagespackage_nameversionsversion_name
  */
-app.delete("/api/packages/:packageName/versions/:versionName", (req, res) => {
+app.delete("/api/packages/:packageName/versions/:versionName", async (req, res) => {
   var params = {
     auth: req.get("Authorization"),
     packageName: req.params.packageName,
@@ -435,10 +473,18 @@ app.get("/api/users/:login/stars", async (req, res) => {
   var user = await users.GetUser(params.login);
 
   if (user.ok) {
-    // since currently user tokens are stored within the user object, they must be pruned, before returning.
-    // TODO this is returning the entire user object. Needs to only return a list of their stars.
-    res.status(200).json(users.Prune(user.content));
-    logger.HTTPLog(req, res);
+    var packages = await data.GetPackageCollection(user.content.stars);
+
+    if (packages.ok) {
+      packages = await collection.Prune(packages.content);
+
+      res.stats(200).json(packages);
+      logger.HTTPLog(req, res);
+    } else {
+      error.ServerErrorJSON(res);
+      logger.HTTPLog(req, res);
+      logger.ErrorLog(req, res, packages.content);
+    }
   } else {
     if (user.short == "Not Found") {
       error.NotFoundJSON(res);
@@ -508,7 +554,7 @@ app.get("/api/stars", async (req, res) => {
  *   @Rtype application/json
  *   @Rdesc Atom update feed, following the format expected by Squirrel.
  */
-app.get("/api/updates", (req, res) => {
+app.get("/api/updates", async (req, res) => {
   // TODO: all of it.
 });
 

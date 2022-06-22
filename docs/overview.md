@@ -44,3 +44,18 @@ Otherwise it seems that users have more data than originally marked:
 * Stared Packages
 * Atom.io Token
 * Github Access Token
+
+
+# Auth
+
+There will be two levels of Auth. When an account is created, it will be done so with Github.
+
+Which gives use the profile icon, as well as a Github User token, and the user name.
+
+With this we store the gh user access token, and from it generate the atom token.
+
+Storing both we now have our two tokens, and can define our auth.
+
+Requests to data forms within Atom.io ONLY will rely on the atom token, meaning to star another package, or unstar all rely on the atom auth,
+
+But once a user goes to publish or update the actual package they provide the atom token, which is used to grab the gh token, which can then be used to ensure they have access to the repo they are attempting to modify.
