@@ -26,12 +26,14 @@ This is implemented as a method of 'bubbling up' any errors, to let the server r
 #### Data.js
 
 * GetUsers(): "File Not Found", "Server Error"
-* SetUsers(): NOT IMPLEMENTED
+* SetUsers(): "Server Error"
 * GetPackagePointer(): "File Not Found", "Server Error"
 * SetPackagePointer(): NOT IMPLEMENTED
 * GetPackageByID(): "File Not Found", "Server Error"
 * GetPackageByName(): "Server Error", "Not Found"
   - Bubbles from GetPackagePointer()
+* GetPackagePointerByName(): "Not Found"
+  - Bubbles from GetPacakgePointer()
 * GetAllPackages():
   - Bubbles from GetPackagePointer()
   - Bubbles from GetPackageByID()
@@ -46,3 +48,11 @@ This is implemented as a method of 'bubbling up' any errors, to let the server r
   - Bubbles from GetUsers()
 * GetUser(): "Not Found"
   - Bubbles from GetUsers()
+* AddUserStar():
+  - Bubbles from GetUser()
+  - Bubbles from data.GetUsers()
+  - Bubbles from data.SetUsers()
+* RemoveUserStar(): "Not Found"
+  - Bubbles from GetUser()
+  - Bubbles from data.GetUsers()
+  - Bubbles from data.SetUsers()

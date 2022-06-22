@@ -49,19 +49,24 @@ This is a collection/list of all functions/methods of the Backend API, with thei
 
 * VerifyAuth(): 🏁
 * GetUser(): 🏁
-* Prune(): ⚒
+* AddUserStar(): 🏁
+* RemoveUserStar(): 🏁
+* Prune(): 🏁
 
 ### Data.js
 
 * GetUsers(): 🏁
-* SetUsers(): 🆘
+* SetUsers(): 🏁
 * GetPackagePointer(): 🏁
 * SetPackagePointer(): 🆘
 * GetPackageByID(): 🏁
 * GetPackageByName(): 🏁
+* GetPackagePointerByName(): 🏁
 * GetAllPackages(): 🏁
 * GetPackageCollection(): 🏁
-* SetPackage(): 🆘
+* StarPackageByName(): 🏁
+* UnStarPackageByName(): 🏁
+* SetPackageByID(): 🏁
 * NewPackage(): 🆘
 
 ### Logger.js

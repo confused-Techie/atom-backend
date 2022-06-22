@@ -132,7 +132,7 @@ app.post("/api/packages", async (req, res) => {
   var user = await users.VerifyAuth(params.auth);
 
   if (user.ok) {
-    // TODO: UnsupportedJSON
+    // TODO: Stopped: Github auth
     error.UnsupportedJSON(res);
     logger.HTTPLog(req, res);
   } else {
@@ -194,7 +194,9 @@ app.get("/api/packages/search", async (req, res) => {
     direction: query.dir(req),
     query: query.query(req),
   };
-  // TODO: All of it.
+  // TODO: Stopper: Search
+  error.UnsupportedJSON(res);
+  logger.HTTPLog(req, res);
 });
 
 /**
@@ -285,7 +287,9 @@ app.delete("/api/packages/:packageName", async (req, res) => {
     auth: req.get("Authorization"),
     packageName: req.params.packageName,
   };
-  // TODO: all of it.
+  // TODO: Stopper: Github auth
+  error.UnsupportedJSON(res);
+  logger.HTTPLog(req, res);
 });
 
 /**
@@ -320,7 +324,6 @@ app.post("/api/packages/:packageName/star", async (req, res) => {
   var user = await users.VerifyAuth(params.auth);
 
   if (user.ok) {
-    // TODO: Need to star the package, and figure out how auth will actually work.
     // with user.ok we already know the user has valid authentication credentails, and we can allow changes.
     var pack = await data.StarPackageByName(params.packageName, user.content.name);
 
@@ -476,7 +479,9 @@ app.post("/api/packages/:packageName/versions", async (req, res) => {
     auth: req.get("Authorization"),
     packageName: req.params.packageName,
   };
-  // TODO: all of it.
+  // TODO: Stopper: Version handling, github auth
+  error.UnsupportedJSON(res);
+  logger.HTTPLog(req, res);
 });
 
 // Package Versions Endpoint
@@ -489,7 +494,9 @@ app.get("/api/packages/:packageName/versions/:versionName", async (req, res) => 
     packageName: req.params.packageName,
     versionName: req.params.versionName,
   };
-  // TODO: all of it.
+  // TODO: Stopper: Version Handling
+  error.UnsupportedJSON(res);
+  logger.HTTPLog(req, res);
 });
 
 /**
@@ -502,7 +509,9 @@ app.delete("/api/packages/:packageName/versions/:versionName", async (req, res) 
     packageName: req.params.packageName,
     versionName: req.params.versionName,
   };
-  // TODO: all of it.
+  // TODO: Stopper: Version handling, github auth
+  error.UnsupportedJSON(res);
+  logger.HTTPLog(req, res);
 });
 
 /**
@@ -613,7 +622,9 @@ app.get("/api/stars", async (req, res) => {
  *   @Rdesc Atom update feed, following the format expected by Squirrel.
  */
 app.get("/api/updates", async (req, res) => {
-  // TODO: all of it.
+  // TODO: Stopper: Update Method 
+  error.UnsupportedJSON(res);
+  logger.HTTPLog(req, res);
 });
 
 app.use((req, res) => {
