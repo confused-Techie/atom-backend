@@ -49,13 +49,23 @@ async function AddUserStar(packageName, userName) {
     // with the user, lets add the package
     user.content.stars.push(packageName);
     // then write the user data.
-    var write = data.SetUsers(user.content);
 
-    if (write.ok) {
-      return { ok: true };
+    // A bug discovered is this writes the user data singular object, not the entire user file object.
+    var users = await data.GetUsers();
+    if (users.ok) {
+      users.content[userName] = user.content;
+
+      // now with the new user object assigned as the key to the user file, we can save.
+      var write = data.SetUsers(users.content);
+
+      if (write.ok) {
+        return { ok: true };
+      } else {
+        return write;
+      }
     } else {
-      // unsuccessful write
-      return write;
+      //unable to read file
+      return users;
     }
   } else {
     return user;
@@ -79,13 +89,18 @@ async function RemoveUserStar(packageName, userName) {
       user.content.stars.splice(starIdx, 1);
 
       // then to write the new user data
-      var write = data.SetUsers(user.content);
-
-      if (write.ok) {
-        return { ok: true };
+      // Same bug as AddUserStar
+      var users = await data.GetUsers();
+      if (users.ok) {
+        users.content[userName] = user.content;
+        var write = data.SetUsers(users.content);
+        if (write.ok) {
+          return { ok: true };
+        } else {
+          return write;
+        }
       } else {
-        // failed to write
-        return write;
+        return users;
       }
     } else {
       // failed to find the star in the user star array

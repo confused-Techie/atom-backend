@@ -389,7 +389,7 @@ app.delete("/api/packages/:packageName/star", async (req, res) => {
       if (unstar.ok) {
         // now the star is successfully removed from the user, and from the package
         // respond according to spec.
-        res.status(201);
+        res.status(201).send();
       } else {
         // else an error has occured.
         // BUT important to note, the star was already removed from the package itself, so this means the package doesn't

@@ -228,7 +228,7 @@ async function UnStarPackageByName(packageName, userName) {
 async function SetPackageByID(id, data) {
   // used to update EXISITNG package
   try {
-    fs.writeFileSync(`../data/packages/${id}`, JSON.stringify(data, null, 4));
+    fs.writeFileSync(`./data/packages/${id}`, JSON.stringify(data, null, 4));
     return { ok: true };
   } catch(err) {
     return { ok: false, content: err, short: "Server Error" };
