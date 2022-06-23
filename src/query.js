@@ -72,6 +72,7 @@ function engine(req) {
   var prov = req.query.engine;
 
   if (typeof prov != "undefined") {
+    // TODO: engine also needs to be a valid semver.
     return prov;
   } else {
     return false;

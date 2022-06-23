@@ -8,6 +8,66 @@
 * Referencing Invalid Packages returns a "Not Found" Message
 * Referencing Stars with Invalid Users/Packages returns "Not found" but this response will instead mirror the "Not Found" Message.
 
+# Data
+
+After additional investigation, some things have come to light. Mainly that the package data has two forms depending on how it is accessed.
+
+## Package Object
+
+* This is the package object when it is accessed every single way except via the details endpoint.
+
+### Schema:
+
+```json
+
+```
+
+## Package Object Full
+
+* This is the package object when it is accessed only via the details endpoint.
+
+### Schema:
+
+```json
+
+```
+
+## Login Object
+
+* This is a rather simplistic format, and is the only time users are returned, this is the format they are saved to a package when starring.
+
+### Schema:
+
+```json
+[
+  {
+    "login": "username"
+  },
+]
+```
+
+## User Object
+
+* This is the format of each user within the server, this data is not publicly accessed. The only aspect that will be returned is the stars array.
+
+### Schema:
+
+```json
+{
+  "userName": {
+    "name": "userName",
+    "atom_token": "valid_atom_token",
+    "github_token": "valid_github_access_token",
+    "stars": [
+      "packageName", "packageName2"
+    ],
+    "published_packages": [],
+    "published_themes": [],
+    "created_at": "date_time"
+  }
+}
+```
+
 # Authentication Research
 
 When you go to login to Atom.io it redirects to OAuth Authorization within Github.
