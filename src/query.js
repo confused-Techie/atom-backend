@@ -7,17 +7,14 @@
 // of knowing not to prune results
 
 function page(req) {
-  var def = 1;
-  var prov = req.query.page;
+  let def = 1;
 
-  if (typeof prov != "undefined") {
-    // ensure it exists.
-    // then ensure its a proper number
-    // TODO
-    return prov;
-  } else {
+  if (req.query.page === undefined) {
     return def;
   }
+
+  // ensure it's a proper number
+  return (prov.match(/^\d+$/) !== null) ? prov : def;
 }
 
 function sort(req, def = "downloads") {
@@ -69,25 +66,31 @@ function query(req) {
 }
 
 function engine(req) {
-  var prov = req.query.engine;
+  let prov = req.query.engine;
 
-  if (typeof prov != "undefined") {
-    // TODO: engine also needs to be a valid semver.
-    return prov;
-  } else {
+  if (prov === undefined) {
     return false;
   }
+
+  // Taken from
+  // - https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
+  // - https://regex101.com/r/vkijKf/1/
+
+  const regex = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
+
+  // Check if it's a valid semver
+  return (prov.match(regex) !== null) ? true : false;
 }
 
 function repo(req) {
-  var prov = req.query.repository;
+  let prov = req.query.repository;
 
-  if (typeof prov != "undefined") {
-    // TODO: may be a good future feature to check that this matches owner/repo
-    return prov;
-  } else {
+  if (prov === undefined) {
     return "";
   }
+
+  // ensure the repo is in the format "owner/repo"
+  return (prov.match(/^[[a-zA-Z0-9_\-]+\/[[a-zA-Z0-9_\-]+$/) !== null) ? prov : "";
 }
 
 function tag(req) {
