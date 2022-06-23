@@ -1,0 +1,24 @@
+{
+  "projectName": "atom-community-server-backend-JS",
+  "projectOwner": "confused-Techie",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "none",
+  "contributors": [
+    {
+      "login": "Digitalone1",
+      "name": "Giusy Digital",
+      "avatar_url": "https://avatars.githubusercontent.com/u/25790525?v=4",
+      "profile": "https://github.com/Digitalone1",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}
