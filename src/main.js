@@ -13,6 +13,8 @@ var logger = require("./logger.js");
 // Otherwise we can read the yaml file manually and know its a local enviroment.
 // TODO proper env variables.
 const port = 8080;
+const server_url = "http://localhost";
+const paginated_amount = 30;
 
 app.use((req, res, next) => {
   // This adds a start to the request, logging the exact time a request was received.
@@ -74,13 +76,15 @@ app.get("/api/packages", async (req, res) => {
     // we will then need to organize this list, according to our params.
     // additionally remove any fields that are not natively shown to the end user.
     // And finally we would need to modify our headers, to include links for current, next, and last.
-    // TODO: Link Headers
     var packages = await collection.Sort(all_packages.content, params.sort);
     packages = await collection.Direction(packages, params.direction);
     packages = await collection.Prune(packages);
     // One note of concern with chaining all of these together, is that this will potentially loop
     // through the entire array of packages 3 times, resulting in a
     // linear time complexity of O(3). But testing will have to determine how much that is a factor of concern.
+    var total_pages = Math.ceil(packages.length/paginated_amount);
+    res.append('Link', `<${server_url}/api/packages?page=${params.page}&sort=${params.sort}&order=${params.direction}>; rel="self", <${server_url}/api/packages?page=${total_pages}&sort=${params.sort}&order=${params.direction}>; rel="last", <${server_url}/api/packages?page=${params.page++}&sort=${params.sort}&order=${params.direction}>; rel="next"`);
+
     res.status(200).json(packages);
     logger.HTTPLog(req, res);
   } else {
@@ -372,7 +376,27 @@ app.post("/api/packages/:packageName/star", async (req, res) => {
 });
 
 /**
- * https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#delete-apipackagesnamestar
+ * @web
+ * @ignore
+ * @path /api/packages/:packageName/star
+ * @method DELETE
+ * @auth true
+ * @desc Unstar a package, requires authentication.
+ * @param
+ *  @location header
+ *  @Ptype string
+ *  @name Authentication
+ *  @required true
+ *  @Pdesc Atom Token, in the Header Authentication Item
+ * @param
+ *  @location path
+ *  @Ptype string
+ *  @name packageName
+ *  @required true
+ *  @Pdesc The package name to unstar.
+ * @response
+ *  @status 201
+ *  @Rdesc An empty response to convey successfully unstaring a package.
  */
 app.delete("/api/packages/:packageName/star", async (req, res) => {
   var params = {
@@ -440,10 +464,21 @@ app.delete("/api/packages/:packageName/star", async (req, res) => {
   }
 });
 
-// Package Stargazers Slug Endpoints
 /**
+ * @web
  * @ignore
- * https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#listing-a-packages-stargazers
+ * @path /api/packages/:packageName/stargazers
+ * @method GET
+ * @desc List the users that have starred a package.
+ * @param
+ *  @location path
+ *  @required true
+ *  @name packageName
+ *  @Pdesc The package name to check for users stars.
+ * @response
+ *  @status 200
+ *  @Rdesc A list of user Objects.
+ *  @Rexample [ { "login": "aperson" }, { "login": "anotherperson" } ]
  */
 app.get("/api/packages/:packageName/stargazers", async (req, res) => {
   var params = {
@@ -500,8 +535,30 @@ app.get("/api/packages/:packageName/versions/:versionName", async (req, res) => 
 });
 
 /**
+ * @web
  * @ignore
- * https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#delete-apipackagespackage_nameversionsversion_name
+ * @path /api/packages/:packageName/versions/:versionName
+ * @method DELETE
+ * @auth true
+ * @desc Deletes a package version. Note once a version is deleted, that same version should not be reused again.
+ * @param
+ *  @location header
+ *  @name Authentication
+ *  @required true
+ *  @Pdesc The Authentication header containing a valid Atom Token
+ * @param
+ *  @location path
+ *  @name packageName
+ *  @required true
+ *  @Pdesc The package name to check for the version to delete.
+ * @param
+ *  @location path
+ *  @name versionName
+ *  @required true
+ *  @Pdesc The Package Version to actually delete.
+ * @response
+ *  @status 204
+ *  @Rdesc Indicates a successful deletion.
  */
 app.delete("/api/packages/:packageName/versions/:versionName", async (req, res) => {
   var params = {
@@ -622,7 +679,7 @@ app.get("/api/stars", async (req, res) => {
  *   @Rdesc Atom update feed, following the format expected by Squirrel.
  */
 app.get("/api/updates", async (req, res) => {
-  // TODO: Stopper: Update Method 
+  // TODO: Stopper: Update Method
   error.UnsupportedJSON(res);
   logger.HTTPLog(req, res);
 });

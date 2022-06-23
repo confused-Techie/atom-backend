@@ -74,15 +74,9 @@ async function EngineFilter(pack, engine) {
   return pack;
 }
 
-async function PackageCollectionHeaders(packages) {
-  // this will return data to build the link headers, Determining how many pages of content the list will create paginated at 30 items.
-  
-}
-
 module.exports = {
   Sort,
   Direction,
   Prune,
   EngineFilter,
-  PackageCollectionHeaders,
 };
