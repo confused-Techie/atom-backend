@@ -22,19 +22,13 @@ function sort(req, def = "downloads") {
   // it will default to downloads, but if we pass the default, such as during search we can provide
   // the default relevance
   var valid = ["downloads", "created_at", "updated_at", "stars"];
-
   var prov = req.query.sort;
 
-  if (prov !== undefined) {
-    if (valid.includes(prov)) {
-      // ensure it is a valid existing value.
-      return prov;
-    } else {
-      return def;
-    }
-  } else {
+  if (prov === undefined) {
     return def;
   }
+
+  return (valid.includes(prov)) ? prov : def;
 }
 
 function dir(req) {
@@ -42,16 +36,11 @@ function dir(req) {
   var valid = ["asc", "desc"];
   var prov = req.query.direction;
 
-  if (prov !== undefined) {
-    if (valid.includes(prov)) {
-      // ensure that the provided value is a valid existing value.
-      return prov;
-    } else {
-      return def;
-    }
-  } else {
+  if (prov === undefined) {
     return def;
   }
+
+  return (valid.includes(prov)) ? prov : def;
 }
 
 function query(req) {
@@ -98,26 +87,22 @@ function repo(req) {
 function tag(req) {
   var prov = req.query.tag;
 
-  if (prov !== undefined) {
-    return prov;
-  } else {
-    return "";
-  }
+  return (prov !== undefined) ? prov : def;
 }
 
 function rename(req) {
   var prov = req.query.rename;
 
-  if (prov !== undefined) {
-    if (prov == "true" || prov == "TRUE") {
-      return true;
-    } else if (prov == "false" || prov == "FALSE") {
-      return false;
-    } else {
-      return false;
-    }
-  } else {
+  if (prov === undefined) {
     // since this is supposed to be a boolean value, return false as the defaulting behavior
+    return false;
+  }
+
+  if (prov == "true" || prov == "TRUE") {
+    return true;
+  } else if (prov == "false" || prov == "FALSE") {
+    return false;
+  } else {
     return false;
   }
 }
