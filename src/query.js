@@ -56,13 +56,15 @@ function dir(req) {
 
 function query(req) {
   // TODO: here we would want to handle any methods to avoid malicious actors with a search query.
+  var max_length = 50;
   var prov = req.query.q;
 
-  if (typeof prov !== undefined) {
-    return prov;
-  } else {
+  if (prov === undefined) {
     return "";
   }
+
+  // Do not allow strings longer than `max_length` characters
+  return prov.slice(0, max_length).trim();
 }
 
 function engine(req) {
