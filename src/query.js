@@ -90,7 +90,7 @@ function repo(req) {
   }
 
   // ensure the repo is in the format "owner/repo"
-  return (prov.match(/^[[a-zA-Z0-9_\-]+\/[[a-zA-Z0-9_\-]+$/) !== null) ? prov : "";
+  return (prov.match(/^[[a-zA-Z0-9_\-.]+\/[[a-zA-Z0-9_\-.]+$/) !== null) ? prov : "";
 }
 
 function tag(req) {
