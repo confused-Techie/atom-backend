@@ -16,20 +16,82 @@ After additional investigation, some things have come to light. Mainly that the 
 
 * This is the package object when it is accessed every single way except via the details endpoint.
 
-### Schema:
+### Schema: (Using kite package as example)
 
 ```json
-
+[
+  {
+    "name": "kite",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/kiteco/atom-plugin"
+    },
+    "downloads": 13117680,
+    "stargazers_count": 238,
+    "releases": {
+      "latest": "0.206.0"
+    },
+    "readme": "The full readme from Github",
+    "metadata": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.206.0",
+      "description": "description from package.json",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+      },
+      ...
+    }
+  }
+]
 ```
 
 ## Package Object Full
 
 * This is the package object when it is accessed only via the details endpoint.
 
-### Schema:
+### Schema: (Using the same kite package as example)
 
 ```json
-
+{
+  "name": "kite",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kiteco/atom-plugin"
+  },
+  "downloads": 13117680,
+  "stargazers_count": 238,
+  "releases": {
+    "latest": "0.206.0"
+  },
+  "versions": {
+    "0.206.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.206.0",
+      "description": "description from package.json",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      ...
+    },
+    "0.205.0": {
+      ...
+    },
+    ...
+  },
+  "readme": "github readme",
+  "metadata": {
+    "name": "kite",
+    "main": "./dist/main",
+    "version": "0.206.0",
+    ...
+  }
+}
 ```
 
 ## Login Object
