@@ -19,7 +19,7 @@ function ErrorLog(req, res, err) {
 }
 
 function WarningLog(req, res, err) {
-  if (typeof req === undefined || typeof res === undefined) {
+  if (req === undefined || res === undefined) {
     console.log(`WARNING:: ${err}`);
   } else {
     var duration = Date.now() - req.start;

@@ -14,7 +14,7 @@ async function VerifyAuth(token) {
     for (const user in users.content) {
       var usrToken = users.content[user].atom_token;
 
-      if (typeof usrToken !== undefined) {
+      if (usrToken !== undefined) {
         if (usrToken == token) {
           return { ok: true, content: users.content[user] };
         }

@@ -25,7 +25,7 @@ function sort(req, def = "downloads") {
 
   var prov = req.query.sort;
 
-  if (typeof prov !== undefined) {
+  if (prov !== undefined) {
     if (valid.includes(prov)) {
       // ensure it is a valid existing value.
       return prov;
@@ -42,7 +42,7 @@ function dir(req) {
   var valid = ["asc", "desc"];
   var prov = req.query.direction;
 
-  if (typeof prov !== undefined) {
+  if (prov !== undefined) {
     if (valid.includes(prov)) {
       // ensure that the provided value is a valid existing value.
       return prov;
@@ -98,7 +98,7 @@ function repo(req) {
 function tag(req) {
   var prov = req.query.tag;
 
-  if (typeof prov !== undefined) {
+  if (prov !== undefined) {
     return prov;
   } else {
     return "";
@@ -108,7 +108,7 @@ function tag(req) {
 function rename(req) {
   var prov = req.query.rename;
 
-  if (typeof prov !== undefined) {
+  if (prov !== undefined) {
     if (prov == "true" || prov == "TRUE") {
       return true;
     } else if (prov == "false" || prov == "FALSE") {
