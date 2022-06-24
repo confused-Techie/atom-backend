@@ -14,7 +14,7 @@ function page(req) {
   }
 
   // ensure it's a proper number
-  return (prov.match(/^\d+$/) !== null) ? prov : def;
+  return prov.match(/^\d+$/) !== null ? prov : def;
 }
 
 function sort(req, def = "downloads") {
@@ -22,19 +22,13 @@ function sort(req, def = "downloads") {
   // it will default to downloads, but if we pass the default, such as during search we can provide
   // the default relevance
   var valid = ["downloads", "created_at", "updated_at", "stars"];
-
   var prov = req.query.sort;
 
-  if (typeof prov != "undefined") {
-    if (valid.includes(prov)) {
-      // ensure it is a valid existing value.
-      return prov;
-    } else {
-      return def;
-    }
-  } else {
+  if (prov === undefined) {
     return def;
   }
+
+  return valid.includes(prov) ? prov : def;
 }
 
 function dir(req) {
@@ -42,27 +36,24 @@ function dir(req) {
   var valid = ["asc", "desc"];
   var prov = req.query.direction;
 
-  if (typeof prov != "undefined") {
-    if (valid.includes(prov)) {
-      // ensure that the provided value is a valid existing value.
-      return prov;
-    } else {
-      return def;
-    }
-  } else {
+  if (prov === undefined) {
     return def;
   }
+
+  return valid.includes(prov) ? prov : def;
 }
 
 function query(req) {
   // TODO: here we would want to handle any methods to avoid malicious actors with a search query.
+  let max_length = 50;
   var prov = req.query.q;
 
-  if (typeof prov != "undefined") {
-    return prov;
-  } else {
+  if (prov === undefined) {
     return "";
   }
+
+  // Do not allow strings longer than `max_length` characters
+  return prov.slice(0, max_length).trim();
 }
 
 function engine(req) {
@@ -79,7 +70,7 @@ function engine(req) {
   const regex = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
 
   // Check if it's a valid semver
-  return (prov.match(regex) !== null) ? prov : false;
+  return prov.match(regex) !== null ? prov : false;
 }
 
 function repo(req) {
@@ -90,32 +81,28 @@ function repo(req) {
   }
 
   // ensure the repo is in the format "owner/repo"
-  return (prov.match(/^[[a-zA-Z0-9_\-]+\/[[a-zA-Z0-9_\-]+$/) !== null) ? prov : "";
+  return prov.match(/^[\w\-.]+\/[\w\-.]+$/) !== null ? prov : "";
 }
 
 function tag(req) {
   var prov = req.query.tag;
 
-  if (typeof prov != "undefined") {
-    return prov;
-  } else {
-    return "";
-  }
+  return prov !== undefined ? prov : "";
 }
 
 function rename(req) {
   var prov = req.query.rename;
 
-  if (typeof prov != "undefined") {
-    if (prov == "true" || prov == "TRUE") {
-      return true;
-    } else if (prov == "false" || prov == "FALSE") {
-      return false;
-    } else {
-      return false;
-    }
-  } else {
+  if (prov === undefined) {
     // since this is supposed to be a boolean value, return false as the defaulting behavior
+    return false;
+  }
+
+  if (prov == "true" || prov == "TRUE") {
+    return true;
+  } else if (prov == "false" || prov == "FALSE") {
+    return false;
+  } else {
     return false;
   }
 }
