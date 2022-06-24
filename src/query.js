@@ -14,7 +14,7 @@ function page(req) {
   }
 
   // ensure it's a proper number
-  return (prov.match(/^\d+$/) !== null) ? prov : def;
+  return prov.match(/^\d+$/) !== null ? prov : def;
 }
 
 function sort(req, def = "downloads") {
@@ -28,7 +28,7 @@ function sort(req, def = "downloads") {
     return def;
   }
 
-  return (valid.includes(prov)) ? prov : def;
+  return valid.includes(prov) ? prov : def;
 }
 
 function dir(req) {
@@ -40,12 +40,12 @@ function dir(req) {
     return def;
   }
 
-  return (valid.includes(prov)) ? prov : def;
+  return valid.includes(prov) ? prov : def;
 }
 
 function query(req) {
   // TODO: here we would want to handle any methods to avoid malicious actors with a search query.
-  var max_length = 50;
+  let max_length = 50;
   var prov = req.query.q;
 
   if (prov === undefined) {
@@ -70,7 +70,7 @@ function engine(req) {
   const regex = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
 
   // Check if it's a valid semver
-  return (prov.match(regex) !== null) ? prov : false;
+  return prov.match(regex) !== null ? prov : false;
 }
 
 function repo(req) {
@@ -81,13 +81,13 @@ function repo(req) {
   }
 
   // ensure the repo is in the format "owner/repo"
-  return (prov.match(/^[[a-zA-Z0-9_\-.]+\/[[a-zA-Z0-9_\-.]+$/) !== null) ? prov : "";
+  return prov.match(/^[\w\-.]+\/[\w\-.]+$/) !== null ? prov : "";
 }
 
 function tag(req) {
   var prov = req.query.tag;
 
-  return (prov !== undefined) ? prov : def;
+  return prov !== undefined ? prov : "";
 }
 
 function rename(req) {
