@@ -27,7 +27,6 @@ async function Sort(packages, method) {
     });
 
     return packages;
-
   } else if (method == "created_at") {
     packages.sort((a, b) => {
       if (a.created < b.created) {
@@ -40,7 +39,6 @@ async function Sort(packages, method) {
     });
 
     return packages;
-
   } else if (method == "updated_at") {
     packages.sort((a, b) => {
       if (a.updated < b.updated) {
@@ -53,7 +51,6 @@ async function Sort(packages, method) {
     });
 
     return packages;
-
   } else if (method == "stars") {
     packages.sort((a, b) => {
       if (a.stargazers_count < b.stargazers_count) {
@@ -66,7 +63,6 @@ async function Sort(packages, method) {
     });
 
     return packages;
-
   } else if (method == "relevance") {
     // TODO search method to then find parameter of relevance.
   } else {
@@ -79,13 +75,11 @@ async function Direction(packages, method) {
   if (method == "desc") {
     // since we wrote the sort, we know it will return results, sorted by the default of desc, and we can return.
     return packages;
-    
   } else if (method == "asc") {
     // we will have to flip the array, upside down.
     // this should work, but finding any solid info on time complexity, hasn't been the easiest, we may want additional logging for
     // the collection functions, to measure what the performance is like.
     return packages.reverse();
-
   } else {
     return "Unrecognized Direction Method!";
   }
