@@ -22,7 +22,7 @@ function SetUsers(data) {
   try {
     fs.writeFileSync("./data/users.json", JSON.stringify(data, null, 4));
     return { ok: true };
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: error, short: "Server Error" };
   }
 }
@@ -230,7 +230,7 @@ async function SetPackageByID(id, data) {
   try {
     fs.writeFileSync(`./data/packages/${id}`, JSON.stringify(data, null, 4));
     return { ok: true };
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }

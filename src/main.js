@@ -82,8 +82,21 @@ app.get("/api/packages", async (req, res) => {
     // One note of concern with chaining all of these together, is that this will potentially loop
     // through the entire array of packages 3 times, resulting in a
     // linear time complexity of O(3). But testing will have to determine how much that is a factor of concern.
-    var total_pages = Math.ceil(packages.length/paginated_amount);
-    res.append('Link', `<${server_url}/api/packages?page=${params.page}&sort=${params.sort}&order=${params.direction}>; rel="self", <${server_url}/api/packages?page=${total_pages}&sort=${params.sort}&order=${params.direction}>; rel="last", <${server_url}/api/packages?page=${params.page++}&sort=${params.sort}&order=${params.direction}>; rel="next"`);
+    var total_pages = Math.ceil(packages.length / paginated_amount);
+    res.append(
+      "Link",
+      `<${server_url}/api/packages?page=${params.page}&sort=${
+        params.sort
+      }&order=${
+        params.direction
+      }>; rel="self", <${server_url}/api/packages?page=${total_pages}&sort=${
+        params.sort
+      }&order=${
+        params.direction
+      }>; rel="last", <${server_url}/api/packages?page=${params.page++}&sort=${
+        params.sort
+      }&order=${params.direction}>; rel="next"`
+    );
 
     res.status(200).json(packages);
     logger.HTTPLog(req, res);
@@ -329,7 +342,10 @@ app.post("/api/packages/:packageName/star", async (req, res) => {
 
   if (user.ok) {
     // with user.ok we already know the user has valid authentication credentails, and we can allow changes.
-    var pack = await data.StarPackageByName(params.packageName, user.content.name);
+    var pack = await data.StarPackageByName(
+      params.packageName,
+      user.content.name
+    );
 
     if (pack.ok) {
       // now with staring the package successfully, we also want to add this package to the user list stars.
@@ -341,7 +357,10 @@ app.post("/api/packages/:packageName/star", async (req, res) => {
         logger.HTTPLog(req, res);
       } else {
         // the users star was not applied properly to their profile, and we would likely want to remove their star from the package before returning.
-        var unstar = await data.UnStarPackageByName(params.packageName, user.content.name);
+        var unstar = await data.UnStarPackageByName(
+          params.packageName,
+          user.content.name
+        );
 
         if (unstar.ok) {
           // since it still failed to star as originally intended, return error.
@@ -352,7 +371,11 @@ app.post("/api/packages/:packageName/star", async (req, res) => {
           // unstarring after a failed staring, failed again. Oh jeez...
           error.ServerErrorJSON(res);
           logger.HTTPLog(req, res);
-          logger.ErrorLog(req, res, "Failed to unstar package after failing to add star to user. Unstar error, followed by User Star error to follow...");
+          logger.ErrorLog(
+            req,
+            res,
+            "Failed to unstar package after failing to add star to user. Unstar error, followed by User Star error to follow..."
+          );
           logger.ErrorLog(req, res, unstar.content);
           logger.ErrorLog(req, res, star.content);
         }
@@ -407,11 +430,17 @@ app.delete("/api/packages/:packageName/star", async (req, res) => {
 
   if (user.ok) {
     // now to unstar the package, by first removing the users star from the package itself.
-    var pack = await data.UnStarPackageByName(params.packageName, user.content.name);
+    var pack = await data.UnStarPackageByName(
+      params.packageName,
+      user.content.name
+    );
 
     if (pack.ok) {
       // we have removed the star from the package, now remove it from the user.
-      var unstar = await users.RemoveUserStar(params.packageName, user.content.name);
+      var unstar = await users.RemoveUserStar(
+        params.packageName,
+        user.content.name
+      );
 
       if (unstar.ok) {
         // now the star is successfully removed from the user, and from the package
@@ -423,7 +452,10 @@ app.delete("/api/packages/:packageName/star", async (req, res) => {
         // list the user, but the user still lists the package, so we would need to restar the package
         // to allow this whole flow to try again, else it will fail to unstar the package on a second attempt, leaving the user
         // no way to actually remove the star later on.
-        var restar = await data.StarPackageByName(params.packageName, user.content.name);
+        var restar = await data.StarPackageByName(
+          params.packageName,
+          user.content.name
+        );
 
         if (restar.ok) {
           // we restared to allow the workflow to restart later, but the request still failed.
@@ -434,7 +466,11 @@ app.delete("/api/packages/:packageName/star", async (req, res) => {
           // We failed to restar the package after failing to unstar the user, rough...
           error.ServerErrorJSON(res);
           logger.HTTPLog(req, res);
-          logger.ErrorLog(req, res, "Failed to restar the package, after failing to unstar the user. Unstar logs followed by Restar logs...");
+          logger.ErrorLog(
+            req,
+            res,
+            "Failed to restar the package, after failing to unstar the user. Unstar logs followed by Restar logs..."
+          );
           logger.ErrorLog(req, res, unstar.content);
           logger.ErrorLog(req, res, restar.content);
         }
@@ -524,15 +560,18 @@ app.post("/api/packages/:packageName/versions", async (req, res) => {
  * @ignore
  * https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#get-apipackagespackage_nameversionsversion_name
  */
-app.get("/api/packages/:packageName/versions/:versionName", async (req, res) => {
-  var params = {
-    packageName: decodeURIComponent(req.params.packageName),
-    versionName: req.params.versionName,
-  };
-  // TODO: Stopper: Version Handling
-  error.UnsupportedJSON(res);
-  logger.HTTPLog(req, res);
-});
+app.get(
+  "/api/packages/:packageName/versions/:versionName",
+  async (req, res) => {
+    var params = {
+      packageName: decodeURIComponent(req.params.packageName),
+      versionName: req.params.versionName,
+    };
+    // TODO: Stopper: Version Handling
+    error.UnsupportedJSON(res);
+    logger.HTTPLog(req, res);
+  }
+);
 
 /**
  * @web
@@ -560,16 +599,19 @@ app.get("/api/packages/:packageName/versions/:versionName", async (req, res) => 
  *  @status 204
  *  @Rdesc Indicates a successful deletion.
  */
-app.delete("/api/packages/:packageName/versions/:versionName", async (req, res) => {
-  var params = {
-    auth: req.get("Authorization"),
-    packageName: decodeURIComponent(req.params.packageName),
-    versionName: req.params.versionName,
-  };
-  // TODO: Stopper: Version handling, github auth
-  error.UnsupportedJSON(res);
-  logger.HTTPLog(req, res);
-});
+app.delete(
+  "/api/packages/:packageName/versions/:versionName",
+  async (req, res) => {
+    var params = {
+      auth: req.get("Authorization"),
+      packageName: decodeURIComponent(req.params.packageName),
+      versionName: req.params.versionName,
+    };
+    // TODO: Stopper: Version handling, github auth
+    error.UnsupportedJSON(res);
+    logger.HTTPLog(req, res);
+  }
+);
 
 /**
  * @web

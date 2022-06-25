@@ -63,7 +63,7 @@ function query(req) {
       // Do not allow strings longer than `max_length` characters
       return decodeProv.slice(0, max_length).trim();
     }
-  } catch(err) {
+  } catch (err) {
     // an error occured while decoding the URI component. Return an empty query.
     return "";
   }
@@ -80,7 +80,8 @@ function engine(req) {
   // - https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
   // - https://regex101.com/r/vkijKf/1/
 
-  const regex = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
+  const regex =
+    /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/;
 
   // Check if it's a valid semver
   return prov.match(regex) !== null ? prov : false;
@@ -126,7 +127,7 @@ function pathTraversalAttempt(data) {
   // The definitions here are based off GoPage checks. https://github.com/confused-Techie/GoPage/blob/main/src/pkg/universalMethods/universalMethods.go
   // But we leave out any focused on defended against URL Encoded values, since this has already been decoded.
   //           unixBackNav, unixBackNavReverse, unixParentCatchAll,
-  var checks = [ /\.{2}\//, /\.{2}\\/, /\.{2}/];
+  var checks = [/\.{2}\//, /\.{2}\\/, /\.{2}/];
 
   for (var i = 0; i < checks.length; i++) {
     if (data.match(checks[i]) !== null) {

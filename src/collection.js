@@ -16,7 +16,6 @@ async function Sort(packages, method) {
   // TODO: Feature Request: Provide the page requested during sort, or the last item needed to sort,
   // then discard the rest of the array. Pruning length of array may actually be a smart move for all additional functions.
   if (method == "downloads") {
-
     packages.sort((a, b) => {
       if (a.downloads < b.downloads) {
         return 1;
@@ -28,9 +27,7 @@ async function Sort(packages, method) {
     });
 
     return packages;
-
   } else if (method == "created_at") {
-
     packages.sort((a, b) => {
       if (a.created < b.created) {
         return 1;
@@ -42,9 +39,7 @@ async function Sort(packages, method) {
     });
 
     return packages;
-
   } else if (method == "updated_at") {
-
     packages.sort((a, b) => {
       if (a.updated < b.updated) {
         return 1;
@@ -56,9 +51,7 @@ async function Sort(packages, method) {
     });
 
     return packages;
-
   } else if (method == "stars") {
-
     packages.sort((a, b) => {
       if (a.stargazers_count < b.stargazers_count) {
         return 1;
@@ -70,7 +63,6 @@ async function Sort(packages, method) {
     });
 
     return packages;
-
   } else if (method == "relevance") {
     // TODO search method to then find parameter of relevance.
   } else {

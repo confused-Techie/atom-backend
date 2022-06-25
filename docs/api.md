@@ -215,6 +215,82 @@ Returns the package that was stared.
 
 
 ---
+# **[DELETE]** /api/packages/:packageName/star
+Unstar a package, requires authentication.
+
+Auth: `true`
+Parameters:
+---
+* Authentication _(required)_ `[string]` | Location: `header`  
+  - Atom Token, in the Header Authentication Item
+
+
+---
+* packageName _(required)_ `[string]` | Location: `path`  
+  - The package name to unstar.
+
+
+---
+Responses:
+---
+**HTTP Status Code:** `201 `
+
+An empty response to convey successfully unstaring a package.
+
+
+---
+# **[GET]** /api/packages/:packageName/stargazers
+List the users that have starred a package.
+
+Auth: `FALSE`
+Parameters:
+---
+* packageName _(required)_  | Location: `path`  
+  - The package name to check for users stars.
+
+
+---
+Responses:
+---
+**HTTP Status Code:** `200 OK`
+
+A list of user Objects.
+
+```json
+[ { "login": "aperson" }, { "login": "anotherperson" } ]
+```
+
+
+---
+# **[DELETE]** /api/packages/:packageName/versions/:versionName
+Deletes a package version. Note once a version is deleted, that same version should not be reused again.
+
+Auth: `true`
+Parameters:
+---
+* Authentication _(required)_  | Location: `header`  
+  - The Authentication header containing a valid Atom Token
+
+
+---
+* packageName _(required)_  | Location: `path`  
+  - The package name to check for the version to delete.
+
+
+---
+* versionName _(required)_  | Location: `path`  
+  - The Package Version to actually delete.
+
+
+---
+Responses:
+---
+**HTTP Status Code:** `204 No Content`
+
+Indicates a successful deletion.
+
+
+---
 # **[GET]** /api/users/:login/stars
 List a user's starred packages.
 

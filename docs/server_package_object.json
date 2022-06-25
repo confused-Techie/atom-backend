@@ -6,7 +6,7 @@
   },
   "created": "CUSTOM PROPERTY, created at datetime using milliseconds since epoch time.",
   "updated": "CUSTOM PROPERTY, last updated at datetime using milliseconds since epoch time.",
-  "star_gazers": [ "CUSTOM PROPERTY, array of user login objects." ],
+  "star_gazers": ["CUSTOM PROPERTY, array of user login objects."],
   "downloads": 13117680,
   "stargazers_count": 238,
   "releases": {
@@ -72,14 +72,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -227,14 +220,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -382,14 +368,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -537,14 +516,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -692,14 +664,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -847,14 +812,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -1002,14 +960,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -1157,14 +1108,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -1306,14 +1250,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -1456,14 +1393,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -1606,14 +1536,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -1756,14 +1679,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -1906,14 +1822,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -2056,14 +1965,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -2206,14 +2108,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -2362,14 +2257,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -2518,14 +2406,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -2674,14 +2555,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -2830,14 +2704,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -2986,14 +2853,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -3142,14 +3002,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -3298,14 +3151,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -3454,14 +3300,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -3610,14 +3449,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -3766,14 +3598,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -3922,14 +3747,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -4078,14 +3896,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -4233,14 +4044,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -4382,14 +4186,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -4531,14 +4328,7 @@
         "loggingLevel": {
           "type": "string",
           "default": "info",
-          "enum": [
-            "silly",
-            "verbose",
-            "debug",
-            "info",
-            "warning",
-            "error"
-          ],
+          "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
           "title": "Logging level",
           "description": "The verbosity level of Kite logs."
         },
@@ -4688,14 +4478,7 @@
       "loggingLevel": {
         "type": "string",
         "default": "info",
-        "enum": [
-          "silly",
-          "verbose",
-          "debug",
-          "info",
-          "warning",
-          "error"
-        ],
+        "enum": ["silly", "verbose", "debug", "info", "warning", "error"],
         "title": "Logging level",
         "description": "The verbosity level of Kite logs."
       },

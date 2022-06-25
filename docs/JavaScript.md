@@ -2,7 +2,8 @@
 
 <dl>
 <dt><a href="#Sort">Sort(method, packages)</a> ⇒ <code>object</code></dt>
-<dd><p>Intended for use for a collection of Packages, sort them according to any valid Sorting method.</p>
+<dd><p>Intended for use for a collection of Packages, sort them according to any valid Sorting method.
+Note this should be called before, any Pruning has taken place.</p>
 </dd>
 <dt><a href="#VerifyAuth">VerifyAuth(token, [callback])</a></dt>
 <dd><p>Checks every existing user within the users file, to see if the token provided exists within their valid
@@ -16,6 +17,7 @@ If no valid user is found returns null.</p>
 
 ## Sort(method, packages) ⇒ <code>object</code>
 Intended for use for a collection of Packages, sort them according to any valid Sorting method.
+Note this should be called before, any Pruning has taken place.
 
 **Kind**: global function  
 **Returns**: <code>object</code> - The provided packages now sorted accordingly.  
