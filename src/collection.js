@@ -1,6 +1,8 @@
 // Here will be all features related to sorting, organizing, or pruning the package collections
 // returned to the end user.
 
+const search_func = require("./search.js");
+
 /**
  * @desc Intended for use for a collection of Packages, sort them according to any valid Sorting method.
  * Note this should be called before, any Pruning has taken place.
@@ -148,6 +150,35 @@ async function POSPrune(packages) {
   }
 }
 
+// the below global variables, are intended to be read from the config file once implemented.
+const search_algorithm = "levenshtein_distance";
+
+async function SearchWithinPackages(search, packages, searchAlgorithm = search_algorithm) {
+  // this will be the method which data is searched, where once searched through will apply a relevance score to each object.
+  // This score can then be used to sort the results.
+
+  // Due to the high potential of this being reworked later on, we will rely on a config option of searchAlgorithm
+  // to define what method we are wanting to use.
+
+  if (searchAlgorithm == "levenshtein_distance") {
+    // The Levenshtein Distance will be the most basic form of search. Simple, not accounting for any word seperators
+    // and simply returning the edit distance between strings.
+
+    for (let i = 0; i < packages.length; i++) {
+      packages[i].relevance = search_func.levenshtein(search, packages[i].name);
+    }
+
+    return packages;
+  } else if (searchAlgorithm == "levenshtein_distance_wsdm") {
+    for (let i = 0; i < packages.length; i++) {
+      packages[i].relevance = search_func.levenshteinWSDM(search, packages[i].name);
+    }
+    return packages;
+  } else {
+    throw new Error(`Unrecognized Search Algorithm in Config: ${searchAlgorithm}`);
+  }
+}
+
 async function EngineFilter(pack, engine) {
   // TODO: All of it
   return pack;
@@ -159,4 +190,5 @@ module.exports = {
   POFPrune,
   POSPrune,
   EngineFilter,
+  SearchWithinPackages,
 };

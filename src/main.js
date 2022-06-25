@@ -202,7 +202,7 @@ app.post("/api/packages", async (req, res) => {
  * @response
  *   @status 200
  *   @Rtype application/json
- *   @Rdesc Same format as listing packages.
+ *   @Rdesc Same format as listing packages, additionally paginated at 30 items.
  */
 app.get("/api/packages/search", async (req, res) => {
   var params = {
