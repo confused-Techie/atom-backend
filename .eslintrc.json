@@ -1,7 +1,0 @@
-{
-  "root": true,
-  "extends": ["eslint:recommended"],
-  "rules": {
-    "no-var": "off"
-  }
-}

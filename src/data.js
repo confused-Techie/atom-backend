@@ -1,5 +1,5 @@
-var fs = require("fs");
-var logger = require("./logger.js");
+const fs = require("fs");
+const logger = require("./logger.js");
 
 // Ideally in the future, reading from these files can be adstracted away, to aid in caching data to reduce
 // disk reads, while additionally allowing methods of reading from the cloud and such.
@@ -100,7 +100,7 @@ async function GetAllPackages() {
     return pointers;
   } else {
     // now with the pointers, we want to get each package object, and shove it in an array.
-    var package_collection = [];
+    let package_collection = [];
     for (const pointer in pointers.content) {
       // now with the key of a value, we can grab the actual package.
       var pack = await GetPackageByID(pointers.content[pointer]);
@@ -126,10 +126,10 @@ async function GetAllPackages() {
 }
 
 async function GetPackageCollection(packages) {
-  var packageCollection = [];
+  let packageCollection = [];
 
-  for (var i = 0; i < packages.length; i++) {
-    var pack = await GetPackageByName(packages[i]);
+  for (let i = 0; i < packages.length; i++) {
+    const pack = await GetPackageByName(packages[i]);
     if (pack.ok) {
       packageCollection.push(pack.content);
     } else {
@@ -154,17 +154,17 @@ async function StarPackageByName(packageName, userName) {
   // we need the package pointer to later write the file, and we need the package file to modify,
   // which after modification we want to write the data, and return the package itself.
 
-  var point = await GetPackagePointerByName(packageName);
+  let point = await GetPackagePointerByName(packageName);
 
   if (point.ok) {
     // now with the pointer, we can get the package
-    var pack = await GetPackageByID(point.content);
+    let pack = await GetPackageByID(point.content);
 
     if (pack.ok) {
       // now we have the package
       pack.content.star_gazers.push({ login: userName });
 
-      var write = await SetPackageByID(point.content, pack.content);
+      const write = await SetPackageByID(point.content, pack.content);
 
       if (write.ok) {
         // on successful completion we want to return the package.
@@ -182,15 +182,15 @@ async function StarPackageByName(packageName, userName) {
 }
 
 async function UnStarPackageByName(packageName, userName) {
-  var point = await GetPackagePointerByName(packageName);
+  const point = await GetPackagePointerByName(packageName);
 
   if (point.ok) {
-    var pack = await GetPackageByID(point.content);
+    const pack = await GetPackageByID(point.content);
 
     if (pack.ok) {
       // now we need to find the index in the array of the user we want to unstar.
-      var usrIdx = -1;
-      for (var i = 0; i < pack.content.star_gazers.length; i++) {
+      let usrIdx = -1;
+      for (let i = 0; i < pack.content.star_gazers.length; i++) {
         if (pack.content.star_gazers[i].login == userName) {
           usrIdx = i;
           // since we know we only are looking once, lets just break the loop once we assign the idx
@@ -204,7 +204,7 @@ async function UnStarPackageByName(packageName, userName) {
         pack.content.star_gazers.splice(usrIdx, 1);
 
         // now to write the content.
-        var write = await SetPackageByID(point.content, pack.content);
+        const write = await SetPackageByID(point.content, pack.content);
 
         if (write.ok) {
           // and we will return the new content.
