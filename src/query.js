@@ -8,8 +8,9 @@
 
 function page(req) {
   let def = 1;
+  let prov = req.query.page;
 
-  if (req.query.page === undefined) {
+  if (prov === undefined) {
     return def;
   }
 
@@ -21,8 +22,8 @@ function sort(req, def = "downloads") {
   // using sort with a default def value of downloads, means when using the generic sort parameter
   // it will default to downloads, but if we pass the default, such as during search we can provide
   // the default relevance
-  var valid = ["downloads", "created_at", "updated_at", "stars"];
-  var prov = req.query.sort;
+  let valid = ["downloads", "created_at", "updated_at", "stars"];
+  let prov = req.query.sort;
 
   if (prov === undefined) {
     return def;
@@ -32,9 +33,9 @@ function sort(req, def = "downloads") {
 }
 
 function dir(req) {
-  var def = "desc";
-  var valid = ["asc", "desc"];
-  var prov = req.query.direction;
+  let def = "desc";
+  let valid = ["asc", "desc"];
+  let prov = req.query.direction;
 
   if (prov === undefined) {
     return def;
@@ -46,14 +47,14 @@ function dir(req) {
 function query(req) {
   let max_length = 50; // While package.json names according to NPM can be up to 214 characters, for performance
   // on the server and assumed deminishing returns on longer queries, this is cut off at 50 as suggested by Digitalone1.
-  var prov = req.query.q;
+  let prov = req.query.q;
 
   if (prov === undefined) {
     return "";
   }
 
   try {
-    var decodeProv = decodeURIComponent(prov); // this will undo any encoding done to get the request to us.
+    let decodeProv = decodeURIComponent(prov); // this will undo any encoding done to get the request to us.
 
     // Then some basic checks to help prevent malicious queries.
     if (pathTraversalAttempt(decodeProv)) {
@@ -99,13 +100,13 @@ function repo(req) {
 }
 
 function tag(req) {
-  var prov = req.query.tag;
+  let prov = req.query.tag;
 
   return prov !== undefined ? prov : "";
 }
 
 function rename(req) {
-  var prov = req.query.rename;
+  let prov = req.query.rename;
 
   if (prov === undefined) {
     // since this is supposed to be a boolean value, return false as the defaulting behavior
@@ -127,9 +128,9 @@ function pathTraversalAttempt(data) {
   // The definitions here are based off GoPage checks. https://github.com/confused-Techie/GoPage/blob/main/src/pkg/universalMethods/universalMethods.go
   // But we leave out any focused on defended against URL Encoded values, since this has already been decoded.
   //           unixBackNav, unixBackNavReverse, unixParentCatchAll,
-  var checks = [/\.{2}\//, /\.{2}\\/, /\.{2}/];
+  const checks = [/\.{2}\//, /\.{2}\\/, /\.{2}/];
 
-  for (var i = 0; i < checks.length; i++) {
+  for (let i = 0; i < checks.length; i++) {
     if (data.match(checks[i]) !== null) {
       return true;
     }

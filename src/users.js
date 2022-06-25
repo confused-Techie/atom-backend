@@ -1,4 +1,4 @@
-var data = require("./data.js");
+const data = require("./data.js");
 
 /**
  * @desc Checks every existing user within the users file, to see if the token provided exists within their valid
@@ -12,7 +12,7 @@ async function VerifyAuth(token) {
   const users = await data.GetUsers();
   if (users.ok) {
     for (const user in users.content) {
-      var usrToken = users.content[user].atom_token;
+      const usrToken = users.content[user].atom_token;
 
       if (usrToken !== undefined) {
         if (usrToken == token) {
@@ -43,7 +43,7 @@ async function GetUser(username) {
 
 async function AddUserStar(packageName, userName) {
   // this lets us add the packageName to the users list of stars.
-  var user = await GetUser(userName);
+  let user = await GetUser(userName);
 
   if (user.ok) {
     // with the user, lets add the package
@@ -51,12 +51,12 @@ async function AddUserStar(packageName, userName) {
     // then write the user data.
 
     // A bug discovered is this writes the user data singular object, not the entire user file object.
-    var users = await data.GetUsers();
+    let users = await data.GetUsers();
     if (users.ok) {
       users.content[userName] = user.content;
 
       // now with the new user object assigned as the key to the user file, we can save.
-      var write = data.SetUsers(users.content);
+      const write = data.SetUsers(users.content);
 
       if (write.ok) {
         return { ok: true };
@@ -73,12 +73,12 @@ async function AddUserStar(packageName, userName) {
 }
 
 async function RemoveUserStar(packageName, userName) {
-  var user = await GetUser(userName);
+  let user = await GetUser(userName);
 
   if (user.ok) {
     // find the index of the star in the users stars array
-    var starIdx = -1;
-    for (var i = 0; i < user.content.stars.length; i++) {
+    let starIdx = -1;
+    for (let i = 0; i < user.content.stars.length; i++) {
       if (user.content.stars[i] == packageName) {
         starIdx = i;
         break;
@@ -90,10 +90,10 @@ async function RemoveUserStar(packageName, userName) {
 
       // then to write the new user data
       // Same bug as AddUserStar
-      var users = await data.GetUsers();
+      let users = await data.GetUsers();
       if (users.ok) {
         users.content[userName] = user.content;
-        var write = data.SetUsers(users.content);
+        const write = data.SetUsers(users.content);
         if (write.ok) {
           return { ok: true };
         } else {

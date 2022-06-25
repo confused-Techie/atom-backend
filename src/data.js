@@ -23,7 +23,7 @@ function SetUsers(data) {
     fs.writeFileSync("./data/users.json", JSON.stringify(data, null, 4));
     return { ok: true };
   } catch (err) {
-    return { ok: false, content: error, short: "Server Error" };
+    return { ok: false, content: err, short: "Server Error" };
   }
 }
 

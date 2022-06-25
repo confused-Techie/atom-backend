@@ -78,7 +78,7 @@ app.get("/api/packages", async (req, res) => {
     // And finally we would need to modify our headers, to include links for current, next, and last.
     var packages = await collection.Sort(all_packages.content, params.sort);
     packages = await collection.Direction(packages, params.direction);
-    packages = await collection.Prune(packages);
+    packages = await collection.POSPrune(packages); // Use the Package Object Short Prune
     // One note of concern with chaining all of these together, is that this will potentially loop
     // through the entire array of packages 3 times, resulting in a
     // linear time complexity of O(3). But testing will have to determine how much that is a factor of concern.
@@ -249,7 +249,7 @@ app.get("/api/packages/:packageName", async (req, res) => {
 
   if (pack.ok) {
     // from here we now have the package and just want to prune data from it
-    pack = await collection.Prune(pack.content);
+    pack = await collection.POFPrune(pack.content); // package object full prune
     pack = await collection.EngineFilter(pack);
     res.status(200).json(pack);
     logger.HTTPLog(req, res);
@@ -642,7 +642,7 @@ app.get("/api/users/:login/stars", async (req, res) => {
     var packages = await data.GetPackageCollection(user.content.stars);
 
     if (packages.ok) {
-      packages = await collection.Prune(packages.content);
+      packages = await collection.POSPrune(packages.content); // package object short prune
 
       res.stats(200).json(packages);
       logger.HTTPLog(req, res);
