@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/main.js",
   "engines": {
-    "node": ">= 10.7.0"
+    "node": ">= 10.7.0 < 14.15.0"
   },
   "scripts": {
     "test": "jest",
