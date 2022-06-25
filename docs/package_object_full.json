@@ -1,0 +1,4781 @@
+{
+  "name": "kite",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kiteco/atom-plugin"
+  },
+  "downloads": 13117680,
+  "stargazers_count": 238,
+  "releases": {
+    "latest": "0.206.0"
+  },
+  "versions": {
+    "0.206.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.206.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCodeFinderLineDecoration": {
+          "type": "boolean",
+          "default": false,
+          "title": "Enable codefinder decoration",
+          "description": "Show a clickable decoration on the cursor line that starts a line-based search for related code."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 5000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.21.0",
+        "kite-connector": "=3.16.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.206.0/tarball"
+      }
+    },
+    "0.205.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.205.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCodeFinderLineDecoration": {
+          "type": "boolean",
+          "default": false,
+          "title": "Enable codefinder decoration",
+          "description": "Show a clickable decoration on the cursor line that starts a line-based search for related code."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 5000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.20.0",
+        "kite-connector": "=3.14.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.205.0/tarball"
+      }
+    },
+    "0.204.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.204.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCodeFinderLineDecoration": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable codefinder decoration",
+          "description": "Show a clickable decoration on the cursor line that starts a line-based search for related code."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 5000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.20.0",
+        "kite-connector": "=3.14.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.204.0/tarball"
+      }
+    },
+    "0.203.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.203.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCodeFinderLineDecoration": {
+          "type": "boolean",
+          "default": "true",
+          "title": "Enable codefinder decoration",
+          "description": "Show a clickable decoration on the cursor line that starts a line-based search for related code."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 5000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.20.0",
+        "kite-connector": "=3.14.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.203.0/tarball"
+      }
+    },
+    "0.202.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.202.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCodeFinderLineDecoration": {
+          "type": "boolean",
+          "default": "true",
+          "title": "Enable codefinder decoration",
+          "description": "Show a clickable decoration on the cursor line that starts a line-based search for related code."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 5000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.20.0",
+        "kite-connector": "=3.14.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.202.0/tarball"
+      }
+    },
+    "0.200.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.200.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCodeFinderLineDecoration": {
+          "type": "boolean",
+          "default": "true",
+          "title": "Enable codefinder decoration",
+          "description": "Show a clickable decoration on the cursor line that starts a line-based search for related code."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 5000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.20.0",
+        "kite-connector": "=3.14.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.200.0/tarball"
+      }
+    },
+    "0.199.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.199.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCodeFinderLineDecoration": {
+          "type": "boolean",
+          "default": "true",
+          "title": "Enable codefinder decoration",
+          "description": "Show a clickable decoration on the cursor line that starts a line-based search for related code."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 5000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.20.0",
+        "kite-connector": "=3.14.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.199.0/tarball"
+      }
+    },
+    "0.198.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.198.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCodeFinderLineDecoration": {
+          "type": "boolean",
+          "default": "true",
+          "title": "Enable codefinder decoration",
+          "description": "Show a clickable decoration on the cursor line that starts a line-based search for related code."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 5000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.20.0",
+        "kite-connector": "=3.14.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.198.0/tarball"
+      }
+    },
+    "0.197.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.197.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 5000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.18.0",
+        "kite-connector": "=3.12.0",
+        "kite-installer": "=3.16.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.197.0/tarball"
+      }
+    },
+    "0.196.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.196.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 5000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.17.0",
+        "kite-connector": "=3.12.0",
+        "kite-installer": "=3.16.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.196.0/tarball"
+      }
+    },
+    "0.195.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.195.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 5000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.16.0",
+        "kite-connector": "=3.12.0",
+        "kite-installer": "=3.16.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.195.0/tarball"
+      }
+    },
+    "0.193.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.193.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 5000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.14.0",
+        "kite-connector": "=3.12.0",
+        "kite-installer": "=3.16.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.193.0/tarball"
+      }
+    },
+    "0.192.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.192.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 5000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.14.0",
+        "kite-connector": "=3.12.0",
+        "kite-installer": "=3.16.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.192.0/tarball"
+      }
+    },
+    "0.191.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.191.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 5000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.14.0",
+        "kite-connector": "=3.12.0",
+        "kite-installer": "=3.16.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.191.0/tarball"
+      }
+    },
+    "0.190.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.190.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 5000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.14.0",
+        "kite-connector": "=3.12.0",
+        "kite-installer": "=3.16.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.190.0/tarball"
+      }
+    },
+    "0.189.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.189.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showGoBetaNotification": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show Go beta notification",
+          "description": "Whether or not to show the Go beta notification."
+        },
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 5000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.14.0",
+        "kite-connector": "=3.12.0",
+        "kite-installer": "=3.16.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.189.0/tarball"
+      }
+    },
+    "0.188.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.188.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showGoBetaNotification": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show Go beta notification",
+          "description": "Whether or not to show the Go beta notification."
+        },
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 15000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.14.0",
+        "kite-connector": "=3.12.0",
+        "kite-installer": "=3.16.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.188.0/tarball"
+      }
+    },
+    "0.187.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.187.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showGoBetaNotification": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show Go beta notification",
+          "description": "Whether or not to show the Go beta notification."
+        },
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 15000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.14.0",
+        "kite-connector": "=3.12.0",
+        "kite-installer": "=3.16.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.187.0/tarball"
+      }
+    },
+    "0.186.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.186.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showGoBetaNotification": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show Go beta notification",
+          "description": "Whether or not to show the Go beta notification."
+        },
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 15000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.12.0",
+        "kite-connector": "=3.12.0",
+        "kite-installer": "=3.16.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.186.0/tarball"
+      }
+    },
+    "0.185.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.185.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showGoBetaNotification": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show Go beta notification",
+          "description": "Whether or not to show the Go beta notification."
+        },
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 15000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.12.0",
+        "kite-connector": "=3.12.0",
+        "kite-installer": "=3.16.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.185.0/tarball"
+      }
+    },
+    "0.184.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.184.0",
+      "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showGoBetaNotification": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show Go beta notification",
+          "description": "Whether or not to show the Go beta notification."
+        },
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 15000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.12.0",
+        "kite-connector": "=3.12.0",
+        "kite-installer": "=3.16.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.184.0/tarball"
+      }
+    },
+    "0.183.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.183.0",
+      "description": "Python coding assistant featuring AI-powered autocompletions, advanced function signatures, and instant documentation",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showGoBetaNotification": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show Go beta notification",
+          "description": "Whether or not to show the Go beta notification."
+        },
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 15000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.12.0",
+        "kite-connector": "=3.12.0",
+        "kite-installer": "=3.16.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.183.0/tarball"
+      }
+    },
+    "0.182.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.182.0",
+      "description": "Python coding assistant featuring AI-powered autocompletions, advanced function signatures, and instant documentation",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showGoBetaNotification": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show Go beta notification",
+          "description": "Whether or not to show the Go beta notification."
+        },
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 15000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.12.0",
+        "kite-connector": "=3.12.0",
+        "kite-installer": "=3.16.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.182.0/tarball"
+      }
+    },
+    "0.181.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.181.0",
+      "description": "Python coding assistant featuring AI-powered autocompletions, advanced function signatures, and instant documentation",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showGoBetaNotification": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show Go beta notification",
+          "description": "Whether or not to show the Go beta notification."
+        },
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 15000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.12.0",
+        "kite-connector": "=3.12.0",
+        "kite-installer": "=3.16.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.181.0/tarball"
+      }
+    },
+    "0.180.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.180.0",
+      "description": "Python coding assistant featuring AI-powered autocompletions, advanced function signatures, and instant documentation",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showGoBetaNotification": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show Go beta notification",
+          "description": "Whether or not to show the Go beta notification."
+        },
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 15000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.12.0",
+        "kite-connector": "=3.12.0",
+        "kite-installer": "=3.16.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.180.0/tarball"
+      }
+    },
+    "0.179.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.179.0",
+      "description": "Python coding assistant featuring AI-powered autocompletions, advanced function signatures, and instant documentation",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showGoBetaNotification": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show Go beta notification",
+          "description": "Whether or not to show the Go beta notification."
+        },
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 15000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.12.0",
+        "kite-connector": "=3.12.0",
+        "kite-installer": "=3.16.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "file-loader": "^5.1.0",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.179.0/tarball"
+      }
+    },
+    "0.178.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.178.0",
+      "description": "Python coding assistant featuring AI-powered autocompletions, advanced function signatures, and instant documentation",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showGoBetaNotification": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show Go beta notification",
+          "description": "Whether or not to show the Go beta notification."
+        },
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 15000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.10.0",
+        "kite-connector": "=3.4.0",
+        "kite-installer": "=3.2.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.178.0/tarball"
+      }
+    },
+    "0.177.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.177.0",
+      "description": "Python coding assistant featuring AI-powered autocompletions, advanced function signatures, and instant documentation",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showGoBetaNotification": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show Go beta notification",
+          "description": "Whether or not to show the Go beta notification."
+        },
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 15000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.10.0",
+        "kite-connector": "=3.4.0",
+        "kite-installer": "=3.2.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.177.0/tarball"
+      }
+    },
+    "0.176.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.176.0",
+      "description": "Python coding assistant featuring AI-powered autocompletions, advanced function signatures, and instant documentation",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 15000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.10.0",
+        "kite-connector": "=3.4.0",
+        "kite-installer": "=3.2.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.176.0/tarball"
+      }
+    },
+    "0.175.0": {
+      "name": "kite",
+      "main": "./dist/main",
+      "version": "0.175.0",
+      "description": "Python coding assistant featuring AI-powered autocompletions, advanced function signatures, and instant documentation",
+      "repository": "https://github.com/kiteco/atom-plugin",
+      "keywords": [],
+      "license": "SEE LICENSE IN LICENSE",
+      "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+      },
+      "scripts": {
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "build-prod": "webpack --config config/webpack.config.js --mode production",
+        "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+        "build-dev": "webpack --config config/webpack.config.js --mode none",
+        "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+      },
+      "configSchema": {
+        "showWelcomeNotificationOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Show welcome notification on startup",
+          "description": "Whether or not to show the Kite welcome notification on startup."
+        },
+        "enableCompletions": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable completions",
+          "description": "Automatically show completions from Kite as you type."
+        },
+        "enableHoverUI": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable hover",
+          "description": "Show a quick summary of a symbol when you hover your mouse over it."
+        },
+        "enableSnippets": {
+          "type": "boolean",
+          "default": true,
+          "title": "Enable snippets",
+          "description": "Enable snippets feature."
+        },
+        "maxVisibleSuggestionsAlongSignature": {
+          "type": "integer",
+          "default": 5,
+          "title": "Completions limit with function signature",
+          "description": "Maximum number of completions that can be shown when a function signature is also shown."
+        },
+        "loggingLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": [
+            "silly",
+            "verbose",
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Logging level",
+          "description": "The verbosity level of Kite logs."
+        },
+        "pollingInterval": {
+          "type": "integer",
+          "default": 15000,
+          "min": 1000,
+          "max": 60000,
+          "title": "Polling interval",
+          "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+        },
+        "developerMode": {
+          "type": "boolean",
+          "default": false,
+          "title": "Developer mode",
+          "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+        },
+        "startKiteAtStartup": {
+          "type": "boolean",
+          "default": true,
+          "title": "Start Kite Engine on startup",
+          "description": "Automatically start Kite Engine on editor startup if it's not already running."
+        },
+        "signatureKwargsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function keyword arguments",
+          "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+        },
+        "signaturePopularPatternsVisible": {
+          "type": "boolean",
+          "default": false,
+          "title": "Show function call examples",
+          "description": "Show examples on how to call a function when the function signature panel is shown"
+        }
+      },
+      "providedServices": {
+        "autocomplete.provider": {
+          "versions": {
+            "2.0.0": "completions"
+          }
+        }
+      },
+      "consumedServices": {
+        "status-bar": {
+          "versions": {
+            "^1.0.0": "consumeStatusBar"
+          }
+        }
+      },
+      "dependencies": {
+        "analytics-node": "^3.1.1",
+        "element-resize-detector": "^1.1.11",
+        "fuzzaldrin-plus": "^0.4.1",
+        "getmac": "1.2.1",
+        "kite-api": "=3.10.0",
+        "kite-connector": "=3.4.0",
+        "kite-installer": "=3.2.0",
+        "lodash": "^4.17.11",
+        "md5": "^2.2.0",
+        "rollbar": "^2.3.8",
+        "tiny-relative-date": "^1.3.0",
+        "underscore-plus": "^1"
+      },
+      "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-eslint": "^6.1.2",
+        "babel-loader": "^8.0.5",
+        "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+        "eslint": "^4.18.2",
+        "eslint-config": "^0.3.0",
+        "eslint-config-fbjs": "^1.1.1",
+        "eslint-plugin-babel": "^3.3.0",
+        "eslint-plugin-flowtype": "^2.29.1",
+        "eslint-plugin-jasmine": "^2.2.0",
+        "eslint-plugin-prefer-object-spread": "^1.1.0",
+        "eslint-plugin-react": "^5.2.2",
+        "fbjs": "^0.8.6",
+        "javascript-obfuscator": "^0.8.3",
+        "sinon": "^2.3.5",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0"
+      },
+      "dist": {
+        "tarball": "https://www.atom.io/api/packages/kite/versions/0.175.0/tarball"
+      }
+    }
+  },
+  "readme": "# Kite Autocomplete Plugin for Atom\n\n[![Report an issue](https://img.shields.io/badge/-Report%20an%20issue-critical)](https://github.com/kiteco/issue-tracker/issues)\n\nKite is an AI-powered programming assistant that helps you write Python & JavaScript code inside Atom. Kite helps you write code faster by saving you keystrokes and showing you the right information at the right time. Learn more about how Kite boosts your Atom editor's capabilities at https://kite.com/integrations/atom-editor/. \n\nAt a high level, Kite provides you with:\n* 🧠 __[Line-of-Code Completions](https://kite.com/blog/product/launching-line-of-code-completions-going-cloudless-and-17-million-in-funding/)__ powered by machine learning models trained on the entire open source code universe\n* 🔍 __[Instant documentation](https://kite.com/copilot/)__ for the symbol underneath your cursor so you save time searching for Python docs\n\n\n## Requirements\n\n* macOS 10.11+, Windows 7+ or Linux\n* Atom v1.13.0+\n* [Kite Engine](https://kite.com/)\n\nUse another editor? Check out [Kite’s other editor integrations](https://kite.com/integrations/).\n\n## Installation\n\n### Installing the Kite Engine\n\nThe [Kite Engine](https://kite.com/) needs to be installed in order for the package to work properly. The package itself\nprovides the frontend that interfaces with the Kite Engine, which performs all the code analysis and machine learning 100% locally on your computer (no code is sent to a cloud server).\n\n__macOS Instructions__\n1. Download the [installer](https://kite.com/download) and open the downloaded `.dmg` file.\n2. Drag the Kite icon into the `Applications` folder.\n3. Run `Kite.app` to start the Kite Engine.\n\n__Windows Instructions__\n1. Download the [installer](https://kite.com/download) and run the downloaded `.exe` file.\n2. The installer should run the Kite Engine automatically after installation is complete.\n\n__Linux Instructions__\n1. Visit https://kite.com/linux/ to install Kite.\n2. The installer should run the Kite Engine automatically after installation is complete.\n\n\n### Installing the Kite Plugin for Atom\n\nWhen running the Kite Engine for the first time, you'll be guided through a setup process which will allow you to install\nthe Atom package. You can also install or uninstall the Atom package at any time using the Kite Engine's [plugin\nmanager](https://help.kite.com/article/62-managing-editor-plugins).\n\nAlternatively, you have 2 options to manually install the package:\n1. Search for \"Kite\" in Atom's built-in package manager and install from there.\n2. Run the command `apm install kite` in your terminal.\n\n[Learn more about why you should use Kite with Atom.](https://kite.com/integrations/atom-editor/)\n\n\n## Usage\n\nThe following is a brief guide to using Kite in its default configuration.\n\n### Tutorial\n\nWhen starting Atom with the Kite Assistant for the first time, you'll be guided through a tutorial that shows you how to\nuse Kite.\n\n![tutorial](https://github.com/kiteco/atom-plugin/blob/master/docs/images/tutorial.png?raw=true)\n\nThis tutorial will only be displayed once. You can show it again at any time by running the command `Kite: Tutorial` from\nAtom's command palette.\n\n### Hover\n\nHover your mouse cursor over a symbol to view a short summary of what the symbol represents.\n\n![hover](https://github.com/kiteco/atom-plugin/blob/master/docs/images/hover.png?raw=true)\n\n### Documentation\n\nClick on the `Docs` link in the hover popup to open the documentation for the symbol inside the Copilot, Kite's standalone\nreference tool.\n\n![copilot](https://github.com/kiteco/atom-plugin/blob/master/docs/images/copilot.png?raw=true)\n\n### Definitions\n\nIf a `Def` link is available in the hover popup, clicking on it will jump to the definition of the symbol.\n\n### Autocompletions\n\nSimply start typing in a saved Python or JavaScript file and Kite will automatically suggest completions for what you're \ntyping. Kite's autocompletions are all labeled with the `⟠` symbol.\n\n![completions](https://github.com/kiteco/atom-plugin/blob/master/docs/images/completions.png?raw=true)\n\n### Function Signatures\n\nWhen you call a function, Kite will show you the arguments required to call it.\n\n![signature](https://github.com/kiteco/atom-plugin/blob/master/docs/images/signature.png?raw=true)\n\nKite also shows you `How others used this` function, which are the most popular calling patterns inferred from all the\nopen source code on the internet.\n\n### Commands\n\nKite comes with sevaral commands that you can run from Atom's command palette.\n\n![commands](https://github.com/kiteco/atom-plugin/blob/master/docs/images/commands.png?raw=true)\n\n|Command|Description|\n|:---|:---|\n|`kite.related-code-from-file`|Search for code related to the current file in the Copilot|\n|`kite.related-code-from-line`|Search for code related to the current line in the Copilot|\n|`kite:open-copilot`|Open the Copilot|\n|`kite:docs-at-cursor`|Show documentation of the symbol underneath your cursor in the Copilot|\n|`kite:status`|Show the current status of Kite in the status panel|\n|`kite:package-settings`|Open the settings for the Kite Atom package|\n|`kite:engine-settings`|Open the settings for the Kite Engine|\n|`kite:tutorial`|Open the Kite tutorial file|\n|`kite:help`|Open Kite's help website in the browser|\n\nIf you wish, you may also setup keybindings for the commands listed above.\n\n\n## Configuration\n\nYou can view and change the Kite Assistant's settings by finding Kite in your list of installed packages, then clicking\nthe `Settings` button. Alternatively, you can run the command `Kite: Package Settings` from the command palette.\n\n\n## Troubleshooting\n\nVisit our [help docs](https://help.kite.com) for FAQs and troubleshooting support.\n\nHappy coding!\n\n\n---\n\n#### About Kite\n\nKite is built by a team in San Francisco devoted to making programming easier and more enjoyable for all. Follow Kite on\n[Twitter](https://twitter.com/kitehq) and get the latest news and programming tips on the\n[Kite Blog](https://kite.com/blog).\nKite has been featured in [Wired](https://www.wired.com/2016/04/kites-coding-asssitant-spots-errors-finds-better-open-source/), \n[VentureBeat](https://venturebeat.com/2019/01/28/kite-raises-17-million-for-its-ai-powered-developer-environment/), \n[The Next Web](https://thenextweb.com/dd/2016/04/14/kite-plugin/), and \n[TechCrunch](https://techcrunch.com/2019/01/28/kite-raises-17m-for-its-ai-driven-code-completion-tool/). \n\n",
+  "metadata": {
+    "name": "kite",
+    "main": "./dist/main",
+    "version": "0.206.0",
+    "description": "Code faster, stay in flow. AI-powered coding assistant featuring line-of-code Python and JavaScript autocompletions, advanced function signatures, and instant documentation.",
+    "repository": "https://github.com/kiteco/atom-plugin",
+    "keywords": [],
+    "license": "SEE LICENSE IN LICENSE",
+    "engines": {
+      "atom": ">=1.0.0 <2.0.0"
+    },
+    "scripts": {
+      "lint": "eslint .",
+      "lint:fix": "eslint --fix .",
+      "build-prod": "webpack --config config/webpack.config.js --mode production",
+      "prepublishOnly": "rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-prod",
+      "build-dev": "webpack --config config/webpack.config.js --mode none",
+      "clean-dev-install": "apm unlink && rm -rf node_modules && rm -f package-lock.json && apm install && rm -rf dist && npm run build-dev && apm link"
+    },
+    "configSchema": {
+      "showWelcomeNotificationOnStartup": {
+        "type": "boolean",
+        "default": true,
+        "title": "Show welcome notification on startup",
+        "description": "Whether or not to show the Kite welcome notification on startup."
+      },
+      "enableCodeFinderLineDecoration": {
+        "type": "boolean",
+        "default": false,
+        "title": "Enable codefinder decoration",
+        "description": "Show a clickable decoration on the cursor line that starts a line-based search for related code."
+      },
+      "enableCompletions": {
+        "type": "boolean",
+        "default": true,
+        "title": "Enable completions",
+        "description": "Automatically show completions from Kite as you type."
+      },
+      "enableHoverUI": {
+        "type": "boolean",
+        "default": true,
+        "title": "Enable hover",
+        "description": "Show a quick summary of a symbol when you hover your mouse over it."
+      },
+      "enableSnippets": {
+        "type": "boolean",
+        "default": true,
+        "title": "Enable snippets",
+        "description": "Enable snippets feature."
+      },
+      "maxVisibleSuggestionsAlongSignature": {
+        "type": "integer",
+        "default": 5,
+        "title": "Completions limit with function signature",
+        "description": "Maximum number of completions that can be shown when a function signature is also shown."
+      },
+      "loggingLevel": {
+        "type": "string",
+        "default": "info",
+        "enum": [
+          "silly",
+          "verbose",
+          "debug",
+          "info",
+          "warning",
+          "error"
+        ],
+        "title": "Logging level",
+        "description": "The verbosity level of Kite logs."
+      },
+      "pollingInterval": {
+        "type": "integer",
+        "default": 5000,
+        "min": 1000,
+        "max": 60000,
+        "title": "Polling interval",
+        "description": "Interval in milliseconds at which the Kite package polls Kite Engine to get the status of the current file."
+      },
+      "developerMode": {
+        "type": "boolean",
+        "default": false,
+        "title": "Developer mode",
+        "description": "Displays JSON data from Kite Engine that's used when rendering a UI element."
+      },
+      "startKiteAtStartup": {
+        "type": "boolean",
+        "default": true,
+        "title": "Start Kite Engine on startup",
+        "description": "Automatically start Kite Engine on editor startup if it's not already running."
+      },
+      "signatureKwargsVisible": {
+        "type": "boolean",
+        "default": false,
+        "title": "Show function keyword arguments",
+        "description": "Show inferred keyword arguments for a function when the function signature panel is shown"
+      },
+      "signaturePopularPatternsVisible": {
+        "type": "boolean",
+        "default": false,
+        "title": "Show function call examples",
+        "description": "Show examples on how to call a function when the function signature panel is shown"
+      }
+    },
+    "providedServices": {
+      "autocomplete.provider": {
+        "versions": {
+          "2.0.0": "completions"
+        }
+      }
+    },
+    "consumedServices": {
+      "status-bar": {
+        "versions": {
+          "^1.0.0": "consumeStatusBar"
+        }
+      }
+    },
+    "dependencies": {
+      "analytics-node": "^3.1.1",
+      "element-resize-detector": "^1.1.11",
+      "fuzzaldrin-plus": "^0.4.1",
+      "getmac": "1.2.1",
+      "kite-api": "=3.21.0",
+      "kite-connector": "=3.16.0",
+      "lodash": "^4.17.11",
+      "md5": "^2.2.0",
+      "rollbar": "^2.3.8",
+      "tiny-relative-date": "^1.3.0",
+      "underscore-plus": "^1"
+    },
+    "devDependencies": {
+      "@babel/core": "^7.4.3",
+      "@babel/preset-env": "^7.4.3",
+      "babel-eslint": "^6.1.2",
+      "babel-loader": "^8.0.5",
+      "editors-json-tests": "git://github.com/kiteco/editors-json-tests.git#master",
+      "eslint": "^4.18.2",
+      "eslint-config": "^0.3.0",
+      "eslint-config-fbjs": "^1.1.1",
+      "eslint-plugin-babel": "^3.3.0",
+      "eslint-plugin-flowtype": "^2.29.1",
+      "eslint-plugin-jasmine": "^2.2.0",
+      "eslint-plugin-prefer-object-spread": "^1.1.0",
+      "eslint-plugin-react": "^5.2.2",
+      "fbjs": "^0.8.6",
+      "file-loader": "^5.1.0",
+      "javascript-obfuscator": "^0.8.3",
+      "sinon": "^2.3.5",
+      "webpack": "^4.30.0",
+      "webpack-cli": "^3.3.0"
+    }
+  }
+}
