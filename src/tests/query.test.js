@@ -1,8 +1,8 @@
-var query = require("../query.js");
+const query = require("../query.js");
 
 // Page Testing
 
-var page_cases = [
+const page_cases = [
   [{ query: { page: 3 } }, 3],
   [{ query: {} }, 1],
   [{ query: { page: 2 } }, 2],
@@ -15,7 +15,7 @@ describe("Verify Page Query Returns", () => {
   });
 });
 
-var sort_cases = [
+const sort_cases = [
   [{ query: { sort: "stars" } }, "stars"],
   [{ query: { sort: "starr" } }, "downloads"],
   [{ query: {} }, "downloads"],
@@ -27,7 +27,7 @@ describe("Verify Sort Query Returns", () => {
   });
 });
 
-var dir_cases = [
+const dir_cases = [
   [{ query: { direction: "asc" } }, "asc"],
   [{ query: { direction: "desc" } }, "desc"],
   [{ query: {} }, "desc"],
@@ -39,7 +39,7 @@ describe("Verify Direction Query Returns", () => {
   });
 });
 
-var query_cases = [
+const query_cases = [
   [{ query: { q: "search-term" } }, "search-term"],
   [{ query: {} }, ""],
 ];
@@ -50,7 +50,7 @@ describe("Verify 'Query' Query Returns", () => {
   });
 });
 
-var engine_cases = [[{ query: { engine: "1.2" } }, "1.2"]];
+const engine_cases = [[{ query: { engine: "1.2" } }, "1.2"]];
 
 describe("Verify Engine Query Returns", () => {
   test.each(engine_cases)("Given %o Returns %p", (arg, result) => {
@@ -58,7 +58,7 @@ describe("Verify Engine Query Returns", () => {
   });
 });
 
-var repo_cases = [
+const repo_cases = [
   [{ query: { repository: "owner/repo" } }, "owner/repo"],
   [{ query: {} }, ""],
 ];
@@ -69,7 +69,7 @@ describe("Verify Repo Query Returns", () => {
   });
 });
 
-var tag_cases = [
+const tag_cases = [
   [{ query: { tag: "latest" } }, "latest"],
   [{ query: {} }, ""],
 ];
@@ -80,7 +80,7 @@ describe("Verify Tag Query Returns", () => {
   });
 });
 
-var rename_cases = [
+const rename_cases = [
   [{ query: { rename: "true" } }, true],
   [{ query: { rename: "false" } }, false],
   [{ query: {} }, false],

@@ -1,8 +1,11 @@
-var users = require("../users.js");
+/* global jest */
+// Global Config declared for ESLint
 
-var userDATAraw = require("./user.test.json");
+const users = require("../users.js");
 
-var userDATA = Buffer.from(JSON.stringify(userDATAraw));
+const userDATAraw = require("./user.test.json");
+
+let userDATA = Buffer.from(JSON.stringify(userDATAraw));
 console.log(JSON.stringify(userDATAraw));
 jest.mock("fs");
 
@@ -20,7 +23,7 @@ beforeEach(() => {
   require("fs").__setMockFiles(MOCK_FILE_INFO);
 });
 
-var getuser = [["idk", "confused-Techie"]];
+const getuser = [["idk", "confused-Techie"]];
 
 test("We get our Test User Back", async () => {
   const data = await users.GetUser("confused-Techie");

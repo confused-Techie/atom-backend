@@ -103,7 +103,7 @@ async function GetAllPackages() {
     let package_collection = [];
     for (const pointer in pointers.content) {
       // now with the key of a value, we can grab the actual package.
-      var pack = await GetPackageByID(pointers.content[pointer]);
+      let pack = await GetPackageByID(pointers.content[pointer]);
       if (pack.ok) {
         package_collection.push(pack.content);
       } else {

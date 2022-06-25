@@ -1,3 +1,6 @@
+/* global jest */
+// Global Config declared for ESLint
+
 const path = require("path");
 const fs = jest.createMockFromModule("fs");
 
