@@ -3,8 +3,8 @@
 * Mean per-function logical LOC: 12.976851851851853
 * Mean per-function parameter count: 1.2268518518518519
 * Mean per-function cyclomatic complexity: 2.1203703703703702
-* Mean per-function Halstead effort: 4795.381335907274
-* Mean per-module maintainability index: 66.71246788747163
+* Mean per-function Halstead effort: 4753.026148974523
+* Mean per-module maintainability index: 66.72099475520787
 * First-order density: 2.7777777777777777%
 * Change cost: 19.444444444444446%
 * Core size: 100%
@@ -246,7 +246,7 @@
 * Mean parameter count: 2
 * Cyclomatic complexity: 13
 * Cyclomatic complexity density: 23.636363636363637%
-* Maintainability index: 57.83924986446006
+* Maintainability index: 57.890411070877455
 * Dependency count: 0
 * Function: **levenshtein**
     * Line No.: 2
@@ -285,9 +285,9 @@
     * Parameter count: 2
     * Cyclomatic complexity: 5
     * Cyclomatic complexity density: 27.77777777777778%
-    * Halstead difficulty: 21.272727272727273
-    * Halstead volume: 677.0653582367355
-    * Halstead effort: 14403.026711581464
+    * Halstead difficulty: 19.636363636363637
+    * Halstead volume: 681.7200207275456
+    * Halstead effort: 13386.502225195441
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/tests/query.test.js
 
