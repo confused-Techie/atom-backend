@@ -129,8 +129,9 @@ function pathTraversalAttempt(data) {
   var checks = [ /\.{2}\//, /\.{2}\\/, /\.{2}/];
 
   for (var i = 0; i < checks.length; i++) {
-    if (data.match(checks[i]) !== null) }
-    return true;
+    if (data.match(checks[i]) !== null) {
+      return true;
+    }
   }
   return false; // if none of the matches are true.
 }
