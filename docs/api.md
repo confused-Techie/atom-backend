@@ -109,7 +109,7 @@ Responses:
 
 **Type:** `[application/json]`
 
-Same format as listing packages.
+Same format as listing packages, additionally paginated at 30 items.
 
 
 ---

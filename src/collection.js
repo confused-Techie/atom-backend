@@ -153,7 +153,11 @@ async function POSPrune(packages) {
 // the below global variables, are intended to be read from the config file once implemented.
 const search_algorithm = "levenshtein_distance";
 
-async function SearchWithinPackages(search, packages, searchAlgorithm = search_algorithm) {
+async function SearchWithinPackages(
+  search,
+  packages,
+  searchAlgorithm = search_algorithm
+) {
   // this will be the method which data is searched, where once searched through will apply a relevance score to each object.
   // This score can then be used to sort the results.
 
@@ -171,11 +175,16 @@ async function SearchWithinPackages(search, packages, searchAlgorithm = search_a
     return packages;
   } else if (searchAlgorithm == "levenshtein_distance_wsdm") {
     for (let i = 0; i < packages.length; i++) {
-      packages[i].relevance = search_func.levenshteinWSDM(search, packages[i].name);
+      packages[i].relevance = search_func.levenshteinWSDM(
+        search,
+        packages[i].name
+      );
     }
     return packages;
   } else {
-    throw new Error(`Unrecognized Search Algorithm in Config: ${searchAlgorithm}`);
+    throw new Error(
+      `Unrecognized Search Algorithm in Config: ${searchAlgorithm}`
+    );
   }
 }
 
