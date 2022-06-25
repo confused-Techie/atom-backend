@@ -44,16 +44,29 @@ function dir(req) {
 }
 
 function query(req) {
-  // TODO: here we would want to handle any methods to avoid malicious actors with a search query.
-  let max_length = 50;
+  let max_length = 50; // While package.json names according to NPM can be up to 214 characters, for performance
+  // on the server and assumed deminishing returns on longer queries, this is cut off at 50 as suggested by Digitalone1.
   var prov = req.query.q;
 
   if (prov === undefined) {
     return "";
   }
 
-  // Do not allow strings longer than `max_length` characters
-  return prov.slice(0, max_length).trim();
+  try {
+    var decodeProv = decodeURIComponent(prov); // this will undo any encoding done to get the request to us.
+
+    // Then some basic checks to help prevent malicious queries.
+    if (pathTraversalAttempt(decodeProv)) {
+      // detected path traversal attack. Return empty query.
+      return "";
+    } else {
+      // Do not allow strings longer than `max_length` characters
+      return decodeProv.slice(0, max_length).trim();
+    }
+  } catch(err) {
+    // an error occured while decoding the URI component. Return an empty query.
+    return "";
+  }
 }
 
 function engine(req) {
@@ -105,6 +118,21 @@ function rename(req) {
   } else {
     return false;
   }
+}
+
+function pathTraversalAttempt(data) {
+  // this will use several methods to check for the possibility of an attempted path traversal attack.
+
+  // The definitions here are based off GoPage checks. https://github.com/confused-Techie/GoPage/blob/main/src/pkg/universalMethods/universalMethods.go
+  // But we leave out any focused on defended against URL Encoded values, since this has already been decoded.
+  //           unixBackNav, unixBackNavReverse, unixParentCatchAll,
+  var checks = [ /\.{2}\//, /\.{2}\\/, /\.{2}/];
+
+  for (var i = 0; i < checks.length; i++) {
+    if (data.match(checks[i]) !== null) }
+    return true;
+  }
+  return false; // if none of the matches are true.
 }
 
 module.exports = { page, sort, dir, query, engine, repo, tag, rename };

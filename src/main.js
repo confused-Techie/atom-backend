@@ -230,7 +230,7 @@ app.get("/api/packages/search", async (req, res) => {
 app.get("/api/packages/:packageName", async (req, res) => {
   var params = {
     engine: query.engine(req),
-    name: req.params.packageName,
+    name: decodeURIComponent(req.params.packageName),
   };
   const pack = await data.GetPackageByName(params.name);
 
@@ -289,7 +289,7 @@ app.get("/api/packages/:packageName", async (req, res) => {
 app.delete("/api/packages/:packageName", async (req, res) => {
   var params = {
     auth: req.get("Authorization"),
-    packageName: req.params.packageName,
+    packageName: decodeURIComponent(req.params.packageName),
   };
   // TODO: Stopper: Github auth
   error.UnsupportedJSON(res);
@@ -323,7 +323,7 @@ app.delete("/api/packages/:packageName", async (req, res) => {
 app.post("/api/packages/:packageName/star", async (req, res) => {
   var params = {
     auth: req.get("Authorization"),
-    packageName: req.params.packageName,
+    packageName: decodeURIComponent(req.params.packageName),
   };
   var user = await users.VerifyAuth(params.auth);
 
@@ -401,7 +401,7 @@ app.post("/api/packages/:packageName/star", async (req, res) => {
 app.delete("/api/packages/:packageName/star", async (req, res) => {
   var params = {
     auth: req.get("Authorization"),
-    packageName: req.params.packageName,
+    packageName: decodeURIComponent(req.params.packageName),
   };
   var user = await users.VerifyAuth(params.auth);
 
@@ -482,7 +482,7 @@ app.delete("/api/packages/:packageName/star", async (req, res) => {
  */
 app.get("/api/packages/:packageName/stargazers", async (req, res) => {
   var params = {
-    packageName: req.params.packageName,
+    packageName: decodeURIComponent(req.params.packageName),
   };
   var pack = await data.GetPackageByName(params.packageName);
 
@@ -512,7 +512,7 @@ app.post("/api/packages/:packageName/versions", async (req, res) => {
     tag: query.tag(req),
     rename: query.rename(req),
     auth: req.get("Authorization"),
-    packageName: req.params.packageName,
+    packageName: decodeURIComponent(req.params.packageName),
   };
   // TODO: Stopper: Version handling, github auth
   error.UnsupportedJSON(res);
@@ -526,7 +526,7 @@ app.post("/api/packages/:packageName/versions", async (req, res) => {
  */
 app.get("/api/packages/:packageName/versions/:versionName", async (req, res) => {
   var params = {
-    packageName: req.params.packageName,
+    packageName: decodeURIComponent(req.params.packageName),
     versionName: req.params.versionName,
   };
   // TODO: Stopper: Version Handling
@@ -563,7 +563,7 @@ app.get("/api/packages/:packageName/versions/:versionName", async (req, res) => 
 app.delete("/api/packages/:packageName/versions/:versionName", async (req, res) => {
   var params = {
     auth: req.get("Authorization"),
-    packageName: req.params.packageName,
+    packageName: decodeURIComponent(req.params.packageName),
     versionName: req.params.versionName,
   };
   // TODO: Stopper: Version handling, github auth
