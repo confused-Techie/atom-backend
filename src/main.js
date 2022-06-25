@@ -1,12 +1,12 @@
 const express = require("express");
 const app = express();
 
-var query = require("./query.js");
-var error = require("./error.js");
-var users = require("./users.js");
-var data = require("./data.js");
-var collection = require("./collection.js");
-var logger = require("./logger.js");
+const query = require("./query.js");
+const error = require("./error.js");
+const users = require("./users.js");
+const data = require("./data.js");
+const collection = require("./collection.js");
+const logger = require("./logger.js");
 
 // this will in time use a YAML config file to retreive details, since if the Hosting ends up in Google Cloud, thats were it stores variables.
 // This method will allow us to detect local testing environments vs production environments by seeing if Google Cloud Run has entered our YAML variables into ENV variables.
@@ -63,26 +63,26 @@ app.get("/", (req, res) => {
  *   @Rdesc Returns a list of all packages. Paginated 30 at a time. Links to the next and last pages are in the 'Link' Header.
  */
 app.get("/api/packages", async (req, res) => {
-  var params = {
+  let params = {
     page: query.page(req),
     sort: query.sort(req),
     direction: query.dir(req),
   };
 
-  var all_packages = await data.GetAllPackages();
+  let all_packages = await data.GetAllPackages();
 
   if (all_packages.ok) {
     // Now we have all_packages.content which is an array of every package
     // we will then need to organize this list, according to our params.
     // additionally remove any fields that are not natively shown to the end user.
     // And finally we would need to modify our headers, to include links for current, next, and last.
-    var packages = await collection.Sort(all_packages.content, params.sort);
+    let packages = await collection.Sort(all_packages.content, params.sort);
     packages = await collection.Direction(packages, params.direction);
     packages = await collection.POSPrune(packages); // Use the Package Object Short Prune
     // One note of concern with chaining all of these together, is that this will potentially loop
     // through the entire array of packages 3 times, resulting in a
     // linear time complexity of O(3). But testing will have to determine how much that is a factor of concern.
-    var total_pages = Math.ceil(packages.length / paginated_amount);
+    let total_pages = Math.ceil(packages.length / paginated_amount);
     res.append(
       "Link",
       `<${server_url}/api/packages?page=${params.page}&sort=${
@@ -142,11 +142,11 @@ app.get("/api/packages", async (req, res) => {
  *   @Rdesc A package by that name already exists.
  */
 app.post("/api/packages", async (req, res) => {
-  var params = {
+  let params = {
     repository: query.repo(req),
     auth: req.get("Authorization"),
   };
-  var user = await users.VerifyAuth(params.auth);
+  let user = await users.VerifyAuth(params.auth);
 
   if (user.ok) {
     // TODO: Stopped: Github auth
@@ -205,7 +205,7 @@ app.post("/api/packages", async (req, res) => {
  *   @Rdesc Same format as listing packages, additionally paginated at 30 items.
  */
 app.get("/api/packages/search", async (req, res) => {
-  var params = {
+  let params = {
     sort: query.sort(req, "relevance"),
     page: query.page(req),
     direction: query.dir(req),
@@ -241,11 +241,11 @@ app.get("/api/packages/search", async (req, res) => {
  *   @Rdesc Returns package details and versions for a single package.
  */
 app.get("/api/packages/:packageName", async (req, res) => {
-  var params = {
+  let params = {
     engine: query.engine(req),
     name: decodeURIComponent(req.params.packageName),
   };
-  const pack = await data.GetPackageByName(params.name);
+  let pack = await data.GetPackageByName(params.name);
 
   if (pack.ok) {
     // from here we now have the package and just want to prune data from it
@@ -300,7 +300,7 @@ app.get("/api/packages/:packageName", async (req, res) => {
  *   @Rdesc Unauthorized.
  */
 app.delete("/api/packages/:packageName", async (req, res) => {
-  var params = {
+  let params = {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),
   };
@@ -334,22 +334,22 @@ app.delete("/api/packages/:packageName", async (req, res) => {
  *    @Rdesc Returns the package that was stared.
  */
 app.post("/api/packages/:packageName/star", async (req, res) => {
-  var params = {
+  let params = {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),
   };
-  var user = await users.VerifyAuth(params.auth);
+  let user = await users.VerifyAuth(params.auth);
 
   if (user.ok) {
     // with user.ok we already know the user has valid authentication credentails, and we can allow changes.
-    var pack = await data.StarPackageByName(
+    let pack = await data.StarPackageByName(
       params.packageName,
       user.content.name
     );
 
     if (pack.ok) {
       // now with staring the package successfully, we also want to add this package to the user list stars.
-      var star = await users.AddUserStar(params.packageName, user.content.name);
+      let star = await users.AddUserStar(params.packageName, user.content.name);
       // this lets us add the star to the users profile.
       if (star.ok) {
         // now that we know the star has been added to the users profile, we can return the package, with success
@@ -357,7 +357,7 @@ app.post("/api/packages/:packageName/star", async (req, res) => {
         logger.HTTPLog(req, res);
       } else {
         // the users star was not applied properly to their profile, and we would likely want to remove their star from the package before returning.
-        var unstar = await data.UnStarPackageByName(
+        let unstar = await data.UnStarPackageByName(
           params.packageName,
           user.content.name
         );
@@ -422,22 +422,22 @@ app.post("/api/packages/:packageName/star", async (req, res) => {
  *  @Rdesc An empty response to convey successfully unstaring a package.
  */
 app.delete("/api/packages/:packageName/star", async (req, res) => {
-  var params = {
+  let params = {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),
   };
-  var user = await users.VerifyAuth(params.auth);
+  let user = await users.VerifyAuth(params.auth);
 
   if (user.ok) {
     // now to unstar the package, by first removing the users star from the package itself.
-    var pack = await data.UnStarPackageByName(
+    let pack = await data.UnStarPackageByName(
       params.packageName,
       user.content.name
     );
 
     if (pack.ok) {
       // we have removed the star from the package, now remove it from the user.
-      var unstar = await users.RemoveUserStar(
+      let unstar = await users.RemoveUserStar(
         params.packageName,
         user.content.name
       );
@@ -452,7 +452,7 @@ app.delete("/api/packages/:packageName/star", async (req, res) => {
         // list the user, but the user still lists the package, so we would need to restar the package
         // to allow this whole flow to try again, else it will fail to unstar the package on a second attempt, leaving the user
         // no way to actually remove the star later on.
-        var restar = await data.StarPackageByName(
+        let restar = await data.StarPackageByName(
           params.packageName,
           user.content.name
         );
@@ -517,10 +517,10 @@ app.delete("/api/packages/:packageName/star", async (req, res) => {
  *  @Rexample [ { "login": "aperson" }, { "login": "anotherperson" } ]
  */
 app.get("/api/packages/:packageName/stargazers", async (req, res) => {
-  var params = {
+  let params = {
     packageName: decodeURIComponent(req.params.packageName),
   };
-  var pack = await data.GetPackageByName(params.packageName);
+  let pack = await data.GetPackageByName(params.packageName);
 
   if (pack.ok) {
     // then we can just directly return the star_gazers object.
@@ -544,7 +544,7 @@ app.get("/api/packages/:packageName/stargazers", async (req, res) => {
  * https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#post-apipackagespackage_nameversions
  */
 app.post("/api/packages/:packageName/versions", async (req, res) => {
-  var params = {
+  let params = {
     tag: query.tag(req),
     rename: query.rename(req),
     auth: req.get("Authorization"),
@@ -563,7 +563,7 @@ app.post("/api/packages/:packageName/versions", async (req, res) => {
 app.get(
   "/api/packages/:packageName/versions/:versionName",
   async (req, res) => {
-    var params = {
+    let params = {
       packageName: decodeURIComponent(req.params.packageName),
       versionName: req.params.versionName,
     };
@@ -602,7 +602,7 @@ app.get(
 app.delete(
   "/api/packages/:packageName/versions/:versionName",
   async (req, res) => {
-    var params = {
+    let params = {
       auth: req.get("Authorization"),
       packageName: decodeURIComponent(req.params.packageName),
       versionName: req.params.versionName,
@@ -633,13 +633,13 @@ app.delete(
  *  @Rdesc If the login does not exist, a 404 is returned.
  */
 app.get("/api/users/:login/stars", async (req, res) => {
-  var params = {
+  let params = {
     login: req.params.login,
   };
-  var user = await users.GetUser(params.login);
+  let user = await users.GetUser(params.login);
 
   if (user.ok) {
-    var packages = await data.GetPackageCollection(user.content.stars);
+    let packages = await data.GetPackageCollection(user.content.stars);
 
     if (packages.ok) {
       packages = await collection.POSPrune(packages.content); // package object short prune
@@ -682,13 +682,13 @@ app.get("/api/users/:login/stars", async (req, res) => {
  *   @Rtype application/json
  */
 app.get("/api/stars", async (req, res) => {
-  var params = {
+  let params = {
     auth: req.get("Authorization"),
   };
-  var user = await users.VerifyAuth(params.auth);
+  let user = await users.VerifyAuth(params.auth);
 
   if (user.ok) {
-    var packageCollection = await data.GetPackageCollection(user.content.stars);
+    let packageCollection = await data.GetPackageCollection(user.content.stars);
     if (packageCollection.ok) {
       res.status(200).json(packageCollection.content);
       logger.HTTPLog(req, res);

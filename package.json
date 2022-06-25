@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/main.js",
+  "engines": {
+    "node": ">= 10.7.0"
+  },
   "scripts": {
     "test": "jest",
     "api-docs": "quick-webserver-docs -i ./src/main.js -o ./docs/api.md",

@@ -11,7 +11,7 @@ function vlSimilairty(s1, s2) {
     shorter = s1;
   }
   let longerLength = longer.length;
-  if (longerLength == 0) {
+  if (longerLength === 0) {
     return 1.0;
   }
   return (
@@ -27,7 +27,7 @@ function vlEditDistance(s1, s2) {
   for (let p = 0; p < s1.length; p++) {
     let lastValue = p;
     for (let q = 0; q < s2.length; q++) {
-      if (p == 0) {
+      if (p === 0) {
         costs[q] = q;
       } else {
         if (q > 0) {
@@ -61,11 +61,11 @@ function levenshteinWSDM(s1, s2) {
   // Additionally some levenshtein functions will self rely on each other to reduce duplication.
 
   // First create an array of the characters, after substituting all word seperators for a single word sep.
-  var c = s1;
+  let c = s1;
   s1 = s1.replace(" ", "-").replace("_", "-");
   s2 = s2.replace(" ", "-").replace("_", "-");
-  s1A = s1.split("-");
-  s2A = s2.split("-");
+  let s1A = s1.split("-");
+  let s2A = s2.split("-");
 
   let means = new Array();
   for (let i = 0; i < s1A.length; i++) {
