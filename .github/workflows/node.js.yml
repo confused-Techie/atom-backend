@@ -25,7 +25,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm install --only=dev
+    - run: npm install
+      # While originally this was --only=dev, seems by default install will install dev-dependencies
     - run: npm run lint
     - run: npm run api-docs
     - run: npm run js-docs
