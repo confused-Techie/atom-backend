@@ -4,8 +4,8 @@
     "type": "git",
     "url": "https://github.com/kiteco/atom-plugin"
   },
-  "created": "CUSTOM PROPERTY, created at datetime",
-  "updated": "CUSTOM PROPERTY, last updated at datetime",
+  "created": "CUSTOM PROPERTY, created at datetime using milliseconds since epoch time.",
+  "updated": "CUSTOM PROPERTY, last updated at datetime using milliseconds since epoch time.",
   "star_gazers": [ "CUSTOM PROPERTY, array of user login objects." ],
   "downloads": 13117680,
   "stargazers_count": 238,

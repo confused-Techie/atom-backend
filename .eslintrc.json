@@ -3,7 +3,7 @@
   "extends": [
     "eslint:recommended"
   ],
-  "rules": [
+  "rules": {
     "no-var": "off"
-  ],
+  },
 }
