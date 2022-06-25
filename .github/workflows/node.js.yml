@@ -23,6 +23,7 @@ jobs:
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
+        ref: ${{ github.head_ref }}
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm install
@@ -31,3 +32,8 @@ jobs:
     - run: npm run api-docs
     - run: npm run js-docs
     - run: npm run complex
+    - name: Commit Auto Lint, Complexity, Docs
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: Apply Linting, Complexity, Docs changes
+        branch: ${{ github.head_ref }}
