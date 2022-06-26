@@ -22,6 +22,10 @@ function ServerErrorJSON(res) {
   res.status(500).json({ message: "Application Error" });
 }
 
+function PublishPackageExists(res) {
+  res.status(409).json({ message: "A Package by that name already exists." });
+}
+
 function UnsupportedJSON(res) {
   // this is only an interm response while the server is under development.
   res.status(501).json({
@@ -35,4 +39,5 @@ module.exports = {
   MissingAuthJSON,
   ServerErrorJSON,
   UnsupportedJSON,
+  PublishPackageExists,
 };

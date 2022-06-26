@@ -72,11 +72,20 @@ app.get("/api/packages", async (req, res) => {
     // And finally we would need to modify our headers, to include links for current, next, and last.
     let packages = await collection.Sort(all_packages.content, params.sort);
     packages = await collection.Direction(packages, params.direction);
+    // Now with packages sorted in the right direction, lets prune the results.
+    let total_pages = Math.ceil(packages.length / paginated_amount);
+    if (params.page != 1) {
+      packages.splice(0, params.page * paginated_amount); // Remove from the start to however many packages, should be visible.
+    }
+    if (params.page != total_pages) {
+      packages.splice((params.page * paginated_amount) + paginated_amount, packages.length);
+      // Start after our paginated items, and remove till the end, as long as we aren't on the last page.
+    }
     packages = await collection.POSPrune(packages); // Use the Package Object Short Prune
     // One note of concern with chaining all of these together, is that this will potentially loop
     // through the entire array of packages 3 times, resulting in a
     // linear time complexity of O(3). But testing will have to determine how much that is a factor of concern.
-    let total_pages = Math.ceil(packages.length / paginated_amount);
+
     res.append(
       "Link",
       `<${server_url}/api/packages?page=${params.page}&sort=${
@@ -143,9 +152,41 @@ app.post("/api/packages", async (req, res) => {
   let user = await users.VerifyAuth(params.auth);
 
   if (user.ok) {
-    // TODO: Stopped: Github auth
-    error.UnsupportedJSON(res);
-    logger.HTTPLog(req, res);
+    // Now here we need to check several things for a new package.
+    // The package doesn't exist.
+    // And the user is the proper owner of the repo they are attempting to link to.
+
+    // To see if the package already exists, we will utilize our data.GetPackagePointerByName
+    // to hope it returns an error, that the package doesn't exist, and will avoid reading the package file itself.
+    let exists = await data.GetPackagePointerByName(params.repository);
+
+    if (!exists.ok) {
+      // Even further though we need to check that the error is not found, since errors here can bubble.
+      if (exists.short == "Not Found") {
+        // Now we know the package doesn't exist. And we want to check that the user owns this repo on git.
+        let gitowner = await git.Ownership(user.content, repository);
+
+        if (gitowner.ok) {
+          // Now knowing they own the git repo, and it doesn't exist here, lets publish.
+          // TODO: Publishing a package.
+        } else {
+          // Check why its not okay. But since it hasn't been written we can't reliably know how to check, or respond.
+          // So we will respond with not supported for now.
+          // TODO: Proper error checking based on function.
+          error.UnsupportedJSON(res);
+          logger.HTTPLog(req, res);
+        }
+      } else {
+        // the server failed for some other bubbled reason, and is now encountering an error.
+        error.ServerErrorJSON(res);
+        logger.HTTPLog(req, res);
+        logger.ErrorLog(req, res, exists.content);
+      }
+    } else {
+      // this means the exists was okay, or otherwise it found a package by this name.
+      error.PublishPackageExists(res);
+      logger.HTTPLog(req, res);
+    }
   } else {
     if (user.short == "Bad Auth") {
       error.MissingAuthJSON(res);
@@ -215,10 +256,19 @@ app.get("/api/packages/search", async (req, res) => {
     );
     packages = await collection.Sort(packages, params.sort);
     packages = await collection.Direction(packages, params.direction);
+    // Now that the packages are sorted in the proper direction, we need to exempt results, according to our pagination.
+    let total_pages = Math.ceil(packages.length / paginated_amount); // We need to get the total before we start splicing and dicing.
+    if (params.page != 1) {
+      packages.splice(0, params.page * paginated_amount); // Remove from the start to however many packages, should be visible on previous pages.
+    }
+    if (params.page != total_pages) {
+      packages.splice((params.page * paginated_amount) + paginated_amount, packages.length);
+      // This will start after our paginated options, and remove till the end of the array, since we aren't on the last page.
+    }
     packages = await collection.POSPrune(packages); // Package Object Short Prune.
 
     // now to get headers.
-    let total_pages = Math.ceil(packages.length / paginated_amount);
+
     res.append(
       "Link",
       `<${server_url}/api/packages/search?q=${params.query}&page=${

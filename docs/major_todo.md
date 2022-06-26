@@ -74,6 +74,7 @@ This is a collection/list of all functions/methods of the Backend API, with thei
 ### Git.js
 
 * VerifyAuth(): 🆘
+* Ownership(): 🆘
 
 ### Config.js
 
