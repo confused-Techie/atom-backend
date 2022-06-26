@@ -2,6 +2,7 @@
 // returned to the end user.
 
 const search_func = require("./search.js");
+const { search_algorithm } = require("./config.js").GetConfig();
 
 /**
  * @desc Intended for use for a collection of Packages, sort them according to any valid Sorting method.
@@ -66,7 +67,17 @@ async function Sort(packages, method) {
 
     return packages;
   } else if (method == "relevance") {
-    // TODO search method to then find parameter of relevance.
+    packages.sort((a,b) => {
+      if (a.relevance < b.relevance) {
+        return 1;
+      }
+      if (a.relevance > b.relevance) {
+        return -1;
+      }
+      return 0;
+    });
+
+    return packages;
   } else {
     return "Unrecognized Sorting Method!";
   }
@@ -131,12 +142,17 @@ async function POSPrune(packages) {
   if (Array.isArray(packages)) {
     for (let i = 0; i < packages.length; i++) {
       // First prune server side data.
-      delete packages.created;
-      delete packages.updated;
-      delete packages.star_gazers;
+      delete packages[i].created;
+      delete packages[i].updated;
+      delete packages[i].star_gazers;
+
+      if (packages[i].relevance) {
+        // Now if these were passed through the search, it'll add this extra value.
+        delete packages[i].relevance;
+      }
 
       // Then really all we need to remove for the short package object is the versions property.
-      delete packages.versions;
+      delete packages[i].versions;
     }
     return packages;
   } else {
@@ -149,9 +165,6 @@ async function POSPrune(packages) {
     return packages;
   }
 }
-
-// the below global variables, are intended to be read from the config file once implemented.
-const search_algorithm = "levenshtein_distance";
 
 async function SearchWithinPackages(
   search,

@@ -1,0 +1,15 @@
+# To use this configuration, copy its contents to a new file at the root of the project.
+# Name this file app.yaml, and it will be picked up by the server.
+# app.yaml is in the git ignore to prevent any secrets from leaking.
+
+runtime: nodejs14
+
+env_variables:
+  PORT: 8080
+  # Valid Search:
+  # Longest Common Sequence: "lcs"
+  # Levenshtein Distance: "levenshtein_distance"
+  # Levenshtein Distance w/ Word Seperators - Double Mean: "levenshtein_distance_wsdm"
+  SEARCHALGORITHM: "lcs"
+  SERVERURL: "http://localhost:8080"
+  PAGINATE: 30

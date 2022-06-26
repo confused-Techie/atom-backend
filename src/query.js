@@ -22,7 +22,7 @@ function sort(req, def = "downloads") {
   // using sort with a default def value of downloads, means when using the generic sort parameter
   // it will default to downloads, but if we pass the default, such as during search we can provide
   // the default relevance
-  let valid = ["downloads", "created_at", "updated_at", "stars"];
+  let valid = ["downloads", "created_at", "updated_at", "stars", "relevance"];
   let prov = req.query.sort;
 
   if (prov === undefined) {
@@ -38,7 +38,14 @@ function dir(req) {
   let prov = req.query.direction;
 
   if (prov === undefined) {
-    return def;
+    // Seems that the autolink headers use order, while documentation uses direction.
+    // Since we are not sure where in the codebase it uses the other, we will just accept both.
+    let altprov = req.query.order;
+
+    if (altprov === undefined) {
+      return def;
+    }
+    return valid.includes(altprov) ? altprov : def;
   }
 
   return valid.includes(prov) ? prov : def;
