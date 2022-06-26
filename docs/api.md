@@ -262,6 +262,76 @@ A list of user Objects.
 
 
 ---
+# **[POST]** /api/packages/:packageName/versions
+Creates a new package version from a git tag. If `rename` is not `true`, the `name` field in `package.json` _must_ match the current package name.
+
+Auth: `true`
+Parameters:
+---
+* packageName _(required)_  | Location: `path`  
+  - The Package to modify.
+
+
+---
+* rename _(optional)_  | Location: `query`  
+  - Boolean indicating whether this version contains a new name for the package.
+
+
+---
+* tag _(required)_  | Location: `query`  
+  - A git tag for the version you'd like to create. It's important to note that the version name will not be taken from the tag, but from the `version` key in the `package.json` file at that ref.
+
+
+---
+* auth _(required)_  | Location: `header`  
+  - A valid Atom.io API token, to authenticate with Github.
+
+
+---
+Responses:
+---
+**HTTP Status Code:** `201 `
+
+Successfully created. Returns created version.
+
+
+---
+**HTTP Status Code:** `400 Bad Request`
+
+Git tag not found / Repository inaccessible / package.json invalid.
+
+
+---
+**HTTP Status Code:** `409 Conflict`
+
+Version exists.
+
+
+---
+# **[GET]** /api/packages/:packageName/versions/:versionName
+Returns `package.json` with `dist` key added for tarball download.
+
+Auth: `FALSE`
+Parameters:
+---
+* packageName _(required)_  | Location: `path`  
+  - The package name we want to access
+
+
+---
+* versionName _(required)_  | Location: `path`  
+  - The Version we want to access.
+
+
+---
+Responses:
+---
+**HTTP Status Code:** `200 OK`
+
+The `package.json` modified as explainged in the endpoint description.
+
+
+---
 # **[DELETE]** /api/packages/:packageName/versions/:versionName
 Deletes a package version. Note once a version is deleted, that same version should not be reused again.
 
