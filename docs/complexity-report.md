@@ -51,11 +51,11 @@
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/error.js
 
-* Physical LOC: 35
-* Logical LOC: 21
+* Physical LOC: 40
+* Logical LOC: 25
 * Mean parameter count: 1
 * Cyclomatic complexity: 1
-* Cyclomatic complexity density: 4.761904761904762%
+* Cyclomatic complexity density: 4%
 * Maintainability index: 84.01966208734825
 * Dependency count: 0
 * Function: **NotFoundJSON**
@@ -98,8 +98,18 @@
     * Halstead difficulty: 2.2857142857142856
     * Halstead volume: 48.43204266092217
     * Halstead effort: 110.70181179639353
-* Function: **UnsupportedJSON**
+* Function: **PublishPackageExists**
     * Line No.: 25
+    * Physical LOC: 3
+    * Logical LOC: 2
+    * Parameter count: 1
+    * Cyclomatic complexity: 1
+    * Cyclomatic complexity density: 50%
+    * Halstead difficulty: 2.2857142857142856
+    * Halstead volume: 48.43204266092217
+    * Halstead effort: 110.70181179639353
+* Function: **UnsupportedJSON**
+    * Line No.: 29
     * Physical LOC: 6
     * Logical LOC: 2
     * Parameter count: 1

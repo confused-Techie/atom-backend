@@ -78,7 +78,10 @@ app.get("/api/packages", async (req, res) => {
       packages.splice(0, params.page * paginated_amount); // Remove from the start to however many packages, should be visible.
     }
     if (params.page != total_pages) {
-      packages.splice((params.page * paginated_amount) + paginated_amount, packages.length);
+      packages.splice(
+        params.page * paginated_amount + paginated_amount,
+        packages.length
+      );
       // Start after our paginated items, and remove till the end, as long as we aren't on the last page.
     }
     packages = await collection.POSPrune(packages); // Use the Package Object Short Prune
@@ -262,7 +265,10 @@ app.get("/api/packages/search", async (req, res) => {
       packages.splice(0, params.page * paginated_amount); // Remove from the start to however many packages, should be visible on previous pages.
     }
     if (params.page != total_pages) {
-      packages.splice((params.page * paginated_amount) + paginated_amount, packages.length);
+      packages.splice(
+        params.page * paginated_amount + paginated_amount,
+        packages.length
+      );
       // This will start after our paginated options, and remove till the end of the array, since we aren't on the last page.
     }
     packages = await collection.POSPrune(packages); // Package Object Short Prune.
