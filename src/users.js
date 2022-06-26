@@ -1,12 +1,15 @@
 const data = require("./data.js");
 
 /**
+* @function VerifyAuth
  * @desc Checks every existing user within the users file, to see if the token provided exists within their valid
  * tokens. If it does will return the entire user object. If an optional callback is provided will invoke the
  * callback passing the user object, otherwise will just return the user object.
  * If no valid user is found returns null.
  * @param {string} token Provided Token to check against all valid users.
  * @param {function} [callback] Optional function to invoke passing the matched user.
+ * @implements {GetUsers}
+ * @returns {object} Error Object bubbled from GetUsers, Error Object of 'Bad Auth', Object containing the User Object.
  */
 async function VerifyAuth(token) {
   const users = await data.GetUsers();
@@ -26,6 +29,15 @@ async function VerifyAuth(token) {
   }
 }
 
+/**
+* @function GetUser
+* @desc Searches for a user within the user file, and if found will return the standard object
+* containing the full User Object. Otherwise an error.
+* @implements {GetUsers}
+* @param {string} username The UserName we want to search for.
+* @returns {object} An error object bubbled up from GetUsers, Error Object of 'Not Found',
+* Object containing full User Object.
+*/
 async function GetUser(username) {
   const users = await data.GetUsers();
   if (users.ok) {
@@ -41,6 +53,17 @@ async function GetUser(username) {
   }
 }
 
+/**
+* @function AddUserStar
+* @desc Adds the desired Package to the list of packages the User has starred.
+* @implements {GetUser}
+* @implements {GetUsers}
+* @impmplements {SetUsers}
+* @param {string} packageName The Name of the Package we want to add to the users star list.
+* @param {string} userName The user we want to make this modification to.
+* @returns {object} Error Object Bubbled from GetUser, Error Object Bubbled from GetUsers,
+* Error Object Bubbled from SetUsers, Short Object of 'ok' if successful.
+*/
 async function AddUserStar(packageName, userName) {
   // this lets us add the packageName to the users list of stars.
   let user = await GetUser(userName);
@@ -72,6 +95,17 @@ async function AddUserStar(packageName, userName) {
   }
 }
 
+/**
+* @function RemoveUserStar
+* @desc Removes the specified Package from the Users list of stars.
+* @implements {GetUser}
+* @implements {GetUsers}
+* @implements {SetUsers}
+* @param {string} packageName The Name of the package we want to remove from the users star list.
+* @param {string} userName The User we want to make these changes to.
+* @returns {object} Error Object Bubbled from GetUser, ErrorObject Bubbled from GetUsers,
+* Error Object Bubbled from SetUsers, Error Object of 'Not Found', Short Object of successful write ok.
+*/
 async function RemoveUserStar(packageName, userName) {
   let user = await GetUser(userName);
 
@@ -111,6 +145,13 @@ async function RemoveUserStar(packageName, userName) {
   }
 }
 
+/**
+* @function Prune
+* @desc Takes a single User Object, and prunes any server side only data from the object to return to the user.
+* This pruned item should never be written back to disk, as removed the data from it removes any pointers to those values.
+* @param {object} userObj The object of which to preform the pruning on.
+* @returns {object} The Pruned userObj.
+*/
 async function Prune(userObj) {
   // WARNING!! : Here I will use the delete operator on the object to prune data, not suitable to the end user.
   // Based on my current research delete only deletes the objects reference to the value, not the value itself.
