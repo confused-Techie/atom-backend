@@ -7,7 +7,8 @@ const users = require("./users.js");
 const data = require("./data.js");
 const collection = require("./collection.js");
 const logger = require("./logger.js");
-const { port, server_url, paginated_amount } = require("./config.js").GetConfig();
+const { port, server_url, paginated_amount } =
+  require("./config.js").GetConfig();
 
 app.use((req, res, next) => {
   // This adds a start to the request, logging the exact time a request was received.
@@ -208,7 +209,10 @@ app.get("/api/packages/search", async (req, res) => {
   let all_packages = await data.GetAllPackages();
 
   if (all_packages.ok) {
-    let packages = await collection.SearchWithinPackages(params.query, all_packages.content);
+    let packages = await collection.SearchWithinPackages(
+      params.query,
+      all_packages.content
+    );
     packages = await collection.Sort(packages, params.sort);
     packages = await collection.Direction(packages, params.direction);
     packages = await collection.POSPrune(packages); // Package Object Short Prune.
@@ -217,9 +221,19 @@ app.get("/api/packages/search", async (req, res) => {
     let total_pages = Math.ceil(packages.length / paginated_amount);
     res.append(
       "Link",
-      `<${server_url}/api/packages/search?q=${params.query}&page=${params.page}&sort=${params.sort}&order=${params.direction}>; rel="self", <${server_url
-      }/api/packages?q=${params.query}&page=${total_pages}&sort=${params.sort}&order=${params.direction}>; rel="last", <${server_url}/api/packages/search?q=${params.query
-      }&page=${params.page++}&sort=${params.sort}&order=${params.direction}>; rel="next"`
+      `<${server_url}/api/packages/search?q=${params.query}&page=${
+        params.page
+      }&sort=${params.sort}&order=${
+        params.direction
+      }>; rel="self", <${server_url}/api/packages?q=${
+        params.query
+      }&page=${total_pages}&sort=${params.sort}&order=${
+        params.direction
+      }>; rel="last", <${server_url}/api/packages/search?q=${
+        params.query
+      }&page=${params.page++}&sort=${params.sort}&order=${
+        params.direction
+      }>; rel="next"`
     );
 
     res.status(200).json(packages);

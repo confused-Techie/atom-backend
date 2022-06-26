@@ -67,7 +67,7 @@ async function Sort(packages, method) {
 
     return packages;
   } else if (method == "relevance") {
-    packages.sort((a,b) => {
+    packages.sort((a, b) => {
       if (a.relevance < b.relevance) {
         return 1;
       }

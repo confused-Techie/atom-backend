@@ -1,12 +1,12 @@
 # Complexity report, 6/26/2022
 
-* Mean per-function logical LOC: 12.754629629629628
-* Mean per-function parameter count: 1.3101851851851851
-* Mean per-function cyclomatic complexity: 2.1203703703703702
-* Mean per-function Halstead effort: 4893.266785916326
-* Mean per-module maintainability index: 66.8795315409633
-* First-order density: 2.7777777777777777%
-* Change cost: 19.444444444444446%
+* Mean per-function logical LOC: 12.837301587301587
+* Mean per-function parameter count: 1.123015873015873
+* Mean per-function cyclomatic complexity: 2.706349206349206
+* Mean per-function Halstead effort: 5217.807432144732
+* Mean per-module maintainability index: 65.46155714556025
+* First-order density: 2.0408163265306123%
+* Change cost: 16.3265306122449%
 * Core size: 100%
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/__mocks__/fs.js
@@ -28,6 +28,26 @@
     * Halstead difficulty: 7.333333333333333
     * Halstead volume: 181.52097998526924
     * Halstead effort: 1331.1538532253078
+
+## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/config.js
+
+* Physical LOC: 36
+* Logical LOC: 18
+* Mean parameter count: 0
+* Cyclomatic complexity: 6
+* Cyclomatic complexity density: 33.33333333333333%
+* Maintainability index: 57.75060082746961
+* Dependency count: 2
+* Function: **GetConfig**
+    * Line No.: 4
+    * Physical LOC: 29
+    * Logical LOC: 13
+    * Parameter count: 0
+    * Cyclomatic complexity: 6
+    * Cyclomatic complexity density: 46.15384615384615%
+    * Halstead difficulty: 10.806451612903224
+    * Halstead volume: 648.2637925587882
+    * Halstead effort: 7005.431306683678
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/error.js
 
@@ -141,12 +161,12 @@
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/query.js
 
-* Physical LOC: 133
-* Logical LOC: 73
+* Physical LOC: 140
+* Logical LOC: 76
 * Mean parameter count: 1.1111111111111112
-* Cyclomatic complexity: 21
-* Cyclomatic complexity density: 28.767123287671232%
-* Maintainability index: 68.79429688287128
+* Cyclomatic complexity: 23
+* Cyclomatic complexity density: 30.263157894736842%
+* Maintainability index: 67.99740682854362
 * Dependency count: 0
 * Function: **page**
     * Line No.: 9
@@ -165,21 +185,21 @@
     * Parameter count: 2
     * Cyclomatic complexity: 3
     * Cyclomatic complexity density: 60%
-    * Halstead difficulty: 6.923076923076923
-    * Halstead volume: 151.6206750336681
-    * Halstead effort: 1049.681596386933
+    * Halstead difficulty: 6.75
+    * Halstead volume: 158.32466846199546
+    * Halstead effort: 1068.6915121184693
 * Function: **dir**
     * Line No.: 35
-    * Physical LOC: 11
-    * Logical LOC: 6
+    * Physical LOC: 18
+    * Logical LOC: 9
     * Parameter count: 1
-    * Cyclomatic complexity: 3
-    * Cyclomatic complexity density: 50%
-    * Halstead difficulty: 7.7727272727272725
-    * Halstead volume: 151.26748332105768
-    * Halstead effort: 1175.7608930864028
+    * Cyclomatic complexity: 5
+    * Cyclomatic complexity density: 55.55555555555556%
+    * Halstead difficulty: 10.384615384615383
+    * Halstead volume: 249.72817064368866
+    * Halstead effort: 2593.331002838305
 * Function: **query**
-    * Line No.: 47
+    * Line No.: 54
     * Physical LOC: 25
     * Logical LOC: 12
     * Parameter count: 1
@@ -189,7 +209,7 @@
     * Halstead volume: 210.90827503317323
     * Halstead effort: 1455.2670977288954
 * Function: **engine**
-    * Line No.: 73
+    * Line No.: 80
     * Physical LOC: 17
     * Logical LOC: 5
     * Parameter count: 1
@@ -199,7 +219,7 @@
     * Halstead volume: 129.65784284662087
     * Halstead effort: 1037.262742772967
 * Function: **repo**
-    * Line No.: 91
+    * Line No.: 98
     * Physical LOC: 10
     * Logical LOC: 4
     * Parameter count: 1
@@ -209,7 +229,7 @@
     * Halstead volume: 108.41805003750011
     * Halstead effort: 758.9263502625008
 * Function: **tag**
-    * Line No.: 102
+    * Line No.: 109
     * Physical LOC: 5
     * Logical LOC: 2
     * Parameter count: 1
@@ -219,7 +239,7 @@
     * Halstead volume: 57.359400011538504
     * Halstead effort: 258.1173000519233
 * Function: **rename**
-    * Line No.: 108
+    * Line No.: 115
     * Physical LOC: 16
     * Logical LOC: 10
     * Parameter count: 1
@@ -229,7 +249,7 @@
     * Halstead volume: 168.55519570060713
     * Halstead effort: 1310.1335665819918
 * Function: **pathTraversalAttempt**
-    * Line No.: 125
+    * Line No.: 132
     * Physical LOC: 15
     * Logical LOC: 6
     * Parameter count: 1
