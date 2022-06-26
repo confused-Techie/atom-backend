@@ -11,9 +11,9 @@ This is a collection/list of all functions/methods of the Backend API, with thei
 
 * ALL endpoints need additional testing, as the underlying functions are seeing continuous change: 🧪
 
-* GET /api/packages : ⚒
+* GET /api/packages : 🏁
 * POST /api/packages : ⚒
-* GET /api/packages/search : 🆘
+* GET /api/packages/search : 🏁
 * GET /api/packages/:packageName : 🏁
 * DELETE /api/packages/:packageName : 🆘
 * POST /api/packages/:packageName/star : 🏁
@@ -28,22 +28,24 @@ This is a collection/list of all functions/methods of the Backend API, with thei
 
 ### Query.js
 
-* page(): ⚒
+* page(): 🏁
 * sort(): 🏁
 * dir(): 🏁
-* query(): ⚒
+* query(): 🏁
 * engine(): 🏁
-* repo(): ⚒
+* repo(): 🏁
 * tag(): 🏁
 * rename(): 🏁
+* pathTraversalAttempt(): 🏁
 
 ### Collection.js
 
-* Sort(): ⚒
+* Sort(): 🏁
 * Direction(): 🏁
-* Prune(): ⚒
+* POFPrune(): 🏁
+* POSPrune(): 🏁
+* SearchWithinPackages(): 🏁
 * EngineFilter(): 🆘
-* PackageStats(): 🆘
 
 ### Users.js
 
@@ -68,6 +70,30 @@ This is a collection/list of all functions/methods of the Backend API, with thei
 * UnStarPackageByName(): 🏁
 * SetPackageByID(): 🏁
 * NewPackage(): 🆘
+
+### Git.js
+
+* VerifyAuth(): 🆘
+
+### Config.js
+
+* GetConfig(): 🏁
+
+### Search.js
+
+* levenshtein(): 🏁
+* vlEditDistance(): 🏁
+* levenshteinWSDM(): 🏁
+* lcs(): 🏁
+* lcsTraceBack(): 🏁
+
+### Error.js
+
+* NotFoundJSON(): 🏁
+* SiteWide404(): 🏁
+* MissingAuthJSON(): 🏁
+* ServerErrorJSON(): 🏁
+* UnsupportedJSON(): 🏁
 
 ### Logger.js
 

@@ -116,7 +116,6 @@ async function GetAllPackages() {
             undefined,
             `Missing Package during GetAllPackages: ${pointers.content[pointer]}`
           );
-          //console.log(`Missing Package during GetAllPackages: ${pointers.content[pointer]}`);
         }
       }
     }

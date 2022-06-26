@@ -12,4 +12,5 @@ env_variables:
   # Levenshtein Distance w/ Word Seperators - Double Mean: "levenshtein_distance_wsdm"
   SEARCHALGORITHM: "lcs"
   SERVERURL: "http://localhost:8080"
+  # Paginate is the amount to paginate results by.
   PAGINATE: 30
