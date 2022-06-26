@@ -1,10 +1,10 @@
-# Complexity report, 6/25/2022
+# Complexity report, 6/26/2022
 
-* Mean per-function logical LOC: 12.976851851851853
-* Mean per-function parameter count: 1.2268518518518519
+* Mean per-function logical LOC: 12.754629629629628
+* Mean per-function parameter count: 1.3101851851851851
 * Mean per-function cyclomatic complexity: 2.1203703703703702
-* Mean per-function Halstead effort: 4753.026148974523
-* Mean per-module maintainability index: 66.72099475520787
+* Mean per-function Halstead effort: 4893.266785916326
+* Mean per-module maintainability index: 66.8795315409633
 * First-order density: 2.7777777777777777%
 * Change cost: 19.444444444444446%
 * Core size: 100%
@@ -241,12 +241,12 @@
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/search.js
 
-* Physical LOC: 94
-* Logical LOC: 55
-* Mean parameter count: 2
-* Cyclomatic complexity: 13
-* Cyclomatic complexity density: 23.636363636363637%
-* Maintainability index: 57.890411070877455
+* Physical LOC: 131
+* Logical LOC: 74
+* Mean parameter count: 2.5
+* Cyclomatic complexity: 19
+* Cyclomatic complexity density: 25.675675675675674%
+* Maintainability index: 58.84163178541008
 * Dependency count: 0
 * Function: **levenshtein**
     * Line No.: 2
@@ -280,14 +280,34 @@
     * Halstead effort: 23177.71201851396
 * Function: **levenshteinWSDM**
     * Line No.: 51
-    * Physical LOC: 40
-    * Logical LOC: 18
+    * Physical LOC: 32
+    * Logical LOC: 14
     * Parameter count: 2
-    * Cyclomatic complexity: 5
-    * Cyclomatic complexity density: 27.77777777777778%
-    * Halstead difficulty: 19.636363636363637
-    * Halstead volume: 681.7200207275456
-    * Halstead effort: 13386.502225195441
+    * Cyclomatic complexity: 3
+    * Cyclomatic complexity density: 21.428571428571427%
+    * Halstead difficulty: 16.578947368421055
+    * Halstead volume: 568.383776429926
+    * Halstead effort: 9423.204714496143
+* Function: **lcs**
+    * Line No.: 85
+    * Physical LOC: 26
+    * Logical LOC: 13
+    * Parameter count: 2
+    * Cyclomatic complexity: 4
+    * Cyclomatic complexity density: 30.76923076923077%
+    * Halstead difficulty: 26.764705882352942
+    * Halstead volume: 609.3661461775857
+    * Halstead effort: 16309.505677105972
+* Function: **lcsTraceBack**
+    * Line No.: 112
+    * Physical LOC: 15
+    * Logical LOC: 7
+    * Parameter count: 5
+    * Cyclomatic complexity: 6
+    * Cyclomatic complexity density: 85.71428571428571%
+    * Halstead difficulty: 32.38888888888889
+    * Halstead volume: 380.3296723500879
+    * Halstead effort: 12318.455498894515
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/tests/query.test.js
 
