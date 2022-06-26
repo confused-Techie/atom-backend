@@ -25,7 +25,7 @@ const example_data = [
 
 const searches = ["mithub", "fishbowl", "mars", "a planet", "world_hello"];
 
-const methods = ["levenshtein_distance", "levenshtein_distance_wsdm"];
+const methods = ["levenshtein_distance", "levenshtein_distance_wsdm", "lcs"];
 
 const search = async () => {
   let output = [];

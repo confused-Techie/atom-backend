@@ -181,6 +181,11 @@ async function SearchWithinPackages(
       );
     }
     return packages;
+  } else if (searchAlgorithm == "lcs") {
+    for (let i = 0; i < packages.length; i++) {
+      packages[i].relevance = search_func.lcs(search, packages[i].name);
+    }
+    return packages;
   } else {
     throw new Error(
       `Unrecognized Search Algorithm in Config: ${searchAlgorithm}`

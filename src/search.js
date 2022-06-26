@@ -72,24 +72,56 @@ function levenshteinWSDM(s1, s2) {
     let costs = new Array();
     for (let u = 0; u < s2A.length; u++) {
       costs[u] = vlSimilairty(s1A[i], s2A[u]);
-
-      if (c == "a planet") {
-        console.log(`${s1}: ${s1A[i]}, ${s2A[u]} - ${costs[u]}`);
-      }
     }
     means[i] =
       costs.reduce((a, b) => (isNaN(a) ? (isNaN(b) ? 0 : b) : a + b), 0) /
       costs.length;
-
-    if (c == "a planet") {
-      console.log(means);
-    }
   }
   // then to calculate the mean of all means.
   return means.reduce((a, b) => a + b, 0) / means.length;
 }
 
+// Longest Common Subsequence Algorithm; lcsFUNC
+function lcs(s1, s2) {
+  // This has been implemented directly from the algorithm function.
+  // https://en.wikipedia.org/wiki/Longest_common_subsequence_problem
+  let height = s1.length +1;
+  let width = s2.length +1;
+  let matrix = Array(height).fill(0).map(() => Array(width).fill(0));
+
+  for (let row = 1; row < height; row++) {
+    for (let col = 1; col < width; col++) {
+      if (s1[row-1] == s2[col-1]) {
+        matrix[row][col] = matrix[row-1][col-1] + 1;
+      } else {
+        matrix[row][col] = Math.max(matrix[row][col-1], matrix[row-1][col]);
+      }
+    }
+  }
+
+  let longest = lcsTraceBack(matrix, s1, s2, height, width);
+  // Now longest is a literal string of the longest common subsequence.
+  // This is now where the implementation differs from the alrogithm,
+  // We will make a float of how close the longest sequence is to the searched sequence
+  return longest.length / s1.length;
+  // For Example: if the string is 5 chars, and the longest is 4, it'll be 0.8 similarity score.
+}
+
+function lcsTraceBack(matrix, s1, s2, height, width) {
+  if (height === 0 || width === 0) {
+    return "";
+  }
+  if (s1[height -1] == s2[width -1]) {
+    return lcsTraceBack(matrix, s1, s2, height -1, width -1) + (s1[height -1] ? s1[height -1] : "");
+  }
+  if (matrix[height][width-1] > matrix[height -1][width]) {
+    return lcsTraceBack(matrix, s1, s2, height, width -1);
+  }
+  return lcsTraceBack(matrix, s1, s2, height -1, width);
+}
+
 module.exports = {
   levenshtein,
   levenshteinWSDM,
+  lcs,
 };
