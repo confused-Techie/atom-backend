@@ -625,8 +625,41 @@ app.get("/api/packages/:packageName/stargazers", async (req, res) => {
 
 // Package New Version Endpoint
 /**
+ * @web
  * @ignore
- * https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#post-apipackagespackage_nameversions
+ * @path /api/packages/:packageName/versions
+ * @auth true
+ * @method POST
+ * @desc Creates a new package version from a git tag. If `rename` is not `true`, the `name` field in `package.json` _must_ match the current package name.
+ * @param
+ *  @location path
+ *  @name packageName
+ *  @required true
+ *  @Pdesc The Package to modify.
+ * @param
+ *  @location query
+ *  @name rename
+ *  @required false
+ *  @Pdesc Boolean indicating whether this version contains a new name for the package.
+ * @param
+ *  @location query
+ *  @name tag
+ *  @required true
+ *  @Pdesc A git tag for the version you'd like to create. It's important to note that the version name will not be taken from the tag, but from the `version` key in the `package.json` file at that ref.
+ * @param
+ *  @location header
+ *  @name auth
+ *  @required true
+ *  @Pdesc A valid Atom.io API token, to authenticate with Github.
+ * @response
+ *  @status 201
+ *  @Rdesc Successfully created. Returns created version.
+ * @response
+ *  @status 400
+ *  @Rdesc Git tag not found / Repository inaccessible / package.json invalid.
+ * @response
+ *  @status 409
+ *  @Rdesc Version exists.
  */
 app.post("/api/packages/:packageName/versions", async (req, res) => {
   let params = {
@@ -642,8 +675,25 @@ app.post("/api/packages/:packageName/versions", async (req, res) => {
 
 // Package Versions Endpoint
 /**
+ * @web
  * @ignore
- * https://flight-manual.atom.io/atom-server-side-apis/sections/atom-package-server-api/#get-apipackagespackage_nameversionsversion_name
+ * @path /api/packages/:packageName/versions/:versionName
+ * @method GET
+ * @auth false
+ * @desc Returns `package.json` with `dist` key added for tarball download.
+ * @param
+ *  @location path
+ *  @name packageName
+ *  @required true
+ *  @Pdesc The package name we want to access
+ * @param
+ *  @location path
+ *  @name versionName
+ *  @required true
+ *  @Pdesc The Version we want to access.
+ * @response
+ *  @status 200
+ *  @Rdesc The `package.json` modified as explainged in the endpoint description.
  */
 app.get(
   "/api/packages/:packageName/versions/:versionName",
