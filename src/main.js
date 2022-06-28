@@ -702,11 +702,57 @@ app.get(
       packageName: decodeURIComponent(req.params.packageName),
       versionName: req.params.versionName,
     };
-    // TODO: Stopper: Version Handling
-    error.UnsupportedJSON(res);
-    logger.HTTPLog(req, res);
+    // To ensure the version we have been handed is a valid SemVer, we can pass it through the query.engine filter
+    // if we get the same object back, we know its valid.
+    if (params.versionName == query.engine(params.versionName)) {
+      // Now we know the version is a valid semver.
+      let pack = await data.GetPackageByName(params.packageName);
+
+      if (pack.ok) {
+        // now with the package itself, lets see if that version is a valid key within in the version obj.
+        if (pack.content.versions[params.versionName]) {
+          // the version does exist, lets return it.
+          // Now additionally, we need to add a link to the tarball endpoint.
+          pack.content.versions[params.versionName].dist = {
+            tarball: `${server_url}/api/packages/${params.packageName}/versions/${params.versionName}/tarball`
+          };
+
+          // now we can return the modified object.
+          res.status(200).json(pack.content.versions[params.versionName]);
+          logger.HTTPLog(req, res);
+        } else {
+          // the version does not exist, return 404
+          error.NotFoundJSON(res);
+          logger.HTTPLog(req, res);
+        }
+      } else {
+        if (pack.short == "Not Found") {
+          error.NotFoundJSON(res);
+          logger.HTTPLog(req, res);
+        } else {
+          error.ServerErrorJSON(res);
+          logger.HTTPLog(req, res);
+          logger.ErrorLog(req, res, pack.content);
+        }
+      }
+    } else {
+      // we return a 404 for the version,
+      error.NotFoundJSON(res);
+      logger.HTTPLog(req, res);
+    }
   }
 );
+
+// Previously undocumented endpoint discovered during developement.
+// Seems this endpoint allows for download of packages. Further testing is required.
+// Confirmed that this is a GET only endpoint.
+app.get("/api/packages/:packageName/versions/:versionName/tarball", async( req, res) => {
+  let params = {
+    packageName: decodeURIComponent(req.params.packageName),
+    versionName: req.params.versionName,
+  };
+  // TODO: All of it, read above comment.
+});
 
 /**
  * @web

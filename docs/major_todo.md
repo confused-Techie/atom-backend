@@ -20,7 +20,8 @@ This is a collection/list of all functions/methods of the Backend API, with thei
 * DELETE /api/packages/:packageName/star : 🏁
 * GET /api/packages/:packageName/stargazers : 🏁
 * POST /api/packages/:packageName/versions : 🆘
-* GET /api/packages/:packageName/versions/:versionName : 🆘
+* GET /api/packages/:packageName/versions/:versionName : 🏁
+* GET /api/packages/:packageName/versions/:versionName/tarball: 🆘
 * DELETE /api/packages/:packageName/versions/:versionName : 🆘
 * GET /api/users/:login/stars : 🏁
 * GET /api/stars : 🏁
