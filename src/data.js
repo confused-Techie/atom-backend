@@ -42,9 +42,12 @@ function GetPackagePointer() {
 
 function SetPackagePointer(data) {
   try {
-    fs.writeFileSync("./data/package_pointer.json", JSON.stringify(data, null, 4));
+    fs.writeFileSync(
+      "./data/package_pointer.json",
+      JSON.stringify(data, null, 4)
+    );
     return { ok: true };
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
@@ -58,7 +61,7 @@ function RemovePackageByPointer(pointer) {
     } else {
       return { ok: false, content: "Not Available", short: "Server Error" };
     }
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }

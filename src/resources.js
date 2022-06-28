@@ -26,7 +26,7 @@ function readFile(path) {
   try {
     const data = fs.readFileSync(path, "utf8");
     return { ok: true, content: JSON.parse(data) };
-  } catch(err) {
+  } catch (err) {
     if (err.code === "ENOENT") {
       return { ok: false, content: err, short: "File Not Found" };
     } else {
@@ -39,7 +39,10 @@ async function Write(type, data, name) {
   if (type == "user") {
     return writeFile("./data/users.json", JSON.stringify(data, null, 4));
   } else if (type == "pointer") {
-    return writeFile("./data/package_pointers.json", JSON.stringify(data, null, 4));
+    return writeFile(
+      "./data/package_pointers.json",
+      JSON.stringify(data, null, 4)
+    );
   } else if (type == "package") {
     return writeFile(`./data/packages/${name}`, JSON.stringify(data, null, 4));
   }
@@ -49,7 +52,7 @@ function writeFile(path, data) {
   try {
     fs.writeFileSync(path, data);
     return { ok: true };
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
