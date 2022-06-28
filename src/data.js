@@ -40,7 +40,63 @@ function GetPackagePointer() {
   }
 }
 
-function SetPackagePointer() {}
+function SetPackagePointer(data) {
+  try {
+    fs.writeFileSync("./data/package_pointer.json", JSON.stringify(data, null, 4));
+    return { ok: true };
+  } catch(err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+function RemovePackageByPointer(pointer) {
+  try {
+    let rm = fs.rmSync(`./data/packages/${id}`);
+    // since rmSync returns undefined, we can check that, just in case it doesn't throw an error.
+    if (rm === undefined) {
+      return { ok: true };
+    } else {
+      return { ok: false, content: "Not Available", short: "Server Error" };
+    }
+  } catch(err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+async function RemovePackageByName(name) {
+  let pointers = await GetPackagePointer();
+
+  if (pointers.ok) {
+    if (pointers.content[name]) {
+      let pack_pointer = pointers.content[name];
+
+      let new_pointer = pointers.content;
+
+      delete new_pointer[name];
+
+      let rm = await RemovePackageByPointer(pack_pointer);
+
+      if (rm.ok) {
+        // Now we can write the new packages, since we don't want to do that then have this fail.
+        let rewrite = await SetPackagePointer(new_pointer);
+
+        if (rewrite.ok) {
+          return { ok: true, content: rewrite.content };
+        } else {
+          // TODO: Determine how we handle this error.
+          // We may want to implement something like caching the file, instead of deleting it. And keeping it for some time.
+        }
+      } else {
+        // if this first part fails we can return the standard error, knowing that nothing permentant has been done.
+        return rm;
+      }
+    } else {
+      return { ok: false, content: "Not Found", short: "Not Found" };
+    }
+  } else {
+    return pointers;
+  }
+}
 
 function GetPackageByID(id) {
   try {
@@ -252,4 +308,6 @@ module.exports = {
   StarPackageByName,
   UnStarPackageByName,
   GetPackagePointerByName,
+  RemovePackageByPointer,
+  RemovePackageByName,
 };
