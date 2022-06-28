@@ -714,7 +714,7 @@ app.get(
           // the version does exist, lets return it.
           // Now additionally, we need to add a link to the tarball endpoint.
           pack.content.versions[params.versionName].dist = {
-            tarball: `${server_url}/api/packages/${params.packageName}/versions/${params.versionName}/tarball`
+            tarball: `${server_url}/api/packages/${params.packageName}/versions/${params.versionName}/tarball`,
           };
 
           // now we can return the modified object.
@@ -746,13 +746,16 @@ app.get(
 // Previously undocumented endpoint discovered during developement.
 // Seems this endpoint allows for download of packages. Further testing is required.
 // Confirmed that this is a GET only endpoint.
-app.get("/api/packages/:packageName/versions/:versionName/tarball", async( req, res) => {
-  let params = {
-    packageName: decodeURIComponent(req.params.packageName),
-    versionName: req.params.versionName,
-  };
-  // TODO: All of it, read above comment.
-});
+app.get(
+  "/api/packages/:packageName/versions/:versionName/tarball",
+  async (req, res) => {
+    let params = {
+      packageName: decodeURIComponent(req.params.packageName),
+      versionName: req.params.versionName,
+    };
+    // TODO: All of it, read above comment.
+  }
+);
 
 /**
  * @web
