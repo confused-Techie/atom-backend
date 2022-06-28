@@ -54,7 +54,7 @@ function SetPackagePointer(data) {
 
 function RemovePackageByPointer(pointer) {
   try {
-    let rm = fs.rmSync(`./data/packages/${id}`);
+    let rm = fs.rmSync(`./data/packages/${pointer}`);
     // since rmSync returns undefined, we can check that, just in case it doesn't throw an error.
     if (rm === undefined) {
       return { ok: true };

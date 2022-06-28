@@ -917,6 +917,22 @@ app.use((req, res) => {
   logger.HTTPLog(res, req);
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   logger.InfoLog(`Atom Server Listening on port ${port}`);
 });
+
+process.on("SIGTERM", async () => {
+  await Exterminate();
+});
+
+process.on("SIGINT", async () => {
+  await Exterminate();
+});
+
+async function Exterminate() {
+  console.log("SIGTERM/SIGINT signal receved: closing HTTP server.");
+  server.close(() => {
+    console.log("HTTP Server Closed.");
+  });
+  // Here we should handle the closing of any file handles, and saving data, as quickly as possible if needed.
+}

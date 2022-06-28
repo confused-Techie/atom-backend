@@ -9,12 +9,36 @@
 
 const fs = require("fs");
 
+class CacheObject {
+  constructor(contents) {
+    this.birth = Date.now();
+    this.data = contents;
+    this.invalidated = false;
+    this.last_validate = 0;
+  }
+  get age() {
+    return Date.now() - this.birth;
+  }
+  invalidate() {
+    this.invalidated = true;
+  }
+}
+
 // The first argument is the TYPE of file. These are custom types, aligned to the intention of this server.
 // TYPES: 'user', 'pointer', 'package', in all types but package, the name may be left out.
 // The name will only be the name of the file, everything else will be determined here.
 async function Read(type, name) {
   if (type == "user") {
-    return readFile("./data/users.json");
+    let data = await readFile("./data/users.json");
+    if (data.ok) {
+      // now with the data lets make our cache object, and we can return that.
+      let obj = new CacheObject(data);
+      obj.last_validate = Date.now(); // give it the time we last read from disk.
+      return { ok: true, content: obj }; // now its data can be accessed via the data property.
+    } else {
+      // data was not read okay, just return error message.
+      return data;
+    }
   } else if (type == "pointer") {
     return readFile("./data/package_pointer.json");
   } else if (type == "package") {
@@ -66,4 +90,5 @@ module.exports = {
   Read,
   Write,
   Delete,
+  CacheObject,
 };
