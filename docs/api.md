@@ -64,7 +64,7 @@ Successfully created, return created package.
 Repository is inaccessible, nonexistant, not an atom package. Could be different errors returned.
 
 ```json
-{ "message": "That repo does not exist, ins't an atom package, or atombot does not have access." }, { "message": "The packagge.json at owner/repo isn't valid." }
+{ "message": "That repo does not exist, ins't an atom package, or atombot does not have access." }, { "message": "The package.json at owner/repo isn't valid." }
 ```
 
 
