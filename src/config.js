@@ -25,7 +25,9 @@ function GetConfig() {
       cache_time: process.env.CACHETIME
         ? process.env.CACHETIME
         : data.env_variables.CACHETIME,
-      debug: process.env.DEBUGLOG ? process.env.DEBUGLOG : data.env_variables.DEBUGLOG,
+      debug: process.env.DEBUGLOG
+        ? process.env.DEBUGLOG
+        : data.env_variables.DEBUGLOG,
     };
   } catch (err) {
     // since this is necessary for the server to startup, we can throw an error here and exit the process.
