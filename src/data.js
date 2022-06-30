@@ -1,11 +1,50 @@
 const fs = require("fs");
 const logger = require("./logger.js");
+const resources = require("./resources.js");
 
 // Ideally in the future, reading from these files can be adstracted away, to aid in caching data to reduce
 // disk reads, while additionally allowing methods of reading from the cloud and such.
 // Currently Functions that read directly from the disk: GetUsers(), GetPackagePointer(), GetPackage()
 
-function GetUsers() {
+// We know what global cache objects we will have, so lets make this easy.
+let cached_user, cached_pointer;
+
+async function GetUsers() {
+  if (cached_user === undefined) {
+    // user object is not cached.
+    let tmpcache = await resources.Read("user");
+    if (tmpcache.ok) {
+      cached_user = tmpcache.content;
+
+      return { ok: true, content: cached_user.data };
+    } else {
+      // we weren't able to read correctly. We will return the error.
+      return tmpcache;
+    }
+  } else {
+    // the user object is= cached.
+    // With the object cached we can check that its still valid.
+    if (cached_user.Expired) {
+      // object is now expired, we will want to get an updated copy after ensuring thers no data to write.
+      console.log("Data is expired, getting new. TODO: REMOVE");
+      // the object is expired but our in memory copy is still valid. lets get a new one then return
+      let tmpcache = await resources.Read("user");
+      if (tmpcache.ok) {
+        cached_user = tmpcache.content;
+        return { ok: true, content: cached_user.data };
+      } else {
+        // failed to get the current data, pass along error.
+        return tmpcache;
+      }
+    } else {
+      console.log("Data is not expired. TODO: REMOVE");
+      // object is not expired, lets return it.
+      return { ok: true, content: cached_user.data };
+    }
+  }
+}
+
+function GetUsersV1() {
   try {
     const users = fs.readFileSync("./data/users.json", "utf8");
     return { ok: true, content: JSON.parse(users) };

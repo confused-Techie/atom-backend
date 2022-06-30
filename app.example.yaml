@@ -14,3 +14,7 @@ env_variables:
   SERVERURL: "http://localhost:8080"
   # Paginate is the amount to paginate results by.
   PAGINATE: 30
+  # The cache time defines how long until an in memory resource is expired, and demands to
+  # be read from disk again. Measured in milliseconds.
+  # The default value for testing is 10 minutes = 600000
+  CACHETIME: 600000

@@ -8,16 +8,18 @@
 // or to some other authenticated service.
 
 const fs = require("fs");
+const { cache_time } = require("./config.js").GetConfig();
 
 class CacheObject {
-  constructor(contents) {
+  constructor(contents, name) {
     this.birth = Date.now();
     this.data = contents;
     this.invalidated = false;
     this.last_validate = 0;
+    this.cache_time = cache_time;
   }
-  get age() {
-    return Date.now() - this.birth;
+  get Expired() {
+    return Date.now() - this.birth > this.cache_time;
   }
   invalidate() {
     this.invalidated = true;
@@ -32,7 +34,8 @@ async function Read(type, name) {
     let data = await readFile("./data/users.json");
     if (data.ok) {
       // now with the data lets make our cache object, and we can return that.
-      let obj = new CacheObject(data);
+
+      let obj = new CacheObject(data.content);
       obj.last_validate = Date.now(); // give it the time we last read from disk.
       return { ok: true, content: obj }; // now its data can be accessed via the data property.
     } else {
@@ -46,7 +49,7 @@ async function Read(type, name) {
   }
 }
 
-function readFile(path) {
+async function readFile(path) {
   try {
     const data = fs.readFileSync(path, "utf8");
     return { ok: true, content: JSON.parse(data) };
@@ -72,7 +75,7 @@ async function Write(type, data, name) {
   }
 }
 
-function writeFile(path, data) {
+async function writeFile(path, data) {
   try {
     fs.writeFileSync(path, data);
     return { ok: true };
@@ -84,6 +87,17 @@ function writeFile(path, data) {
 async function Delete(name) {
   // since we know the only data we ever want to delete from disk will be packages,
   // a type is not needed here.
+  try {
+    let rm = fs.rmSync(`./data/packages/${name}`);
+    // since rmSync returns undefined, we can check that, just in case it doesn't throw an error.
+    if (rm === undefined) {
+      return { ok: true };
+    } else {
+      return { ok: false, content: "Not Available", short: "Server Error" };
+    }
+  } catch(err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
 }
 
 module.exports = {

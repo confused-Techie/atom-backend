@@ -5,7 +5,6 @@ function GetConfig() {
   try {
     let fileContent = fs.readFileSync("./app.yaml", "utf8");
     let data = yaml.load(fileContent);
-    console.log(data);
 
     // now we should have the data as a JSON object.
 
@@ -23,6 +22,7 @@ function GetConfig() {
         ? process.env.SEARCHALGORITHM
         : data.env_variables.SEARCHALGORITHM,
       prod: process.env.NODE_ENV == "production" ? true : false,
+      cache_time: process.env.CACHETIME ? process.env.CACHETIME : data.env_variables.CACHETIME,
     };
   } catch (err) {
     // since this is necessary for the server to startup, we can throw an error here and exit the process.

@@ -878,16 +878,16 @@ app.get("/api/stars", async (req, res) => {
       logger.HTTPLog(req, res);
     } else {
       error.ServerErrorJSON(res);
-      logger.HTTPLog(req, res);
+      logger.HTTPLog(res, req);
       logger.ErrorLog(req, res, packageCollection.content);
     }
   } else {
     if (user.short == "Bad Auth") {
       error.MissingAuthJSON(res);
-      logger.HTTPLog(res, req);
+      logger.HTTPLog(req, res);
     } else {
       error.ServerErrorJSON(res);
-      logger.HTTPLog(res, req);
+      logger.HTTPLog(req, res);
       logger.ErrorLog(req, res, user.content);
     }
   }
