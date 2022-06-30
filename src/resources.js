@@ -43,7 +43,14 @@ async function Read(type, name) {
       return data;
     }
   } else if (type == "pointer") {
-    return readFile("./data/package_pointer.json");
+    let data = await readFile("./data/package_pointer.json");
+    if (data.ok) {
+      let obj = new CacheObject(data.content);
+      obj.last_validate = Date.now();
+      return { ok: true, content: obj };
+    } else {
+      return data;
+    }
   } else if (type == "package") {
     return readFile(`./data/packages/${name}`);
   }

@@ -9,8 +9,32 @@ const resources = require("./resources.js");
 // We know what global cache objects we will have, so lets make this easy.
 let cached_user, cached_pointer;
 
+async function Shutdown() {
+  logger.DebugLog("data.Shutdown called...");
+  // This function will serve as a callee for any shutdown signals we receive, and to save the data right away.
+  if (cached_user !== undefined) {
+    if (cached_user.invalidated) {
+      logger.DebugLog("Saving invalidated User Cache.");
+      // this will tell us if we called for its data to be saved previously.
+      // Now we will write it.
+      return resources.Write("user", cached_user.data);
+    } else {
+      logger.DebugLog("No need to save valid User Cache.");
+    }
+  }
+  if (cached_pointer !== undefined) {
+    if (cached_pointer.invalidated) {
+      logger.DebugLog("Saving invalidated Pointer Cache.");
+      return resources.Write("pointer", cached_pointer.data);
+    } else {
+      logger.DebugLog("No need to save valid Pointer Cache.");
+    }
+  }
+}
+
 async function GetUsers() {
   if (cached_user === undefined) {
+    logger.DebugLog("Creating User Cache.");
     // user object is not cached.
     let tmpcache = await resources.Read("user");
     if (tmpcache.ok) {
@@ -26,7 +50,7 @@ async function GetUsers() {
     // With the object cached we can check that its still valid.
     if (cached_user.Expired) {
       // object is now expired, we will want to get an updated copy after ensuring thers no data to write.
-      console.log("Data is expired, getting new. TODO: REMOVE");
+      logger.DebugLog("User data IS expired, getting new.");
       // the object is expired but our in memory copy is still valid. lets get a new one then return
       let tmpcache = await resources.Read("user");
       if (tmpcache.ok) {
@@ -37,57 +61,65 @@ async function GetUsers() {
         return tmpcache;
       }
     } else {
-      console.log("Data is not expired. TODO: REMOVE");
+      logger.DebugLog("User data IS NOT expired.");
       // object is not expired, lets return it.
       return { ok: true, content: cached_user.data };
     }
   }
 }
 
-function GetUsersV1() {
-  try {
-    const users = fs.readFileSync("./data/users.json", "utf8");
-    return { ok: true, content: JSON.parse(users) };
-  } catch (err) {
-    if (err.code === "ENOENT") {
-      return { ok: false, content: err, short: "File Not Found" };
+async function GetPackagePointer() {
+  if (cached_pointer === undefined) {
+    // pointer object is not cached.
+    logger.DebugLog("Creating Pointer Cache.");
+    let tmpcache = await resources.Read("pointer");
+    if (tmpcache.ok) {
+      cached_pointer = tmpcache.content;
+      return { ok: true, content: cached_pointer.data };
     } else {
-      return { ok: false, content: err, short: "Server Error" };
+      return tmpcache;
+    }
+  } else {
+    // the pointer object is cached.
+    if (cached_pointer.Expired) {
+      logger.DebugLog("Pointer data IS expired, getting new.");
+      let tmpcache = await resources.Read("pointer");
+      if (tmpcache.ok) {
+        cached_pointer = tmpcache.content;
+        return { ok: true, content: cached_pointer };
+      } else {
+        return tmpcache;
+      }
+    } else {
+      logger.DebugLog("Pointer data IS NOT expired.");
+      return { ok: true, content: cached_pointer.data };
     }
   }
 }
 
 function SetUsers(data) {
-  try {
-    fs.writeFileSync("./data/users.json", JSON.stringify(data, null, 4));
+  // Instead of actually writing to disk, this will just update its cached data.
+  if (cached_user === undefined) {
+    // for whatever reason our cache data doesn't exist. Which would mean we haven't read it yet,
+    // but then how are we updating the data we dont have?? But thats not for this low level function to worry about.
+    // Lets write that data to disk, to ensure we keep it updated.
+    return resources.Write("user", data);
+  } else {
+    // We have a cached data of users, lets update our cache.
+    cached_user.data = data;
+    cached_user.invalidate();
     return { ok: true };
-  } catch (err) {
-    return { ok: false, content: err, short: "Server Error" };
-  }
-}
-
-function GetPackagePointer() {
-  try {
-    const pointers = fs.readFileSync("./data/package_pointer.json", "utf8");
-    return { ok: true, content: JSON.parse(pointers) };
-  } catch (err) {
-    if (err.code === "ENOENT") {
-      return { ok: false, content: err, short: "File Not Found" };
-    } else {
-      return { ok: false, content: err, short: "Server Error" };
-    }
   }
 }
 
 function SetPackagePointer(data) {
-  try {
-    fs.writeFileSync(
-      "./data/package_pointer.json",
-      JSON.stringify(data, null, 4)
-    );
+  if (cached_pointer === undefined) {
+    // well our cache doesn't exist. Ignoring the implecation we are writing data we didn't grab lets save just in case.
+    return resources.Write("pointer", data);
+  } else {
+    cached_pointer.data = data;
+    cached_pointer.invalidate();
     return { ok: true };
-  } catch (err) {
-    return { ok: false, content: err, short: "Server Error" };
   }
 }
 
@@ -352,4 +384,5 @@ module.exports = {
   GetPackagePointerByName,
   RemovePackageByPointer,
   RemovePackageByName,
+  Shutdown,
 };

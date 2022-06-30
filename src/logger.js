@@ -1,10 +1,12 @@
+const { debug } = require("./config.js").GetConfig();
+
 function HTTPLog(req, res) {
   // this will log a modified Apache Combined Log Format
   // IP - [time] "METHOD url PROTOCOL" STATUS_CODE TIME_TAKEN
   let date = new Date();
   let duration = Date.now() - req.start;
   console.log(
-    `${req.ip} [${date.toISOString()}] "${req.method} ${req.url} ${
+    `HTTP:: ${req.ip} [${date.toISOString()}] "${req.method} ${req.url} ${
       req.protocol
     }" ${res.statusCode} ${duration}ms`
   );
@@ -33,9 +35,17 @@ function InfoLog(value) {
   console.log(`INFO:: ${value}`);
 }
 
+function DebugLog(value) {
+  // will only print logs if debug env variable is true.
+  if (debug) {
+    console.log(`DEBUG:: ${value}`);
+  }
+}
+
 module.exports = {
   HTTPLog,
   ErrorLog,
   WarningLog,
   InfoLog,
+  DebugLog,
 };

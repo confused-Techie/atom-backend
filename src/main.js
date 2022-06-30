@@ -828,7 +828,7 @@ app.get("/api/users/:login/stars", async (req, res) => {
     if (packages.ok) {
       packages = await collection.POSPrune(packages.content); // package object short prune
 
-      res.stats(200).json(packages);
+      res.status(200).json(packages);
       logger.HTTPLog(req, res);
     } else {
       error.ServerErrorJSON(res);
@@ -931,8 +931,10 @@ process.on("SIGINT", async () => {
 
 async function Exterminate() {
   console.log("SIGTERM/SIGINT signal receved: closing HTTP server.");
+  // Here we should handle the closing of any file handles, and saving data, as quickly as possible if needed.
+  await data.Shutdown();
+  console.log("Exiting...");
   server.close(() => {
     console.log("HTTP Server Closed.");
   });
-  // Here we should handle the closing of any file handles, and saving data, as quickly as possible if needed.
 }
