@@ -22,7 +22,9 @@ function GetConfig() {
         ? process.env.SEARCHALGORITHM
         : data.env_variables.SEARCHALGORITHM,
       prod: process.env.NODE_ENV == "production" ? true : false,
-      cache_time: process.env.CACHETIME ? process.env.CACHETIME : data.env_variables.CACHETIME,
+      cache_time: process.env.CACHETIME
+        ? process.env.CACHETIME
+        : data.env_variables.CACHETIME,
     };
   } catch (err) {
     // since this is necessary for the server to startup, we can throw an error here and exit the process.

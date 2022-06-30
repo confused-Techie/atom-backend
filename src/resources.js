@@ -95,7 +95,7 @@ async function Delete(name) {
     } else {
       return { ok: false, content: "Not Available", short: "Server Error" };
     }
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
