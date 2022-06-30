@@ -141,7 +141,7 @@ app.get("/api/packages", async (req, res) => {
  *   @status 400
  *   @Rtype application/json
  *   @Rdesc Repository is inaccessible, nonexistant, not an atom package. Could be different errors returned.
- *   @Rexample { "message": "That repo does not exist, ins't an atom package, or atombot does not have access." }, { "message": "The packagge.json at owner/repo isn't valid." }
+ *   @Rexample { "message": "That repo does not exist, ins't an atom package, or atombot does not have access." }, { "message": "The package.json at owner/repo isn't valid." }
  * @response
  *   @status 409
  *   @Rtype application/json

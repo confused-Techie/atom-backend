@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
 const logger = require("./logger.js");
 const resources = require("./resources.js");
 
@@ -364,8 +365,37 @@ async function SetPackageByID(id, data) {
   }
 }
 
-function NewPackage() {
+function NewPackage(data) {
   // Used to create a new package file.
+  // this expects to be handed fully constructed proper package data. All handling of adding star_gazers, created
+  // needs to be handled elsewhere.
+
+  // so lets get our new unique ID.
+  let id = uuidv4();
+  // then the pointers.
+  let pointers = await GetPackagePointer();
+
+  if (pointers.ok) {
+    pointers.content[data.name] = id;
+    let write_pointer = await SetPackagePointer(pointers.content);
+
+    if (write_pointer.ok) {
+      // now with the pointers updated, lets write the package itself.
+      let write_pack = await SetPackageById(id, data);
+
+      if (write_pack.ok) {
+        return { ok: true };
+      } else {
+        // writing the package was unsuccessful.
+        // TODO: We probably want to then remove the package pointer entry if this fails.
+        return write_pack;
+      }
+    } else {
+      return write_pointer;
+    }
+  } else {
+    return pointers;
+  }
 }
 
 module.exports = {
