@@ -365,7 +365,7 @@ async function SetPackageByID(id, data) {
   }
 }
 
-function NewPackage(data) {
+async function NewPackage(data) {
   // Used to create a new package file.
   // this expects to be handed fully constructed proper package data. All handling of adding star_gazers, created
   // needs to be handled elsewhere.
