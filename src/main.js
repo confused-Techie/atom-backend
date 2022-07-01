@@ -389,9 +389,45 @@ app.delete("/api/packages/:packageName", async (req, res) => {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),
   };
-  // TODO: Stopper: Github auth
-  error.UnsupportedJSON(res);
-  logger.HTTPLog(req, res);
+  let user = await users.VerifyAuth(params.auth);
+
+  if (user.ok) {
+    let gitowner = await git.Ownership(user.content, params.packageName);
+
+    if (gitowner.ok) {
+      // they are logged in properly, and own the git repo they are referencing via the package name.
+      // Now we can delete the package.
+      let rm = await data.RemovePackageByName(params.packageName);
+
+      if (rm.ok) {
+        // we have successfully removed the package.
+        res.status(204).json({ message: "Success" });
+      } else {
+        if (rm.short == "Not Found") {
+          error.NotFoundJSON(res);
+          logger.HTTPLog(req, res);
+        } else {
+          // likely a server error.
+          error.ServerErrorJSON(res);
+          logger.HTTPLog(req, res);
+          logger.ErrorLog(req, res, rm.content);
+        }
+      }
+    } else {
+      // TODO: This cannot be written as we don't know yet what errors this will return.
+      error.ServerErrorJSON(res);
+      logger.HTTPLog(req, res);
+    }
+  } else {
+    if (user.short == "Bad Auth") {
+      error.MissingAuthJSON(res);
+      logger.HTTPLog(req, res);
+    } else {
+      error.ServerErrorJSON(res);
+      logger.HTTPLog(req, res);
+      logger.ErrorLog(req, res, user.content);
+    }
+  }
 });
 
 /**
