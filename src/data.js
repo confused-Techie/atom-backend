@@ -99,7 +99,7 @@ async function GetPackagePointer() {
 }
 
 async function GetAllPackages() {
-  const getNew = async function() {
+  const getNew = async function () {
     const pointers = await GetPackagePointer();
     if (!pointers.ok) {
       return pointers;
@@ -115,7 +115,11 @@ async function GetAllPackages() {
           if (pack.short != "Not Found") {
             return pack;
           } else {
-            logger.WarningLog(undefined, undefined, `Missing Package during GetAllPackages: ${pointers.content[pointer]}`);
+            logger.WarningLog(
+              undefined,
+              undefined,
+              `Missing Package during GetAllPackages: ${pointers.content[pointer]}`
+            );
           }
         }
       }
