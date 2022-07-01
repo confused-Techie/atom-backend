@@ -8,8 +8,7 @@ const data = require("./data.js");
 const collection = require("./collection.js");
 const logger = require("./logger.js");
 const git = require("./git.js");
-const { server_url, paginated_amount } =
-  require("./config.js").GetConfig();
+const { server_url, paginated_amount } = require("./config.js").GetConfig();
 
 app.use((req, res, next) => {
   // This adds a start to the request, logging the exact time a request was received.

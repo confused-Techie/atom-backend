@@ -1,10 +1,10 @@
 # Complexity report, 7/1/2022
 
-* Mean per-function logical LOC: 11.958730158730159
+* Mean per-function logical LOC: 11.934920634920635
 * Mean per-function parameter count: 0.9444444444444444
 * Mean per-function cyclomatic complexity: 2.8634920634920635
-* Mean per-function Halstead effort: 5481.65492851073
-* Mean per-module maintainability index: 70.0819557555044
+* Mean per-function Halstead effort: 5476.453609103038
+* Mean per-module maintainability index: 70.10424781954461
 * First-order density: 4.081632653061225%
 * Change cost: 18.367346938775512%
 * Core size: 100%
@@ -261,12 +261,12 @@
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/search.js
 
-* Physical LOC: 131
-* Logical LOC: 74
+* Physical LOC: 130
+* Logical LOC: 73
 * Mean parameter count: 2.5
 * Cyclomatic complexity: 19
-* Cyclomatic complexity density: 25.675675675675674%
-* Maintainability index: 58.84163178541008
+* Cyclomatic complexity density: 26.027397260273972%
+* Maintainability index: 58.997676233691614
 * Dependency count: 0
 * Function: **levenshtein**
     * Line No.: 2
@@ -300,16 +300,16 @@
     * Halstead effort: 23177.71201851396
 * Function: **levenshteinWSDM**
     * Line No.: 51
-    * Physical LOC: 32
-    * Logical LOC: 14
+    * Physical LOC: 31
+    * Logical LOC: 13
     * Parameter count: 2
     * Cyclomatic complexity: 3
-    * Cyclomatic complexity density: 21.428571428571427%
-    * Halstead difficulty: 16.578947368421055
-    * Halstead volume: 568.383776429926
-    * Halstead effort: 9423.204714496143
+    * Cyclomatic complexity density: 23.076923076923077%
+    * Halstead difficulty: 16.944444444444443
+    * Halstead volume: 543.2311061925092
+    * Halstead effort: 9204.749299373072
 * Function: **lcs**
-    * Line No.: 85
+    * Line No.: 84
     * Physical LOC: 26
     * Logical LOC: 13
     * Parameter count: 2
@@ -319,7 +319,7 @@
     * Halstead volume: 609.3661461775857
     * Halstead effort: 16309.505677105972
 * Function: **lcsTraceBack**
-    * Line No.: 112
+    * Line No.: 111
     * Physical LOC: 15
     * Logical LOC: 7
     * Parameter count: 5

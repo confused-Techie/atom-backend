@@ -399,9 +399,7 @@ async function SetPackageByID(id, data) {
   }
 }
 
-async function SetPackageByName(name, data) {
-
-}
+async function SetPackageByName(name, data) {}
 
 async function NewPackage(data) {
   // Used to create a new package file.
