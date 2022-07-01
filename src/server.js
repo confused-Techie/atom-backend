@@ -7,11 +7,11 @@ const serve = app.listen(port, () => {
   logger.InfoLog(`Atom Server Listening on port ${port}`);
 });
 
-process.on("SIGTERM", async() => {
+process.on("SIGTERM", async () => {
   await Exterminate("SIGTERM");
 });
 
-process.on("SIGINT", async() => {
+process.on("SIGINT", async () => {
   await Exterminate("SIGINT");
 });
 
