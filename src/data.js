@@ -8,7 +8,7 @@ const resources = require("./resources.js");
 // Currently Functions that read directly from the disk: GetUsers(), GetPackagePointer(), GetPackage()
 
 // We know what global cache objects we will have, so lets make this easy.
-let cached_user, cached_pointer;
+let cached_user, cached_pointer, cached_packages;
 
 async function Shutdown() {
   logger.DebugLog("data.Shutdown called...");
@@ -98,6 +98,70 @@ async function GetPackagePointer() {
   }
 }
 
+async function GetAllPackages() {
+  const getNew = async function() {
+    const pointers = await GetPackagePointer();
+    if (!pointers.ok) {
+      return pointers;
+    } else {
+      let package_collection = [];
+      for (const pointer in pointers.content) {
+        let pack = await GetPackageByID(pointers.content[pointer]);
+        if (pack.ok) {
+          package_collection.push(pack.content);
+        } else {
+          // this will prioritize giving a response, so if a single package isn't found, it'll log it.
+          // then move on.
+          if (pack.short != "Not Found") {
+            return pack;
+          } else {
+            logger.WarningLog(undefined, undefined, `Missing Package during GetAllPackages: ${pointers.content[pointer]}`);
+          }
+        }
+      }
+      // once all packages have been iterated, return the collection, to the internal caller.
+      return { ok: true, content: package_collection };
+    }
+  };
+
+  if (cached_packages === undefined) {
+    logger.DebugLog("Creating Full Package Cache.");
+    let tmpcache = await getNew();
+    if (tmpcache.ok) {
+      cached_packages = new resources.CacheObject(tmpcache.content);
+      cached_packages.last_validate = Date.now();
+      return { ok: true, content: cached_packages.data };
+    } else {
+      return tmpcache;
+    }
+  } else {
+    // packages are cached
+    if (cached_packages.Expired) {
+      logger.DebugLog("Full Package data IS expired.");
+      let tmpcache = await getNew();
+      if (tmpcache.ok) {
+        cached_packages = new resources.CacheObject(tmpcache.content);
+        cached_packages.last_validate = Date.now();
+        return { ok: true, content: cached_packages.data };
+      } else {
+        return tmpcache;
+      }
+    } else {
+      logger.DebugLog("Full Package data IS NOT expired.");
+      return { ok: true, content: cached_packages.data };
+    }
+  }
+}
+
+async function GetPackageByID(id) {
+  let pack = await resources.Read("package", id);
+  if (pack.ok) {
+    return { ok: true, content: pack.content };
+  } else {
+    return pack;
+  }
+}
+
 function SetUsers(data) {
   // Instead of actually writing to disk, this will just update its cached data.
   if (cached_user === undefined) {
@@ -173,7 +237,7 @@ async function RemovePackageByName(name) {
   }
 }
 
-function GetPackageByID(id) {
+function GetPackageByIDV1(id) {
   try {
     const pack = fs.readFileSync(`./data/packages/${id}`, "utf8");
     return { ok: true, content: JSON.parse(pack) };
@@ -222,7 +286,7 @@ async function GetPackagePointerByName(name) {
   }
 }
 
-async function GetAllPackages() {
+async function GetAllPackagesV1() {
   // first we will retrieve the package pointer.
   const pointers = await GetPackagePointer();
 
