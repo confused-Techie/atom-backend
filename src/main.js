@@ -171,7 +171,37 @@ app.post("/api/packages", async (req, res) => {
 
         if (gitowner.ok) {
           // Now knowing they own the git repo, and it doesn't exist here, lets publish.
-          // TODO: Publishing a package.
+          let pack = git.CreatePackage(params.repository);
+
+          if (pack.ok) {
+            // now with valid package data, we can pass it along.
+            let create = data.NewPackage(pack.content);
+
+            if (create.ok) {
+              // if this returns okay, the package has been successfully created.
+              // And we want to now do a small test, and grab the new package to return it.
+              let new_pack = data.GetPackageByName(params.repository);
+
+              if (new_pack.ok) {
+                new_pack = await collection.POFPrune(new_pack.content); // Package Object Full Prune before return.
+                res.status(201).json(new_pack);
+              } else {
+                // we were unable to get the new package, and should return an error.
+                error.ServerErrorJSON(res);
+                logger.HTTPLog(req, res);
+                logger.ErrorLog(req, res, new_pack.content);
+              }
+            } else {
+              error.ServerErrorJSON(res);
+              logger.HTTPLog(req, res);
+              logger.ErrorLog(req, res, create.content);
+            }
+          } else {
+            // TODO: Proper error checking based on function. But this will likely
+            // implement the 400 package not valid error.
+            error.UnsupportedJSON(res);
+            logger.HTTPLog(req, res);
+          }
         } else {
           // Check why its not okay. But since it hasn't been written we can't reliably know how to check, or respond.
           // So we will respond with not supported for now.

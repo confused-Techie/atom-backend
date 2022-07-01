@@ -22,7 +22,7 @@ This is a collection/list of all functions/methods of the Backend API, with thei
 * POST /api/packages/:packageName/versions : ⚒
 * GET /api/packages/:packageName/versions/:versionName : 🏁
 * GET /api/packages/:packageName/versions/:versionName/tarball: 🆘
-* DELETE /api/packages/:packageName/versions/:versionName : 🆘
+* DELETE /api/packages/:packageName/versions/:versionName : ⚒
 * GET /api/users/:login/stars : 🏁
 * GET /api/stars : 🏁
 * GET /api/updates : 🆘

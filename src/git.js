@@ -13,7 +13,14 @@ async function Ownership(user, repo) {
   return { ok: true, content: "Fake Function" };
 }
 
+async function CreatePackage(repo) {
+  // TODO: ALL OF IT
+  // This is expected to generate the internal package metadata, to be directly used as the Server Package Object.
+  return { ok: false };
+}
+
 module.exports = {
   VerifyAuth,
   Ownership,
+  CreatePackage,
 };
