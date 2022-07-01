@@ -878,7 +878,7 @@ app.get("/api/stars", async (req, res) => {
       logger.HTTPLog(req, res);
     } else {
       error.ServerErrorJSON(res);
-      logger.HTTPLog(res, req);
+      logger.HTTPLog(req, res);
       logger.ErrorLog(req, res, packageCollection.content);
     }
   } else {
@@ -914,27 +914,7 @@ app.use((req, res) => {
   // Having this as the last route, will handle all other unknown routes.
   // Ensure to leave this at the very last position to handle properly.
   error.SiteWide404(res);
-  logger.HTTPLog(res, req);
+  logger.HTTPLog(req, res);
 });
 
-const server = app.listen(port, () => {
-  logger.InfoLog(`Atom Server Listening on port ${port}`);
-});
-
-process.on("SIGTERM", async () => {
-  await Exterminate();
-});
-
-process.on("SIGINT", async () => {
-  await Exterminate();
-});
-
-async function Exterminate() {
-  console.log("SIGTERM/SIGINT signal receved: closing HTTP server.");
-  // Here we should handle the closing of any file handles, and saving data, as quickly as possible if needed.
-  await data.Shutdown();
-  console.log("Exiting...");
-  server.close(() => {
-    console.log("HTTP Server Closed.");
-  });
-}
+module.exports = app;

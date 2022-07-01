@@ -2,7 +2,7 @@
   "name": "atom-community-server-backend-JS",
   "version": "1.0.0",
   "description": "",
-  "main": "src/main.js",
+  "main": "src/server.js",
   "engines": {
     "node": ">= 10.7.0 < 14.15.0"
   },
@@ -27,6 +27,7 @@
     "all-contributors-cli": "^6.20.0",
     "complexity-report": "^2.0.0-alpha",
     "jsdoc-to-markdown": "^7.1.1",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "supertest": "^6.2.3"
   }
 }

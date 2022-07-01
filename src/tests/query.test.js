@@ -3,9 +3,9 @@ const query = require("../query.js");
 // Page Testing
 
 const page_cases = [
-  [{ query: { page: 3 } }, 3],
+  [{ query: { page: "3" } }, "3"],
   [{ query: {} }, 1],
-  [{ query: { page: 2 } }, 2],
+  [{ query: { page: "2" } }, "2"],
 ];
 // once proper type conversion is implemented the last test should pass a string "2"
 
@@ -50,7 +50,7 @@ describe("Verify 'Query' Query Returns", () => {
   });
 });
 
-const engine_cases = [[{ query: { engine: "1.2" } }, "1.2"]];
+const engine_cases = [[{ query: { engine: "0.1.2" } }, "0.1.2"]];
 
 describe("Verify Engine Query Returns", () => {
   test.each(engine_cases)("Given %o Returns %p", (arg, result) => {
