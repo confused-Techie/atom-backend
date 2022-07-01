@@ -34,7 +34,7 @@ async function Shutdown() {
 }
 
 async function GetUsers() {
-  const getNew = async function() {
+  const getNew = async function () {
     let tmpcache = await resources.Read("user");
     if (tmpcache.ok) {
       cached_user = tmpcache.content;
@@ -78,7 +78,7 @@ async function GetUsers() {
 }
 
 async function GetPackagePointer() {
-  const getNew = async function() {
+  const getNew = async function () {
     let tmpcache = await resources.Read("pointer");
     if (tmpcache.ok) {
       cached_pointer = tmpcache.content;
@@ -234,7 +234,12 @@ async function RemovePackageByName(name) {
         } else {
           // TODO: Determine how we handle this error.
           // We may want to implement something like caching the file, instead of deleting it. And keeping it for some time.
-          return { ok: false, content: "Failed to rewrite the package pointer file. The Old pointer still exists!", short: "Server Error" };
+          return {
+            ok: false,
+            content:
+              "Failed to rewrite the package pointer file. The Old pointer still exists!",
+            short: "Server Error",
+          };
         }
       } else {
         // if this first part fails we can return the standard error, knowing that nothing permentant has been done.
