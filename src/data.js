@@ -34,32 +34,40 @@ async function Shutdown() {
 }
 
 async function GetUsers() {
-  if (cached_user === undefined) {
-    logger.DebugLog("Creating User Cache.");
-    // user object is not cached.
+  const getNew = async function() {
     let tmpcache = await resources.Read("user");
     if (tmpcache.ok) {
       cached_user = tmpcache.content;
-
       return { ok: true, content: cached_user.data };
     } else {
-      // we weren't able to read correctly. We will return the error.
       return tmpcache;
     }
+  };
+
+  if (cached_user === undefined) {
+    logger.DebugLog("Creating User Cache.");
+    // user object is not cached.
+    return getNew();
   } else {
-    // the user object is= cached.
+    // the user object is cached.
     // With the object cached we can check that its still valid.
     if (cached_user.Expired) {
       // object is now expired, we will want to get an updated copy after ensuring thers no data to write.
       logger.DebugLog("User data IS expired, getting new.");
-      // the object is expired but our in memory copy is still valid. lets get a new one then return
-      let tmpcache = await resources.Read("user");
-      if (tmpcache.ok) {
-        cached_user = tmpcache.content;
-        return { ok: true, content: cached_user.data };
+      // The object is expired, we want to get a new one. But before we do, lets make sure there aren't any unsaved changes.
+      if (cached_user.invalidated) {
+        logger.DebugLog("Saving Invalidated, Expired User Cache.");
+        let save = resources.Write("user", cached_user.data);
+        if (save.ok) {
+          // now with the data saved, lets get it agian, and refresh the cache.
+          return getNew();
+        } else {
+          // the save failed. Return the error.
+          return save;
+        }
       } else {
-        // failed to get the current data, pass along error.
-        return tmpcache;
+        // no changes to save. Lets get new data.
+        return getNew();
       }
     } else {
       logger.DebugLog("User data IS NOT expired.");
@@ -70,9 +78,7 @@ async function GetUsers() {
 }
 
 async function GetPackagePointer() {
-  if (cached_pointer === undefined) {
-    // pointer object is not cached.
-    logger.DebugLog("Creating Pointer Cache.");
+  const getNew = async function() {
     let tmpcache = await resources.Read("pointer");
     if (tmpcache.ok) {
       cached_pointer = tmpcache.content;
@@ -80,17 +86,17 @@ async function GetPackagePointer() {
     } else {
       return tmpcache;
     }
+  };
+
+  if (cached_pointer === undefined) {
+    // pointer object is not cached.
+    logger.DebugLog("Creating Pointer Cache.");
+    return getNew();
   } else {
     // the pointer object is cached.
     if (cached_pointer.Expired) {
       logger.DebugLog("Pointer data IS expired, getting new.");
-      let tmpcache = await resources.Read("pointer");
-      if (tmpcache.ok) {
-        cached_pointer = tmpcache.content;
-        return { ok: true, content: cached_pointer };
-      } else {
-        return tmpcache;
-      }
+      return getNew();
     } else {
       logger.DebugLog("Pointer data IS NOT expired.");
       return { ok: true, content: cached_pointer.data };
@@ -228,6 +234,7 @@ async function RemovePackageByName(name) {
         } else {
           // TODO: Determine how we handle this error.
           // We may want to implement something like caching the file, instead of deleting it. And keeping it for some time.
+          return { ok: false, content: "Failed to rewrite the package pointer file. The Old pointer still exists!", short: "Server Error" };
         }
       } else {
         // if this first part fails we can return the standard error, knowing that nothing permentant has been done.
@@ -238,19 +245,6 @@ async function RemovePackageByName(name) {
     }
   } else {
     return pointers;
-  }
-}
-
-function GetPackageByIDV1(id) {
-  try {
-    const pack = fs.readFileSync(`./data/packages/${id}`, "utf8");
-    return { ok: true, content: JSON.parse(pack) };
-  } catch (err) {
-    if (err.code === "ENOENT") {
-      return { ok: false, content: err, short: "File Not Found" };
-    } else {
-      return { ok: false, content: err, short: "Server Error" };
-    }
   }
 }
 
@@ -287,39 +281,6 @@ async function GetPackagePointerByName(name) {
     } else {
       return { ok: false, content: "Not Found", short: "Not Found" };
     }
-  }
-}
-
-async function GetAllPackagesV1() {
-  // first we will retrieve the package pointer.
-  const pointers = await GetPackagePointer();
-
-  if (!pointers.ok) {
-    // any other error handling could be here, but for now we can leave it up to the handler.
-    return pointers;
-  } else {
-    // now with the pointers, we want to get each package object, and shove it in an array.
-    let package_collection = [];
-    for (const pointer in pointers.content) {
-      // now with the key of a value, we can grab the actual package.
-      let pack = await GetPackageByID(pointers.content[pointer]);
-      if (pack.ok) {
-        package_collection.push(pack.content);
-      } else {
-        // this will prioritize giving a response, so if a single package isn't found, it'll log it. Then move on.
-        if (pack.short != "Not Found") {
-          return pack;
-        } else {
-          logger.WarningLog(
-            undefined,
-            undefined,
-            `Missing Package during GetAllPackages: ${pointers.content[pointer]}`
-          );
-        }
-      }
-    }
-    // once all packages have been iterated through, we can return the collection as a status object.
-    return { ok: true, content: package_collection };
   }
 }
 
