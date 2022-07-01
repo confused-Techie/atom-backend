@@ -7,7 +7,8 @@ const users = require("./users.js");
 const data = require("./data.js");
 const collection = require("./collection.js");
 const logger = require("./logger.js");
-const { port, server_url, paginated_amount } =
+const git = require("./git.js");
+const { server_url, paginated_amount } =
   require("./config.js").GetConfig();
 
 app.use((req, res, next) => {
@@ -74,10 +75,10 @@ app.get("/api/packages", async (req, res) => {
     packages = await collection.Direction(packages, params.direction);
     // Now with packages sorted in the right direction, lets prune the results.
     let total_pages = Math.ceil(packages.length / paginated_amount);
-    if (params.page != 1) {
+    if (params.page !== 1) {
       packages.splice(0, params.page * paginated_amount); // Remove from the start to however many packages, should be visible.
     }
-    if (params.page != total_pages) {
+    if (params.page !== total_pages) {
       packages.splice(
         params.page * paginated_amount + paginated_amount,
         packages.length
@@ -704,9 +705,28 @@ app.post("/api/packages/:packageName/versions", async (req, res) => {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),
   };
-  // TODO: Stopper: Version handling, github auth
-  error.UnsupportedJSON(res);
-  logger.HTTPLog(req, res);
+  let user = await users.VerifyAuth(params.auth);
+
+  if (user.ok) {
+    let gitowner = await git.Ownership(user.content, params.packageName);
+
+    if (gitowner.ok) {
+      // TODO: unknown how to handle a rename, so that should be planned before finishing.
+    } else {
+      // TODO: cannot handle errors here, until we know what errors it will return.
+      error.ServerErrorJSON(res);
+      logger.HTTPLog(req, res);
+    }
+  } else {
+    if (user.short == "Bad Auth") {
+      error.MissingAuthJSON(res);
+      logger.HTTPLog(req, res);
+    } else {
+      error.ServerErrorJSON(res);
+      logger.HTTPLog(req, res);
+      logger.ErrorLog(req, res, user.content);
+    }
+  }
 });
 
 // Package Versions Endpoint
@@ -827,6 +847,52 @@ app.delete(
       packageName: decodeURIComponent(req.params.packageName),
       versionName: req.params.versionName,
     };
+    let user = await users.VerifyAuth(params.auth);
+
+    if (user.ok) {
+      let gitowner = await git.Ownership(user.content, params.packageName);
+
+      if (gitowner.ok) {
+        // now since they are signed in and own the repo, lets modify the repo by removing the requested version.
+        let pack = await data.GetPackageByName(params.packageName);
+
+        if (pack.ok) {
+          if (pack.content[versionName]) {
+            // the version exists.
+            delete pack.content[versionName];
+
+            // now to write back the modified data.
+            let write = data.SetPackageByName(params.packageName, pack.content);
+
+            if (write.ok) {
+              // successfully wrote modified data.
+              res.status(204).send();
+            } else {
+              // TODO: Cannot write error handling till we know what errors it will return.
+            }
+          } else {
+            // we will return not found for a non-existant version deletion.
+            error.NotFoundJSON(res);
+            logger.HTTPLog(req, res);
+          }
+        } else {
+          // getting package returned error.
+        }
+      } else {
+        // TODO: Cannot write error handling without knowing what errors it'll return.
+        error.ServerErrorJSON(res);
+        logger.HTTPLog(req, res);
+      }
+    } else {
+      if (user.short == "Bad Auth") {
+        error.MissingAuthJSON(res);
+        logger.HTTPLog(req, res);
+      } else {
+        error.ServerErrorJSON(res);
+        logger.HTTPLog(req, res);
+        logger.ErrorLog(req, res, user.content);
+      }
+    }
     // TODO: Stopper: Version handling, github auth
     error.UnsupportedJSON(res);
     logger.HTTPLog(req, res);

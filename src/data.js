@@ -399,6 +399,10 @@ async function SetPackageByID(id, data) {
   }
 }
 
+async function SetPackageByName(name, data) {
+
+}
+
 async function NewPackage(data) {
   // Used to create a new package file.
   // this expects to be handed fully constructed proper package data. All handling of adding star_gazers, created
@@ -415,7 +419,7 @@ async function NewPackage(data) {
 
     if (write_pointer.ok) {
       // now with the pointers updated, lets write the package itself.
-      let write_pack = await SetPackageById(id, data);
+      let write_pack = await SetPackageByID(id, data);
 
       if (write_pack.ok) {
         return { ok: true };
@@ -442,6 +446,7 @@ module.exports = {
   GetAllPackages,
   GetPackageCollection,
   SetPackageByID,
+  SetPackageByName,
   NewPackage,
   StarPackageByName,
   UnStarPackageByName,

@@ -17,6 +17,7 @@ class CacheObject {
     this.invalidated = false;
     this.last_validate = 0;
     this.cache_time = cache_time;
+    this.name = name;
   }
   get Expired() {
     return Date.now() - this.birth > this.cache_time;

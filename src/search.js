@@ -61,7 +61,6 @@ function levenshteinWSDM(s1, s2) {
   // Additionally some levenshtein functions will self rely on each other to reduce duplication.
 
   // First create an array of the characters, after substituting all word seperators for a single word sep.
-  let c = s1;
   s1 = s1.replace(" ", "-").replace("_", "-");
   s2 = s2.replace(" ", "-").replace("_", "-");
   let s1A = s1.split("-");
