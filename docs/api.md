@@ -361,6 +361,35 @@ Indicates a successful deletion.
 
 
 ---
+# **[POST]** /api/packages/:packageName/versions/:versionName/events/uninstall
+Previously undocumented endpoint. BETA: Decreases the packages download count, but one. Indicating an uninstall.
+
+Auth: `true`
+Parameters:
+---
+* packageName _(required)_  | Location: `path`  
+  - The name of the packge to modify.
+
+
+---
+* versionName _(required)_  | Location: `path`  
+  - This value is within the original spec. But has no use in its current implementation.
+
+
+---
+* auth _(required)_  | Location: `header`  
+  - Valid Atom.io token.
+
+
+---
+Responses:
+---
+**HTTP Status Code:** `200 OK`
+
+Returns JSON ok: true
+
+
+---
 # **[GET]** /api/users/:login/stars
 List a user's starred packages.
 

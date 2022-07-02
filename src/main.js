@@ -957,31 +957,31 @@ app.delete(
 );
 
 /**
-* @web
-* @ignore
-* @path /api/packages/:packageName/versions/:versionName/events/uninstall
-* @desc Previously undocumented endpoint. BETA: Decreases the packages download count, but one. Indicating an uninstall.
-* @method POST
-* @auth true
-* @param
-*   @name packageName
-*   @location path
-*   @required true
-*   @Pdesc The name of the packge to modify.
-* @param
-*   @name versionName
-*   @location path
-*   @required true
-*   @Pdesc This value is within the original spec. But has no use in its current implementation.
-* @param
-*   @name auth
-*   @location header
-*   @required true
-*   @Pdesc Valid Atom.io token.
-* @response
-*   @status 200
-*   @Rdesc Returns JSON ok: true
-*/
+ * @web
+ * @ignore
+ * @path /api/packages/:packageName/versions/:versionName/events/uninstall
+ * @desc Previously undocumented endpoint. BETA: Decreases the packages download count, but one. Indicating an uninstall.
+ * @method POST
+ * @auth true
+ * @param
+ *   @name packageName
+ *   @location path
+ *   @required true
+ *   @Pdesc The name of the packge to modify.
+ * @param
+ *   @name versionName
+ *   @location path
+ *   @required true
+ *   @Pdesc This value is within the original spec. But has no use in its current implementation.
+ * @param
+ *   @name auth
+ *   @location header
+ *   @required true
+ *   @Pdesc Valid Atom.io token.
+ * @response
+ *   @status 200
+ *   @Rdesc Returns JSON ok: true
+ */
 app.post(
   "/api/packages/:packageName/versions/:versionName/events/uninstall",
   async (req, res) => {
