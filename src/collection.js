@@ -208,27 +208,19 @@ async function SearchWithinPackages(
 
 async function EngineFilter(pack, engine) {
   // We will want to loop through each version of the package, and check its engine version against the specified one.
-  let reg = ;
-  let raw_engine = engine.match(reg);
+  let reg = /(^\W*)([0-9]*).([0-9]*).([0-9]*)\s(\W*)([0-9]*).([0-9]*).([0-9]*)$/;
+  let raw_engine = engine.match(/^([0-9]*).([0-9]*).([0-9]*)/);
   let engine_semver = {
-    start: {
-      mod: raw_match[1],
-      major: raw_match[2],
-      minor: raw_match[3],
-      patch: raw_match[4]
-    },
-    end: {
-      mod: raw_match[5],
-      major: raw_match[6],
-      minor: raw_match[7],
-      patch: raw_match[8]
-    }
+    major: raw_engine[1],
+    minor: raw_engine[2],
+    patch: raw_engine[3]
   };
+  let compatible_version = "";
 
   for (const ver in pack.versions) {
     if (ver.engines.atom) {
       // make sure the key we need is available.
-      let raw_match = ver.engines.atom.match(reg);
+      let raw_match = pack.versions[ver].engines.atom.match(reg);
       // now to create our simple, overly-verbose semver object.
       let semver = {
         start: {
@@ -246,10 +238,33 @@ async function EngineFilter(pack, engine) {
       };
 
       // And now to check if this version is compatible with the engine specified.
-      
+      // For the time being, we will assume that start.mod == '>=' and end.mod == '<'
+      // As thats the use case created when using a template to make a package.
+      // TODO: Properly check the mods to see what they specify.
+      if (semver.start.major < engine_semver.major &&
+          semver.start.minor < engine_semver.minor &&
+          semver.start.patch < engine_semver.patch &&
+          semver.end.major > engine_semver.major &&
+          semver.end.minor > engine_semver.minor &&
+          semver.end.patch > engine_semver.patch) {
+            // only if all portions of the semver declaration are within the bounds of the provided engine, we will return.
+            // we will just return on the first properly found item.
+            compatible_version = ver;
+            break; // exit the loop
+          }
     }
   }
-  return pack;
+
+  // after the loop ends, or breaks, check the returned value.
+  if (compatible_version != "") {
+    // we have a compatible version, lets add its data to the metadata property of the package.
+    pack.metadata = pack.versions[compatible_version];
+    return pack;
+  } else {
+    // no valid version can be returned from the engine parameter.
+    // we may want to return en empty object.
+    return {};
+  }
 }
 
 module.exports = {
