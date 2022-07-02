@@ -260,14 +260,17 @@ app.get("/api/themes/featured", async (req, res) => {
   // or leave it to the client is hard to say.
 });
 
-app.post("/api/packages/:packageName/versions/:versionName/events/uninstall", async (req, res) => {
-  // TODO: Undocumented Endpoint discovered, as the endpoint used by APM during an uninstall.
-  // https://github.com/atom/apm/blob/master/src/uninstall.coffee
-  // Authorization Headers with the token. Seems to also have options.
-  // Assumption: This endpoint simply reduces the download count of a package. And nothing else.
-  // No clues in the code how this returns. But if we consider that all other posts to remove data
-  // return a 201, we can mirror that here.
-});
+app.post(
+  "/api/packages/:packageName/versions/:versionName/events/uninstall",
+  async (req, res) => {
+    // TODO: Undocumented Endpoint discovered, as the endpoint used by APM during an uninstall.
+    // https://github.com/atom/apm/blob/master/src/uninstall.coffee
+    // Authorization Headers with the token. Seems to also have options.
+    // Assumption: This endpoint simply reduces the download count of a package. And nothing else.
+    // No clues in the code how this returns. But if we consider that all other posts to remove data
+    // return a 201, we can mirror that here.
+  }
+);
 
 /**
  * @web

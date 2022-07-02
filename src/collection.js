@@ -208,12 +208,13 @@ async function SearchWithinPackages(
 
 async function EngineFilter(pack, engine) {
   // We will want to loop through each version of the package, and check its engine version against the specified one.
-  let reg = /(^\W*)([0-9]*).([0-9]*).([0-9]*)\s(\W*)([0-9]*).([0-9]*).([0-9]*)$/;
+  let reg =
+    /(^\W*)([0-9]*).([0-9]*).([0-9]*)\s(\W*)([0-9]*).([0-9]*).([0-9]*)$/;
   let raw_engine = engine.match(/^([0-9]*).([0-9]*).([0-9]*)/);
   let engine_semver = {
     major: raw_engine[1],
     minor: raw_engine[2],
-    patch: raw_engine[3]
+    patch: raw_engine[3],
   };
   let compatible_version = "";
 
@@ -227,31 +228,33 @@ async function EngineFilter(pack, engine) {
           mod: raw_match[1],
           major: raw_match[2],
           minor: raw_match[3],
-          patch: raw_match[4]
+          patch: raw_match[4],
         },
         end: {
           mod: raw_match[5],
           major: raw_match[6],
           minor: raw_match[7],
-          patch: raw_match[8]
-        }
+          patch: raw_match[8],
+        },
       };
 
       // And now to check if this version is compatible with the engine specified.
       // For the time being, we will assume that start.mod == '>=' and end.mod == '<'
       // As thats the use case created when using a template to make a package.
       // TODO: Properly check the mods to see what they specify.
-      if (semver.start.major < engine_semver.major &&
-          semver.start.minor < engine_semver.minor &&
-          semver.start.patch < engine_semver.patch &&
-          semver.end.major > engine_semver.major &&
-          semver.end.minor > engine_semver.minor &&
-          semver.end.patch > engine_semver.patch) {
-            // only if all portions of the semver declaration are within the bounds of the provided engine, we will return.
-            // we will just return on the first properly found item.
-            compatible_version = ver;
-            break; // exit the loop
-          }
+      if (
+        semver.start.major < engine_semver.major &&
+        semver.start.minor < engine_semver.minor &&
+        semver.start.patch < engine_semver.patch &&
+        semver.end.major > engine_semver.major &&
+        semver.end.minor > engine_semver.minor &&
+        semver.end.patch > engine_semver.patch
+      ) {
+        // only if all portions of the semver declaration are within the bounds of the provided engine, we will return.
+        // we will just return on the first properly found item.
+        compatible_version = ver;
+        break; // exit the loop
+      }
     }
   }
 
