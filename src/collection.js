@@ -207,7 +207,48 @@ async function SearchWithinPackages(
 }
 
 async function EngineFilter(pack, engine) {
-  // TODO: All of it
+  // We will want to loop through each version of the package, and check its engine version against the specified one.
+  let reg = ;
+  let raw_engine = engine.match(reg);
+  let engine_semver = {
+    start: {
+      mod: raw_match[1],
+      major: raw_match[2],
+      minor: raw_match[3],
+      patch: raw_match[4]
+    },
+    end: {
+      mod: raw_match[5],
+      major: raw_match[6],
+      minor: raw_match[7],
+      patch: raw_match[8]
+    }
+  };
+
+  for (const ver in pack.versions) {
+    if (ver.engines.atom) {
+      // make sure the key we need is available.
+      let raw_match = ver.engines.atom.match(reg);
+      // now to create our simple, overly-verbose semver object.
+      let semver = {
+        start: {
+          mod: raw_match[1],
+          major: raw_match[2],
+          minor: raw_match[3],
+          patch: raw_match[4]
+        },
+        end: {
+          mod: raw_match[5],
+          major: raw_match[6],
+          minor: raw_match[7],
+          patch: raw_match[8]
+        }
+      };
+
+      // And now to check if this version is compatible with the engine specified.
+      
+    }
+  }
   return pack;
 }
 

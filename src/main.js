@@ -232,6 +232,43 @@ app.post("/api/packages", async (req, res) => {
   }
 });
 
+app.get("/api/packages/featured", async (req, res) => {
+  // TODO: Undocumented Endpoint discovered, as the endpoint in use by APM to get featured packages.
+  // https://github.com/atom/apm/blob/master/src/featured.coffee
+  // Returns featured packages, but its unknown how these are determined.
+  // At least currently just returns 6 items. No link headers or anything fancy like that.
+  // Just Package Object Short array
+  // Supports engine query parameter.
+  // Assumption: This utlizies a mystery rating system to return only themes. Allowing specificity
+  // into versions that are currently compatible.
+  // Returns a 200 response if everything goes well.
+  // Sort by package name, in alphabetical order is implemented client side. Wether this means we want to implement it
+  // or leave it to the client is hard to say.
+});
+
+app.get("/api/themes/featured", async (req, res) => {
+  // TODO: Undocumented Endpoint discovered, as the endpoint in use by APM to get featured themes.
+  // https://github.com/atom/apm/blob/master/src/featured.coffee
+  // Returns featured packages, filtered by themes. Unknown how these are determined.
+  // At least currently returns an 2 of items.
+  // Package Object Short Array.
+  // Supports engine query parameter.
+  // Assumption: this utilizes a mystery rating system to return only themes. Allowing specificity
+  // into versions that are currently compatible.
+  // Returns a 200 response if everything goes well.
+  // Sort by package name, in alphabetical order is implemented client side. Wether this means we want to implement it
+  // or leave it to the client is hard to say.
+});
+
+app.post("/api/packages/:packageName/versions/:versionName/events/uninstall", async (req, res) => {
+  // TODO: Undocumented Endpoint discovered, as the endpoint used by APM during an uninstall.
+  // https://github.com/atom/apm/blob/master/src/uninstall.coffee
+  // Authorization Headers with the token. Seems to also have options.
+  // Assumption: This endpoint simply reduces the download count of a package. And nothing else.
+  // No clues in the code how this returns. But if we consider that all other posts to remove data
+  // return a 201, we can mirror that here.
+});
+
 /**
  * @web
  * @ignore
