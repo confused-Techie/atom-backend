@@ -549,7 +549,7 @@ async function POSTPackagesEventUninstall(req, res) {
   // This was originall an Undocumented endpoint, discovered as the endpoint using during an uninstall by APM.
   // https://github.com/atom/apm/blob/master/src/uninstall.coffee
   // The decision to return a '201' was based on how other POST endpoints return, during a successful event.
-  
+
   let params = {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),

@@ -32,8 +32,6 @@ Returns a list of all packages. Paginated 30 at a time. Links to the next and la
 # **[POST]** /api/packages
 Publishes a new Package.
 
-Todo: With auth not setup, nor atombot setup, this is non-functional.
-
 Auth: `true`
 Parameters:
 ---
@@ -362,7 +360,7 @@ Indicates a successful deletion.
 
 ---
 # **[POST]** /api/packages/:packageName/versions/:versionName/events/uninstall
-Previously undocumented endpoint. BETA: Decreases the packages download count, but one. Indicating an uninstall.
+Previously undocumented endpoint. BETA: Decreases the packages download count, by one. Indicating an uninstall.
 
 Auth: `true`
 Parameters:

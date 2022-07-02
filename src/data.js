@@ -509,9 +509,18 @@ async function NewPackage(data) {
         let rewrite_pointer = await SetPackagePointer(pointers.content);
 
         if (rewrite_pointer.ok) {
-          return { ok: false, content: "Failed to write package. Removed new Pointer. State Unchanged.", short: "Server Error" };
+          return {
+            ok: false,
+            content:
+              "Failed to write package. Removed new Pointer. State Unchanged.",
+            short: "Server Error",
+          };
         } else {
-          return { ok: false, content: `Failed to write package. Failed to remove new pointer. State Changed: ${write_pack.content}`, short: "Server Error" };
+          return {
+            ok: false,
+            content: `Failed to write package. Failed to remove new pointer. State Changed: ${write_pack.content}`,
+            short: "Server Error",
+          };
         }
       }
     } else {
