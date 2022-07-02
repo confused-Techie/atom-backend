@@ -8,7 +8,7 @@
 // or to some other authenticated service.
 
 const fs = require("fs");
-const { cache_time } = require("./config.js").GetConfig();
+const { cache_time, file_store } = require("./config.js").GetConfig();
 
 class CacheObject {
   constructor(contents, name) {
@@ -58,15 +58,20 @@ async function Read(type, name) {
 }
 
 async function readFile(path) {
-  try {
-    const data = fs.readFileSync(path, "utf8");
-    return { ok: true, content: JSON.parse(data) };
-  } catch (err) {
-    if (err.code === "ENOENT") {
-      return { ok: false, content: err, short: "File Not Found" };
-    } else {
-      return { ok: false, content: err, short: "Server Error" };
+  if (file_store == "filesystem") {
+    try {
+      const data = fs.readFileSync(path, "utf8");
+      return { ok: true, content: JSON.parse(data) };
+    } catch (err) {
+      if (err.code === "ENOENT") {
+        return { ok: false, content: err, short: "File Not Found" };
+      } else {
+        return { ok: false, content: err, short: "Server Error" };
+      }
     }
+  } else {
+    console.log("UNRECOGNIZED FILE STORE METHOD! Exiting...");
+    process.exit(1);
   }
 }
 
@@ -84,11 +89,16 @@ async function Write(type, data, name) {
 }
 
 async function writeFile(path, data) {
-  try {
-    fs.writeFileSync(path, data);
-    return { ok: true };
-  } catch (err) {
-    return { ok: false, content: err, short: "Server Error" };
+  if (file_store == "filesystem") {
+    try {
+      fs.writeFileSync(path, data);
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, content: err, short: "Server Error" };
+    }
+  } else {
+    console.log("UNRECOGNIZED FILE STORE METHOD! Exiting...");
+    process.exit(1);
   }
 }
 

@@ -20,3 +20,6 @@ env_variables:
   CACHETIME: 600000
   # Should only be enabled in non-production builds. Enabled as true for extra output during testing.
   DEBUGLOG: true
+  # This indicates how the server will retreive data.
+  # - "filesystem": Means the data is within the ./data folder.
+  FILESTORE: "filesystem"
