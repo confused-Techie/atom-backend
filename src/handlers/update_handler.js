@@ -1,10 +1,9 @@
-const error = require("../error.js");
-const logger = require("../logger.js");
+const common = require("./common_handler.js");
 
 async function GETUpdates(req, res) {
+  // GET /api/updates
   // TODO: Stopped: Update Method
-  error.UnsupportedJSON(res);
-  logger.HTTPLog(req, res);
+  await common.NotSupported(req, res);
 }
 
 module.exports = {

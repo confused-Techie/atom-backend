@@ -1,10 +1,10 @@
-const error = require("../error.js");
 const logger = require("../logger.js");
 const users = require("../users.js");
 const data = require("../data.js");
 const common = require("./common_handler.js");
 
 async function GETStars(req, res) {
+  // GET /api/stars
   let params = {
     auth: req.get("Authorization"),
   };

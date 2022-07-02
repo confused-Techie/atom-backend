@@ -18,7 +18,25 @@ async function ServerError(req, res, err) {
   logger.ErrorLog(req, res, err);
 }
 
+async function NotFound(req, res) {
+  error.NotFoundJSON(res);
+  logger.HTTPLog(req, res);
+}
+
+async function NotSupported(req, res) {
+  error.UnsupportedJSON(res);
+  logger.HTTPLog(req, res);
+}
+
+async function SiteWideNotFound(req, res) {
+  error.SiteWide404(res);
+  logger.HTTPLog(req, res);
+}
+
 module.exports = {
   AuthFail,
   ServerError,
+  NotFound,
+  SiteWideNotFound,
+  NotSupported,
 };

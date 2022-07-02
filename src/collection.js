@@ -208,6 +208,7 @@ async function SearchWithinPackages(
 
 async function EngineFilter(pack, engine) {
   // We will want to loop through each version of the package, and check its engine version against the specified one.
+  // TODO: This fails, if no engine is supplied.
   let reg =
     /(^\W*)([0-9]*).([0-9]*).([0-9]*)\s(\W*)([0-9]*).([0-9]*).([0-9]*)$/;
   let raw_engine = engine.match(/^([0-9]*).([0-9]*).([0-9]*)/);
