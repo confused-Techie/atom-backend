@@ -105,33 +105,25 @@ async function POSTPackages(req, res) {
                 res.status(201).json(new_pack);
               } else {
                 // we were unable to get the new package, and should return an error.
-                error.ServerErrorJSON(res);
-                logger.HTTPLog(req, res);
-                logger.ErrorLog(req, res, new_pack.content);
+                await common.ServerError(req, res, new_pack.content);
               }
             } else {
-              error.ServerErrorJSON(res);
-              logger.HTTPLog(req, res);
-              logger.ErrorLog(req, res, create.content);
+              await common.ServerError(req, res, create.content);
             }
           } else {
             // TODO: Proper error checking based on function. But this will likely
             // implement the 400 package not valid error.
-            error.UnsupportedJSON(res);
-            logger.HTTPLog(req, res);
+            await common.NotSupported(req, res);
           }
         } else {
           // Check why its not okay. But since it hasn't been written we can't reliably know how to check, or respond.
           // So we will respond with not supported for now.
           // TODO: Proper error checking based on function.
-          error.UnsupportedJSON(res);
-          logger.HTTPLog(req, res);
+          await common.NotSupported(req, res);
         }
       } else {
         // the server failed for some other bubbled reason, and is now encountering an error.
-        error.ServerErrorJSON(res);
-        logger.HTTPLog(req, res);
-        logger.ErrorLog(req, res, exists.content);
+        await common.ServerError(req, res, exists.content);
       }
     } else {
       // this means the exists was okay, or otherwise it found a package by this name.
@@ -139,14 +131,7 @@ async function POSTPackages(req, res) {
       logger.HTTPLog(req, res);
     }
   } else {
-    if (user.short == "Bad Auth") {
-      error.MissingAuthJSON(res);
-      logger.HTTPLog(req, res);
-    } else {
-      error.ServerErrorJSON(res);
-      logger.HTTPLog(req, res);
-      logger.ErrorLog(req, res, user.content);
-    }
+    await common.AuthFail(req, res, user);
   }
 }
 
@@ -163,7 +148,7 @@ async function GETPackagesFeatured(req, res) {
   // Sort by package name, in alphabetical order is implemented client side. Wether this means we want to implement it
   // or leave it to the client is hard to say.
 
-  common.NotSupported(req, res);
+  await common.NotSupported(req, res);
 }
 
 async function GETPackagesSearch(req, res) {
@@ -220,9 +205,7 @@ async function GETPackagesSearch(req, res) {
     res.status(200).json(packages);
     logger.HTTPLog(req, res);
   } else {
-    error.ServerErrorJSON(res);
-    logger.HTTPLog(req, res);
-    logger.ErrorLog(req, res, all_packages.content);
+    await common.ServerError(req, res, all_packages.content);
   }
 }
 
@@ -244,12 +227,9 @@ async function GETPackagesDetails(req, res) {
     logger.HTTPLog(req, res);
   } else {
     if (pack.short == "Not Found") {
-      error.NotFoundJSON(res);
-      logger.HTTPLog(req, res);
+      await common.NotFound(req, res);
     } else if (pack.short == "Server Error") {
-      error.ServerErrorJSON(res);
-      logger.HTTPLog(req, res);
-      logger.ErrorLog(req, res, pack.content);
+      await common.ServerError(req, res, pack.content);
     }
   }
 }
@@ -275,29 +255,18 @@ async function DELETEPackagesName(req, res) {
         res.status(204).json({ message: "Success" });
       } else {
         if (rm.short == "Not Found") {
-          error.NotFoundJSON(res);
-          logger.HTTPLog(req, res);
+          await common.NotFound(req, res);
         } else {
           // likely a server error.
-          error.ServerErrorJSON(res);
-          logger.HTTPLog(req, res);
-          logger.ErrorLog(req, res, rm.content);
+          await common.ServerError(req, res, rm.content);
         }
       }
     } else {
       // TODO: This cannot be written as we don't know yet what errors this will return.
-      error.ServerErrorJSON(res);
-      logger.HTTPLog(req, res);
+      await common.NotSupported(req, res);
     }
   } else {
-    if (user.short == "Bad Auth") {
-      error.MissingAuthJSON(res);
-      logger.HTTPLog(req, res);
-    } else {
-      error.ServerErrorJSON(res);
-      logger.HTTPLog(req, res);
-      logger.ErrorLog(req, res, user.content);
-    }
+    await common.AuthFail(req, res, user);
   }
 }
 
@@ -333,9 +302,7 @@ async function POSTPackagesStar(req, res) {
 
         if (unstar.ok) {
           // since it still failed to star as originally intended, return error.
-          error.ServerErrorJSON(res);
-          logger.HTTPLog(req, res);
-          logger.ErrorLog(req, res, star.content);
+          await common.ServerError(req, res, star.content);
         } else {
           // unstarring after a failed staring, failed again. Oh jeez...
           error.ServerErrorJSON(res);
@@ -351,19 +318,10 @@ async function POSTPackagesStar(req, res) {
       }
     } else {
       // the users star was not applied properly to the package, and we can return without further action.
-      error.ServerErrorJSON(res);
-      logger.HTTPLog(req, res);
-      logger.ErrorLog(req, res, pack.content);
+      await common.ServerError(req, res, pack.content);
     }
   } else {
-    if (user.short == "Bad Auth") {
-      error.MissingAuthJSON(res);
-      logger.HTTPLog(req, res);
-    } else {
-      error.ServerErrorJSON(res);
-      logger.HTTPLog(req, res);
-      logger.ErrorLog(req, res, user.content);
-    }
+    await common.AuthFail(req, res, user);
   }
 }
 
@@ -406,9 +364,7 @@ async function DELETEPackagesStar(req, res) {
 
         if (restar.ok) {
           // we restared to allow the workflow to restart later, but the request still failed.
-          error.ServerErrorJSON(res);
-          logger.HTTPLog(req, res);
-          logger.ErrorLog(req, res, unstar.content);
+          await common.ServerError(req, res, unstar.content);
         } else {
           // We failed to restar the package after failing to unstar the user, rough...
           error.ServerErrorJSON(res);
@@ -427,23 +383,13 @@ async function DELETEPackagesStar(req, res) {
       if (pack.short == "Not Found") {
         // this means the user had never stared this package, or we were unable to find it. So lets move from the original
         // spec and return not found.
-        error.NotFoundJSON(res);
-        logger.HTTPLog(req, res);
+        await common.NotFound(req, res);
       } else {
-        error.ServerErrorJSON(res);
-        logger.HTTPLog(req, res);
-        logger.ErrorLog(req, res, pack.content);
+        await common.ServerError(req, res, pack.content);
       }
     }
   } else {
-    if (user.short == "Bad Auth") {
-      error.MissingAuthJSON(res);
-      logger.HTTPLog(req, res);
-    } else {
-      error.ServerErrorJSON(res);
-      logger.HTTPLog(req, res);
-      logger.ErrorLog(req, res, user.content);
-    }
+    await common.AuthFail(req, res, user);
   }
 }
 
@@ -460,12 +406,9 @@ async function GETPackagesStargazers(req, res) {
     logger.HTTPLog(req, res);
   } else {
     if (pack.short == "Not Found") {
-      error.NotFoundJSON(res);
-      logger.HTTPLog(req, res);
+      await common.NotFound(req, res);
     } else {
-      error.ServerErrorJSON(res);
-      logger.HTTPLog(req, res);
-      logger.ErrorLog(req, res, pack.content);
+      await common.ServerError(req, res, pack.content);
     }
   }
 }
@@ -485,20 +428,13 @@ async function POSTPackagesVersion(req, res) {
 
     if (gitowner.ok) {
       // TODO: unknown how to handle a rename, so that should be planned before finishing.
+      await common.NotSupported(req, res);
     } else {
       // TODO: cannot handle errors here, until we know what errors it will return.
-      error.ServerErrorJSON(res);
-      logger.HTTPLog(req, res);
+      await common.NotSupported(req, res);
     }
   } else {
-    if (user.short == "Bad Auth") {
-      error.MissingAuthJSON(res);
-      logger.HTTPLog(req, res);
-    } else {
-      error.ServerErrorJSON(res);
-      logger.HTTPLog(req, res);
-      logger.ErrorLog(req, res, user.content);
-    }
+    await common.AuthFail(req, res, user);
   }
 }
 
@@ -528,23 +464,18 @@ async function GETPackagesVersion(req, res) {
         logger.HTTPLog(req, res);
       } else {
         // the version does not exist, return 404
-        error.NotFoundJSON(res);
-        logger.HTTPLog(req, res);
+        await common.NotFound(req, res);
       }
     } else {
       if (pack.short == "Not Found") {
-        error.NotFoundJSON(res);
-        logger.HTTPLog(req, res);
+        await common.NotFound(req, res);
       } else {
-        error.ServerErrorJSON(res);
-        logger.HTTPLog(req, res);
-        logger.ErrorLog(req, res, pack.content);
+        await common.ServerError(req, res, pack.content);
       }
     }
   } else {
     // we return a 404 for the version,
-    error.NotFoundJSON(res);
-    logger.HTTPLog(req, res);
+    await common.NotFound(req, res);
   }
 }
 
@@ -555,6 +486,7 @@ async function GETPackagesVersionTarball(req, res) {
     versionName: req.params.versionName,
   };
   // TODO: All of it, read above comment.
+  await common.NotSupported(req, res);
 }
 
 async function DELETEPackageVersion(req, res) {
@@ -586,26 +518,26 @@ async function DELETEPackageVersion(req, res) {
             res.status(204).send();
           } else {
             // TODO: Cannot write error handling till we know what errors it will return.
-            common.NotSupported(req, res);
+            await common.NotSupported(req, res);
           }
         } else {
           // we will return not found for a non-existant version deletion.
-          common.NotFound(req, res);
+          await common.NotFound(req, res);
         }
       } else {
         // getting package returned error.
         if (pack.short == "Not Found") {
-          common.NotFound(req, res);
+          await common.NotFound(req, res);
         } else {
-          common.ServerError(req, res, pack.content);
+          await common.ServerError(req, res, pack.content);
         }
       }
     } else {
       // TODO: Cannot write error handling without knowing what errors it'll return.
-      common.NotSupported(req, res);
+      await common.NotSupported(req, res);
     }
   } else {
-    common.AuthFail(req, res, user);
+    await common.AuthFail(req, res, user);
   }
 }
 
@@ -640,23 +572,13 @@ async function POSTPackagesEventUninstall(req, res) {
       }
     } else {
       if (pack.short == "Not Found") {
-        error.NotFoundJSON(res);
-        logger.HTTPLog(req, res);
+        await common.NotFound(req, res);
       } else {
-        error.ServerErrorJSON(res);
-        logger.HTTPLog(req, res);
-        logger.ErrorLog(req, res, pack.content);
+        await common.ServerError(req, res, pack.content);
       }
     }
   } else {
-    if (user.short == "Bad Auth") {
-      error.MissingAuthJSON(res);
-      logger.HTTPLog(req, res);
-    } else {
-      error.ServerErrorJSON(res);
-      logger.HTTPLog(req, res);
-      logger.ErrorLog(req, res, user.content);
-    }
+    await common.AuthFail(req, res, user);
   }
 }
 
