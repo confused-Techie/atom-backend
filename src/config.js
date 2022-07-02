@@ -28,7 +28,9 @@ function GetConfig() {
       debug: process.env.DEBUGLOG
         ? process.env.DEBUGLOG
         : data.env_variables.DEBUGLOG,
-      file_store: process.env.FILESTORE ? process.env.FILESTORE : data.env_variables.FILESTORE,
+      file_store: process.env.FILESTORE
+        ? process.env.FILESTORE
+        : data.env_variables.FILESTORE,
     };
   } catch (err) {
     // since this is necessary for the server to startup, we can throw an error here and exit the process.
