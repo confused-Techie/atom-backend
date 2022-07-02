@@ -474,7 +474,7 @@ async function GETPackagesVersion(req, res) {
       }
     }
   } else {
-    // we return a 404 for the version,
+    // we return a 404 for the version, since its an invalid format.
     await common.NotFound(req, res);
   }
 }

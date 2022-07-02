@@ -9,6 +9,7 @@ const resources = require("./resources.js");
 
 // We know what global cache objects we will have, so lets make this easy.
 let cached_user, cached_pointer, cached_packages;
+let deletion_flags = [];
 
 async function Shutdown() {
   logger.DebugLog("data.Shutdown called...");
@@ -29,6 +30,21 @@ async function Shutdown() {
       return resources.Write("pointer", cached_pointer.data);
     } else {
       logger.DebugLog("No need to save valid Pointer Cache.");
+    }
+  }
+  if (deletion_flags.length > 0) {
+    logger.DebugLog("Active Deletion Flags Stored. Moving to Delete.");
+    for (let i = 0; i < deletion_flags.length; i++) {
+      if (deletion_flags[i].type == "package") {
+        let rm = await resources.Delete(deletion_flags[i].file);
+        if (rm.ok) {
+          logger.DebugLog(`Deleted Successfully: ${deletion_flags[i].file}`);
+        } else {
+          logger.DebugLog(`FAILED to Delete: ${deletion_flags[i].file}; ${rm.short} - ${rm.content}`);
+        }
+      } else {
+        logger.DebugLog(`Unrecognized Type within Deletion Array: ${deletion_flags[i].type}, ${deletion_flags[i].file} not deleted.`);
+      }
     }
   }
 }
@@ -198,7 +214,11 @@ function SetPackagePointer(data) {
   }
 }
 
-function RemovePackageByPointer(pointer) {
+async function SetPackageByID(id, data) {
+  return resources.Write("package", data, id);
+}
+
+function RemovePackageByPointerV1(pointer) {
   try {
     let rm = fs.rmSync(`./data/packages/${pointer}`);
     // since rmSync returns undefined, we can check that, just in case it doesn't throw an error.
@@ -209,6 +229,35 @@ function RemovePackageByPointer(pointer) {
     }
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+async function RemovePackageByPointer(pointer) {
+  try {
+    deletion_flags.push({
+      type: "package",
+      file: pointer
+    });
+
+    return { ok: true };
+  } catch(err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+async function RestorePackageByPointer(pointer) {
+  let idx = -1;
+  for (let i = 0; i < deletion_flags.length; i++) {
+    if (deletion_flags[i].file == pointer) {
+      idx = i;
+    }
+  }
+
+  if (idx === -1) {
+    return { ok: false, content: `Unable to find ${pointer} within Deletion Array.`, short: "Not Found" };
+  } else {
+    deletion_flags.splice(idx, 1);
+    return { ok: true };
   }
 }
 
@@ -232,14 +281,21 @@ async function RemovePackageByName(name) {
         if (rewrite.ok) {
           return { ok: true, content: rewrite.content };
         } else {
-          // TODO: Determine how we handle this error.
-          // We may want to implement something like caching the file, instead of deleting it. And keeping it for some time.
-          return {
-            ok: false,
-            content:
-              "Failed to rewrite the package pointer file. The Old pointer still exists!",
-            short: "Server Error",
-          };
+          // Since the RemovePackageByPointer only marks the file for deletion, if this fails, we can then go back,
+          // and call for it to be resotred.
+          let rs = await RestorePackageByPointer(pack_pointer);
+
+          if (rs.ok) {
+            // This still did fail to remove the file. But we recovered and will  return an error.
+            return { ok: false, content: "Failed to rewrite the package pointer file. Recovered Package File. No Change.", short: "Server Error" };
+          } else {
+            return {
+              ok: false,
+              content:
+                "Failed to rewrite the package pointer file. The Package is still marked for deletion. The Old pointer still exists!",
+              short: "Server Error",
+            };
+          }
         }
       } else {
         // if this first part fails we can return the standard error, knowing that nothing permentant has been done.
@@ -389,17 +445,25 @@ async function UnStarPackageByName(packageName, userName) {
   }
 }
 
-async function SetPackageByID(id, data) {
-  // used to update EXISITNG package
-  try {
-    fs.writeFileSync(`./data/packages/${id}`, JSON.stringify(data, null, 4));
-    return { ok: true };
-  } catch (err) {
-    return { ok: false, content: err, short: "Server Error" };
+async function SetPackageByName(name, data) {
+  const pointers = await GetPackagePointer();
+
+  if (pointers.ok) {
+    if (pointers.content[name]) {
+      let write = await SetPackageByID(pointers.content[name], data);
+
+      if (write.ok) {
+        return { ok: true };
+      } else {
+        return write;
+      }
+    } else {
+      return { ok: false, content: "Unable to Find Package within Package Pointer Keys", short: "Not Found" };
+    }
+  } else {
+    return pointers;
   }
 }
-
-async function SetPackageByName(name, data) {}
 
 async function NewPackage(data) {
   // Used to create a new package file.
@@ -417,7 +481,7 @@ async function NewPackage(data) {
 
     if (write_pointer.ok) {
       // now with the pointers updated, lets write the package itself.
-      let write_pack = await SetPackageByID(id, data);
+      let write_pack = await SetPackageByID(`${id}.json`, data);
 
       if (write_pack.ok) {
         return { ok: true };
