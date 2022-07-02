@@ -40,10 +40,14 @@ async function Shutdown() {
         if (rm.ok) {
           logger.DebugLog(`Deleted Successfully: ${deletion_flags[i].file}`);
         } else {
-          logger.DebugLog(`FAILED to Delete: ${deletion_flags[i].file}; ${rm.short} - ${rm.content}`);
+          logger.DebugLog(
+            `FAILED to Delete: ${deletion_flags[i].file}; ${rm.short} - ${rm.content}`
+          );
         }
       } else {
-        logger.DebugLog(`Unrecognized Type within Deletion Array: ${deletion_flags[i].type}, ${deletion_flags[i].file} not deleted.`);
+        logger.DebugLog(
+          `Unrecognized Type within Deletion Array: ${deletion_flags[i].type}, ${deletion_flags[i].file} not deleted.`
+        );
       }
     }
   }
@@ -236,11 +240,11 @@ async function RemovePackageByPointer(pointer) {
   try {
     deletion_flags.push({
       type: "package",
-      file: pointer
+      file: pointer,
     });
 
     return { ok: true };
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
@@ -254,7 +258,11 @@ async function RestorePackageByPointer(pointer) {
   }
 
   if (idx === -1) {
-    return { ok: false, content: `Unable to find ${pointer} within Deletion Array.`, short: "Not Found" };
+    return {
+      ok: false,
+      content: `Unable to find ${pointer} within Deletion Array.`,
+      short: "Not Found",
+    };
   } else {
     deletion_flags.splice(idx, 1);
     return { ok: true };
@@ -287,7 +295,12 @@ async function RemovePackageByName(name) {
 
           if (rs.ok) {
             // This still did fail to remove the file. But we recovered and will  return an error.
-            return { ok: false, content: "Failed to rewrite the package pointer file. Recovered Package File. No Change.", short: "Server Error" };
+            return {
+              ok: false,
+              content:
+                "Failed to rewrite the package pointer file. Recovered Package File. No Change.",
+              short: "Server Error",
+            };
           } else {
             return {
               ok: false,
@@ -458,7 +471,11 @@ async function SetPackageByName(name, data) {
         return write;
       }
     } else {
-      return { ok: false, content: "Unable to Find Package within Package Pointer Keys", short: "Not Found" };
+      return {
+        ok: false,
+        content: "Unable to Find Package within Package Pointer Keys",
+        short: "Not Found",
+      };
     }
   } else {
     return pointers;
