@@ -10,6 +10,10 @@ const logger = require("./logger.js");
 const git = require("./git.js");
 const { server_url, paginated_amount } = require("./config.js").GetConfig();
 
+// Import handlers
+const update_handler = require("./handlers/update_handler.js");
+const star_handler = require("./handlers/star_handler.js");
+
 app.use((req, res, next) => {
   // This adds a start to the request, logging the exact time a request was received.
   req.start = Date.now();
@@ -1104,31 +1108,32 @@ app.get("/api/users/:login/stars", async (req, res) => {
  *   @Rtype application/json
  */
 app.get("/api/stars", async (req, res) => {
-  let params = {
-    auth: req.get("Authorization"),
-  };
-  let user = await users.VerifyAuth(params.auth);
+  //let params = {
+  //  auth: req.get("Authorization"),
+  //};
+  //let user = await users.VerifyAuth(params.auth);
 
-  if (user.ok) {
-    let packageCollection = await data.GetPackageCollection(user.content.stars);
-    if (packageCollection.ok) {
-      res.status(200).json(packageCollection.content);
-      logger.HTTPLog(req, res);
-    } else {
-      error.ServerErrorJSON(res);
-      logger.HTTPLog(req, res);
-      logger.ErrorLog(req, res, packageCollection.content);
-    }
-  } else {
-    if (user.short == "Bad Auth") {
-      error.MissingAuthJSON(res);
-      logger.HTTPLog(req, res);
-    } else {
-      error.ServerErrorJSON(res);
-      logger.HTTPLog(req, res);
-      logger.ErrorLog(req, res, user.content);
-    }
-  }
+  //if (user.ok) {
+  //  let packageCollection = await data.GetPackageCollection(user.content.stars);
+  //  if (packageCollection.ok) {
+  //    res.status(200).json(packageCollection.content);
+  //    logger.HTTPLog(req, res);
+  //  } else {
+  //    error.ServerErrorJSON(res);
+  //    logger.HTTPLog(req, res);
+  //    logger.ErrorLog(req, res, packageCollection.content);
+  //  }
+  //} else {
+  //  if (user.short == "Bad Auth") {
+  //    error.MissingAuthJSON(res);
+  //    logger.HTTPLog(req, res);
+  //  } else {
+  //    error.ServerErrorJSON(res);
+  //    logger.HTTPLog(req, res);
+  //    logger.ErrorLog(req, res, user.content);
+  //  }
+  //}
+  await star_handler.GETStars(req, res);
 });
 
 /**
@@ -1143,9 +1148,7 @@ app.get("/api/stars", async (req, res) => {
  *   @Rdesc Atom update feed, following the format expected by Squirrel.
  */
 app.get("/api/updates", async (req, res) => {
-  // TODO: Stopper: Update Method
-  error.UnsupportedJSON(res);
-  logger.HTTPLog(req, res);
+  await update_handler.GETUpdates(req, res);
 });
 
 app.use((req, res) => {
