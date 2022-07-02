@@ -46,7 +46,7 @@ This is a collection/list of all functions/methods of the Backend API, with thei
 * POFPrune(): 🏁
 * POSPrune(): 🏁
 * SearchWithinPackages(): 🏁
-* EngineFilter(): 🆘
+* EngineFilter(): 🏁
 
 ### Users.js
 

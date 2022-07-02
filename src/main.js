@@ -260,18 +260,6 @@ app.get("/api/themes/featured", async (req, res) => {
   // or leave it to the client is hard to say.
 });
 
-app.post(
-  "/api/packages/:packageName/versions/:versionName/events/uninstall",
-  async (req, res) => {
-    // TODO: Undocumented Endpoint discovered, as the endpoint used by APM during an uninstall.
-    // https://github.com/atom/apm/blob/master/src/uninstall.coffee
-    // Authorization Headers with the token. Seems to also have options.
-    // Assumption: This endpoint simply reduces the download count of a package. And nothing else.
-    // No clues in the code how this returns. But if we consider that all other posts to remove data
-    // return a 201, we can mirror that here.
-  }
-);
-
 /**
  * @web
  * @ignore
@@ -965,6 +953,85 @@ app.delete(
     // TODO: Stopper: Version handling, github auth
     error.UnsupportedJSON(res);
     logger.HTTPLog(req, res);
+  }
+);
+
+/**
+* @web
+* @ignore
+* @path /api/packages/:packageName/versions/:versionName/events/uninstall
+* @desc Previously undocumented endpoint. BETA: Decreases the packages download count, but one. Indicating an uninstall.
+* @method POST
+* @auth true
+* @param
+*   @name packageName
+*   @location path
+*   @required true
+*   @Pdesc The name of the packge to modify.
+* @param
+*   @name versionName
+*   @location path
+*   @required true
+*   @Pdesc This value is within the original spec. But has no use in its current implementation.
+* @param
+*   @name auth
+*   @location header
+*   @required true
+*   @Pdesc Valid Atom.io token.
+* @response
+*   @status 200
+*   @Rdesc Returns JSON ok: true
+*/
+app.post(
+  "/api/packages/:packageName/versions/:versionName/events/uninstall",
+  async (req, res) => {
+    // TODO: Undocumented Endpoint discovered, as the endpoint used by APM during an uninstall.
+    // https://github.com/atom/apm/blob/master/src/uninstall.coffee
+    // Authorization Headers with the token. Seems to also have options.
+    // Assumption: This endpoint simply reduces the download count of a package. And nothing else.
+    // No clues in the code how this returns. But if we consider that all other posts to remove data
+    // return a 201, we can mirror that here.
+    let params = {
+      auth: req.get("Authorization"),
+      packageName: decodeURIComponent(req.params.packageName),
+      versionName: req.params.versionName,
+    };
+
+    let user = await users.VerifyAuth(params.auth);
+    if (user.ok) {
+      let pack = data.GetPackageByName(params.packageName);
+      if (pack.ok) {
+        pack.content.downloads--;
+        let write = data.SetPackageByName(params.packageName, pack.content);
+        if (write.ok) {
+          // we modified the package downloads count, and wrote the new data successfully. We should return.
+          res.status(200).json({ ok: true });
+          logger.HTTPLog(req, res);
+        } else {
+          error.ServerErrorJSON(res);
+          logger.HTTPLog(req, res);
+          logger.ErrorLog(req, res, write.content);
+        }
+      } else {
+        if (pack.short == "Not Found") {
+          error.NotFoundJSON(res);
+          logger.HTTPLog(req, res);
+        } else {
+          error.ServerErrorJSON(res);
+          logger.HTTPLog(req, res);
+          logger.ErrorLog(req, res, pack.content);
+        }
+      }
+    } else {
+      if (user.short == "Bad Auth") {
+        error.MissingAuthJSON(res);
+        logger.HTTPLog(req, res);
+      } else {
+        error.ServerErrorJSON(res);
+        logger.HTTPLog(req, res);
+        logger.ErrorLog(req, res, user.content);
+      }
+    }
   }
 );
 
