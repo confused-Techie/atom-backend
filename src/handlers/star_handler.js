@@ -2,6 +2,7 @@ const error = require("../error.js");
 const logger = require("../logger.js");
 const users = require("../users.js");
 const data = require("../data.js");
+const common = require("./common_handler.js");
 
 async function GETStars(req, res) {
   let params = {
@@ -15,19 +16,10 @@ async function GETStars(req, res) {
       res.status(200).json(packageCollection.content);
       logger.HTTPLog(req, res);
     } else {
-      error.ServerErrorJSON(res);
-      logger.HTTPLog(req, res);
-      logger.ErrorLog(req, res, packageCollection.content);
+      await common.ServerError(req, res, packageCollection.content);
     }
   } else {
-    if (user.short == "Bad Auth") {
-      error.MissingAuthJSON(res);
-      logger.HTTPLog(req, res);
-    } else {
-      error.ServerErrorJSON(res);
-      logger.HTTPLog(req, res);
-      logger.ErrorLog(req, res, user.content);
-    }
+    await common.AuthFail(req, res, user);
   }
 }
 
