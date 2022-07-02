@@ -7,6 +7,29 @@
 
 > This is originally based off the research done on [Atom Community Server Backend](https://github.com/confused-Techie/atom-community-server-backend) which was written in Golang. But has been switched to JS for more broad support.
 
+## Get Started
+
+To start developing with this package, it should be rather quick.
+
+In the root folder for the downloaded package:
+```bash
+npm install .
+```
+
+To install all package dependencies.
+
+Then go ahead and create an `app.yaml` file, or rename the `app.example.yaml` to `app.yaml`. The contents of these files can mirror each other or you can read through the comments of `app.example.yaml` to find suitable alternatives for what you are testing. This config specifies the port of the server, the URL, as well as many other aspects.
+
+Finally you can run the API Server with `node .`, additionally there are several built in scripts that can be run with `npm run $SCRIPT_NAME`
+
+* `test`: Runs the Jest tests within the ./src/tests folder.
+* `api-docs`: Uses `@confused-techie/quick-webserver-docs` to generate documentation based off the JSDoc style comments.
+* `lint`: Uses `prettier` to format and lint the codebase.
+* `complex`: Uses `complexity-report` to generate complexity reports of the JavaScript. Keep in mind this does not support ES6 yet, so not all functions are documented.
+* `js-docs`: Uses `jsdoc2md` to generate documentation based off the JSDoc comments within the codebase.
+* `contributors:add`: Uses `all-contributors` to add a new contributor to the README.
+* `test_search`: Uses the `./src/tests/search.js` to run the search specified in `app.yaml` to test the results against several different words, phrases, and sentences, with different data sets.
+
 ## Documentation
 
 To view researched information and the behavior that will be mirrored from the original Backend is available [here](/docs/overview.md).

@@ -1,7 +1,7 @@
 {
   "name": "atom-community-server-backend-JS",
   "version": "1.0.0",
-  "description": "",
+  "description": "The Pulsar API Backend for the Community fork of Atom.",
   "main": "src/server.js",
   "engines": {
     "node": ">= 10.7.0 < 14.15.0"
@@ -16,7 +16,7 @@
     "test_search": "node ./src/tests/search.js"
   },
   "author": "confused-Techie",
-  "license": "TBD",
+  "license": "MIT",
   "dependencies": {
     "express": "^4.18.1",
     "js-yaml": "^4.1.0",
