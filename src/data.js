@@ -503,9 +503,16 @@ async function NewPackage(data) {
       if (write_pack.ok) {
         return { ok: true };
       } else {
-        // writing the package was unsuccessful.
-        // TODO: We probably want to then remove the package pointer entry if this fails.
-        return write_pack;
+        // writing the package was unsuccessful. We will remove the new pointer, and write that to disk.
+        // then return.
+        delete pointers.content[data.name];
+        let rewrite_pointer = await SetPackagePointer(pointers.content);
+
+        if (rewrite_pointer.ok) {
+          return { ok: false, content: "Failed to write package. Removed new Pointer. State Unchanged.", short: "Server Error" };
+        } else {
+          return { ok: false, content: `Failed to write package. Failed to remove new pointer. State Changed: ${write_pack.content}`, short: "Server Error" };
+        }
       }
     } else {
       return write_pointer;

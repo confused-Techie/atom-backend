@@ -517,8 +517,11 @@ async function DELETEPackageVersion(req, res) {
             // successfully wrote modified data.
             res.status(204).send();
           } else {
-            // TODO: Cannot write error handling till we know what errors it will return.
-            await common.NotSupported(req, res);
+            if (write.short == "Not Found") {
+              await common.NotFound(req, res);
+            } else {
+              await common.ServerError(req, res, write.content);
+            }
           }
         } else {
           // we will return not found for a non-existant version deletion.
@@ -543,12 +546,10 @@ async function DELETEPackageVersion(req, res) {
 
 async function POSTPackagesEventUninstall(req, res) {
   // POST /api/packages/:packageName/versions/:versionName/events/uninstall
-  // TODO: Undocumented Endpoint discovered, as the endpoint used by APM during an uninstall.
+  // This was originall an Undocumented endpoint, discovered as the endpoint using during an uninstall by APM.
   // https://github.com/atom/apm/blob/master/src/uninstall.coffee
-  // Authorization Headers with the token. Seems to also have options.
-  // Assumption: This endpoint simply reduces the download count of a package. And nothing else.
-  // No clues in the code how this returns. But if we consider that all other posts to remove data
-  // return a 201, we can mirror that here.
+  // The decision to return a '201' was based on how other POST endpoints return, during a successful event.
+  
   let params = {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),

@@ -63,7 +63,6 @@ app.get("/api/packages", async (req, res) => {
  * @ignore
  * @path /api/packages
  * @desc Publishes a new Package.
- * @todo With auth not setup, nor atombot setup, this is non-functional.
  * @method POST
  * @auth true
  * @param
@@ -405,7 +404,7 @@ app.delete(
  * @web
  * @ignore
  * @path /api/packages/:packageName/versions/:versionName/events/uninstall
- * @desc Previously undocumented endpoint. BETA: Decreases the packages download count, but one. Indicating an uninstall.
+ * @desc Previously undocumented endpoint. BETA: Decreases the packages download count, by one. Indicating an uninstall.
  * @method POST
  * @auth true
  * @param
@@ -430,8 +429,6 @@ app.delete(
 app.post(
   "/api/packages/:packageName/versions/:versionName/events/uninstall",
   async (req, res) => {
-    // TODO: Undocumented Endpoint discovered, as the endpoint used by APM during an uninstall.
-    // More documentation in handlers/package_handler.js
     await package_handler.POSTPackagesEventUninstall(req, res);
   }
 );
