@@ -1,4 +1,3 @@
-const error = require("../error.js");
 const logger = require("../logger.js");
 const users = require("../users.js");
 const data = require("../data.js");

@@ -85,7 +85,7 @@ async function POSTPackages(req, res) {
       // Even further though we need to check that the error is not found, since errors here can bubble.
       if (exists.short == "Not Found") {
         // Now we know the package doesn't exist. And we want to check that the user owns this repo on git.
-        let gitowner = await git.Ownership(user.content, repository);
+        let gitowner = await git.Ownership(user.content, params.repository);
 
         if (gitowner.ok) {
           // Now knowing they own the git repo, and it doesn't exist here, lets publish.
@@ -171,10 +171,10 @@ async function GETPackagesSearch(req, res) {
     packages = await collection.Direction(packages, params.direction);
     // Now that the packages are sorted in the proper direction, we need to exempt results, according to our pagination.
     let total_pages = Math.ceil(packages.length / paginated_amount); // We need to get the total before we start splicing and dicing.
-    if (params.page != 1) {
+    if (params.page !== 1) {
       packages.splice(0, params.page * paginated_amount); // Remove from the start to however many packages, should be visible on previous pages.
     }
-    if (params.page != total_pages) {
+    if (params.page !== total_pages) {
       packages.splice(
         params.page * paginated_amount + paginated_amount,
         packages.length
@@ -506,9 +506,9 @@ async function DELETEPackageVersion(req, res) {
       let pack = await data.GetPackageByName(params.packageName);
 
       if (pack.ok) {
-        if (pack.content[versionName]) {
+        if (pack.content[params.versionName]) {
           // the version exists.
-          delete pack.content[versionName];
+          delete pack.content[params.versionName];
 
           // now to write back the modified data.
           let write = data.SetPackageByName(params.packageName, pack.content);
@@ -544,7 +544,7 @@ async function DELETEPackageVersion(req, res) {
   }
 }
 
-async function POSTPackagesEventUninstall(req, res) {
+async function POSTPackagesEventUninstallV1(req, res) {
   // POST /api/packages/:packageName/versions/:versionName/events/uninstall
   // This was originall an Undocumented endpoint, discovered as the endpoint using during an uninstall by APM.
   // https://github.com/atom/apm/blob/master/src/uninstall.coffee
@@ -577,6 +577,65 @@ async function POSTPackagesEventUninstall(req, res) {
       } else {
         await common.ServerError(req, res, pack.content);
       }
+    }
+  } else {
+    await common.AuthFail(req, res, user);
+  }
+}
+
+async function POSTPackagesEventUninstall(req, res) {
+  let params = {
+    auth: req.get("Authorization"),
+    packageName: decodeURIComponent(req.params.packageName),
+    versionName: req.params.versionName,
+  };
+
+  await DetermineUserPackagePermission(req, res, params.auth, async (user) => {
+    let pack = await data.GetPackageByName(params.packageName);
+    if (pack.ok) {
+      pack.content.downloads--;
+      let write = await data.SetPackageByName(params.packageName, pack.content);
+      if (write.ok) {
+        res.status(200).json({ ok: true });
+        logger.HTTPLog(req, res);
+      } else {
+        console.log(write);
+        await common.ServerError(req, res, write.content);
+      }
+    } else {
+      if (pack.short == "Not Found") {
+        await common.NotFound(req, res);
+      } else {
+        console.log('pack');
+        console.log(pack);
+        await common.ServerError(req, res, pack.content);
+      }
+    }
+  });
+}
+
+// ========== Helper Functions ==========
+async function DetermineUserPackagePermission(req, res, auth, callback) {
+  let user = await users.VerifyAuth(auth);
+
+  if (user.ok) {
+    callback(user);
+  } else {
+    await common.AuthFail(req, res, user);
+  }
+}
+
+async function DetermineUserPackageGitPermission(req, res, auth, package, callback) {
+  let user = await users.VerifyAuth(auth);
+
+  if (user.ok) {
+    let gitowner = await git.Ownership(user.content, package);
+
+    if (gitowner.ok) {
+      callback(user, gitowner);
+    } else {
+      // TODO: Once determined the errors this will return, then we can impement. For now...
+      await common.NotSupported(req, res);
     }
   } else {
     await common.AuthFail(req, res, user);
