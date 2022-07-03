@@ -606,7 +606,7 @@ async function POSTPackagesEventUninstall(req, res) {
       if (pack.short == "Not Found") {
         await common.NotFound(req, res);
       } else {
-        console.log('pack');
+        console.log("pack");
         console.log(pack);
         await common.ServerError(req, res, pack.content);
       }
@@ -625,7 +625,13 @@ async function DetermineUserPackagePermission(req, res, auth, callback) {
   }
 }
 
-async function DetermineUserPackageGitPermission(req, res, auth, package, callback) {
+async function DetermineUserPackageGitPermission(
+  req,
+  res,
+  auth,
+  package,
+  callback
+) {
   let user = await users.VerifyAuth(auth);
 
   if (user.ok) {
