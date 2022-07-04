@@ -8,7 +8,10 @@
 // or to some other authenticated service.
 
 const fs = require("fs");
-const { cache_time, file_store } = require("./config.js").GetConfig();
+const { Storage } = require("@google-cloud/storage");
+const { cache_time, file_store, GCS_BUCKET, GCS_SERVICE_ACCOUNT_FILE } = require("./config.js").GetConfig();
+
+let gcs_storage;
 
 class CacheObject {
   constructor(contents, name) {
@@ -69,6 +72,19 @@ async function readFile(path) {
         return { ok: false, content: err, short: "Server Error" };
       }
     }
+  } else if (file_store == "gcs") {
+    // check we have a valid storage object.
+    if (gcs_storage === undefined) {
+      gcs_storage = new Storage({keyFilename: GCS_SERVICE_ACCOUNT_FILE});
+    }
+
+    // then continue on
+    try {
+      let contents = await gcs_storage.bucket(GCS_BUCKET).file(path).download();
+      return { ok: true, content: JSON.parse(contents) };
+    } catch(err) {
+      return { ok: false, content: err, short: "Server Error" };
+    }
   } else {
     console.log("UNRECOGNIZED FILE STORE METHOD! Exiting...");
     process.exit(1);
@@ -96,6 +112,19 @@ async function writeFile(path, data) {
     } catch (err) {
       return { ok: false, content: err, short: "Server Error" };
     }
+  } else if (file_store == "gcs") {
+    // check we have a valid storage object.
+    if (gcs_storage === undefined) {
+      gcs_storage = new Storage({keyFilename: GCS_SERVICE_ACCOUNT_FILE});
+    }
+
+    // then continue on
+    try {
+      await gcs_storage.bucket(GCS_BUCKET).file(path).save(data);
+      return { ok: true };
+    } catch(err) {
+      return { ok: false, content: err, short: "Server Error" };
+    }
   } else {
     console.log("UNRECOGNIZED FILE STORE METHOD! Exiting...");
     process.exit(1);
@@ -105,17 +134,33 @@ async function writeFile(path, data) {
 async function Delete(name) {
   // since we know the only data we ever want to delete from disk will be packages,
   // a type is not needed here.
-  try {
-    let rm = fs.rmSync(`./data/packages/${name}`);
-    // since rmSync returns undefined, we can check that, just in case it doesn't throw an error.
-    if (rm === undefined) {
-      return { ok: true };
-    } else {
-      return { ok: false, content: "Not Available", short: "Server Error" };
+  if (file_store == "filesystem") {
+    try {
+      let rm = fs.rmSync(`./data/packages/${name}`);
+      // since rmSync returns undefined, we can check that, just in case it doesn't throw an error.
+      if (rm === undefined) {
+        return { ok: true };
+      } else {
+        return { ok: false, content: "Not Available", short: "Server Error" };
+      }
+    } catch (err) {
+      return { ok: false, content: err, short: "Server Error" };
     }
-  } catch (err) {
-    return { ok: false, content: err, short: "Server Error" };
+  } else if (file_store == "gcs") {
+    if (gcs_storage === undefined) {
+      gcs_storage = new Storage({keyFilename: GCS_SERVICE_ACCOUNT_FILE});
+    }
+    try {
+      await gcs_storage.bucket(GCS_BUCKET).file(name).delete();
+      return { ok: true };
+    } catch(err) {
+      return { ok: false, content: err, short: "Server Error" };
+    }
+  } else {
+    console.log("UNRECOGNIZED FILE STORE METHOD! Exiting...");
+    process.exit(1);
   }
+
 }
 
 module.exports = {

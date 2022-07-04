@@ -31,6 +31,8 @@ function GetConfig() {
       file_store: process.env.FILESTORE
         ? process.env.FILESTORE
         : data.env_variables.FILESTORE,
+      GCS_BUCKET: process.env.GCS_BUCKET ? process.env.GCS_BUCKET : data.env_variables.GCS_BUCKET,
+      GCS_SERVICE_ACCOUNT_FILE: process.env.GCS_SERVICE_ACCOUNT_FILE ? process.env.GCS_SERVICE_ACCOUNT_FILE : data.env_variables.GCS_SERVICE_ACCOUNT_FILE,
     };
   } catch (err) {
     // since this is necessary for the server to startup, we can throw an error here and exit the process.

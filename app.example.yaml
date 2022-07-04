@@ -22,4 +22,8 @@ env_variables:
   DEBUGLOG: true
   # This indicates how the server will retreive data.
   # - "filesystem": Means the data is within the ./data folder.
+  # - "gcs": Means the data will be hosted in Google Cloud Storage.
   FILESTORE: "filesystem"
+  # The following settings are for storing data within Google Cloud Storage
+  GCS_BUCKET: "bucket_name"
+  GCS_SERVICE_ACCOUNT_FILE: "local_file_path"
