@@ -592,13 +592,13 @@ async function DetermineUserPackageGitPermission(
   req,
   res,
   auth,
-  package,
+  pack,
   callback
 ) {
   let user = await users.VerifyAuth(auth);
 
   if (user.ok) {
-    let gitowner = await git.Ownership(user.content, package);
+    let gitowner = await git.Ownership(user.content, pack);
 
     if (gitowner.ok) {
       callback(user, gitowner);

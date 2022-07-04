@@ -11,7 +11,7 @@
     "api-docs": "quick-webserver-docs -i ./src/main.js -o ./docs/api.md",
     "lint": "prettier --check -u -w .",
     "complex": "cr --newmi --config .complexrc .",
-    "js-docs": "jsdoc2md ./src/*.js > ./docs/JavaScript.md",
+    "js-docs": "jsdoc2md ./src/*.js ./src/handlers/*.js > ./docs/JavaScript.md",
     "contributors:add": "all-contributors add",
     "test_search": "node ./src/tests/search.js"
   },
