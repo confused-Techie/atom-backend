@@ -1,8 +1,11 @@
-## Classes
+## Modules
 
 <dl>
-<dt><a href="#CacheObject">CacheObject</a></dt>
-<dd></dd>
+<dt><a href="#resources.module_js">js</a></dt>
+<dd><p>This module provides a way for other functions to read/write/delete data without knowing or
+thinking about the underlying file structure. Providing abstraction if the data resides on a local
+filesystem, Google Cloud Storage, or something else entirely.</p>
+</dd>
 </dl>
 
 ## Functions
@@ -16,20 +19,6 @@ Note this should be called before, any Pruning has taken place.</p>
 <dd><p>Used to get Server Config data from the <code>app.yaml</code> file at the root of the project.
 Or from environment variables. Prioritizing environment variables.</p>
 </dd>
-<dt><a href="#Read">Read(type, name)</a> ⇒ <code>object</code></dt>
-<dd><p>Exported function to read data from the filesystem, whatever that may be.</p>
-</dd>
-<dt><a href="#readFile">readFile(path)</a> ⇒ <code>object</code></dt>
-<dd><p>Non-Exported function to read data from the filesystem. Whatever that may be.</p>
-</dd>
-<dt><a href="#Write">Write(type, data, name)</a> ⇒ <code>object</code></dt>
-<dd><p>The Exported Write function, to allow writing of data to the filesystem.</p>
-</dd>
-<dt><a href="#writeFile">writeFile(path, data)</a> ⇒ <code>object</code></dt>
-<dd><p>Non-Exported write function. Used to directly write data to the filesystem. Whatever that may be.</p>
-</dd>
-<dt><a href="#Delete">Delete(name)</a> ⇒ <code>object</code></dt>
-<dd></dd>
 <dt><a href="#VerifyAuth">VerifyAuth(token, [callback])</a> ⇒ <code>object</code></dt>
 <dd><p>Checks every existing user within the users file, to see if the token provided exists within their valid
 tokens. If it does will return the entire user object. If an optional callback is provided will invoke the
@@ -52,14 +41,108 @@ This pruned item should never be written back to disk, as removed the data from 
 </dd>
 </dl>
 
-<a name="CacheObject"></a>
+<a name="resources.module_js"></a>
 
-## CacheObject
-**Kind**: global class  
-<a name="new_CacheObject_new"></a>
+## js
+This module provides a way for other functions to read/write/delete data without knowing or
+thinking about the underlying file structure. Providing abstraction if the data resides on a local
+filesystem, Google Cloud Storage, or something else entirely.
 
-### new CacheObject()
+
+* [js](#resources.module_js)
+    * [~CacheObject](#resources.module_js..CacheObject)
+        * [new CacheObject([name], contents)](#new_resources.module_js..CacheObject_new)
+    * [~Read(type, name)](#resources.module_js..Read) ⇒ <code>object</code>
+    * [~readFile(path)](#resources.module_js..readFile) ⇒ <code>object</code>
+    * [~Write(type, data, name)](#resources.module_js..Write) ⇒ <code>object</code>
+    * [~writeFile(path, data)](#resources.module_js..writeFile) ⇒ <code>object</code>
+    * [~Delete(name)](#resources.module_js..Delete) ⇒ <code>object</code>
+
+<a name="resources.module_js..CacheObject"></a>
+
+### js~CacheObject
+**Kind**: inner class of [<code>js</code>](#resources.module_js)  
+<a name="new_resources.module_js..CacheObject_new"></a>
+
+#### new CacheObject([name], contents)
 Allows simple interfaces to handle caching an object in memory. Used to cache data read from the filesystem.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [name] | <code>string</code> | Optional name to assign to the Cached Object. |
+| contents | <code>object</code> | The contents of this cached object. Intended to be a JavaScript object. But could be anything. |
+
+<a name="resources.module_js..Read"></a>
+
+### js~Read(type, name) ⇒ <code>object</code>
+Exported function to read data from the filesystem, whatever that may be.
+
+**Kind**: inner method of [<code>js</code>](#resources.module_js)  
+**Returns**: <code>object</code> - If type is "package" or "pointer" returns a Server Status Object, with `content`
+being a `CacheObject` class, already initialized and ready for consumption. Otherwise if type is
+"package" returns the return from `readFile`. Errors bubble up from `readFile`.  
+**Implments**: <code>readFile</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| type | <code>string</code> | The type of data we are reading. Valid Types: "user", "pointer", "package". |
+| name | <code>string</code> | The name of the file we are reading. Only needed if type is "package", in which case this <b>MUST</b> include `.json` for example `UUID.json`. |
+
+<a name="resources.module_js..readFile"></a>
+
+### js~readFile(path) ⇒ <code>object</code>
+Non-Exported function to read data from the filesystem. Whatever that may be.
+
+**Kind**: inner method of [<code>js</code>](#resources.module_js)  
+**Returns**: <code>object</code> - A Server Status Object, with `content` being the read file parsed from JSON.
+If error returns "Server Error" or "File Not Found".  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| path | <code>string</code> | The Path to whatever file we want. |
+
+<a name="resources.module_js..Write"></a>
+
+### js~Write(type, data, name) ⇒ <code>object</code>
+The Exported Write function, to allow writing of data to the filesystem.
+
+**Kind**: inner method of [<code>js</code>](#resources.module_js)  
+**Implements**: <code>writeFile</code>  
+**Returns**: <code>object</code> - Returns the object returned from `writeFile`. Errors bubble up from `writeFile`.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| type | <code>string</code> | The Type of data we are writing. Valid Types: "user", "pointer", "package" |
+| data | <code>object</code> | A JavaScript Object that will be `JSON.stringify`ed before writing. |
+| name | <code>string</code> | The path name of the file we are writing. Only required when type is "package", in which case it should be `UUID.json`, it <b>MUST</b> include the `.json`. |
+
+<a name="resources.module_js..writeFile"></a>
+
+### js~writeFile(path, data) ⇒ <code>object</code>
+Non-Exported write function. Used to directly write data to the filesystem. Whatever that may be.
+
+**Kind**: inner method of [<code>js</code>](#resources.module_js)  
+**Returns**: <code>object</code> - A Server Status Object, with `content` only on an error.
+Errors returned "Server Error".  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| path | <code>string</code> | The path to the file we are writing. Including the destination file. |
+| data | <code>object</code> | The Data we are writing to the filesystem. Already encoded in a compatible format. |
+
+<a name="resources.module_js..Delete"></a>
+
+### js~Delete(name) ⇒ <code>object</code>
+**Kind**: inner method of [<code>js</code>](#resources.module_js)  
+**Returns**: <code>object</code> - A Server Status Object, with `content` non-existant on a successful deletion.
+Errors returned as "Server Error".  
+**Descc**: Exported function to delete data from the filesystem, whatever that may be. But since we know
+we will only ever be deleting packages, these will only ever attempt to delete a package.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name of the package we want to delete. <b>MUST</b> include `.json`, as in `UUID.json`. |
 
 <a name="Sort"></a>
 
@@ -87,74 +170,6 @@ Or from environment variables. Prioritizing environment variables.
 ```js
 const { search_algorithm } = require("./config.js").GetConfig();
 ```
-<a name="Read"></a>
-
-## Read(type, name) ⇒ <code>object</code>
-Exported function to read data from the filesystem, whatever that may be.
-
-**Kind**: global function  
-**Returns**: <code>object</code> - If type is "package" or "pointer" returns a Server Status Object, with `content`
-being a `CacheObject` class, already initialized and ready for consumption. Otherwise if type is
-"package" returns the return from `readFile`.  
-**Implments**: [<code>readFile</code>](#readFile)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| type | <code>string</code> | The type of data we are reading. Valid Types: "user", "pointer", "package". |
-| name | <code>string</code> | The name of the file we are reading. Only needed if type is "package", in which case this <b>MUST</b> include `.json` for example `UUID.json`. |
-
-<a name="readFile"></a>
-
-## readFile(path) ⇒ <code>object</code>
-Non-Exported function to read data from the filesystem. Whatever that may be.
-
-**Kind**: global function  
-**Returns**: <code>object</code> - A Server Status Object, with `content` being the read file parsed from JSON.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| path | <code>string</code> | The Path to whatever file we want. |
-
-<a name="Write"></a>
-
-## Write(type, data, name) ⇒ <code>object</code>
-The Exported Write function, to allow writing of data to the filesystem.
-
-**Kind**: global function  
-**Implements**: [<code>writeFile</code>](#writeFile)  
-**Returns**: <code>object</code> - Returns the object returned from `writeFile`.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| type | <code>string</code> | The Type of data we are writing. Valid Types: "user", "pointer", "package" |
-| data | <code>object</code> | A JavaScript Object that will be `JSON.stringify`ed before writing. |
-| name | <code>string</code> | The path name of the file we are writing. Only required when type is "package", in which case it should be `UUID.json`, it <b>MUST</b> include the `.json`. |
-
-<a name="writeFile"></a>
-
-## writeFile(path, data) ⇒ <code>object</code>
-Non-Exported write function. Used to directly write data to the filesystem. Whatever that may be.
-
-**Kind**: global function  
-**Returns**: <code>object</code> - A Server Status Object, with `content` only on an error.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| path | <code>string</code> | The path to the file we are writing. Including the destination file. |
-| data | <code>object</code> | The Data we are writing to the filesystem. Already encoded in a compatible format. |
-
-<a name="Delete"></a>
-
-## Delete(name) ⇒ <code>object</code>
-**Kind**: global function  
-**Returns**: <code>object</code> - A Server Status Object, with `content` non-existant on a successful deletion.  
-**Descc**: Exported function to delete data from the filesystem, whatever that may be. But since we know
-we will only ever be deleting packages, these will only ever attempt to delete a package.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| name | <code>string</code> | The name of the package we want to delete. <b>MUST</b> include `.json`, as in `UUID.json`. |
-
 <a name="VerifyAuth"></a>
 
 ## VerifyAuth(token, [callback]) ⇒ <code>object</code>
