@@ -1,5 +1,5 @@
 /**
- * @module resources.js
+ * @module Resources
  * @desc This module provides a way for other functions to read/write/delete data without knowing or
  * thinking about the underlying file structure. Providing abstraction if the data resides on a local
  * filesystem, Google Cloud Storage, or something else entirely.
