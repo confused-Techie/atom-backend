@@ -1,7 +1,7 @@
 ## Modules
 
 <dl>
-<dt><a href="#resources.module_js">js</a></dt>
+<dt><a href="#module_Resources">Resources</a></dt>
 <dd><p>This module provides a way for other functions to read/write/delete data without knowing or
 thinking about the underlying file structure. Providing abstraction if the data resides on a local
 filesystem, Google Cloud Storage, or something else entirely.</p>
@@ -41,28 +41,28 @@ This pruned item should never be written back to disk, as removed the data from 
 </dd>
 </dl>
 
-<a name="resources.module_js"></a>
+<a name="module_Resources"></a>
 
-## js
+## Resources
 This module provides a way for other functions to read/write/delete data without knowing or
 thinking about the underlying file structure. Providing abstraction if the data resides on a local
 filesystem, Google Cloud Storage, or something else entirely.
 
 
-* [js](#resources.module_js)
-    * [~CacheObject](#resources.module_js..CacheObject)
-        * [new CacheObject([name], contents)](#new_resources.module_js..CacheObject_new)
-    * [~Read(type, name)](#resources.module_js..Read) ⇒ <code>object</code>
-    * [~readFile(path)](#resources.module_js..readFile) ⇒ <code>object</code>
-    * [~Write(type, data, name)](#resources.module_js..Write) ⇒ <code>object</code>
-    * [~writeFile(path, data)](#resources.module_js..writeFile) ⇒ <code>object</code>
-    * [~Delete(name)](#resources.module_js..Delete) ⇒ <code>object</code>
+* [Resources](#module_Resources)
+    * [~CacheObject](#module_Resources..CacheObject)
+        * [new CacheObject([name], contents)](#new_module_Resources..CacheObject_new)
+    * [~Read(type, name)](#module_Resources..Read) ⇒ <code>object</code>
+    * [~readFile(path)](#module_Resources..readFile) ⇒ <code>object</code>
+    * [~Write(type, data, name)](#module_Resources..Write) ⇒ <code>object</code>
+    * [~writeFile(path, data)](#module_Resources..writeFile) ⇒ <code>object</code>
+    * [~Delete(name)](#module_Resources..Delete) ⇒ <code>object</code>
 
-<a name="resources.module_js..CacheObject"></a>
+<a name="module_Resources..CacheObject"></a>
 
-### js~CacheObject
-**Kind**: inner class of [<code>js</code>](#resources.module_js)  
-<a name="new_resources.module_js..CacheObject_new"></a>
+### Resources~CacheObject
+**Kind**: inner class of [<code>Resources</code>](#module_Resources)  
+<a name="new_module_Resources..CacheObject_new"></a>
 
 #### new CacheObject([name], contents)
 Allows simple interfaces to handle caching an object in memory. Used to cache data read from the filesystem.
@@ -73,12 +73,12 @@ Allows simple interfaces to handle caching an object in memory. Used to cache da
 | [name] | <code>string</code> | Optional name to assign to the Cached Object. |
 | contents | <code>object</code> | The contents of this cached object. Intended to be a JavaScript object. But could be anything. |
 
-<a name="resources.module_js..Read"></a>
+<a name="module_Resources..Read"></a>
 
-### js~Read(type, name) ⇒ <code>object</code>
+### Resources~Read(type, name) ⇒ <code>object</code>
 Exported function to read data from the filesystem, whatever that may be.
 
-**Kind**: inner method of [<code>js</code>](#resources.module_js)  
+**Kind**: inner method of [<code>Resources</code>](#module_Resources)  
 **Returns**: <code>object</code> - If type is "package" or "pointer" returns a Server Status Object, with `content`
 being a `CacheObject` class, already initialized and ready for consumption. Otherwise if type is
 "package" returns the return from `readFile`. Errors bubble up from `readFile`.  
@@ -89,12 +89,12 @@ being a `CacheObject` class, already initialized and ready for consumption. Othe
 | type | <code>string</code> | The type of data we are reading. Valid Types: "user", "pointer", "package". |
 | name | <code>string</code> | The name of the file we are reading. Only needed if type is "package", in which case this <b>MUST</b> include `.json` for example `UUID.json`. |
 
-<a name="resources.module_js..readFile"></a>
+<a name="module_Resources..readFile"></a>
 
-### js~readFile(path) ⇒ <code>object</code>
+### Resources~readFile(path) ⇒ <code>object</code>
 Non-Exported function to read data from the filesystem. Whatever that may be.
 
-**Kind**: inner method of [<code>js</code>](#resources.module_js)  
+**Kind**: inner method of [<code>Resources</code>](#module_Resources)  
 **Returns**: <code>object</code> - A Server Status Object, with `content` being the read file parsed from JSON.
 If error returns "Server Error" or "File Not Found".  
 
@@ -102,12 +102,12 @@ If error returns "Server Error" or "File Not Found".
 | --- | --- | --- |
 | path | <code>string</code> | The Path to whatever file we want. |
 
-<a name="resources.module_js..Write"></a>
+<a name="module_Resources..Write"></a>
 
-### js~Write(type, data, name) ⇒ <code>object</code>
+### Resources~Write(type, data, name) ⇒ <code>object</code>
 The Exported Write function, to allow writing of data to the filesystem.
 
-**Kind**: inner method of [<code>js</code>](#resources.module_js)  
+**Kind**: inner method of [<code>Resources</code>](#module_Resources)  
 **Implements**: <code>writeFile</code>  
 **Returns**: <code>object</code> - Returns the object returned from `writeFile`. Errors bubble up from `writeFile`.  
 
@@ -117,12 +117,12 @@ The Exported Write function, to allow writing of data to the filesystem.
 | data | <code>object</code> | A JavaScript Object that will be `JSON.stringify`ed before writing. |
 | name | <code>string</code> | The path name of the file we are writing. Only required when type is "package", in which case it should be `UUID.json`, it <b>MUST</b> include the `.json`. |
 
-<a name="resources.module_js..writeFile"></a>
+<a name="module_Resources..writeFile"></a>
 
-### js~writeFile(path, data) ⇒ <code>object</code>
+### Resources~writeFile(path, data) ⇒ <code>object</code>
 Non-Exported write function. Used to directly write data to the filesystem. Whatever that may be.
 
-**Kind**: inner method of [<code>js</code>](#resources.module_js)  
+**Kind**: inner method of [<code>Resources</code>](#module_Resources)  
 **Returns**: <code>object</code> - A Server Status Object, with `content` only on an error.
 Errors returned "Server Error".  
 
@@ -131,10 +131,10 @@ Errors returned "Server Error".
 | path | <code>string</code> | The path to the file we are writing. Including the destination file. |
 | data | <code>object</code> | The Data we are writing to the filesystem. Already encoded in a compatible format. |
 
-<a name="resources.module_js..Delete"></a>
+<a name="module_Resources..Delete"></a>
 
-### js~Delete(name) ⇒ <code>object</code>
-**Kind**: inner method of [<code>js</code>](#resources.module_js)  
+### Resources~Delete(name) ⇒ <code>object</code>
+**Kind**: inner method of [<code>Resources</code>](#module_Resources)  
 **Returns**: <code>object</code> - A Server Status Object, with `content` non-existant on a successful deletion.
 Errors returned as "Server Error".  
 **Descc**: Exported function to delete data from the filesystem, whatever that may be. But since we know
