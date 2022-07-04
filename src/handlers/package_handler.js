@@ -544,46 +544,12 @@ async function DELETEPackageVersion(req, res) {
   }
 }
 
-async function POSTPackagesEventUninstallV1(req, res) {
+async function POSTPackagesEventUninstall(req, res) {
   // POST /api/packages/:packageName/versions/:versionName/events/uninstall
   // This was originall an Undocumented endpoint, discovered as the endpoint using during an uninstall by APM.
   // https://github.com/atom/apm/blob/master/src/uninstall.coffee
   // The decision to return a '201' was based on how other POST endpoints return, during a successful event.
 
-  let params = {
-    auth: req.get("Authorization"),
-    packageName: decodeURIComponent(req.params.packageName),
-    versionName: req.params.versionName,
-  };
-
-  let user = await users.VerifyAuth(params.auth);
-  if (user.ok) {
-    let pack = data.GetPackageByName(params.packageName);
-    if (pack.ok) {
-      pack.content.downloads--;
-      let write = data.SetPackageByName(params.packageName, pack.content);
-      if (write.ok) {
-        // we modified the package downloads count, and wrote the new data successfully. We should return.
-        res.status(200).json({ ok: true });
-        logger.HTTPLog(req, res);
-      } else {
-        error.ServerErrorJSON(res);
-        logger.HTTPLog(req, res);
-        logger.ErrorLog(req, res, write.content);
-      }
-    } else {
-      if (pack.short == "Not Found") {
-        await common.NotFound(req, res);
-      } else {
-        await common.ServerError(req, res, pack.content);
-      }
-    }
-  } else {
-    await common.AuthFail(req, res, user);
-  }
-}
-
-async function POSTPackagesEventUninstall(req, res) {
   let params = {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),
@@ -599,15 +565,12 @@ async function POSTPackagesEventUninstall(req, res) {
         res.status(200).json({ ok: true });
         logger.HTTPLog(req, res);
       } else {
-        console.log(write);
         await common.ServerError(req, res, write.content);
       }
     } else {
       if (pack.short == "Not Found") {
         await common.NotFound(req, res);
       } else {
-        console.log("pack");
-        console.log(pack);
         await common.ServerError(req, res, pack.content);
       }
     }
