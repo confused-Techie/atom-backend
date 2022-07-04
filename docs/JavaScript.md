@@ -1,7 +1,13 @@
 ## Modules
 
 <dl>
-<dt><a href="#module_Resources">Resources</a></dt>
+<dt><a href="#module_error">error</a></dt>
+<dd><p>Contains different error messages that can be returned, adding them and their
+respective HTTP Status Codes to the <code>Response</code> object provided to them.
+Letting them all be defined in one place for ease of modification, and easily route
+to them from different handlers.</p>
+</dd>
+<dt><a href="#module_resources">resources</a></dt>
 <dd><p>This module provides a way for other functions to read/write/delete data without knowing or
 thinking about the underlying file structure. Providing abstraction if the data resides on a local
 filesystem, Google Cloud Storage, or something else entirely.</p>
@@ -41,28 +47,117 @@ This pruned item should never be written back to disk, as removed the data from 
 </dd>
 </dl>
 
-<a name="module_Resources"></a>
+<a name="module_error"></a>
 
-## Resources
+## error
+Contains different error messages that can be returned, adding them and their
+respective HTTP Status Codes to the `Response` object provided to them.
+Letting them all be defined in one place for ease of modification, and easily route
+to them from different handlers.
+
+
+* [error](#module_error)
+    * [~NotFoundJSON(res)](#module_error..NotFoundJSON)
+    * [~SiteWide404(res)](#module_error..SiteWide404)
+    * [~MissingAuthJSON(res)](#module_error..MissingAuthJSON)
+    * [~ServerErrorJSON(res)](#module_error..ServerErrorJSON)
+    * [~UnsupportedJSON(res)](#module_error..UnsupportedJSON)
+
+<a name="module_error..NotFoundJSON"></a>
+
+### error~NotFoundJSON(res)
+The Standard JSON Handling when an object is not found. Setting:
+Status Code: 404
+JSON Respone Body: message: "Not Found"
+
+**Kind**: inner method of [<code>error</code>](#module_error)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_error..SiteWide404"></a>
+
+### error~SiteWide404(res)
+The standard Website Page 404 not found handler.
+
+**Kind**: inner method of [<code>error</code>](#module_error)  
+**Todo**
+
+- [ ] Currently this returns a JSON object, but in the future should return an HTML Not Found page.
+Setting Currently:
+Status Code: 404
+JSON Response Body: message: "This is a standin for the proper site wide 404 page."
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_error..MissingAuthJSON"></a>
+
+### error~MissingAuthJSON(res)
+JSON Handling when authentication fails. Setting:
+Status Code: 401
+JSON Response Body: message: "Requires authentication. Please update your token if you haven't done so recently."
+
+**Kind**: inner method of [<code>error</code>](#module_error)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_error..ServerErrorJSON"></a>
+
+### error~ServerErrorJSON(res)
+The Standard Server Error JSON Endpoint. Setting:
+Status Code: 500
+JSON Response Body: message: "Application Error"
+
+**Kind**: inner method of [<code>error</code>](#module_error)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_error..UnsupportedJSON"></a>
+
+### error~UnsupportedJSON(res)
+This is a standard JSON endpoint to define an endpoint that is currently not supported.
+Used currently to delineate which endpoints have not been fully implemented. Or a specific error endpoint
+that has not been written yet.
+Setting:
+Status Code: 501
+JSON Response Body: message: "While under development this feature is not supported."
+
+**Kind**: inner method of [<code>error</code>](#module_error)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_resources"></a>
+
+## resources
 This module provides a way for other functions to read/write/delete data without knowing or
 thinking about the underlying file structure. Providing abstraction if the data resides on a local
 filesystem, Google Cloud Storage, or something else entirely.
 
 
-* [Resources](#module_Resources)
-    * [~CacheObject](#module_Resources..CacheObject)
-        * [new CacheObject([name], contents)](#new_module_Resources..CacheObject_new)
-    * [~Read(type, name)](#module_Resources..Read) ⇒ <code>object</code>
-    * [~readFile(path)](#module_Resources..readFile) ⇒ <code>object</code>
-    * [~Write(type, data, name)](#module_Resources..Write) ⇒ <code>object</code>
-    * [~writeFile(path, data)](#module_Resources..writeFile) ⇒ <code>object</code>
-    * [~Delete(name)](#module_Resources..Delete) ⇒ <code>object</code>
+* [resources](#module_resources)
+    * [~CacheObject](#module_resources..CacheObject)
+        * [new CacheObject([name], contents)](#new_module_resources..CacheObject_new)
+    * [~Read(type, name)](#module_resources..Read) ⇒ <code>object</code>
+    * [~readFile(path)](#module_resources..readFile) ⇒ <code>object</code>
+    * [~Write(type, data, name)](#module_resources..Write) ⇒ <code>object</code>
+    * [~writeFile(path, data)](#module_resources..writeFile) ⇒ <code>object</code>
+    * [~Delete(name)](#module_resources..Delete) ⇒ <code>object</code>
 
-<a name="module_Resources..CacheObject"></a>
+<a name="module_resources..CacheObject"></a>
 
-### Resources~CacheObject
-**Kind**: inner class of [<code>Resources</code>](#module_Resources)  
-<a name="new_module_Resources..CacheObject_new"></a>
+### resources~CacheObject
+**Kind**: inner class of [<code>resources</code>](#module_resources)  
+<a name="new_module_resources..CacheObject_new"></a>
 
 #### new CacheObject([name], contents)
 Allows simple interfaces to handle caching an object in memory. Used to cache data read from the filesystem.
@@ -73,12 +168,12 @@ Allows simple interfaces to handle caching an object in memory. Used to cache da
 | [name] | <code>string</code> | Optional name to assign to the Cached Object. |
 | contents | <code>object</code> | The contents of this cached object. Intended to be a JavaScript object. But could be anything. |
 
-<a name="module_Resources..Read"></a>
+<a name="module_resources..Read"></a>
 
-### Resources~Read(type, name) ⇒ <code>object</code>
+### resources~Read(type, name) ⇒ <code>object</code>
 Exported function to read data from the filesystem, whatever that may be.
 
-**Kind**: inner method of [<code>Resources</code>](#module_Resources)  
+**Kind**: inner method of [<code>resources</code>](#module_resources)  
 **Returns**: <code>object</code> - If type is "package" or "pointer" returns a Server Status Object, with `content`
 being a `CacheObject` class, already initialized and ready for consumption. Otherwise if type is
 "package" returns the return from `readFile`. Errors bubble up from `readFile`.  
@@ -89,12 +184,12 @@ being a `CacheObject` class, already initialized and ready for consumption. Othe
 | type | <code>string</code> | The type of data we are reading. Valid Types: "user", "pointer", "package". |
 | name | <code>string</code> | The name of the file we are reading. Only needed if type is "package", in which case this <b>MUST</b> include `.json` for example `UUID.json`. |
 
-<a name="module_Resources..readFile"></a>
+<a name="module_resources..readFile"></a>
 
-### Resources~readFile(path) ⇒ <code>object</code>
+### resources~readFile(path) ⇒ <code>object</code>
 Non-Exported function to read data from the filesystem. Whatever that may be.
 
-**Kind**: inner method of [<code>Resources</code>](#module_Resources)  
+**Kind**: inner method of [<code>resources</code>](#module_resources)  
 **Returns**: <code>object</code> - A Server Status Object, with `content` being the read file parsed from JSON.
 If error returns "Server Error" or "File Not Found".  
 
@@ -102,12 +197,12 @@ If error returns "Server Error" or "File Not Found".
 | --- | --- | --- |
 | path | <code>string</code> | The Path to whatever file we want. |
 
-<a name="module_Resources..Write"></a>
+<a name="module_resources..Write"></a>
 
-### Resources~Write(type, data, name) ⇒ <code>object</code>
+### resources~Write(type, data, name) ⇒ <code>object</code>
 The Exported Write function, to allow writing of data to the filesystem.
 
-**Kind**: inner method of [<code>Resources</code>](#module_Resources)  
+**Kind**: inner method of [<code>resources</code>](#module_resources)  
 **Implements**: <code>writeFile</code>  
 **Returns**: <code>object</code> - Returns the object returned from `writeFile`. Errors bubble up from `writeFile`.  
 
@@ -117,12 +212,12 @@ The Exported Write function, to allow writing of data to the filesystem.
 | data | <code>object</code> | A JavaScript Object that will be `JSON.stringify`ed before writing. |
 | name | <code>string</code> | The path name of the file we are writing. Only required when type is "package", in which case it should be `UUID.json`, it <b>MUST</b> include the `.json`. |
 
-<a name="module_Resources..writeFile"></a>
+<a name="module_resources..writeFile"></a>
 
-### Resources~writeFile(path, data) ⇒ <code>object</code>
+### resources~writeFile(path, data) ⇒ <code>object</code>
 Non-Exported write function. Used to directly write data to the filesystem. Whatever that may be.
 
-**Kind**: inner method of [<code>Resources</code>](#module_Resources)  
+**Kind**: inner method of [<code>resources</code>](#module_resources)  
 **Returns**: <code>object</code> - A Server Status Object, with `content` only on an error.
 Errors returned "Server Error".  
 
@@ -131,10 +226,10 @@ Errors returned "Server Error".
 | path | <code>string</code> | The path to the file we are writing. Including the destination file. |
 | data | <code>object</code> | The Data we are writing to the filesystem. Already encoded in a compatible format. |
 
-<a name="module_Resources..Delete"></a>
+<a name="module_resources..Delete"></a>
 
-### Resources~Delete(name) ⇒ <code>object</code>
-**Kind**: inner method of [<code>Resources</code>](#module_Resources)  
+### resources~Delete(name) ⇒ <code>object</code>
+**Kind**: inner method of [<code>resources</code>](#module_resources)  
 **Returns**: <code>object</code> - A Server Status Object, with `content` non-existant on a successful deletion.
 Errors returned as "Server Error".  
 **Descc**: Exported function to delete data from the filesystem, whatever that may be. But since we know

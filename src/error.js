@@ -1,31 +1,31 @@
 /**
-* @module error
-* @desc Contains different error messages that can be returned, adding them and their
-* respective HTTP Status Codes to the `Response` object provided to them.
-* Letting them all be defined in one place for ease of modification, and easily route
-* to them from different handlers.
-*/
+ * @module error
+ * @desc Contains different error messages that can be returned, adding them and their
+ * respective HTTP Status Codes to the `Response` object provided to them.
+ * Letting them all be defined in one place for ease of modification, and easily route
+ * to them from different handlers.
+ */
 
 /**
-* @function NotFoundJSON
-* @desc The Standard JSON Handling when an object is not found. Setting:
-* Status Code: 404
-* JSON Respone Body: message: "Not Found"
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-*/
+ * @function NotFoundJSON
+ * @desc The Standard JSON Handling when an object is not found. Setting:
+ * Status Code: 404
+ * JSON Respone Body: message: "Not Found"
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 function NotFoundJSON(res) {
   res.status(404).json({ message: "Not Found" });
 }
 
 /**
-* @function SiteWide404
-* @desc The standard Website Page 404 not found handler.
-* @todo Currently this returns a JSON object, but in the future should return an HTML Not Found page.
-* Setting Currently:
-* Status Code: 404
-* JSON Response Body: message: "This is a standin for the proper site wide 404 page."
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-*/
+ * @function SiteWide404
+ * @desc The standard Website Page 404 not found handler.
+ * @todo Currently this returns a JSON object, but in the future should return an HTML Not Found page.
+ * Setting Currently:
+ * Status Code: 404
+ * JSON Response Body: message: "This is a standin for the proper site wide 404 page."
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 function SiteWide404(res) {
   res
     .status(404)
@@ -33,12 +33,12 @@ function SiteWide404(res) {
 }
 
 /**
-* @function MissingAuthJSON
-* @desc JSON Handling when authentication fails. Setting:
-* Status Code: 401
-* JSON Response Body: message: "Requires authentication. Please update your token if you haven't done so recently."
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-*/
+ * @function MissingAuthJSON
+ * @desc JSON Handling when authentication fails. Setting:
+ * Status Code: 401
+ * JSON Response Body: message: "Requires authentication. Please update your token if you haven't done so recently."
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 function MissingAuthJSON(res) {
   res.status(401).json({
     message:
@@ -47,12 +47,12 @@ function MissingAuthJSON(res) {
 }
 
 /**
-* @function ServerErrorJSON
-* @desc The Standard Server Error JSON Endpoint. Setting:
-* Status Code: 500
-* JSON Response Body: message: "Application Error"
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-*/
+ * @function ServerErrorJSON
+ * @desc The Standard Server Error JSON Endpoint. Setting:
+ * Status Code: 500
+ * JSON Response Body: message: "Application Error"
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 function ServerErrorJSON(res) {
   res.status(500).json({ message: "Application Error" });
 }
@@ -62,15 +62,15 @@ function PublishPackageExists(res) {
 }
 
 /**
-* @function UnsupportedJSON
-* @desc This is a standard JSON endpoint to define an endpoint that is currently not supported.
-* Used currently to delineate which endpoints have not been fully implemented. Or a specific error endpoint
-* that has not been written yet.
-* Setting:
-* Status Code: 501
-* JSON Response Body: message: "While under development this feature is not supported."
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-*/
+ * @function UnsupportedJSON
+ * @desc This is a standard JSON endpoint to define an endpoint that is currently not supported.
+ * Used currently to delineate which endpoints have not been fully implemented. Or a specific error endpoint
+ * that has not been written yet.
+ * Setting:
+ * Status Code: 501
+ * JSON Response Body: message: "While under development this feature is not supported."
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 function UnsupportedJSON(res) {
   // this is only an interm response while the server is under development.
   res.status(501).json({

@@ -31,7 +31,7 @@
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/error.js
 
-* Physical LOC: 40
+* Physical LOC: 73
 * Logical LOC: 25
 * Mean parameter count: 1
 * Cyclomatic complexity: 1
@@ -39,7 +39,7 @@
 * Maintainability index: 84.01966208734825
 * Dependency count: 0
 * Function: **NotFoundJSON**
-    * Line No.: 4
+    * Line No.: 16
     * Physical LOC: 3
     * Logical LOC: 2
     * Parameter count: 1
@@ -49,7 +49,7 @@
     * Halstead volume: 48.43204266092217
     * Halstead effort: 110.70181179639353
 * Function: **SiteWide404**
-    * Line No.: 8
+    * Line No.: 29
     * Physical LOC: 5
     * Logical LOC: 2
     * Parameter count: 1
@@ -59,7 +59,7 @@
     * Halstead volume: 48.43204266092217
     * Halstead effort: 110.70181179639353
 * Function: **MissingAuthJSON**
-    * Line No.: 14
+    * Line No.: 42
     * Physical LOC: 6
     * Logical LOC: 2
     * Parameter count: 1
@@ -69,7 +69,7 @@
     * Halstead volume: 48.43204266092217
     * Halstead effort: 110.70181179639353
 * Function: **ServerErrorJSON**
-    * Line No.: 21
+    * Line No.: 56
     * Physical LOC: 3
     * Logical LOC: 2
     * Parameter count: 1
@@ -79,7 +79,7 @@
     * Halstead volume: 48.43204266092217
     * Halstead effort: 110.70181179639353
 * Function: **PublishPackageExists**
-    * Line No.: 25
+    * Line No.: 60
     * Physical LOC: 3
     * Logical LOC: 2
     * Parameter count: 1
@@ -89,7 +89,7 @@
     * Halstead volume: 48.43204266092217
     * Halstead effort: 110.70181179639353
 * Function: **UnsupportedJSON**
-    * Line No.: 29
+    * Line No.: 74
     * Physical LOC: 6
     * Logical LOC: 2
     * Parameter count: 1
