@@ -1,11 +1,9 @@
-// This file will be the only file called on to do any reading and writing to the actual disk.
-// The idea is to allow this to be a buffer for disk reads and writes.
-// Letting it read from disk once, possibly before even the first API request, read on startup,
-// and hold the data in memory. Allowing the rest of the requests to not be dependent on disk reads or writes.
-// Allowing them to be faster, and less cost prohibitive to server owners.
-// This absolutely needs to be fleshed out. But for the time being, will be simple.
-// Additionally this allows one simple location to make any changes, if the data moves to a db, or to google cloud,
-// or to some other authenticated service.
+/**
+* @module resources.js
+* @desc This module provides a way for other functions to read/write/delete data without knowing or
+* thinking about the underlying file structure. Providing abstraction if the data resides on a local
+* filesystem, Google Cloud Storage, or something else entirely.
+*/
 
 const fs = require("fs");
 const { Storage } = require("@google-cloud/storage");
@@ -17,6 +15,8 @@ let gcs_storage;
 /**
  * @class
  * @desc Allows simple interfaces to handle caching an object in memory. Used to cache data read from the filesystem.
+ * @param {string} [name] - Optional name to assign to the Cached Object.
+ * @param {object} contents - The contents of this cached object. Intended to be a JavaScript object. But could be anything.
  */
 class CacheObject {
   constructor(contents, name) {
@@ -44,7 +44,7 @@ class CacheObject {
  * in which case this <b>MUST</b> include `.json` for example `UUID.json`.
  * @return {object} If type is "package" or "pointer" returns a Server Status Object, with `content`
  * being a `CacheObject` class, already initialized and ready for consumption. Otherwise if type is
- * "package" returns the return from `readFile`.
+ * "package" returns the return from `readFile`. Errors bubble up from `readFile`.
  * @implments {readFile}
  */
 async function Read(type, name) {
@@ -80,6 +80,7 @@ async function Read(type, name) {
  * @function readFile
  * @param {string} path - The Path to whatever file we want.
  * @returns {object} A Server Status Object, with `content` being the read file parsed from JSON.
+ * If error returns "Server Error" or "File Not Found".
  */
 async function readFile(path) {
   if (file_store == "filesystem") {
@@ -120,7 +121,7 @@ async function readFile(path) {
  * @param {object} data - A JavaScript Object that will be `JSON.stringify`ed before writing.
  * @param {string} name - The path name of the file we are writing. Only required when type is "package",
  * in which case it should be `UUID.json`, it <b>MUST</b> include the `.json`.
- * @return {object} Returns the object returned from `writeFile`.
+ * @return {object} Returns the object returned from `writeFile`. Errors bubble up from `writeFile`.
  * @implements {writeFile}
  */
 async function Write(type, data, name) {
@@ -143,6 +144,7 @@ async function Write(type, data, name) {
  * @param {string} path - The path to the file we are writing. Including the destination file.
  * @param {object} data - The Data we are writing to the filesystem. Already encoded in a compatible format.
  * @return {object} A Server Status Object, with `content` only on an error.
+ * Errors returned "Server Error".
  */
 async function writeFile(path, data) {
   if (file_store == "filesystem") {
@@ -178,6 +180,7 @@ async function writeFile(path, data) {
  * we will only ever be deleting packages, these will only ever attempt to delete a package.
  * @param {string} name - The name of the package we want to delete. <b>MUST</b> include `.json`, as in `UUID.json`.
  * @return {object} A Server Status Object, with `content` non-existant on a successful deletion.
+ * Errors returned as "Server Error".
  */
 async function Delete(name) {
   // since we know the only data we ever want to delete from disk will be packages,
