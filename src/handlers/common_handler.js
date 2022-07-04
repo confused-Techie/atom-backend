@@ -35,16 +35,16 @@ async function AuthFail(req, res, user) {
 }
 
 /**
-* @async
-* @function ServerError
-* @desc Returns a standard Server Error to the user as JSON. Logging the detailed error message to the server.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-* @param {string} err - The detailed error message to log server side.
-* @implements {error.ServerErrorJSON}
-* @implements {logger.HTTPLog}
-* @implements {logger.ErrorLog}
-*/
+ * @async
+ * @function ServerError
+ * @desc Returns a standard Server Error to the user as JSON. Logging the detailed error message to the server.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ * @param {string} err - The detailed error message to log server side.
+ * @implements {error.ServerErrorJSON}
+ * @implements {logger.HTTPLog}
+ * @implements {logger.ErrorLog}
+ */
 async function ServerError(req, res, err) {
   error.ServerErrorJSON(res);
   logger.HTTPLog(req, res);
@@ -52,42 +52,42 @@ async function ServerError(req, res, err) {
 }
 
 /**
-* @async
-* @function NotFound
-* @desc Standard endpoint to return the JSON Not Found error to the user.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-* @implements {error.NotFoundJSON}
-* @implements {logger.HTTPLog}
-*/
+ * @async
+ * @function NotFound
+ * @desc Standard endpoint to return the JSON Not Found error to the user.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ * @implements {error.NotFoundJSON}
+ * @implements {logger.HTTPLog}
+ */
 async function NotFound(req, res) {
   error.NotFoundJSON(res);
   logger.HTTPLog(req, res);
 }
 
 /**
-* @async
-* @function NotSupported
-* @desc Returns a Not Supported message to the user.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-* @implements {error.UnsupportedJSON}
-* @implements {logger.HTTPLog}
-*/
+ * @async
+ * @function NotSupported
+ * @desc Returns a Not Supported message to the user.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ * @implements {error.UnsupportedJSON}
+ * @implements {logger.HTTPLog}
+ */
 async function NotSupported(req, res) {
   error.UnsupportedJSON(res);
   logger.HTTPLog(req, res);
 }
 
 /**
-* @async
-* @function SiteWideNotFound
-* @desc Returns the SiteWide 404 page to the end user.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-* @implements {error.SiteWide404}
-* @implements {logger.HTTPLog}
-*/
+ * @async
+ * @function SiteWideNotFound
+ * @desc Returns the SiteWide 404 page to the end user.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ * @implements {error.SiteWide404}
+ * @implements {logger.HTTPLog}
+ */
 async function SiteWideNotFound(req, res) {
   error.SiteWide404(res);
   logger.HTTPLog(req, res);

@@ -7,6 +7,10 @@ respective HTTP Status Codes to the <code>Response</code> object provided to the
 Letting them all be defined in one place for ease of modification, and easily route
 to them from different handlers.</p>
 </dd>
+<dt><a href="#module_logger">logger</a></dt>
+<dd><p>Allows easy logging of the server. Allowing it to become simple to add additional
+logging methods if a log server is ever implemented.</p>
+</dd>
 <dt><a href="#module_main">main</a></dt>
 <dd><p>The Main functionality for the entire server. Sets up the Express server, providing
 all endpoints it listens on. With those endpoints being further documented in <code>api.md</code>.</p>
@@ -63,7 +67,10 @@ This pruned item should never be written back to disk, as removed the data from 
 <a name="module_error"></a>
 
 ## error
-Contains different error messages that can be returned, adding them and theirrespective HTTP Status Codes to the `Response` object provided to them.Letting them all be defined in one place for ease of modification, and easily routeto them from different handlers.
+Contains different error messages that can be returned, adding them and their
+respective HTTP Status Codes to the `Response` object provided to them.
+Letting them all be defined in one place for ease of modification, and easily route
+to them from different handlers.
 
 
 * [error](#module_error)
@@ -77,7 +84,10 @@ Contains different error messages that can be returned, adding them and theirre
 <a name="module_error..NotFoundJSON"></a>
 
 ### error~NotFoundJSON(res)
-The Standard JSON Handling when an object is not found.###### Setting:* Status Code: 404* JSON Respone Body: message: "Not Found"
+The Standard JSON Handling when an object is not found.
+###### Setting:
+* Status Code: 404
+* JSON Respone Body: message: "Not Found"
 
 **Kind**: inner method of [<code>error</code>](#module_error)  
 
@@ -93,7 +103,10 @@ The standard Website Page 404 not found handler.
 **Kind**: inner method of [<code>error</code>](#module_error)  
 **Todo**
 
-- [ ] Currently this returns a JSON object, but in the future should return an HTML Not Found page.###### Setting Currently:* Status Code: 404* JSON Response Body: message: "This is a standin for the proper site wide 404 page."
+- [ ] Currently this returns a JSON object, but in the future should return an HTML Not Found page.
+###### Setting Currently:
+* Status Code: 404
+* JSON Response Body: message: "This is a standin for the proper site wide 404 page."
 
 
 | Param | Type | Description |
@@ -103,7 +116,10 @@ The standard Website Page 404 not found handler.
 <a name="module_error..MissingAuthJSON"></a>
 
 ### error~MissingAuthJSON(res)
-JSON Handling when authentication fails.###### Setting:* Status Code: 401* JSON Response Body: message: "Requires authentication. Please update your token if you haven't done so recently."
+JSON Handling when authentication fails.
+###### Setting:
+* Status Code: 401
+* JSON Response Body: message: "Requires authentication. Please update your token if you haven't done so recently."
 
 **Kind**: inner method of [<code>error</code>](#module_error)  
 
@@ -114,7 +130,10 @@ JSON Handling when authentication fails.###### Setting:* Status Code: 401* JS
 <a name="module_error..ServerErrorJSON"></a>
 
 ### error~ServerErrorJSON(res)
-The Standard Server Error JSON Endpoint.###### Setting:* Status Code: 500* JSON Response Body: message: "Application Error"
+The Standard Server Error JSON Endpoint.
+###### Setting:
+* Status Code: 500
+* JSON Response Body: message: "Application Error"
 
 **Kind**: inner method of [<code>error</code>](#module_error)  
 
@@ -125,7 +144,10 @@ The Standard Server Error JSON Endpoint.###### Setting:* Status Code: 500* JS
 <a name="module_error..PublishPackageExists"></a>
 
 ### error~PublishPackageExists(res)
-JSON Response announcing a package already exists.###### Setting:* Status Code: 409* JSON Response Body: message: "A Package by that name already exists."
+JSON Response announcing a package already exists.
+###### Setting:
+* Status Code: 409
+* JSON Response Body: message: "A Package by that name already exists."
 
 **Kind**: inner method of [<code>error</code>](#module_error)  
 
@@ -136,7 +158,12 @@ JSON Response announcing a package already exists.###### Setting:* Status Code
 <a name="module_error..UnsupportedJSON"></a>
 
 ### error~UnsupportedJSON(res)
-This is a standard JSON endpoint to define an endpoint that is currently not supported.Used currently to delineate which endpoints have not been fully implemented. Or a specific error endpointthat has not been written yet.###### Setting:* Status Code: 501* JSON Response Body: message: "While under development this feature is not supported."
+This is a standard JSON endpoint to define an endpoint that is currently not supported.
+Used currently to delineate which endpoints have not been fully implemented. Or a specific error endpoint
+that has not been written yet.
+###### Setting:
+* Status Code: 501
+* JSON Response Body: message: "While under development this feature is not supported."
 
 **Kind**: inner method of [<code>error</code>](#module_error)  
 
@@ -144,18 +171,123 @@ This is a standard JSON endpoint to define an endpoint that is currently not sup
 | --- | --- | --- |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
+<a name="module_logger"></a>
+
+## logger
+Allows easy logging of the server. Allowing it to become simple to add additional
+logging methods if a log server is ever implemented.
+
+**Implements**: <code>config</code>  
+
+* [logger](#module_logger)
+    * [~HTTPLog(req, res)](#module_logger..HTTPLog)
+    * [~ErrorLog(req, res, err)](#module_logger..ErrorLog)
+    * [~WarningLog([req], [res], err)](#module_logger..WarningLog)
+    * [~InfoLog(value)](#module_logger..InfoLog)
+    * [~DebugLog(value)](#module_logger..DebugLog)
+
+<a name="module_logger..HTTPLog"></a>
+
+### logger~HTTPLog(req, res)
+The standard logger for HTTP calls. Logging in a modified 'Apache Combined Log Format'.
+
+**Kind**: inner method of [<code>logger</code>](#module_logger)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+**Example** *(Logging Output Format)*  
+```js
+HTTP:: IP [DATE (as ISO String)] "HTTP_METHOD URL PROTOCOL" STATUS_CODE DURATION_OF_REQUESTms
+```
+<a name="module_logger..ErrorLog"></a>
+
+### logger~ErrorLog(req, res, err)
+An endpoint to log errors, as well as exactly where they occured. Allowing some insight into what caused
+them, as well as how the server reacted to the end user.
+
+**Kind**: inner method of [<code>logger</code>](#module_logger)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+| err | <code>object</code> \| <code>string</code> | The error of what happened. Will take a raw error value, or a string created one. |
+
+**Example** *(Logging Output Format)*  
+```js
+ERROR:: IP "HTTP_METHOD URL PROTOCOL" STATUS_CODE DURATION_OF_REQUESTms ! ERROR
+```
+<a name="module_logger..WarningLog"></a>
+
+### logger~WarningLog([req], [res], err)
+An endpoint to log warnings. This should be used for when an error recovered, but the server
+did its best to recover from it. Providing no error to the end user.
+
+**Kind**: inner method of [<code>logger</code>](#module_logger)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [req] | <code>object</code> | The Optional `Request` object inherited from the Express endpoint. |
+| [res] | <code>object</code> | The Optional `Response` object inherited from the Express endpoint. |
+| err | <code>object</code> \| <code>string</code> | The error of what happened. And like `ErrorLog` takes the raw error, or a string created one. |
+
+**Example** *(Logging Output Format w/ Req and Res.)*  
+```js
+WARNING:: IP "HTTP_METHOD URL PROTOCOL" STATUS_CODE DURATION_OF_REQUESTms ! ERROR
+```
+**Example** *(Logging Output Format w/o Req and Res.)*  
+```js
+WARNING:: ERROR
+```
+<a name="module_logger..InfoLog"></a>
+
+### logger~InfoLog(value)
+An endpoint to log information only. Used sparingly, but may be helpful.
+
+**Kind**: inner method of [<code>logger</code>](#module_logger)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>string</code> | The value of whatever is being logged. |
+
+**Example** *(Logging Output Format)*  
+```js
+INFO:: VALUE
+```
+<a name="module_logger..DebugLog"></a>
+
+### logger~DebugLog(value)
+An endpoint to log debug information only. This log will only show if enabled in the Config file.
+That is if the `app.yaml` file has DEBUG as true.
+
+**Kind**: inner method of [<code>logger</code>](#module_logger)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>string</code> | The value of whatever is being logged. |
+
+**Example** *(Logging Output Format)*  
+```js
+DEBUG:: VALUE
+```
 <a name="module_main"></a>
 
 ## main
-The Main functionality for the entire server. Sets up the Express server, providingall endpoints it listens on. With those endpoints being further documented in `api.md`.
+The Main functionality for the entire server. Sets up the Express server, providing
+all endpoints it listens on. With those endpoints being further documented in `api.md`.
 
 **Implements**: <code>update\_handler</code>, <code>star\_handler</code>, <code>user\_handler</code>, <code>theme\_handler</code>, <code>package\_handler</code>, <code>common\_handler</code>  
 <a name="module_resources"></a>
 
 ## resources
-This module provides a way for other functions to read/write/delete data without knowing orthinking about the underlying file structure. Providing abstraction if the data resides on a localfilesystem, Google Cloud Storage, or something else entirely.
+This module provides a way for other functions to read/write/delete data without knowing or
+thinking about the underlying file structure. Providing abstraction if the data resides on a local
+filesystem, Google Cloud Storage, or something else entirely.
 
-**Implements**: <code>config</code>, <code>fs</code>, <code>google-cloud/storage</code>  
+**Implements**: <code>config</code>  
 
 * [resources](#module_resources)
     * [~CacheObject](#module_resources..CacheObject)
@@ -187,7 +319,9 @@ Allows simple interfaces to handle caching an object in memory. Used to cache da
 Exported function to read data from the filesystem, whatever that may be.
 
 **Kind**: inner method of [<code>resources</code>](#module_resources)  
-**Returns**: <code>object</code> - If type is "package" or "pointer" returns a Server Status Object, with `content`being a `CacheObject` class, already initialized and ready for consumption. Otherwise if type is"package" returns the return from `readFile`. Errors bubble up from `readFile`.  
+**Returns**: <code>object</code> - If type is "package" or "pointer" returns a Server Status Object, with `content`
+being a `CacheObject` class, already initialized and ready for consumption. Otherwise if type is
+"package" returns the return from `readFile`. Errors bubble up from `readFile`.  
 **Implments**: <code>readFile</code>  
 
 | Param | Type | Description |
@@ -201,7 +335,8 @@ Exported function to read data from the filesystem, whatever that may be.
 Non-Exported function to read data from the filesystem. Whatever that may be.
 
 **Kind**: inner method of [<code>resources</code>](#module_resources)  
-**Returns**: <code>object</code> - A Server Status Object, with `content` being the read file parsed from JSON.If error returns "Server Error" or "File Not Found".  
+**Returns**: <code>object</code> - A Server Status Object, with `content` being the read file parsed from JSON.
+If error returns "Server Error" or "File Not Found".  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -228,7 +363,8 @@ The Exported Write function, to allow writing of data to the filesystem.
 Non-Exported write function. Used to directly write data to the filesystem. Whatever that may be.
 
 **Kind**: inner method of [<code>resources</code>](#module_resources)  
-**Returns**: <code>object</code> - A Server Status Object, with `content` only on an error.Errors returned "Server Error".  
+**Returns**: <code>object</code> - A Server Status Object, with `content` only on an error.
+Errors returned "Server Error".  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -239,8 +375,10 @@ Non-Exported write function. Used to directly write data to the filesystem. What
 
 ### resources~Delete(name) ⇒ <code>object</code>
 **Kind**: inner method of [<code>resources</code>](#module_resources)  
-**Returns**: <code>object</code> - A Server Status Object, with `content` non-existant on a successful deletion.Errors returned as "Server Error".  
-**Descc**: Exported function to delete data from the filesystem, whatever that may be. But since we knowwe will only ever be deleting packages, these will only ever attempt to delete a package.  
+**Returns**: <code>object</code> - A Server Status Object, with `content` non-existant on a successful deletion.
+Errors returned as "Server Error".  
+**Descc**: Exported function to delete data from the filesystem, whatever that may be. But since we know
+we will only ever be deleting packages, these will only ever attempt to delete a package.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -249,13 +387,15 @@ Non-Exported write function. Used to directly write data to the filesystem. What
 <a name="module_server"></a>
 
 ## server
-The initializer of `main.js` starting up the Express Server, and setting the portto listen on. As well as handling a graceful shutdown of the server.
+The initializer of `main.js` starting up the Express Server, and setting the port
+to listen on. As well as handling a graceful shutdown of the server.
 
 **Implements**: <code>main</code>, <code>config</code>, <code>logger</code>, <code>data</code>  
 <a name="module_server..Exterminate"></a>
 
 ### server~Exterminate(callee)
-This is called when the server process receives a `SIGINT` or `SIGTERM` signal.Which this will then handle closing the server listener, as well as calling `data.Shutdown`.
+This is called when the server process receives a `SIGINT` or `SIGTERM` signal.
+Which this will then handle closing the server listener, as well as calling `data.Shutdown`.
 
 **Kind**: inner method of [<code>server</code>](#module_server)  
 
@@ -266,8 +406,11 @@ This is called when the server process receives a `SIGINT` or `SIGTERM` signal.
 <a name="module_common_handler"></a>
 
 ## common\_handler
-Provides a simplistic way to refer to implement common endpoint returns.So these can be called as an async function without more complex functions, reducingverbosity, and duplication within the codebase.
+Provides a simplistic way to refer to implement common endpoint returns.
+So these can be called as an async function without more complex functions, reducing
+verbosity, and duplication within the codebase.
 
+**Implements**: <code>error</code>, <code>logger</code>  
 
 * [common_handler](#module_common_handler)
     * [~AuthFail(req, res, user)](#module_common_handler..AuthFail)
@@ -279,7 +422,8 @@ Provides a simplistic way to refer to implement common endpoint returns.So thes
 <a name="module_common_handler..AuthFail"></a>
 
 ### common_handler~AuthFail(req, res, user)
-Will take the <b>failed</b> user object from VerifyAuth, and respond for the endpoint aseither a "Server Error" or a "Bad Auth", whichever is correct based on the Error bubbled from VerifyAuth.
+Will take the <b>failed</b> user object from VerifyAuth, and respond for the endpoint as
+either a "Server Error" or a "Bad Auth", whichever is correct based on the Error bubbled from VerifyAuth.
 
 **Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
 **Implements**: <code>error.MissingAuthJSON</code>, <code>error.ServerErrorJSON</code>, <code>logger.HTTPLog</code>, <code>logger.ErrorLog</code>  
@@ -346,7 +490,8 @@ Returns the SiteWide 404 page to the end user.
 <a name="Sort"></a>
 
 ## Sort(method, packages) ⇒ <code>object</code>
-Intended for use for a collection of Packages, sort them according to any valid Sorting method.Note this should be called before, any Pruning has taken place.
+Intended for use for a collection of Packages, sort them according to any valid Sorting method.
+Note this should be called before, any Pruning has taken place.
 
 **Kind**: global function  
 **Returns**: <code>object</code> - The provided packages now sorted accordingly.  
@@ -359,7 +504,8 @@ Intended for use for a collection of Packages, sort them according to any valid 
 <a name="GetConfig"></a>
 
 ## GetConfig() ⇒ <code>object</code>
-Used to get Server Config data from the `app.yaml` file at the root of the project.Or from environment variables. Prioritizing environment variables.
+Used to get Server Config data from the `app.yaml` file at the root of the project.
+Or from environment variables. Prioritizing environment variables.
 
 **Kind**: global function  
 **Returns**: <code>object</code> - The different available configuration values.  
@@ -370,7 +516,10 @@ const { search_algorithm } = require("./config.js").GetConfig();
 <a name="VerifyAuth"></a>
 
 ## VerifyAuth(token, [callback]) ⇒ <code>object</code>
-Checks every existing user within the users file, to see if the token provided exists within their validtokens. If it does will return the entire user object. If an optional callback is provided will invoke thecallback passing the user object, otherwise will just return the user object.If no valid user is found returns null.
+Checks every existing user within the users file, to see if the token provided exists within their valid
+tokens. If it does will return the entire user object. If an optional callback is provided will invoke the
+callback passing the user object, otherwise will just return the user object.
+If no valid user is found returns null.
 
 **Kind**: global function  
 **Implements**: <code>GetUsers</code>  
@@ -384,11 +533,13 @@ Checks every existing user within the users file, to see if the token provided e
 <a name="GetUser"></a>
 
 ## GetUser(username) ⇒ <code>object</code>
-Searches for a user within the user file, and if found will return the standard objectcontaining the full User Object. Otherwise an error.
+Searches for a user within the user file, and if found will return the standard object
+containing the full User Object. Otherwise an error.
 
 **Kind**: global function  
 **Implements**: <code>GetUsers</code>  
-**Returns**: <code>object</code> - An error object bubbled up from GetUsers, Error Object of 'Not Found',Object containing full User Object.  
+**Returns**: <code>object</code> - An error object bubbled up from GetUsers, Error Object of 'Not Found',
+Object containing full User Object.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -401,7 +552,8 @@ Adds the desired Package to the list of packages the User has starred.
 
 **Kind**: global function  
 **Implements**: [<code>GetUser</code>](#GetUser), <code>GetUsers</code>  
-**Returns**: <code>object</code> - Error Object Bubbled from GetUser, Error Object Bubbled from GetUsers,Error Object Bubbled from SetUsers, Short Object of 'ok' if successful.  
+**Returns**: <code>object</code> - Error Object Bubbled from GetUser, Error Object Bubbled from GetUsers,
+Error Object Bubbled from SetUsers, Short Object of 'ok' if successful.  
 **Impmplements**: <code>SetUsers</code>  
 
 | Param | Type | Description |
@@ -416,7 +568,8 @@ Removes the specified Package from the Users list of stars.
 
 **Kind**: global function  
 **Implements**: [<code>GetUser</code>](#GetUser), <code>GetUsers</code>, <code>SetUsers</code>  
-**Returns**: <code>object</code> - Error Object Bubbled from GetUser, ErrorObject Bubbled from GetUsers,Error Object Bubbled from SetUsers, Error Object of 'Not Found', Short Object of successful write ok.  
+**Returns**: <code>object</code> - Error Object Bubbled from GetUser, ErrorObject Bubbled from GetUsers,
+Error Object Bubbled from SetUsers, Error Object of 'Not Found', Short Object of successful write ok.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -426,7 +579,8 @@ Removes the specified Package from the Users list of stars.
 <a name="Prune"></a>
 
 ## Prune(userObj) ⇒ <code>object</code>
-Takes a single User Object, and prunes any server side only data from the object to return to the user.This pruned item should never be written back to disk, as removed the data from it removes any pointers to those values.
+Takes a single User Object, and prunes any server side only data from the object to return to the user.
+This pruned item should never be written back to disk, as removed the data from it removes any pointers to those values.
 
 **Kind**: global function  
 **Returns**: <code>object</code> - The Pruned userObj.  

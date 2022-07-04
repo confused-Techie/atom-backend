@@ -61,13 +61,13 @@ function ServerErrorJSON(res) {
 }
 
 /**
-* @function PublishPackageExists
-* @desc JSON Response announcing a package already exists.
-* ###### Setting:
-* * Status Code: 409
-* * JSON Response Body: message: "A Package by that name already exists."
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-*/
+ * @function PublishPackageExists
+ * @desc JSON Response announcing a package already exists.
+ * ###### Setting:
+ * * Status Code: 409
+ * * JSON Response Body: message: "A Package by that name already exists."
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 function PublishPackageExists(res) {
   res.status(409).json({ message: "A Package by that name already exists." });
 }

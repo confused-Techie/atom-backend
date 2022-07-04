@@ -31,7 +31,7 @@
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/error.js
 
-* Physical LOC: 73
+* Physical LOC: 83
 * Logical LOC: 25
 * Mean parameter count: 1
 * Cyclomatic complexity: 1
@@ -39,7 +39,7 @@
 * Maintainability index: 84.01966208734825
 * Dependency count: 0
 * Function: **NotFoundJSON**
-    * Line No.: 16
+    * Line No.: 17
     * Physical LOC: 3
     * Logical LOC: 2
     * Parameter count: 1
@@ -49,7 +49,7 @@
     * Halstead volume: 48.43204266092217
     * Halstead effort: 110.70181179639353
 * Function: **SiteWide404**
-    * Line No.: 29
+    * Line No.: 30
     * Physical LOC: 5
     * Logical LOC: 2
     * Parameter count: 1
@@ -59,7 +59,7 @@
     * Halstead volume: 48.43204266092217
     * Halstead effort: 110.70181179639353
 * Function: **MissingAuthJSON**
-    * Line No.: 42
+    * Line No.: 44
     * Physical LOC: 6
     * Logical LOC: 2
     * Parameter count: 1
@@ -69,7 +69,7 @@
     * Halstead volume: 48.43204266092217
     * Halstead effort: 110.70181179639353
 * Function: **ServerErrorJSON**
-    * Line No.: 56
+    * Line No.: 59
     * Physical LOC: 3
     * Logical LOC: 2
     * Parameter count: 1
@@ -79,7 +79,7 @@
     * Halstead volume: 48.43204266092217
     * Halstead effort: 110.70181179639353
 * Function: **PublishPackageExists**
-    * Line No.: 60
+    * Line No.: 71
     * Physical LOC: 3
     * Logical LOC: 2
     * Parameter count: 1
@@ -89,7 +89,7 @@
     * Halstead volume: 48.43204266092217
     * Halstead effort: 110.70181179639353
 * Function: **UnsupportedJSON**
-    * Line No.: 74
+    * Line No.: 85
     * Physical LOC: 6
     * Logical LOC: 2
     * Parameter count: 1
@@ -101,7 +101,7 @@
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/logger.js
 
-* Physical LOC: 51
+* Physical LOC: 93
 * Logical LOC: 25
 * Mean parameter count: 2
 * Cyclomatic complexity: 4
@@ -109,8 +109,8 @@
 * Maintainability index: 79.48401961963178
 * Dependency count: 1
 * Function: **HTTPLog**
-    * Line No.: 3
-    * Physical LOC: 11
+    * Line No.: 18
+    * Physical LOC: 9
     * Logical LOC: 3
     * Parameter count: 2
     * Cyclomatic complexity: 1
@@ -119,7 +119,7 @@
     * Halstead volume: 85.95159310338741
     * Halstead effort: 315.1558413790872
 * Function: **ErrorLog**
-    * Line No.: 15
+    * Line No.: 38
     * Physical LOC: 7
     * Logical LOC: 2
     * Parameter count: 3
@@ -129,7 +129,7 @@
     * Halstead volume: 68.53238859703687
     * Halstead effort: 190.36774610288018
 * Function: **WarningLog**
-    * Line No.: 23
+    * Line No.: 58
     * Physical LOC: 10
     * Logical LOC: 5
     * Parameter count: 3
@@ -139,7 +139,7 @@
     * Halstead volume: 131.68575291675114
     * Halstead effort: 948.1374210006082
 * Function: **InfoLog**
-    * Line No.: 34
+    * Line No.: 76
     * Physical LOC: 3
     * Logical LOC: 1
     * Parameter count: 1
@@ -149,8 +149,8 @@
     * Halstead volume: 11.60964047443681
     * Halstead effort: 11.60964047443681
 * Function: **DebugLog**
-    * Line No.: 38
-    * Physical LOC: 6
+    * Line No.: 88
+    * Physical LOC: 5
     * Logical LOC: 2
     * Parameter count: 1
     * Cyclomatic complexity: 2
