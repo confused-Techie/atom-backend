@@ -95,9 +95,18 @@ app.post("/api/packages", async (req, res) => {
   await package_handler.POSTPackages(req, res);
 });
 
+/**
+* @web
+* @ignore
+* @path /api/packages/featured
+* @desc Previously Undocumented endpoint. Used to return featured packages from all existing packages.
+* @method GET
+* @auth false
+* @response
+*   @status 200
+*   @Rdesc An array of packages similar to /api/packages endpoint.
+*/
 app.get("/api/packages/featured", async (req, res) => {
-  // TODO: Undocumented Endpoint discovered, as the endpoint in use by APM to get featured packages.
-  // More documentation in /handlers/package_handlers.js
   await package_handler.GETPackagesFeatured(req, res);
 });
 
@@ -286,7 +295,6 @@ app.get("/api/packages/:packageName/stargazers", async (req, res) => {
   await package_handler.GETPackagesStargazers(req, res);
 });
 
-// Package New Version Endpoint
 /**
  * @web
  * @ignore
@@ -328,7 +336,6 @@ app.post("/api/packages/:packageName/versions", async (req, res) => {
   await package_handler.POSTPackagesVersion(req, res);
 });
 
-// Package Versions Endpoint
 /**
  * @web
  * @ignore
@@ -360,6 +367,27 @@ app.get(
 // Previously undocumented endpoint discovered during developement.
 // Seems this endpoint allows for download of packages. Further testing is required.
 // Confirmed that this is a GET only endpoint.
+/**
+* @web
+* @ignore
+* @path /api/packages/:packageName/versions/:versionName/tarball
+* @method GET
+* @auth false
+* @desc Previously undocumented endpoint. Seems to allow for installation of a package. This is not currently implemented.
+* @param
+*   @location path
+*   @name packageName
+*   @required true
+*   @Pdesc The package we want to download.
+* @param
+*   @location path
+*   @name versionName
+*   @required true
+*   @Pdesc The package version we want to download.
+* @response
+*   @status 200
+*   @Rdesc The tarball data for the user to then be able to install.
+*/
 app.get(
   "/api/packages/:packageName/versions/:versionName/tarball",
   async (req, res) => {
@@ -433,9 +461,18 @@ app.post(
   }
 );
 
+/**
+* @web
+* @ignore
+* @path /api/themes/featured
+* @desc Previously undocumented endpoint. BETA: Returns 'Featured' Themes from all available themes.
+* @method GET
+* @auth false
+* @response
+*   @status 200
+*   @Rdesc Returns an array of Theme Packages. Similar to the /api/packages Endpoint.
+*/
 app.get("/api/themes/featured", async (req, res) => {
-  // TODO: Undocumented Endpoint discovered, as the endpoint in use by APM to get featured themes.
-  // More documentation within handlers/theme_handler.js
   await theme_handler.GETThemeFeatured(req, res);
 });
 

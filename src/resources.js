@@ -14,6 +14,10 @@ const { cache_time, file_store, GCS_BUCKET, GCS_SERVICE_ACCOUNT_FILE } =
 
 let gcs_storage;
 
+/**
+* @class
+* @desc Allows simple interfaces to handle caching an object in memory. Used to cache data read from the filesystem.
+*/
 class CacheObject {
   constructor(contents, name) {
     this.birth = Date.now();
@@ -31,9 +35,18 @@ class CacheObject {
   }
 }
 
-// The first argument is the TYPE of file. These are custom types, aligned to the intention of this server.
-// TYPES: 'user', 'pointer', 'package', in all types but package, the name may be left out.
-// The name will only be the name of the file, everything else will be determined here.
+/**
+* @async
+* @function Read
+* @desc Exported function to read data from the filesystem, whatever that may be.
+* @param {string} type - The type of data we are reading. Valid Types: "user", "pointer", "package".
+* @param {string} name - The name of the file we are reading. Only needed if type is "package",
+* in which case this <b>MUST</b> include `.json` for example `UUID.json`.
+* @return {object} If type is "package" or "pointer" returns a Server Status Object, with `content`
+* being a `CacheObject` class, already initialized and ready for consumption. Otherwise if type is
+* "package" returns the return from `readFile`.
+* @implments {readFile}
+*/
 async function Read(type, name) {
   if (type == "user") {
     let data = await readFile("./data/users.json");
@@ -61,6 +74,13 @@ async function Read(type, name) {
   }
 }
 
+/**
+* @async
+* @desc Non-Exported function to read data from the filesystem. Whatever that may be.
+* @function readFile
+* @param {string} path - The Path to whatever file we want.
+* @returns {object} A Server Status Object, with `content` being the read file parsed from JSON.
+*/
 async function readFile(path) {
   if (file_store == "filesystem") {
     try {
@@ -92,6 +112,17 @@ async function readFile(path) {
   }
 }
 
+/**
+* @async
+* @function Write
+* @desc The Exported Write function, to allow writing of data to the filesystem.
+* @param {string} type - The Type of data we are writing. Valid Types: "user", "pointer", "package"
+* @param {object} data - A JavaScript Object that will be `JSON.stringify`ed before writing.
+* @param {string} name - The path name of the file we are writing. Only required when type is "package",
+* in which case it should be `UUID.json`, it <b>MUST</b> include the `.json`.
+* @return {object} Returns the object returned from `writeFile`.
+* @implements {writeFile}
+*/
 async function Write(type, data, name) {
   if (type == "user") {
     return writeFile("./data/users.json", JSON.stringify(data, null, 4));
@@ -105,6 +136,14 @@ async function Write(type, data, name) {
   }
 }
 
+/**
+* @async
+* @function writeFile
+* @desc Non-Exported write function. Used to directly write data to the filesystem. Whatever that may be.
+* @param {string} path - The path to the file we are writing. Including the destination file.
+* @param {object} data - The Data we are writing to the filesystem. Already encoded in a compatible format.
+* @return {object} A Server Status Object, with `content` only on an error.
+*/
 async function writeFile(path, data) {
   if (file_store == "filesystem") {
     try {
@@ -132,6 +171,14 @@ async function writeFile(path, data) {
   }
 }
 
+/**
+* @async
+* @function Delete
+* @descc Exported function to delete data from the filesystem, whatever that may be. But since we know
+* we will only ever be deleting packages, these will only ever attempt to delete a package.
+* @param {string} name - The name of the package we want to delete. <b>MUST</b> include `.json`, as in `UUID.json`.
+* @return {object} A Server Status Object, with `content` non-existant on a successful deletion.
+*/
 async function Delete(name) {
   // since we know the only data we ever want to delete from disk will be packages,
   // a type is not needed here.
