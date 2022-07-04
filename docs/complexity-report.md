@@ -11,7 +11,7 @@
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/config.js
 
-* Physical LOC: 50
+* Physical LOC: 58
 * Logical LOC: 22
 * Mean parameter count: 0
 * Cyclomatic complexity: 11
@@ -19,7 +19,7 @@
 * Maintainability index: 53.32449937556923
 * Dependency count: 2
 * Function: **GetConfig**
-    * Line No.: 4
+    * Line No.: 12
     * Physical LOC: 43
     * Logical LOC: 17
     * Parameter count: 0

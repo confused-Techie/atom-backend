@@ -75,6 +75,18 @@ A package by that name already exists.
 
 
 ---
+# **[GET]** /api/packages/featured
+Previously Undocumented endpoint. Used to return featured packages from all existing packages.
+
+Auth: `FALSE`
+Responses:
+---
+**HTTP Status Code:** `200 OK`
+
+An array of packages similar to /api/packages endpoint.
+
+
+---
 # **[GET]** /api/packages/search
 Searches all Packages.
 
@@ -330,6 +342,30 @@ The `package.json` modified as explainged in the endpoint description.
 
 
 ---
+# **[GET]** /api/packages/:packageName/versions/:versionName/tarball
+Previously undocumented endpoint. Seems to allow for installation of a package. This is not currently implemented.
+
+Auth: `FALSE`
+Parameters:
+---
+* packageName _(required)_  | Location: `path`  
+  - The package we want to download.
+
+
+---
+* versionName _(required)_  | Location: `path`  
+  - The package version we want to download.
+
+
+---
+Responses:
+---
+**HTTP Status Code:** `200 OK`
+
+The tarball data for the user to then be able to install.
+
+
+---
 # **[DELETE]** /api/packages/:packageName/versions/:versionName
 Deletes a package version. Note once a version is deleted, that same version should not be reused again.
 
@@ -385,6 +421,18 @@ Responses:
 **HTTP Status Code:** `200 OK`
 
 Returns JSON ok: true
+
+
+---
+# **[GET]** /api/themes/featured
+Previously undocumented endpoint. BETA: Returns 'Featured' Themes from all available themes.
+
+Auth: `FALSE`
+Responses:
+---
+**HTTP Status Code:** `200 OK`
+
+Returns an array of Theme Packages. Similar to the /api/packages Endpoint.
 
 
 ---

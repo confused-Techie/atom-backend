@@ -2,13 +2,13 @@ const fs = require("fs");
 const yaml = require("js-yaml");
 
 /**
-* @desc Used to get Server Config data from the `app.yaml` file at the root of the project.
-* Or from environment variables. Prioritizing environment variables.
-* @function GetConfig
-* @return {object} The different available configuration values.
-* @example <caption>Using `GetConfig()` during an import for a single value.</caption>
-* const { search_algorithm } = require("./config.js").GetConfig();
-*/
+ * @desc Used to get Server Config data from the `app.yaml` file at the root of the project.
+ * Or from environment variables. Prioritizing environment variables.
+ * @function GetConfig
+ * @return {object} The different available configuration values.
+ * @example <caption>Using `GetConfig()` during an import for a single value.</caption>
+ * const { search_algorithm } = require("./config.js").GetConfig();
+ */
 function GetConfig() {
   try {
     let fileContent = fs.readFileSync("./app.yaml", "utf8");
