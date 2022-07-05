@@ -164,7 +164,7 @@ function lcs(s1, s2) {
 * @function lcsTraceBack
 * @desc The non-exported recursive traceback function determining the actual Longest Common
 * Subsequence.
-* @param {[array]array} matrix - A table storing the matrix of the LCS calculation.
+* @param {array[]} matrix - A table storing the matrix of the LCS calculation.
 * @param {string} s1 - Intended as the string being searched with, or row's of the matrix.
 * @param {string} s2 - Intended as the string being searched against, or col's of the matrix.
 * @param {int} height - The numerical height of the matrix, as derived from s1.
