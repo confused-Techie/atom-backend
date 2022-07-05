@@ -1,3 +1,10 @@
+/**
+* @module users
+* @desc Focused on interacting with User Data only. Provides functions required
+* to modify, or compile user data specifically.
+* @implements {data}
+*/
+
 const data = require("./data.js");
 
 /**

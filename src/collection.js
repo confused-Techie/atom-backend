@@ -1,5 +1,8 @@
-// Here will be all features related to sorting, organizing, or pruning the package collections
-// returned to the end user.
+/**
+* @module collection
+* @desc Endpoint of all features related to sorting, organizing, or pruning package
+* collections, to be returned to the user.
+*/
 
 const search_func = require("./search.js");
 const { search_algorithm } = require("./config.js").GetConfig();

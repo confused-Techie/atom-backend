@@ -1,3 +1,8 @@
+/**
+* @module config
+* @desc Module that access' and returns the server wide configuration.
+*/
+
 const fs = require("fs");
 const yaml = require("js-yaml");
 

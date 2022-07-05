@@ -1,9 +1,33 @@
-// Levenshtein Distance; otherwise denotated as vlFUNC for its creator Vladimir Levenshtein
+/**
+* @module search
+* @desc This module is focused on implementing different search algorithms.
+* Elsewhere in the code the choice is made of which functions to call, to actual
+* execute a search function.
+*/
+
+/**
+* @function levenshtein
+* @desc The top level exported function to call, to preform a search based on
+* the Levenshtein Distance. Sibling functions denotated as vlFUNC, for its creator
+* Vladimir Levenshtein.
+* @param {string} s1 - The first string, generally inteded to be the actual typed search string.
+* @param {string} s2 - The second string, generally intended to be the string compared against the search.
+* @returns {function} vlSimilarity
+* @implements {vlSimilarity}
+*/
 function levenshtein(s1, s2) {
-  return vlSimilairty(s1, s2);
+  return vlSimilarity(s1, s2);
 }
 
-function vlSimilairty(s1, s2) {
+/**
+* @function vlSimilarity
+* @desc The un-exported function called by `levenshtein`. Used to preform the actual search.
+* @param {string} s1 - Intended to be the search string.
+* @param {string} s2 - Intended to be the string compared against the search string.
+* @returns {float} The numerical Edit Distance. 1.0 being the highest, and closest match, down to 0.0
+* @implements {vlEditDistance}
+*/
+function vlSimilarity(s1, s2) {
   let longer = s1;
   let shorter = s2;
   if (s1.length < s2.length) {
@@ -19,6 +43,14 @@ function vlSimilairty(s1, s2) {
   );
 }
 
+/**
+* @function vlEditDistance
+* @desc The un-exported function called by `vlSimilarity` to actually compute the Edit Distance
+* between two strings.
+* @param {string} s1 - The longest string provided to vlSimilarity.
+* @param {string} s2 - The shortest string provided to vlSimilarity.
+* @returns {float} A numerical Edit Distance, 1.0 being the highest and closest match, down to 0.0
+*/
 function vlEditDistance(s1, s2) {
   s1 = s1.toLowerCase();
   s2 = s2.toLowerCase();
@@ -47,7 +79,16 @@ function vlEditDistance(s1, s2) {
   return costs[s2.length];
 }
 
-// Levenshtein Distance w/ Word Seperators - Double Mean; vlwsFUNC
+/**
+* @function levenshteinWSDM
+* @desc A custom implementation of Levenshtein's Edit Distance, intended to be
+* better suited for sentences. Named: 'Levenshtein Distance w/ Word Seperators - Double Mean'.
+* Still relies on base levenshtein functions to reduce duplication.
+* @param {string} s1 - Intended as the string being searched with.
+* @param {string} s2 - Intended as the string being search against.
+* @returns {float} A numerical Edit Distance, 1.0 being the highest and closest match, down to 0.0
+* @implements {vlSimilarity}
+*/
 function levenshteinWSDM(s1, s2) {
   // But based on the data, it still seems that the standard levenshtein distance is best, even with word characters.
 
@@ -70,7 +111,7 @@ function levenshteinWSDM(s1, s2) {
   for (let i = 0; i < s1A.length; i++) {
     let costs = new Array();
     for (let u = 0; u < s2A.length; u++) {
-      costs[u] = vlSimilairty(s1A[i], s2A[u]);
+      costs[u] = vlSimilarity(s1A[i], s2A[u]);
     }
     means[i] =
       costs.reduce((a, b) => (isNaN(a) ? (isNaN(b) ? 0 : b) : a + b), 0) /
@@ -80,7 +121,18 @@ function levenshteinWSDM(s1, s2) {
   return means.reduce((a, b) => a + b, 0) / means.length;
 }
 
-// Longest Common Subsequence Algorithm; lcsFUNC
+/**
+* @function lcs
+* @desc An exported translation of Longest Common Subsequence Algorithm in JavaScript.
+* With a custom twist, where instead of reporting the string of the LCS, reports
+* a numerical float value of the similarity two its search string.
+* With sibling functions denotated by lcsFUNC.
+* @param {string} s1 - Intended as the string being searched with.
+* @param {string} s2 - Intended as the string being searched against.
+* @returns {float} A numerical float similarity index. For example if the string is
+* 5 characters long, and the LCS is 4 characters, it will return 0.8 for it's similarity score.
+* @implements {lcsTraceBack}
+*/
 function lcs(s1, s2) {
   // This has been implemented directly from the algorithm function.
   // https://en.wikipedia.org/wiki/Longest_common_subsequence_problem
@@ -108,6 +160,16 @@ function lcs(s1, s2) {
   // For Example: if the string is 5 chars, and the longest is 4, it'll be 0.8 similarity score.
 }
 
+/**
+* @function lcsTraceBack
+* @desc The non-exported recursive traceback function determining the actual Longest Common
+* Subsequence.
+* @param {[array]array} matrix - A table storing the matrix of the LCS calculation.
+* @param {string} s1 - Intended as the string being searched with, or row's of the matrix.
+* @param {string} s2 - Intended as the string being searched against, or col's of the matrix.
+* @param {int} height - The numerical height of the matrix, as derived from s1.
+* @param {int} width - The numerical width of the matrix, as derived from s2.
+*/
 function lcsTraceBack(matrix, s1, s2, height, width) {
   if (height === 0 || width === 0) {
     return "";
