@@ -1,8 +1,8 @@
 /**
-* @module collection
-* @desc Endpoint of all features related to sorting, organizing, or pruning package
-* collections, to be returned to the user.
-*/
+ * @module collection
+ * @desc Endpoint of all features related to sorting, organizing, or pruning package
+ * collections, to be returned to the user.
+ */
 
 const search_func = require("./search.js");
 const logger = require("./logger.js");
@@ -85,23 +85,27 @@ async function Sort(packages, method) {
 
     return packages;
   } else {
-    logger.WarningLog(null, null, `Unrecognized Sorting Method Provided: ${method}`);
+    logger.WarningLog(
+      null,
+      null,
+      `Unrecognized Sorting Method Provided: ${method}`
+    );
     return packages;
   }
 }
 
 /**
-* @function Direction
-* @desc Sorts an array of package objects based on the provided method.
-* Intended to occur after sorting the package. Prioritizes returning packages,
-* so if an invalid method is provided returns the packages with no changes.
-* @param {object[]} packages - The array of package objects to work on.
-* @param {string} method - The method of which they should be organized. Either
-* "desc" = Descending, or "asc" = Ascending.
-* @returns {object[]|string} The array of object packages, now organized, or directly
-* returned if an invalid 'method' is supplied.
-* @async
-*/
+ * @function Direction
+ * @desc Sorts an array of package objects based on the provided method.
+ * Intended to occur after sorting the package. Prioritizes returning packages,
+ * so if an invalid method is provided returns the packages with no changes.
+ * @param {object[]} packages - The array of package objects to work on.
+ * @param {string} method - The method of which they should be organized. Either
+ * "desc" = Descending, or "asc" = Ascending.
+ * @returns {object[]|string} The array of object packages, now organized, or directly
+ * returned if an invalid 'method' is supplied.
+ * @async
+ */
 async function Direction(packages, method) {
   // While previously
   if (method == "desc") {
@@ -113,7 +117,11 @@ async function Direction(packages, method) {
     // the collection functions, to measure what the performance is like.
     return packages.reverse();
   } else {
-    logger.WarningLog(null, null, `Unrecognized Direction Method Used: ${method}`);
+    logger.WarningLog(
+      null,
+      null,
+      `Unrecognized Direction Method Used: ${method}`
+    );
     return packages;
   }
 }

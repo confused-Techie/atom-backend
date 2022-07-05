@@ -1,11 +1,21 @@
 ## Modules
 
 <dl>
+<dt><a href="#module_collection">collection</a></dt>
+<dd><p>Endpoint of all features related to sorting, organizing, or pruning package
+collections, to be returned to the user.</p>
+</dd>
+<dt><a href="#module_config">config</a></dt>
+<dd><p>Module that access&#39; and returns the server wide configuration.</p>
+</dd>
 <dt><a href="#module_error">error</a></dt>
 <dd><p>Contains different error messages that can be returned, adding them and their
 respective HTTP Status Codes to the <code>Response</code> object provided to them.
 Letting them all be defined in one place for ease of modification, and easily route
 to them from different handlers.</p>
+</dd>
+<dt><a href="#module_git">git</a></dt>
+<dd><p>Assists in interactions between the backend and GitHub.</p>
 </dd>
 <dt><a href="#module_logger">logger</a></dt>
 <dd><p>Allows easy logging of the server. Allowing it to become simple to add additional
@@ -15,55 +25,97 @@ logging methods if a log server is ever implemented.</p>
 <dd><p>The Main functionality for the entire server. Sets up the Express server, providing
 all endpoints it listens on. With those endpoints being further documented in <code>api.md</code>.</p>
 </dd>
+<dt><a href="#module_query">query</a></dt>
+<dd><p>Home to parsing all query parameters from the <code>Request</code> object. Ensuring a valid response.</p>
+</dd>
 <dt><a href="#module_resources">resources</a></dt>
 <dd><p>This module provides a way for other functions to read/write/delete data without knowing or
 thinking about the underlying file structure. Providing abstraction if the data resides on a local
 filesystem, Google Cloud Storage, or something else entirely.</p>
 </dd>
+<dt><a href="#module_search">search</a></dt>
+<dd><p>This module is focused on implementing different search algorithms.
+Elsewhere in the code the choice is made of which functions to call, to actual
+execute a search function.</p>
+</dd>
 <dt><a href="#module_server">server</a></dt>
 <dd><p>The initializer of <code>main.js</code> starting up the Express Server, and setting the port
 to listen on. As well as handling a graceful shutdown of the server.</p>
+</dd>
+<dt><a href="#module_users">users</a></dt>
+<dd><p>Focused on interacting with User Data only. Provides functions required
+to modify, or compile user data specifically.</p>
 </dd>
 <dt><a href="#module_common_handler">common_handler</a></dt>
 <dd><p>Provides a simplistic way to refer to implement common endpoint returns.
 So these can be called as an async function without more complex functions, reducing
 verbosity, and duplication within the codebase.</p>
 </dd>
-</dl>
-
-## Functions
-
-<dl>
-<dt><a href="#Sort">Sort(method, packages)</a> ⇒ <code>object</code></dt>
-<dd><p>Intended for use for a collection of Packages, sort them according to any valid Sorting method.
-Note this should be called before, any Pruning has taken place.</p>
-</dd>
-<dt><a href="#GetConfig">GetConfig()</a> ⇒ <code>object</code></dt>
-<dd><p>Used to get Server Config data from the <code>app.yaml</code> file at the root of the project.
-Or from environment variables. Prioritizing environment variables.</p>
-</dd>
-<dt><a href="#VerifyAuth">VerifyAuth(token, [callback])</a> ⇒ <code>object</code></dt>
-<dd><p>Checks every existing user within the users file, to see if the token provided exists within their valid
-tokens. If it does will return the entire user object. If an optional callback is provided will invoke the
-callback passing the user object, otherwise will just return the user object.
-If no valid user is found returns null.</p>
-</dd>
-<dt><a href="#GetUser">GetUser(username)</a> ⇒ <code>object</code></dt>
-<dd><p>Searches for a user within the user file, and if found will return the standard object
-containing the full User Object. Otherwise an error.</p>
-</dd>
-<dt><a href="#AddUserStar">AddUserStar(packageName, userName)</a> ⇒ <code>object</code></dt>
-<dd><p>Adds the desired Package to the list of packages the User has starred.</p>
-</dd>
-<dt><a href="#RemoveUserStar">RemoveUserStar(packageName, userName)</a> ⇒ <code>object</code></dt>
-<dd><p>Removes the specified Package from the Users list of stars.</p>
-</dd>
-<dt><a href="#Prune">Prune(userObj)</a> ⇒ <code>object</code></dt>
-<dd><p>Takes a single User Object, and prunes any server side only data from the object to return to the user.
-This pruned item should never be written back to disk, as removed the data from it removes any pointers to those values.</p>
+<dt><a href="#module_star_handler">star_handler</a></dt>
+<dd><p>Handler for any endpoints whose slug after <code>/api/</code> is <code>star</code>.</p>
 </dd>
 </dl>
 
+<a name="module_collection"></a>
+
+## collection
+Endpoint of all features related to sorting, organizing, or pruning package
+collections, to be returned to the user.
+
+
+* [collection](#module_collection)
+    * [~Sort(method, packages)](#module_collection..Sort) ⇒ <code>Array.&lt;object&gt;</code>
+    * [~Direction(packages, method)](#module_collection..Direction) ⇒ <code>Array.&lt;object&gt;</code> \| <code>string</code>
+
+<a name="module_collection..Sort"></a>
+
+### collection~Sort(method, packages) ⇒ <code>Array.&lt;object&gt;</code>
+Intended for use for a collection of Packages, sort them according to any valid Sorting method.
+Note this should be called before, any Pruning has taken place.
+Prioritizes returning packages so if an invalid method is provided returns the packages
+without modification.
+
+**Kind**: inner method of [<code>collection</code>](#module_collection)  
+**Returns**: <code>Array.&lt;object&gt;</code> - The provided packages now sorted accordingly.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| method | <code>string</code> | The Method to Sort By |
+| packages | <code>Array.&lt;object&gt;</code> | The Packages in which to sort. |
+
+<a name="module_collection..Direction"></a>
+
+### collection~Direction(packages, method) ⇒ <code>Array.&lt;object&gt;</code> \| <code>string</code>
+Sorts an array of package objects based on the provided method.
+Intended to occur after sorting the package. Prioritizes returning packages,
+so if an invalid method is provided returns the packages with no changes.
+
+**Kind**: inner method of [<code>collection</code>](#module_collection)  
+**Returns**: <code>Array.&lt;object&gt;</code> \| <code>string</code> - The array of object packages, now organized, or directly
+returned if an invalid 'method' is supplied.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| packages | <code>Array.&lt;object&gt;</code> | The array of package objects to work on. |
+| method | <code>string</code> | The method of which they should be organized. Either "desc" = Descending, or "asc" = Ascending. |
+
+<a name="module_config"></a>
+
+## config
+Module that access' and returns the server wide configuration.
+
+<a name="module_config..GetConfig"></a>
+
+### config~GetConfig() ⇒ <code>object</code>
+Used to get Server Config data from the `app.yaml` file at the root of the project.
+Or from environment variables. Prioritizing environment variables.
+
+**Kind**: inner method of [<code>config</code>](#module_config)  
+**Returns**: <code>object</code> - The different available configuration values.  
+**Example** *(Using &#x60;GetConfig()&#x60; during an import for a single value.)*  
+```js
+const { search_algorithm } = require("./config.js").GetConfig();
+```
 <a name="module_error"></a>
 
 ## error
@@ -171,6 +223,45 @@ that has not been written yet.
 | --- | --- | --- |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
+<a name="module_git"></a>
+
+## git
+Assists in interactions between the backend and GitHub.
+
+
+* [git](#module_git)
+    * [~VerifyAuth()](#module_git..VerifyAuth)
+    * [~Ownership()](#module_git..Ownership)
+    * [~CreatePackage()](#module_git..CreatePackage)
+
+<a name="module_git..VerifyAuth"></a>
+
+### git~VerifyAuth()
+This <b>Unfinished</b> function is intended to return true or false,
+if the provided token owns the provided repo. Th rest of the documentation will
+wait until this function is completed. Apon further inspection it seems this function
+is not actually implemented, or intended to be implemented anywhere, and possibly should be removed.
+
+**Kind**: inner method of [<code>git</code>](#module_git)  
+<a name="module_git..Ownership"></a>
+
+### git~Ownership()
+This <b>Unfinished</b> function is intended to return a Server Status Object.
+Proving ownership over a GitHub repo. Which is used to determine if the user
+is allowed to make changes to its corresponding package. Should return true
+in the Server Status Object if ownership is valid. But until it is written, will
+not be fully documented.
+
+**Kind**: inner method of [<code>git</code>](#module_git)  
+<a name="module_git..CreatePackage"></a>
+
+### git~CreatePackage()
+This <b>Unfinished</b> function is intended to create a compatible package object
+to be used directly as a `Server Package Object`. Meaning it will need to create
+all properties, and fill all keys. Until this is completed, the documentation will
+also be uncompleted.
+
+**Kind**: inner method of [<code>git</code>](#module_git)  
 <a name="module_logger"></a>
 
 ## logger
@@ -280,6 +371,139 @@ The Main functionality for the entire server. Sets up the Express server, provid
 all endpoints it listens on. With those endpoints being further documented in `api.md`.
 
 **Implements**: <code>update\_handler</code>, <code>star\_handler</code>, <code>user\_handler</code>, <code>theme\_handler</code>, <code>package\_handler</code>, <code>common\_handler</code>  
+<a name="module_query"></a>
+
+## query
+Home to parsing all query parameters from the `Request` object. Ensuring a valid response.
+
+
+* [query](#module_query)
+    * [~page(req)](#module_query..page) ⇒ <code>string</code>
+    * [~sort(req, [def])](#module_query..sort) ⇒ <code>string</code>
+    * [~dir(req)](#module_query..dir) ⇒ <code>string</code>
+    * [~query(req)](#module_query..query) ⇒ <code>string</code>
+    * [~engine(req)](#module_query..engine) ⇒ <code>string</code> \| <code>boolean</code>
+    * [~repo(req)](#module_query..repo) ⇒ <code>string</code>
+    * [~tag(req)](#module_query..tag) ⇒ <code>string</code>
+    * [~rename(req)](#module_query..rename) ⇒ <code>boolean</code>
+    * [~pathTraversalAttempt(data)](#module_query..pathTraversalAttempt) ⇒ <code>boolean</code>
+
+<a name="module_query..page"></a>
+
+### query~page(req) ⇒ <code>string</code>
+Parser of the Page query parameter. Defaulting to 1.
+
+**Kind**: inner method of [<code>query</code>](#module_query)  
+**Returns**: <code>string</code> - Returns the valid page provided in the query parameter or 1, as the default.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+
+<a name="module_query..sort"></a>
+
+### query~sort(req, [def]) ⇒ <code>string</code>
+Parser for the 'sort' query parameter. Defaulting usually to downloads.
+
+**Kind**: inner method of [<code>query</code>](#module_query)  
+**Returns**: <code>string</code> - Either the user provided 'sort' query parameter, or the default specified.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| req | <code>object</code> |  | The `Request` object inherited from the Express endpoint. |
+| [def] | <code>string</code> | <code>&quot;\&quot;downloads\&quot;&quot;</code> | The default provided for sort. Allowing The search function to use "relevance" instead of the default "downloads". |
+
+<a name="module_query..dir"></a>
+
+### query~dir(req) ⇒ <code>string</code>
+Parser for either 'direction' or 'order' query parameter, prioritizing
+'direction'.
+
+**Kind**: inner method of [<code>query</code>](#module_query)  
+**Returns**: <code>string</code> - The valid direction value from the 'direction' or 'order'
+query parameter.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+
+<a name="module_query..query"></a>
+
+### query~query(req) ⇒ <code>string</code>
+Checks the 'q' query parameter, trunicating it at 50 characters, and checking simplisticly that
+it is not a malicious request.
+
+**Kind**: inner method of [<code>query</code>](#module_query)  
+**Implements**: <code>pathTraversalAttempt</code>  
+**Returns**: <code>string</code> - A valid search string derived from 'q' query parameter. Or '' if invalid.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+
+<a name="module_query..engine"></a>
+
+### query~engine(req) ⇒ <code>string</code> \| <code>boolean</code>
+Parses the 'engine' query parameter to ensure its valid, otherwise returning false.
+
+**Kind**: inner method of [<code>query</code>](#module_query)  
+**Returns**: <code>string</code> \| <code>boolean</code> - Returns the valid 'engine' specified, or if none, returns false.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+
+<a name="module_query..repo"></a>
+
+### query~repo(req) ⇒ <code>string</code>
+Parses the 'repository' query parameter, returning it if valid, otherwise returning ''.
+
+**Kind**: inner method of [<code>query</code>](#module_query)  
+**Returns**: <code>string</code> - Returning the valid 'repository' query parameter, or '' if invalid.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+
+<a name="module_query..tag"></a>
+
+### query~tag(req) ⇒ <code>string</code>
+Parses the 'tag' query parameter, returning it if valid, otherwise returning ''.
+
+**Kind**: inner method of [<code>query</code>](#module_query)  
+**Returns**: <code>string</code> - Returns a valid 'tag' query parameter. Or '' if invalid.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+
+<a name="module_query..rename"></a>
+
+### query~rename(req) ⇒ <code>boolean</code>
+Since this is intended to be returning a boolean value, returns false
+if invalid, otherwise returns true. Checking for mixed captilization.
+
+**Kind**: inner method of [<code>query</code>](#module_query)  
+**Returns**: <code>boolean</code> - Returns false if invalid, or otherwise returns the boolean value of the string.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+
+<a name="module_query..pathTraversalAttempt"></a>
+
+### query~pathTraversalAttempt(data) ⇒ <code>boolean</code>
+Completes some short checks to determine if the data contains a malicious
+path traversal attempt. Returning a boolean indicating if a path traversal attempt
+exists in the data.
+
+**Kind**: inner method of [<code>query</code>](#module_query)  
+**Returns**: <code>boolean</code> - True indicates a path traversal attempt was found. False otherwise.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| data | <code>string</code> | The data to check for possible malicious data. |
+
 <a name="module_resources"></a>
 
 ## resources
@@ -384,6 +608,116 @@ we will only ever be deleting packages, these will only ever attempt to delete a
 | --- | --- | --- |
 | name | <code>string</code> | The name of the package we want to delete. <b>MUST</b> include `.json`, as in `UUID.json`. |
 
+<a name="module_search"></a>
+
+## search
+This module is focused on implementing different search algorithms.
+Elsewhere in the code the choice is made of which functions to call, to actual
+execute a search function.
+
+
+* [search](#module_search)
+    * [~levenshtein(s1, s2)](#module_search..levenshtein) ⇒ <code>function</code>
+    * [~vlSimilarity(s1, s2)](#module_search..vlSimilarity) ⇒ <code>float</code>
+    * [~vlEditDistance(s1, s2)](#module_search..vlEditDistance) ⇒ <code>float</code>
+    * [~levenshteinWSDM(s1, s2)](#module_search..levenshteinWSDM) ⇒ <code>float</code>
+    * [~lcs(s1, s2)](#module_search..lcs) ⇒ <code>float</code>
+    * [~lcsTraceBack(matrix, s1, s2, height, width)](#module_search..lcsTraceBack)
+
+<a name="module_search..levenshtein"></a>
+
+### search~levenshtein(s1, s2) ⇒ <code>function</code>
+The top level exported function to call, to preform a search based on
+the Levenshtein Distance. Sibling functions denotated as vlFUNC, for its creator
+Vladimir Levenshtein.
+
+**Kind**: inner method of [<code>search</code>](#module_search)  
+**Implements**: <code>vlSimilarity</code>  
+**Returns**: <code>function</code> - vlSimilarity  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| s1 | <code>string</code> | The first string, generally inteded to be the actual typed search string. |
+| s2 | <code>string</code> | The second string, generally intended to be the string compared against the search. |
+
+<a name="module_search..vlSimilarity"></a>
+
+### search~vlSimilarity(s1, s2) ⇒ <code>float</code>
+The un-exported function called by `levenshtein`. Used to preform the actual search.
+
+**Kind**: inner method of [<code>search</code>](#module_search)  
+**Implements**: <code>vlEditDistance</code>  
+**Returns**: <code>float</code> - The numerical Edit Distance. 1.0 being the highest, and closest match, down to 0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| s1 | <code>string</code> | Intended to be the search string. |
+| s2 | <code>string</code> | Intended to be the string compared against the search string. |
+
+<a name="module_search..vlEditDistance"></a>
+
+### search~vlEditDistance(s1, s2) ⇒ <code>float</code>
+The un-exported function called by `vlSimilarity` to actually compute the Edit Distance
+between two strings.
+
+**Kind**: inner method of [<code>search</code>](#module_search)  
+**Returns**: <code>float</code> - A numerical Edit Distance, 1.0 being the highest and closest match, down to 0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| s1 | <code>string</code> | The longest string provided to vlSimilarity. |
+| s2 | <code>string</code> | The shortest string provided to vlSimilarity. |
+
+<a name="module_search..levenshteinWSDM"></a>
+
+### search~levenshteinWSDM(s1, s2) ⇒ <code>float</code>
+A custom implementation of Levenshtein's Edit Distance, intended to be
+better suited for sentences. Named: 'Levenshtein Distance w/ Word Seperators - Double Mean'.
+Still relies on base levenshtein functions to reduce duplication.
+
+**Kind**: inner method of [<code>search</code>](#module_search)  
+**Implements**: <code>vlSimilarity</code>  
+**Returns**: <code>float</code> - A numerical Edit Distance, 1.0 being the highest and closest match, down to 0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| s1 | <code>string</code> | Intended as the string being searched with. |
+| s2 | <code>string</code> | Intended as the string being search against. |
+
+<a name="module_search..lcs"></a>
+
+### search~lcs(s1, s2) ⇒ <code>float</code>
+An exported translation of Longest Common Subsequence Algorithm in JavaScript.
+With a custom twist, where instead of reporting the string of the LCS, reports
+a numerical float value of the similarity two its search string.
+With sibling functions denotated by lcsFUNC.
+
+**Kind**: inner method of [<code>search</code>](#module_search)  
+**Implements**: <code>lcsTraceBack</code>  
+**Returns**: <code>float</code> - A numerical float similarity index. For example if the string is
+5 characters long, and the LCS is 4 characters, it will return 0.8 for it's similarity score.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| s1 | <code>string</code> | Intended as the string being searched with. |
+| s2 | <code>string</code> | Intended as the string being searched against. |
+
+<a name="module_search..lcsTraceBack"></a>
+
+### search~lcsTraceBack(matrix, s1, s2, height, width)
+The non-exported recursive traceback function determining the actual Longest Common
+Subsequence.
+
+**Kind**: inner method of [<code>search</code>](#module_search)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| matrix | <code>Array.&lt;array&gt;</code> | A table storing the matrix of the LCS calculation. |
+| s1 | <code>string</code> | Intended as the string being searched with, or row's of the matrix. |
+| s2 | <code>string</code> | Intended as the string being searched against, or col's of the matrix. |
+| height | <code>int</code> | The numerical height of the matrix, as derived from s1. |
+| width | <code>int</code> | The numerical width of the matrix, as derived from s2. |
+
 <a name="module_server"></a>
 
 ## server
@@ -402,6 +736,97 @@ Which this will then handle closing the server listener, as well as calling `dat
 | Param | Type | Description |
 | --- | --- | --- |
 | callee | <code>string</code> | Simply a way to better log what called the server to shutdown. |
+
+<a name="module_users"></a>
+
+## users
+Focused on interacting with User Data only. Provides functions required
+to modify, or compile user data specifically.
+
+**Implements**: <code>data</code>  
+
+* [users](#module_users)
+    * [~VerifyAuth(token, [callback])](#module_users..VerifyAuth) ⇒ <code>object</code>
+    * [~GetUser(username)](#module_users..GetUser) ⇒ <code>object</code>
+    * [~AddUserStar(packageName, userName)](#module_users..AddUserStar) ⇒ <code>object</code>
+    * [~RemoveUserStar(packageName, userName)](#module_users..RemoveUserStar) ⇒ <code>object</code>
+    * [~Prune(userObj)](#module_users..Prune) ⇒ <code>object</code>
+
+<a name="module_users..VerifyAuth"></a>
+
+### users~VerifyAuth(token, [callback]) ⇒ <code>object</code>
+Checks every existing user within the users file, to see if the token provided exists within their valid
+tokens. If it does will return the entire user object. If an optional callback is provided will invoke the
+callback passing the user object, otherwise will just return the user object.
+If no valid user is found returns null.
+
+**Kind**: inner method of [<code>users</code>](#module_users)  
+**Implements**: <code>GetUsers</code>  
+**Returns**: <code>object</code> - Error Object bubbled from GetUsers, Error Object of 'Bad Auth', Object containing the User Object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| token | <code>string</code> | Provided Token to check against all valid users. |
+| [callback] | <code>function</code> | Optional function to invoke passing the matched user. |
+
+<a name="module_users..GetUser"></a>
+
+### users~GetUser(username) ⇒ <code>object</code>
+Searches for a user within the user file, and if found will return the standard object
+containing the full User Object. Otherwise an error.
+
+**Kind**: inner method of [<code>users</code>](#module_users)  
+**Implements**: <code>GetUsers</code>  
+**Returns**: <code>object</code> - An error object bubbled up from GetUsers, Error Object of 'Not Found',
+Object containing full User Object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| username | <code>string</code> | The UserName we want to search for. |
+
+<a name="module_users..AddUserStar"></a>
+
+### users~AddUserStar(packageName, userName) ⇒ <code>object</code>
+Adds the desired Package to the list of packages the User has starred.
+
+**Kind**: inner method of [<code>users</code>](#module_users)  
+**Implements**: <code>GetUser</code>, <code>GetUsers</code>  
+**Returns**: <code>object</code> - Error Object Bubbled from GetUser, Error Object Bubbled from GetUsers,
+Error Object Bubbled from SetUsers, Short Object of 'ok' if successful.  
+**Impmplements**: <code>SetUsers</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| packageName | <code>string</code> | The Name of the Package we want to add to the users star list. |
+| userName | <code>string</code> | The user we want to make this modification to. |
+
+<a name="module_users..RemoveUserStar"></a>
+
+### users~RemoveUserStar(packageName, userName) ⇒ <code>object</code>
+Removes the specified Package from the Users list of stars.
+
+**Kind**: inner method of [<code>users</code>](#module_users)  
+**Implements**: <code>GetUser</code>, <code>GetUsers</code>, <code>SetUsers</code>  
+**Returns**: <code>object</code> - Error Object Bubbled from GetUser, ErrorObject Bubbled from GetUsers,
+Error Object Bubbled from SetUsers, Error Object of 'Not Found', Short Object of successful write ok.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| packageName | <code>string</code> | The Name of the package we want to remove from the users star list. |
+| userName | <code>string</code> | The User we want to make these changes to. |
+
+<a name="module_users..Prune"></a>
+
+### users~Prune(userObj) ⇒ <code>object</code>
+Takes a single User Object, and prunes any server side only data from the object to return to the user.
+This pruned item should never be written back to disk, as removed the data from it removes any pointers to those values.
+
+**Kind**: inner method of [<code>users</code>](#module_users)  
+**Returns**: <code>object</code> - The Pruned userObj.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| userObj | <code>object</code> | The object of which to preform the pruning on. |
 
 <a name="module_common_handler"></a>
 
@@ -487,105 +912,23 @@ Returns the SiteWide 404 page to the end user.
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="Sort"></a>
+<a name="module_star_handler"></a>
 
-## Sort(method, packages) ⇒ <code>object</code>
-Intended for use for a collection of Packages, sort them according to any valid Sorting method.
-Note this should be called before, any Pruning has taken place.
+## star\_handler
+Handler for any endpoints whose slug after `/api/` is `star`.
 
-**Kind**: global function  
-**Returns**: <code>object</code> - The provided packages now sorted accordingly.  
+**Implements**: <code>logger</code>, <code>users</code>, <code>data</code>, <code>common\_handler</code>  
+<a name="module_star_handler..GETStars"></a>
 
-| Param | Type | Description |
-| --- | --- | --- |
-| method | <code>string</code> | The Method to Sort By |
-| packages | <code>object</code> | The Packages in which to sort. |
+### star_handler~GETStars(req, res)
+Endpoint for `GET /api/stars`. Whose endgoal is to return an array of all packages
+the authenticated user has stared.
 
-<a name="GetConfig"></a>
-
-## GetConfig() ⇒ <code>object</code>
-Used to get Server Config data from the `app.yaml` file at the root of the project.
-Or from environment variables. Prioritizing environment variables.
-
-**Kind**: global function  
-**Returns**: <code>object</code> - The different available configuration values.  
-**Example** *(Using &#x60;GetConfig()&#x60; during an import for a single value.)*  
-```js
-const { search_algorithm } = require("./config.js").GetConfig();
-```
-<a name="VerifyAuth"></a>
-
-## VerifyAuth(token, [callback]) ⇒ <code>object</code>
-Checks every existing user within the users file, to see if the token provided exists within their valid
-tokens. If it does will return the entire user object. If an optional callback is provided will invoke the
-callback passing the user object, otherwise will just return the user object.
-If no valid user is found returns null.
-
-**Kind**: global function  
-**Implements**: <code>GetUsers</code>  
-**Returns**: <code>object</code> - Error Object bubbled from GetUsers, Error Object of 'Bad Auth', Object containing the User Object.  
+**Kind**: inner method of [<code>star\_handler</code>](#module_star_handler)  
+**Implements**: <code>users.VerifyAuth</code>, <code>data.GetPackageCollection</code>, <code>logger.HTTPLog</code>, <code>common.ServerError</code>, <code>common.AuthFail</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| token | <code>string</code> | Provided Token to check against all valid users. |
-| [callback] | <code>function</code> | Optional function to invoke passing the matched user. |
-
-<a name="GetUser"></a>
-
-## GetUser(username) ⇒ <code>object</code>
-Searches for a user within the user file, and if found will return the standard object
-containing the full User Object. Otherwise an error.
-
-**Kind**: global function  
-**Implements**: <code>GetUsers</code>  
-**Returns**: <code>object</code> - An error object bubbled up from GetUsers, Error Object of 'Not Found',
-Object containing full User Object.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| username | <code>string</code> | The UserName we want to search for. |
-
-<a name="AddUserStar"></a>
-
-## AddUserStar(packageName, userName) ⇒ <code>object</code>
-Adds the desired Package to the list of packages the User has starred.
-
-**Kind**: global function  
-**Implements**: [<code>GetUser</code>](#GetUser), <code>GetUsers</code>  
-**Returns**: <code>object</code> - Error Object Bubbled from GetUser, Error Object Bubbled from GetUsers,
-Error Object Bubbled from SetUsers, Short Object of 'ok' if successful.  
-**Impmplements**: <code>SetUsers</code>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| packageName | <code>string</code> | The Name of the Package we want to add to the users star list. |
-| userName | <code>string</code> | The user we want to make this modification to. |
-
-<a name="RemoveUserStar"></a>
-
-## RemoveUserStar(packageName, userName) ⇒ <code>object</code>
-Removes the specified Package from the Users list of stars.
-
-**Kind**: global function  
-**Implements**: [<code>GetUser</code>](#GetUser), <code>GetUsers</code>, <code>SetUsers</code>  
-**Returns**: <code>object</code> - Error Object Bubbled from GetUser, ErrorObject Bubbled from GetUsers,
-Error Object Bubbled from SetUsers, Error Object of 'Not Found', Short Object of successful write ok.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| packageName | <code>string</code> | The Name of the package we want to remove from the users star list. |
-| userName | <code>string</code> | The User we want to make these changes to. |
-
-<a name="Prune"></a>
-
-## Prune(userObj) ⇒ <code>object</code>
-Takes a single User Object, and prunes any server side only data from the object to return to the user.
-This pruned item should never be written back to disk, as removed the data from it removes any pointers to those values.
-
-**Kind**: global function  
-**Returns**: <code>object</code> - The Pruned userObj.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| userObj | <code>object</code> | The object of which to preform the pruning on. |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 

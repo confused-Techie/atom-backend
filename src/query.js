@@ -1,7 +1,7 @@
 /**
-* @module query
-* @desc Home to parsing all query parameters from the `Request` object. Ensuring a valid response.
-*/
+ * @module query
+ * @desc Home to parsing all query parameters from the `Request` object. Ensuring a valid response.
+ */
 
 // While most values will just return their default there are some expecptions:
 // q or the query of the search will return false if nothing is provided, to allow a fast way to return an empty
@@ -10,11 +10,11 @@
 // of knowing not to prune results
 
 /**
-* @function page
-* @desc Parser of the Page query parameter. Defaulting to 1.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @returns {string} Returns the valid page provided in the query parameter or 1, as the default.
-*/
+ * @function page
+ * @desc Parser of the Page query parameter. Defaulting to 1.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @returns {string} Returns the valid page provided in the query parameter or 1, as the default.
+ */
 function page(req) {
   let def = 1;
   let prov = req.query.page;
@@ -28,13 +28,13 @@ function page(req) {
 }
 
 /**
-* @function sort
-* @desc Parser for the 'sort' query parameter. Defaulting usually to downloads.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @param {string} [def="downloads"] - The default provided for sort. Allowing
-* The search function to use "relevance" instead of the default "downloads".
-* @returns {string} Either the user provided 'sort' query parameter, or the default specified.
-*/
+ * @function sort
+ * @desc Parser for the 'sort' query parameter. Defaulting usually to downloads.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {string} [def="downloads"] - The default provided for sort. Allowing
+ * The search function to use "relevance" instead of the default "downloads".
+ * @returns {string} Either the user provided 'sort' query parameter, or the default specified.
+ */
 function sort(req, def = "downloads") {
   // using sort with a default def value of downloads, means when using the generic sort parameter
   // it will default to downloads, but if we pass the default, such as during search we can provide
@@ -50,13 +50,13 @@ function sort(req, def = "downloads") {
 }
 
 /**
-* @function dir
-* @desc Parser for either 'direction' or 'order' query parameter, prioritizing
-* 'direction'.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @returns {string} The valid direction value from the 'direction' or 'order'
-* query parameter.
-*/
+ * @function dir
+ * @desc Parser for either 'direction' or 'order' query parameter, prioritizing
+ * 'direction'.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @returns {string} The valid direction value from the 'direction' or 'order'
+ * query parameter.
+ */
 function dir(req) {
   let def = "desc";
   let valid = ["asc", "desc"];
@@ -77,13 +77,13 @@ function dir(req) {
 }
 
 /**
-* @function query
-* @desc Checks the 'q' query parameter, trunicating it at 50 characters, and checking simplisticly that
-* it is not a malicious request.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @returns {string} A valid search string derived from 'q' query parameter. Or '' if invalid.
-* @implements {pathTraversalAttempt}
-*/
+ * @function query
+ * @desc Checks the 'q' query parameter, trunicating it at 50 characters, and checking simplisticly that
+ * it is not a malicious request.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @returns {string} A valid search string derived from 'q' query parameter. Or '' if invalid.
+ * @implements {pathTraversalAttempt}
+ */
 function query(req) {
   let max_length = 50; // While package.json names according to NPM can be up to 214 characters, for performance
   // on the server and assumed deminishing returns on longer queries, this is cut off at 50 as suggested by Digitalone1.
@@ -111,11 +111,11 @@ function query(req) {
 }
 
 /**
-* @function engine
-* @desc Parses the 'engine' query parameter to ensure its valid, otherwise returning false.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @returns {string|boolean} Returns the valid 'engine' specified, or if none, returns false.
-*/
+ * @function engine
+ * @desc Parses the 'engine' query parameter to ensure its valid, otherwise returning false.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @returns {string|boolean} Returns the valid 'engine' specified, or if none, returns false.
+ */
 function engine(req) {
   let prov = req.query.engine;
 
@@ -135,11 +135,11 @@ function engine(req) {
 }
 
 /**
-* @function repo
-* @desc Parses the 'repository' query parameter, returning it if valid, otherwise returning ''.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @returns {string} Returning the valid 'repository' query parameter, or '' if invalid.
-*/
+ * @function repo
+ * @desc Parses the 'repository' query parameter, returning it if valid, otherwise returning ''.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @returns {string} Returning the valid 'repository' query parameter, or '' if invalid.
+ */
 function repo(req) {
   let prov = req.query.repository;
 
@@ -152,11 +152,11 @@ function repo(req) {
 }
 
 /**
-* @function tag
-* @desc Parses the 'tag' query parameter, returning it if valid, otherwise returning ''.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @returns {string} Returns a valid 'tag' query parameter. Or '' if invalid.
-*/
+ * @function tag
+ * @desc Parses the 'tag' query parameter, returning it if valid, otherwise returning ''.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @returns {string} Returns a valid 'tag' query parameter. Or '' if invalid.
+ */
 function tag(req) {
   let prov = req.query.tag;
 
@@ -164,12 +164,12 @@ function tag(req) {
 }
 
 /**
-* @function rename
-* @desc Since this is intended to be returning a boolean value, returns false
-* if invalid, otherwise returns true. Checking for mixed captilization.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @returns {boolean} Returns false if invalid, or otherwise returns the boolean value of the string.
-*/
+ * @function rename
+ * @desc Since this is intended to be returning a boolean value, returns false
+ * if invalid, otherwise returns true. Checking for mixed captilization.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @returns {boolean} Returns false if invalid, or otherwise returns the boolean value of the string.
+ */
 function rename(req) {
   let prov = req.query.rename;
 
@@ -188,13 +188,13 @@ function rename(req) {
 }
 
 /**
-* @function pathTraversalAttempt
-* @desc Completes some short checks to determine if the data contains a malicious
-* path traversal attempt. Returning a boolean indicating if a path traversal attempt
-* exists in the data.
-* @param {string} data - The data to check for possible malicious data.
-* @returns {boolean} True indicates a path traversal attempt was found. False otherwise.
-*/
+ * @function pathTraversalAttempt
+ * @desc Completes some short checks to determine if the data contains a malicious
+ * path traversal attempt. Returning a boolean indicating if a path traversal attempt
+ * exists in the data.
+ * @param {string} data - The data to check for possible malicious data.
+ * @returns {boolean} True indicates a path traversal attempt was found. False otherwise.
+ */
 function pathTraversalAttempt(data) {
   // this will use several methods to check for the possibility of an attempted path traversal attack.
 
