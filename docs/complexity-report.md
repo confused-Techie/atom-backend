@@ -1,12 +1,12 @@
 # Complexity report, 7/6/2022
 
-* Mean per-function logical LOC: 12.363492063492064
-* Mean per-function parameter count: 0.9444444444444444
-* Mean per-function cyclomatic complexity: 3.292063492063492
-* Mean per-function Halstead effort: 6477.403381338161
-* Mean per-module maintainability index: 69.68653708851653
-* First-order density: 4.081632653061225%
-* Change cost: 18.367346938775512%
+* Mean per-function logical LOC: 14.424074074074076
+* Mean per-function parameter count: 1.1018518518518519
+* Mean per-function cyclomatic complexity: 3.7407407407407405
+* Mean per-function Halstead effort: 7571.335629688606
+* Mean per-module maintainability index: 64.54484730335624
+* First-order density: 5.555555555555555%
+* Change cost: 22.22222222222222%
 * Core size: 100%
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/config.js
@@ -104,9 +104,9 @@
 * Physical LOC: 93
 * Logical LOC: 25
 * Mean parameter count: 2
-* Cyclomatic complexity: 4
-* Cyclomatic complexity density: 16%
-* Maintainability index: 79.48401961963178
+* Cyclomatic complexity: 6
+* Cyclomatic complexity density: 24%
+* Maintainability index: 78.94734382015348
 * Dependency count: 1
 * Function: **HTTPLog**
     * Line No.: 18
@@ -133,11 +133,11 @@
     * Physical LOC: 10
     * Logical LOC: 5
     * Parameter count: 3
-    * Cyclomatic complexity: 3
-    * Cyclomatic complexity density: 60%
-    * Halstead difficulty: 7.2
-    * Halstead volume: 131.68575291675114
-    * Halstead effort: 948.1374210006082
+    * Cyclomatic complexity: 5
+    * Cyclomatic complexity density: 100%
+    * Halstead difficulty: 8.181818181818182
+    * Halstead volume: 168.55519570060713
+    * Halstead effort: 1379.0879648231492
 * Function: **InfoLog**
     * Line No.: 76
     * Physical LOC: 3
@@ -338,14 +338,4 @@
 * Cyclomatic complexity density: 2.083333333333333%
 * Maintainability index: 43.98249547483119
 * Dependency count: 1
-
-## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/tests/users.test.js
-
-* Physical LOC: 1
-* Logical LOC: 0
-* Mean parameter count: 0
-* Cyclomatic complexity: 1
-* Cyclomatic complexity density: Infinity%
-* Maintainability index: 100
-* Dependency count: 0
 
