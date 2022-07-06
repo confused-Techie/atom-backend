@@ -285,20 +285,6 @@ async function SetPackageByID(id, data) {
   return resources.Write("package", data, id);
 }
 
-function RemovePackageByPointerV1(pointer) {
-  try {
-    let rm = fs.rmSync(`./data/packages/${pointer}`);
-    // since rmSync returns undefined, we can check that, just in case it doesn't throw an error.
-    if (rm === undefined) {
-      return { ok: true };
-    } else {
-      return { ok: false, content: "Not Available", short: "Server Error" };
-    }
-  } catch (err) {
-    return { ok: false, content: err, short: "Server Error" };
-  }
-}
-
 async function RemovePackageByPointer(pointer) {
   try {
     deletion_flags.push({

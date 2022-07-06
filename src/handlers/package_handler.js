@@ -556,7 +556,7 @@ async function POSTPackagesEventUninstall(req, res) {
     versionName: req.params.versionName,
   };
 
-  await DetermineUserPackagePermission(req, res, params.auth, async (user) => {
+  await DetermineUserPackagePermission(req, res, params.auth, async () => {
     let pack = await data.GetPackageByName(params.packageName);
     if (pack.ok) {
       pack.content.downloads--;

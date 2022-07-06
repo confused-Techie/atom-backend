@@ -56,7 +56,7 @@ function ErrorLog(req, res, err) {
  * WARNING:: ERROR
  */
 function WarningLog(req, res, err) {
-  if (req === undefined || res === undefined) {
+  if (req === undefined || res === undefined || req === null || res === null) {
     console.log(`WARNING:: ${err}`);
   } else {
     let duration = Date.now() - req.start;
