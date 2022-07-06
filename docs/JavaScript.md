@@ -8,6 +8,11 @@ collections, to be returned to the user.</p>
 <dt><a href="#module_config">config</a></dt>
 <dd><p>Module that access&#39; and returns the server wide configuration.</p>
 </dd>
+<dt><a href="#module_data">data</a></dt>
+<dd><p>This is likely the most major module within the codebase. Being the handler
+for data in general. Containing the <code>Shutdown</code> function, as well as gathering the users,
+packages, package_pointer, and additionally handling any modifications of the packages.</p>
+</dd>
 <dt><a href="#module_error">error</a></dt>
 <dd><p>Contains different error messages that can be returned, adding them and their
 respective HTTP Status Codes to the <code>Response</code> object provided to them.
@@ -53,6 +58,9 @@ verbosity, and duplication within the codebase.</p>
 </dd>
 <dt><a href="#module_star_handler">star_handler</a></dt>
 <dd><p>Handler for any endpoints whose slug after <code>/api/</code> is <code>star</code>.</p>
+</dd>
+<dt><a href="#module_user_handler">user_handler</a></dt>
+<dd><p>Handler for endpoints whose slug after <code>/api/</code> is <code>user</code>.</p>
 </dd>
 </dl>
 
@@ -116,6 +124,83 @@ Or from environment variables. Prioritizing environment variables.
 ```js
 const { search_algorithm } = require("./config.js").GetConfig();
 ```
+<a name="module_data"></a>
+
+## data
+This is likely the most major module within the codebase. Being the handler
+for data in general. Containing the `Shutdown` function, as well as gathering the users,
+packages, package_pointer, and additionally handling any modifications of the packages.
+
+
+* [data](#module_data)
+    * [~Shutdown()](#module_data..Shutdown)
+    * [~GetUsers()](#module_data..GetUsers) ⇒ <code>object</code>
+    * [~GetPackagePointer()](#module_data..GetPackagePointer) ⇒ <code>object</code>
+    * [~GetAllPackages()](#module_data..GetAllPackages) ⇒ <code>object</code>
+    * [~GetPackageByID(id)](#module_data..GetPackageByID) ⇒ <code>object</code>
+
+<a name="module_data..Shutdown"></a>
+
+### data~Shutdown()
+The function to be called during the a server stop event. Allowing any cache
+only data to be written to disk. Checking the Cached User Data, Cached Pointer
+Data, as well as checking for any items marked for deletion, and deleting them.
+
+**Kind**: inner method of [<code>data</code>](#module_data)  
+<a name="module_data..GetUsers"></a>
+
+### data~GetUsers() ⇒ <code>object</code>
+Used to get the fully Users File. Or all user data. This function will, if
+possible, cache the data read from the disk into `cached_user` variable to refer to later.
+And if the user data has already been cached, and is not yet expired, or otherwise
+invalidated, it will return this data. If it finds an invalidated cache, it will
+write this cache to disk, then return the new results from disk.
+
+**Kind**: inner method of [<code>data</code>](#module_data)  
+**Returns**: <code>object</code> - Server Status Object, which on success `content` contains an array of
+user objects.  
+<a name="module_data..GetPackagePointer"></a>
+
+### data~GetPackagePointer() ⇒ <code>object</code>
+Used to get the full package_pointer file, will cache an uncached file and return
+or will fetch an updated file if the cache has expired, or will write an
+invalidated cache, then return the new data from disk.
+
+**Kind**: inner method of [<code>data</code>](#module_data)  
+**Returns**: <code>object</code> - A Server Status Object, which on success returns the Package
+Pointer Object within `content`.  
+<a name="module_data..GetAllPackages"></a>
+
+### data~GetAllPackages() ⇒ <code>object</code>
+Will attempt to return all available packages in the repository.
+Caching the results, or if results have already been cached, will check the expiry
+and if expired, refresh the cache. `GetAllPackages` differs sigificantly from
+`GetPackagePointer` and `GetUsers` in that it will make no attempt to save invalidated data.
+Since it is expected that any modifications that occur to the Packages, never
+happens on the full collection, and instead is handled on an individual basis.
+Thus expecting them to be saved during those individual changes. Additionally
+While collected the full list of packages, if a package's data doesn't exist
+as a full file and only within the package_pointer, it will ignore the file,
+log it, and continue to return data.
+
+**Kind**: inner method of [<code>data</code>](#module_data)  
+**Implements**: <code>GetPackagePointer</code>, <code>GetPackageByID</code>  
+**Returns**: <code>object</code> - A Server Status Object, which on success `content` contains the full
+array of all package objects, as 'Server Package Objects'.  
+<a name="module_data..GetPackageByID"></a>
+
+### data~GetPackageByID(id) ⇒ <code>object</code>
+Will get a specific package, using its provided ID of the package.
+
+**Kind**: inner method of [<code>data</code>](#module_data)  
+**Implements**: <code>resources.Read</code>  
+**Returns**: <code>object</code> - A Server Status Object, which on success the `content` contains
+the package object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>string</code> | The ID of the package, like `UUIDv4.json`. |
+
 <a name="module_error"></a>
 
 ## error
@@ -931,4 +1016,25 @@ the authenticated user has stared.
 | --- | --- | --- |
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_user_handler"></a>
+
+## user\_handler
+Handler for endpoints whose slug after `/api/` is `user`.
+
+**Implements**: <code>logger</code>, <code>users</code>, <code>data</code>, <code>collection</code>, <code>common\_handler</code>  
+<a name="module_user_handler..GETLoginStars"></a>
+
+### user_handler~GETLoginStars(req, res)
+Endpoint for `GET /api/users/:login/stars`. Whose goal is to return
+An array of Package Object Short's collected from the authenticated user's
+star gazer list.
+
+**Kind**: inner method of [<code>user\_handler</code>](#module_user_handler)  
+**Implements**: <code>users.GetUser</code>, <code>data.GetPackageCollection</code>, <code>collection.POSPrune</code>, <code>logger.HTTPLog</code>, <code>common.ServerError</code>, <code>common.NotFound</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | - |
+| res | <code>object</code> | - |
 
