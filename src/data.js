@@ -1,16 +1,26 @@
+/**
+* @module data
+* @desc This is likely the most major module within the codebase. Being the handler
+* for data in general. Containing the `Shutdown` function, as well as gathering the users,
+* packages, package_pointer, and additionally handling any modifications of the packages.
+*/
+
 const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
 const logger = require("./logger.js");
 const resources = require("./resources.js");
 
-// Ideally in the future, reading from these files can be adstracted away, to aid in caching data to reduce
-// disk reads, while additionally allowing methods of reading from the cloud and such.
-// Currently Functions that read directly from the disk: GetUsers(), GetPackagePointer(), GetPackage()
-
-// We know what global cache objects we will have, so lets make this easy.
+// Collection of data global variables. Used for caching read data.
 let cached_user, cached_pointer, cached_packages;
 let deletion_flags = [];
 
+/**
+* @function Shutdown
+* @async
+* @desc The function to be called during the a server stop event. Allowing any cache
+* only data to be written to disk. Checking the Cached User Data, Cached Pointer
+* Data, as well as checking for any items marked for deletion, and deleting them.
+*/
 async function Shutdown() {
   logger.DebugLog("data.Shutdown called...");
   // This function will serve as a callee for any shutdown signals we receive, and to save the data right away.
@@ -19,7 +29,8 @@ async function Shutdown() {
       logger.DebugLog("Saving invalidated User Cache.");
       // this will tell us if we called for its data to be saved previously.
       // Now we will write it.
-      return resources.Write("user", cached_user.data);
+      let write = resources.Write("user", cached_user.data);
+      logger.DebugLog(`${write.ok ? "Successfully" : "Unsuccessfully" } Saved User Cache.`);
     } else {
       logger.DebugLog("No need to save valid User Cache.");
     }
@@ -27,7 +38,8 @@ async function Shutdown() {
   if (cached_pointer !== undefined) {
     if (cached_pointer.invalidated) {
       logger.DebugLog("Saving invalidated Pointer Cache.");
-      return resources.Write("pointer", cached_pointer.data);
+      let write = resources.Write("pointer", cached_pointer.data);
+      logger.DebugLog(`${write.ok ? "Successfully" : "Unsuccessfully"} Saved Pointer Cache.`);
     } else {
       logger.DebugLog("No need to save valid Pointer Cache.");
     }
@@ -53,6 +65,17 @@ async function Shutdown() {
   }
 }
 
+/**
+* @function GetUsers
+* @async
+* @desc Used to get the fully Users File. Or all user data. This function will, if
+* possible, cache the data read from the disk into `cached_user` variable to refer to later.
+* And if the user data has already been cached, and is not yet expired, or otherwise
+* invalidated, it will return this data. If it finds an invalidated cache, it will
+* write this cache to disk, then return the new results from disk.
+* @returns {object} Server Status Object, which on success `content` contains an array of
+* user objects.
+*/
 async function GetUsers() {
   const getNew = async function () {
     let tmpcache = await resources.Read("user");
@@ -97,6 +120,15 @@ async function GetUsers() {
   }
 }
 
+/**
+* @function GetPackagePointer
+* @async
+* @desc Used to get the full package_pointer file, will cache an uncached file and return
+* or will fetch an updated file if the cache has expired, or will write an
+* invalidated cache, then return the new data from disk.
+* @returns {object} A Server Status Object, which on success returns the Package
+* Pointer Object within `content`.
+*/
 async function GetPackagePointer() {
   const getNew = async function () {
     let tmpcache = await resources.Read("pointer");
@@ -124,6 +156,24 @@ async function GetPackagePointer() {
   }
 }
 
+/**
+* @function GetAllPackages
+* @async
+* @desc Will attempt to return all available packages in the repository.
+* Caching the results, or if results have already been cached, will check the expiry
+* and if expired, refresh the cache. `GetAllPackages` differs sigificantly from
+* `GetPackagePointer` and `GetUsers` in that it will make no attempt to save invalidated data.
+* Since it is expected that any modifications that occur to the Packages, never
+* happens on the full collection, and instead is handled on an individual basis.
+* Thus expecting them to be saved during those individual changes. Additionally
+* While collected the full list of packages, if a package's data doesn't exist
+* as a full file and only within the package_pointer, it will ignore the file,
+* log it, and continue to return data.
+* @returns {object} A Server Status Object, which on success `content` contains the full
+* array of all package objects, as 'Server Package Objects'.
+* @implements {GetPackagePointer}
+* @implements {GetPackageByID}
+*/
 async function GetAllPackages() {
   const getNew = async function () {
     const pointers = await GetPackagePointer();
@@ -183,6 +233,15 @@ async function GetAllPackages() {
   }
 }
 
+/**
+* @function GetPackageByID
+* @async
+* @desc Will get a specific package, using its provided ID of the package.
+* @param {string} id - The ID of the package, like `UUIDv4.json`.
+* @returns {object} A Server Status Object, which on success the `content` contains
+* the package object.
+* @implements {resources.Read}
+*/
 async function GetPackageByID(id) {
   let pack = await resources.Read("package", id);
   if (pack.ok) {
