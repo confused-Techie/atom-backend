@@ -52,3 +52,36 @@ test("Direction returns Array, when given one and an invalid method", async () =
 //  let res = await collection.Direction(data, "asc");
 //  expect(res[0].name).toBe("three");
 //});
+
+test("POFPrune Removes created", async () => {
+  let data = {
+    name: "test",
+    created: "date",
+    updated: "date",
+    star_gazers: "gazing"
+  };
+  let res = await collection.POFPrune(data);
+  expect(res.created).toBeUndefined();
+});
+
+test("POFPrune Removed updated", async () => {
+  let data = {
+    name: "test",
+    created: "date",
+    updated: "date",
+    star_gazers: "gazing"
+  };
+  let res = await collection.POFPrune(data);
+  expect(res.updated).toBeUndefined();
+});
+
+test("POFPrune Removes star_gazers", async () => {
+  let data = {
+    name: "test",
+    created: "date",
+    updated: "date",
+    star_gazers: "gazing"
+  };
+  let res = await collection.POFPrune(data);
+  expect(res.star_gazers).toBeUndefined();
+})
