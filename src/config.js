@@ -16,8 +16,18 @@ const yaml = require("js-yaml");
  */
 function GetConfig() {
   try {
-    let fileContent = fs.readFileSync("./app.yaml", "utf8");
-    let data = yaml.load(fileContent);
+    let data;
+    try {
+      let fileContent = fs.readFileSync("./app.yaml", "utf8");
+      data = yaml.load(fileContent);
+    } catch(err) {
+      // We failed to get the config file. But if we have env vars in production its okay.
+      if (!process.env.NODE_ENV == "production") {
+        console.log(`Failed to load app.yaml in non-production env! ${err}`);
+        process.exit(1);
+      } // else we should be okay.
+    }
+
 
     // now we should have the data as a JSON object.
 

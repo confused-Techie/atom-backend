@@ -9,6 +9,18 @@ on:
   push:
     branches: [ "main" ]
 
+env: # Now we need to setup environment variables, for the tests to run
+     # Since its expected that the app.yml exists.
+  PORT: 8080
+  SEARCHALGORITHM: "lcs"
+  SERVERURL: "http://localhost:8080"
+  PAGINATE: 30
+  CACHETIME: 600000
+  DEBUGLOG: true
+  FILESTORE: "filesystem"
+  GCS_BUCKET: ""
+  GCS_SERVICE_ACCOUNT_FILE: ""
+  
 jobs:
   build:
 
