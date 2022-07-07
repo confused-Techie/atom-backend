@@ -25,11 +25,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-      - run: npm install
-      - run: npm run api-docs
-      - run: npm run js-docs
-      - run: npm run complex 
-      - name: Commit Auto Docs
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: GH Action Documentation
+    - run: npm install
+    - run: npm run api-docs
+    - run: npm run js-docs
+    - run: npm run complex
+    - name: Commit Auto Docs
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: GH Action Documentation
