@@ -23,12 +23,18 @@ function GetConfig() {
     } catch (err) {
       // We failed to get the config file. But if we have env vars in production its okay.
       if (
-        !process.env.NODE_ENV == "production" &&
-        !process.env.NODE_ENV == "test"
+        process.env.NODE_ENV != "production" &&
+        process.env.NODE_ENV != "test"
       ) {
         console.log(`Failed to load app.yaml in non-production env! ${err}`);
         process.exit(1);
-      } // else we should be okay.
+      } else {
+        // while we want to continue, to grab variables from just the environment,
+        // We will assign the base object to data, to help prevent tests from failing.
+        data = {
+          env_variables: {}
+        };
+      }
     }
 
     // now we should have the data as a JSON object.
