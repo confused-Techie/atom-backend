@@ -46,4 +46,4 @@ jobs:
       - name: Commit Coverage, Coverage Badge
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: Coverage JSON, Coverage Badge
+          commit_message: GH Action Coverage JSON, Coverage Badge

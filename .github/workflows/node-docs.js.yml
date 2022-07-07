@@ -1,0 +1,35 @@
+# Seperating out all workflows.
+
+name: Node.js CI - Documentation
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+      - run: npm install
+      - run: npm run api-docs
+      - run: npm run js-docs
+      - run: npm run complex 
+      - name: Commit Auto Docs
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: GH Action Documentation
