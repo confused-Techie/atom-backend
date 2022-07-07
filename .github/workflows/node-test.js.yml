@@ -1,0 +1,37 @@
+# Testing if a workflow can be created on the file directly, then commited.
+# Or if it has to be made via the UI.
+
+# Workflow to install node dependencies, and run tests, and create badging.
+
+name: Node.js CI - Tests, Coverage Badging
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm install
+      - run: npm run test
+      - run: npm run gen-badge
+      - name: Commit Coverage, Coverage Badge
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Coverage JSON, Coverage Badge
