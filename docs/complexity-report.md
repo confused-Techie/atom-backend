@@ -1,12 +1,12 @@
-# Complexity report, 7/6/2022
+# Complexity report, 7/7/2022
 
-* Mean per-function logical LOC: 14.424074074074076
-* Mean per-function parameter count: 1.1018518518518519
-* Mean per-function cyclomatic complexity: 3.7407407407407405
-* Mean per-function Halstead effort: 7571.335629688606
-* Mean per-module maintainability index: 64.54484730335624
-* First-order density: 5.555555555555555%
-* Change cost: 22.22222222222222%
+* Mean per-function logical LOC: 13.863492063492064
+* Mean per-function parameter count: 1.123015873015873
+* Mean per-function cyclomatic complexity: 3.5634920634920633
+* Mean per-function Halstead effort: 6772.520583558192
+* Mean per-module maintainability index: 64.24118894366633
+* First-order density: 4.081632653061225%
+* Change cost: 18.367346938775512%
 * Core size: 100%
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/config.js
@@ -328,6 +328,56 @@
     * Halstead difficulty: 32.38888888888889
     * Halstead volume: 380.3296723500879
     * Halstead effort: 12318.455498894515
+
+## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/tests/genBadges.js
+
+* Physical LOC: 90
+* Logical LOC: 50
+* Mean parameter count: 1.25
+* Cyclomatic complexity: 7
+* Cyclomatic complexity density: 14.000000000000002%
+* Maintainability index: 62.419238785526865
+* Dependency count: 1
+* Function: **run**
+    * Line No.: 8
+    * Physical LOC: 52
+    * Logical LOC: 31
+    * Parameter count: 0
+    * Cyclomatic complexity: 7
+    * Cyclomatic complexity density: 22.58064516129032%
+    * Halstead difficulty: 10.528571428571428
+    * Halstead volume: 707.0159303752977
+    * Halstead effort: 7443.867724094205
+* Function: **call**
+    * Line No.: 24
+    * Physical LOC: 4
+    * Logical LOC: 2
+    * Parameter count: 1
+    * Cyclomatic complexity: 1
+    * Cyclomatic complexity density: 50%
+    * Halstead difficulty: 2.0999999999999996
+    * Halstead volume: 33
+    * Halstead effort: 69.29999999999998
+* Function: **makeBadge**
+    * Line No.: 61
+    * Physical LOC: 18
+    * Logical LOC: 3
+    * Parameter count: 3
+    * Cyclomatic complexity: 1
+    * Cyclomatic complexity density: 33.33333333333333%
+    * Halstead difficulty: 3.375
+    * Halstead volume: 64.72503367497926
+    * Halstead effort: 218.446988653055
+* Function: **writeBadge**
+    * Line No.: 80
+    * Physical LOC: 9
+    * Logical LOC: 6
+    * Parameter count: 1
+    * Cyclomatic complexity: 1
+    * Cyclomatic complexity density: 16.666666666666664%
+    * Halstead difficulty: 2.0454545454545454
+    * Halstead volume: 91.37651812938249
+    * Halstead effort: 186.9065143555551
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/tests/query.test.js
 

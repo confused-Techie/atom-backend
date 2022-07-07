@@ -20,7 +20,10 @@
   "license": "MIT",
   "jest": {
     "collectCoverage": true,
-    "coverageReporters": [ "json-summary", "text" ]
+    "coverageReporters": [
+      "json-summary",
+      "text"
+    ]
   },
   "dependencies": {
     "@google-cloud/storage": "^6.2.2",

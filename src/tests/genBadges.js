@@ -2,12 +2,15 @@ const fs = require("fs");
 
 const config = {
   target: "functions",
-  result: "percentage"
+  result: "percentage",
 };
 
 function run() {
   try {
-    let coverageRAW = fs.readFileSync("./coverage/coverage-summary.json", "utf8");
+    let coverageRAW = fs.readFileSync(
+      "./coverage/coverage-summary.json",
+      "utf8"
+    );
     let coverage = JSON.parse(coverageRAW);
 
     console.log(coverage.total.functions.pct);
@@ -18,7 +21,7 @@ function run() {
         // since we are doing percentage, lets get the pct or percentage coverage of total.
         let value = target.pct;
 
-        let call = function(color) {
+        let call = function (color) {
           let badge = makeBadge("coverage", `${value}%`, color);
           writeBadge(badge);
         };
@@ -49,7 +52,7 @@ function run() {
       console.log("Couldn't find 'total' property of coverage-summary.json");
       process.exit(1);
     }
-  } catch(err) {
+  } catch (err) {
     console.log(err);
     process.exit(1);
   }
@@ -57,29 +60,28 @@ function run() {
 
 function makeBadge(textDeclare, textValue, color) {
   let text = `${textDeclare}: ${textValue}`;
-  let badge =
-    [
-      `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" `,
-      `width="116" height="20" role="img" aria-label="${text}">`,
-      `<title>${text}</title>`,
-      `<g shape-rendering="crispEdges">`,
-      `<rect width="65" height="20" fill="#555"></rect>`,
-      `<rect x="65" width="51" height="20" fill="${color}"></rect>`,
-      `</g>`,
-      `<g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110">`,
-      `<text x="335" y="140" transform="scale(.1)" fill="#fff" textLength="550">${textDeclare}</text>`,
-      `<text x="895" y="140" transform="scale(.1)" fill="#fff" textLength="410">${textValue}</text>`,
-      `</g>`,
-      `</svg>`
-    ];
-  return badge.join('');
+  let badge = [
+    `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" `,
+    `width="116" height="20" role="img" aria-label="${text}">`,
+    `<title>${text}</title>`,
+    `<g shape-rendering="crispEdges">`,
+    `<rect width="65" height="20" fill="#555"></rect>`,
+    `<rect x="65" width="51" height="20" fill="${color}"></rect>`,
+    `</g>`,
+    `<g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110">`,
+    `<text x="335" y="140" transform="scale(.1)" fill="#fff" textLength="550">${textDeclare}</text>`,
+    `<text x="895" y="140" transform="scale(.1)" fill="#fff" textLength="410">${textValue}</text>`,
+    `</g>`,
+    `</svg>`,
+  ];
+  return badge.join("");
 }
 
 function writeBadge(data) {
   try {
     fs.writeFileSync("./coverage/badge.svg", data);
     console.log("Wrote new badge at: './coverage/badge.svg'");
-  } catch(err) {
+  } catch (err) {
     console.log(err);
     process.exit(1);
   }
