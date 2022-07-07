@@ -19,6 +19,7 @@ const user_handler = require("./handlers/user_handler.js");
 const theme_handler = require("./handlers/theme_handler.js");
 const package_handler = require("./handlers/package_handler.js");
 const common_handler = require("./handlers/common_handler.js");
+const oauth_handler = require("./handlers/oauth_handler.js");
 
 app.use((req, res, next) => {
   // This adds a start to the request, logging the exact time a request was received.
@@ -30,6 +31,18 @@ app.get("/", (req, res) => {
   // this is to display the ability to use this as the normal web page handler as well.
   // TODO: remove this, or modify as needed.
   res.send("Hello World");
+});
+
+/**
+* @web
+* @ignore
+* @path /api/oauth
+* @desc OAuth Callback URL. Other details TBD.
+* @method GET
+* @auth FALSE
+*/
+app.get("/api/oauth", async (req, res) => {
+  await oauth_handler.GETOauth(req, res);
 });
 
 /**
