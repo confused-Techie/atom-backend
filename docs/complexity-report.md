@@ -339,7 +339,7 @@
 * Maintainability index: 62.419238785526865
 * Dependency count: 1
 * Function: **run**
-    * Line No.: 8
+    * Line No.: 13
     * Physical LOC: 52
     * Logical LOC: 31
     * Parameter count: 0
@@ -349,7 +349,7 @@
     * Halstead volume: 707.0159303752977
     * Halstead effort: 7443.867724094205
 * Function: **call**
-    * Line No.: 24
+    * Line No.: 29
     * Physical LOC: 4
     * Logical LOC: 2
     * Parameter count: 1
@@ -359,7 +359,7 @@
     * Halstead volume: 33
     * Halstead effort: 69.29999999999998
 * Function: **makeBadge**
-    * Line No.: 61
+    * Line No.: 66
     * Physical LOC: 18
     * Logical LOC: 3
     * Parameter count: 3
@@ -369,7 +369,7 @@
     * Halstead volume: 64.72503367497926
     * Halstead effort: 218.446988653055
 * Function: **writeBadge**
-    * Line No.: 80
+    * Line No.: 85
     * Physical LOC: 9
     * Logical LOC: 6
     * Parameter count: 1
