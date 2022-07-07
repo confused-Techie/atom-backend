@@ -1,3 +1,7 @@
+# **[GET]** /api/oauth
+OAuth Callback URL. Other details TBD.
+
+Auth: `FALSE`
 # **[GET]** /api/packages
 List all packages.
 
