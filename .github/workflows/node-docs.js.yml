@@ -3,8 +3,13 @@
 name: Node.js CI - Documentation
 
 on:
-  push:
-    branches: [ "main" ]
+  workflow_run:
+    workflows: [ "Node.js CI - Tests, Coverage Badging" ]
+    types:
+      - completed
+  # Using this to prevent simulatinious runs, outdating local git cache.
+  #push:
+    #branches: [ "main" ]
 
 jobs:
   build:

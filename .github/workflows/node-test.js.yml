@@ -6,8 +6,13 @@
 name: Node.js CI - Tests, Coverage Badging
 
 on:
-  push:
-    branches: [ "main" ]
+  workflow_run:
+    workflows: [ "Node.js CI - Lint" ]
+    types:
+      - completed
+  # Using this to ensure two workflows don't finish simulatniously and cause the local git to be out of date.
+  #push:
+    #branches: [ "main" ]
 
 env: # Now we need to setup environment variables, for the tests to run
      # Since its expected that the app.yml exists.
