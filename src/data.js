@@ -5,7 +5,6 @@
  * packages, package_pointer, and additionally handling any modifications of the packages.
  */
 
-const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
 const logger = require("./logger.js");
 const resources = require("./resources.js");

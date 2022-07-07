@@ -39,6 +39,18 @@ describe("Verify Direction Query Returns", () => {
   });
 });
 
+const order_cases = [
+  [{query: {order: "asc" } }, "asc" ],
+  [{query: {order: "desc" } }, "desc" ],
+  [{query: {} }, "desc" ]
+];
+
+describe("Verify Order Query Returns", () => {
+  test.each(order_cases)("Given %o Returns %p", (arg, result) => {
+    expect(query.dir(arg)).toBe(result);
+  });
+});
+
 const query_cases = [
   [{ query: { q: "search-term" } }, "search-term"],
   [{ query: {} }, ""],
