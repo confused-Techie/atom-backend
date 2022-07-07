@@ -32,7 +32,7 @@ function GetConfig() {
         // while we want to continue, to grab variables from just the environment,
         // We will assign the base object to data, to help prevent tests from failing.
         data = {
-          env_variables: {}
+          env_variables: {},
         };
       }
     }
