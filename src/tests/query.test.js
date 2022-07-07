@@ -40,9 +40,9 @@ describe("Verify Direction Query Returns", () => {
 });
 
 const order_cases = [
-  [{query: {order: "asc" } }, "asc" ],
-  [{query: {order: "desc" } }, "desc" ],
-  [{query: {} }, "desc" ]
+  [{ query: { order: "asc" } }, "asc"],
+  [{ query: { order: "desc" } }, "desc"],
+  [{ query: {} }, "desc"],
 ];
 
 describe("Verify Order Query Returns", () => {

@@ -33,7 +33,7 @@ test("AuthFail Modifies 'Server Error' HTTP Status", async () => {
   let user = {
     ok: false,
     content: "DEV",
-    short: "Server Error"
+    short: "Server Error",
   };
   await common.AuthFail(req, res, user);
   expect(res.statusCode).toBe(500);
@@ -45,7 +45,7 @@ test("AuthFail Modifies 'Bad Auth' HTTP Status", async () => {
   let user = {
     ok: false,
     content: "DEV",
-    short: "Bad Auth"
+    short: "Bad Auth",
   };
   await common.AuthFail(req, res, user);
   expect(res.statusCode).toBe(401);
