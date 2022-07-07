@@ -20,7 +20,6 @@ env: # Now we need to setup environment variables, for the tests to run
   FILESTORE: "filesystem"
   GCS_BUCKET: ""
   GCS_SERVICE_ACCOUNT_FILE: ""
-  NODE_ENV: "test"
 
 jobs:
   build:
