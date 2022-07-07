@@ -1,3 +1,8 @@
+// This is used ONLY by package.json to gen the README badge for code coverage.
+// It takes the json output from jest in ./coverage/coverage-summary.json
+// Takes a small config object here and creates an SVG. Super simplistic,
+// and the config is there for hopes the eventuall it does support other options.
+
 const fs = require("fs");
 
 const config = {

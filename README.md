@@ -24,6 +24,7 @@ Then go ahead and create an `app.yaml` file, or rename the `app.example.yaml` to
 Finally you can run the API Server with `node .`, additionally there are several built in scripts that can be run with `npm run $SCRIPT_NAME`
 
 * `test`: Runs the Jest tests within the ./src/tests folder.
+* `gen-badge`: Runs `./src/tests/genBadges.js` and uses the Jest Code Coverage output to create an SVG badge.
 * `api-docs`: Uses `@confused-techie/quick-webserver-docs` to generate documentation based off the JSDoc style comments.
 * `lint`: Uses `prettier` to format and lint the codebase.
 * `complex`: Uses `complexity-report` to generate complexity reports of the JavaScript. Keep in mind this does not support ES6 yet, so not all functions are documented.
