@@ -6,7 +6,7 @@ const page_cases = [
   [{ query: { page: "3" } }, "3"],
   [{ query: {} }, 1],
   [{ query: { page: "2" } }, "2"],
-  [{ query: { page: "JustText" } }, 1 ],
+  [{ query: { page: "JustText" } }, 1],
 ];
 // once proper type conversion is implemented the last test should pass a string "2"
 
