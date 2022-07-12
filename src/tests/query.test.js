@@ -6,6 +6,7 @@ const page_cases = [
   [{ query: { page: "3" } }, "3"],
   [{ query: {} }, 1],
   [{ query: { page: "2" } }, "2"],
+  [{ query: { page: "JustText" } }, "1" ],
 ];
 // once proper type conversion is implemented the last test should pass a string "2"
 
@@ -31,6 +32,9 @@ const dir_cases = [
   [{ query: { direction: "asc" } }, "asc"],
   [{ query: { direction: "desc" } }, "desc"],
   [{ query: {} }, "desc"],
+  [{ query: { order: "asc" } }, "asc" ],
+  [{ query: { order: "BadOrder" } }, "desc" ],
+  [{ query: { direction: "BadDirection" } }, "desc" ],
 ];
 
 describe("Verify Direction Query Returns", () => {
@@ -54,6 +58,7 @@ describe("Verify Order Query Returns", () => {
 const query_cases = [
   [{ query: { q: "search-term" } }, "search-term"],
   [{ query: {} }, ""],
+  [{ query: { q: ".//your-secret.env" } }, "" ],
 ];
 
 describe("Verify 'Query' Query Returns", () => {
@@ -62,7 +67,10 @@ describe("Verify 'Query' Query Returns", () => {
   });
 });
 
-const engine_cases = [[{ query: { engine: "0.1.2" } }, "0.1.2"]];
+const engine_cases = [
+  [{ query: { engine: "0.1.2" } }, "0.1.2"],
+  [{ query: { engine: "JustText" } }, false], // should return false to indicate that no check is needed.
+];
 
 describe("Verify Engine Query Returns", () => {
   test.each(engine_cases)("Given %o Returns %p", (arg, result) => {
@@ -73,6 +81,7 @@ describe("Verify Engine Query Returns", () => {
 const repo_cases = [
   [{ query: { repository: "owner/repo" } }, "owner/repo"],
   [{ query: {} }, ""],
+  [{ query: { repository: "InvalidRepo" } }, ""],
 ];
 
 describe("Verify Repo Query Returns", () => {
@@ -96,6 +105,9 @@ const rename_cases = [
   [{ query: { rename: "true" } }, true],
   [{ query: { rename: "false" } }, false],
   [{ query: {} }, false],
+  [{ query: { rename: "Schrodinger" } }, false],
+  [{ query: { rename: "TRUE" } }, true],
+  [{ query: { rename: "FALSE" } }, false],
 ];
 
 describe("Verify Rename Query Returns", () => {

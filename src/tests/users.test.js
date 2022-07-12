@@ -13,6 +13,12 @@ test("users.VerifyAuth denies DEV 'invalid_token'", async () => {
   expect(data.ok).toBe(false);
 });
 
+// === Fails gracefully on user with no token.
+test("users.VerifyAuth fails gracefully on DEV 'murphys-user'", async () => {
+  const data = await users.VerifyAuth("invalid_token");
+  expect(data.ok).toBe(false);
+});
+
 // ============== users.GetUser()
 // === Returns valid user?
 test("users.GetUser returns DEV 'confused-Techie' provided 'confused-Techie'", async () => {
