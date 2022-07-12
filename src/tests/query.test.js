@@ -6,7 +6,7 @@ const page_cases = [
   [{ query: { page: "3" } }, "3"],
   [{ query: {} }, 1],
   [{ query: { page: "2" } }, "2"],
-  [{ query: { page: "JustText" } }, "1" ],
+  [{ query: { page: "JustText" } }, "1"],
 ];
 // once proper type conversion is implemented the last test should pass a string "2"
 
@@ -32,9 +32,9 @@ const dir_cases = [
   [{ query: { direction: "asc" } }, "asc"],
   [{ query: { direction: "desc" } }, "desc"],
   [{ query: {} }, "desc"],
-  [{ query: { order: "asc" } }, "asc" ],
-  [{ query: { order: "BadOrder" } }, "desc" ],
-  [{ query: { direction: "BadDirection" } }, "desc" ],
+  [{ query: { order: "asc" } }, "asc"],
+  [{ query: { order: "BadOrder" } }, "desc"],
+  [{ query: { direction: "BadDirection" } }, "desc"],
 ];
 
 describe("Verify Direction Query Returns", () => {
@@ -58,7 +58,7 @@ describe("Verify Order Query Returns", () => {
 const query_cases = [
   [{ query: { q: "search-term" } }, "search-term"],
   [{ query: {} }, ""],
-  [{ query: { q: ".//your-secret.env" } }, "" ],
+  [{ query: { q: ".//your-secret.env" } }, ""],
 ];
 
 describe("Verify 'Query' Query Returns", () => {
