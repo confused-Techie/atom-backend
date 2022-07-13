@@ -46,12 +46,12 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: npm install
-        if: always()
       - run: npm run test
       - name: Commit Coverage
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: GH Action Unit Tests, Coverage Info
+        if: always()
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
