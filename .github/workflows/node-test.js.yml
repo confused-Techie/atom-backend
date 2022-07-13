@@ -48,12 +48,12 @@ jobs:
       - run: npm install
       - run: npm run test
       - name: Commit Coverage
+        if: always()
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: GH Action Unit Tests, Coverage Info
-        if: always()
       - name: Coveralls
+        if: always()
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-        if: always()
