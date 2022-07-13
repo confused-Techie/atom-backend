@@ -41,12 +41,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
-        continue-on-error: true
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: npm install
+        continue-on-error: true
       - run: npm run test
       - name: Commit Coverage
         uses: stefanzweifel/git-auto-commit-action@v4
