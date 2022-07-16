@@ -58,7 +58,7 @@ describe("Verify Order Query Returns", () => {
 const query_cases = [
   [{ query: { q: "search-term" } }, "search-term"],
   [{ query: {} }, ""],
-  [{ query: { q: ".//your-secret.env" } }, ""],
+  [{ query: { q: "../your-secret.env" } }, ""],
 ];
 
 describe("Verify 'Query' Query Returns", () => {

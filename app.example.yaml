@@ -27,3 +27,5 @@ env_variables:
   # The following settings are for storing data within Google Cloud Storage
   GCS_BUCKET: "bucket_name"
   GCS_SERVICE_ACCOUNT_FILE: "local_file_path"
+  # The GH Client ID, for use with OAuth
+  GH_CLIENTID: ""

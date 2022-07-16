@@ -68,6 +68,7 @@ function GetConfig() {
       GCS_SERVICE_ACCOUNT_FILE: process.env.GCS_SERVICE_ACCOUNT_FILE
         ? process.env.GCS_SERVICE_ACCOUNT_FILE
         : data.env_variables.GCS_SERVICE_ACCOUNT_FILE,
+      GH_CLIENTID: process.env.GH_CLIENTID ? process.env.GH_CLIENTID : data.env_variables.GH_CLIENTID,
     };
   } catch (err) {
     // since this is necessary for the server to startup, we can throw an error here and exit the process.
