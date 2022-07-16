@@ -323,7 +323,7 @@ Assists in interactions between the backend and GitHub.
 
 ### git~VerifyAuth()
 This <b>Unfinished</b> function is intended to return true or false,
-if the provided token owns the provided repo. Th rest of the documentation will
+if the provided token owns the provided repo. The rest of the documentation will
 wait until this function is completed. Apon further inspection it seems this function
 is not actually implemented, or intended to be implemented anywhere, and possibly should be removed.
 

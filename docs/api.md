@@ -2,6 +2,10 @@
 OAuth Callback URL. Other details TBD.
 
 Auth: `FALSE`
+# **[GET]** /api/oauth
+OAuth Callback URL. Other details TDB.
+
+Auth: `FALSE`
 # **[GET]** /api/packages
 List all packages.
 
