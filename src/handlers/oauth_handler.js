@@ -7,12 +7,14 @@ async function GETLogin(req, res) {
   // since this will be the endpoint for a user to login, we need to redirect to GH.
   // @see https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps
   // need to setup callback_uri, and state.
-  res.status(301).redirect(`https://github.com/login/oauth/authorize?client_id=${GH_CLIENTID}`);
+  res
+    .status(301)
+    .redirect(
+      `https://github.com/login/oauth/authorize?client_id=${GH_CLIENTID}`
+    );
 }
 
-async function GETOauth(req, res) {
-
-}
+async function GETOauth(req, res) {}
 
 module.exports = {
   GETLogin,

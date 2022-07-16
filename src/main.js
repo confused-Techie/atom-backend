@@ -46,13 +46,13 @@ app.get("/api/login", async (req, res) => {
 });
 
 /**
-* @web
-* @ignore
-* @path /api/oauth
-* @desc OAuth Callback URL. Other details TDB.
-* @method GET
-* @auth FALSE
-*/
+ * @web
+ * @ignore
+ * @path /api/oauth
+ * @desc OAuth Callback URL. Other details TDB.
+ * @method GET
+ * @auth FALSE
+ */
 app.get("/api/oauth", async (req, res) => {
   await oauth_handler.GETOauth(req, res);
 });
