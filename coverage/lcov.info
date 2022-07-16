@@ -1340,14 +1340,14 @@ end_of_record
 TN:
 SF:src/handlers/oauth_handler.js
 FN:2,GETLogin
-FN:16,GETOauth
+FN:17,GETOauth
 FNF:2
 FNH:0
 FNDA:0,GETLogin
 FNDA:0,GETOauth
 DA:1,1
-DA:9,0
-DA:18,1
+DA:10,0
+DA:19,1
 LF:3
 LH:2
 BRF:0
