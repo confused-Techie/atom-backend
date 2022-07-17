@@ -81,7 +81,7 @@ async function POSTPackages(req, res) {
   // Check repository format validity.
   if (params.repository === "") {
     // The repository format is invalid.
-    res.status(400);  // Bad request.
+    res.status(400); // Bad request.
   }
 
   // Now here we need to check several things for a new package:
