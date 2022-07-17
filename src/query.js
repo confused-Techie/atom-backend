@@ -185,9 +185,9 @@ function rename(req) {
     return false;
   }
 
-  if (prov == "true" || prov == "TRUE") {
+  if (prov === "true" || prov === "TRUE") {
     return true;
-  } else if (prov == "false" || prov == "FALSE") {
+  } else if (prov === "false" || prov === "FALSE") {
     return false;
   } else {
     return false;

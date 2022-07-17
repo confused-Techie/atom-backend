@@ -234,9 +234,9 @@ async function GETPackagesDetails(req, res) {
     res.status(200).json(pack);
     logger.HTTPLog(req, res);
   } else {
-    if (pack.short == "Not Found") {
+    if (pack.short === "Not Found") {
       await common.NotFound(req, res);
-    } else if (pack.short == "Server Error") {
+    } else if (pack.short === "Server Error") {
       await common.ServerError(req, res, pack.content);
     }
   }
@@ -262,7 +262,7 @@ async function DELETEPackagesName(req, res) {
         // we have successfully removed the package.
         res.status(204).json({ message: "Success" });
       } else {
-        if (rm.short == "Not Found") {
+        if (rm.short === "Not Found") {
           await common.NotFound(req, res);
         } else {
           // likely a server error.
@@ -388,7 +388,7 @@ async function DELETEPackagesStar(req, res) {
       }
     } else {
       // unable to remove the star from the package, respond with error.
-      if (pack.short == "Not Found") {
+      if (pack.short === "Not Found") {
         // this means the user had never stared this package, or we were unable to find it. So lets move from the original
         // spec and return not found.
         await common.NotFound(req, res);
@@ -413,7 +413,7 @@ async function GETPackagesStargazers(req, res) {
     res.status(200).json(pack.content.star_gazers);
     logger.HTTPLog(req, res);
   } else {
-    if (pack.short == "Not Found") {
+    if (pack.short === "Not Found") {
       await common.NotFound(req, res);
     } else {
       await common.ServerError(req, res, pack.content);
@@ -475,7 +475,7 @@ async function GETPackagesVersion(req, res) {
         await common.NotFound(req, res);
       }
     } else {
-      if (pack.short == "Not Found") {
+      if (pack.short === "Not Found") {
         await common.NotFound(req, res);
       } else {
         await common.ServerError(req, res, pack.content);
@@ -525,7 +525,7 @@ async function DELETEPackageVersion(req, res) {
             // successfully wrote modified data.
             res.status(204).send();
           } else {
-            if (write.short == "Not Found") {
+            if (write.short === "Not Found") {
               await common.NotFound(req, res);
             } else {
               await common.ServerError(req, res, write.content);
@@ -537,7 +537,7 @@ async function DELETEPackageVersion(req, res) {
         }
       } else {
         // getting package returned error.
-        if (pack.short == "Not Found") {
+        if (pack.short === "Not Found") {
           await common.NotFound(req, res);
         } else {
           await common.ServerError(req, res, pack.content);
@@ -576,7 +576,7 @@ async function POSTPackagesEventUninstall(req, res) {
         await common.ServerError(req, res, write.content);
       }
     } else {
-      if (pack.short == "Not Found") {
+      if (pack.short === "Not Found") {
         await common.NotFound(req, res);
       } else {
         await common.ServerError(req, res, pack.content);

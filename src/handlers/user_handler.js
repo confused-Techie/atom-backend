@@ -48,7 +48,7 @@ async function GETLoginStars(req, res) {
       await common.ServerError(req, res, packages.content);
     }
   } else {
-    if (user.short == "Not Found") {
+    if (user.short === "Not Found") {
       await common.NotFound(req, res);
     } else {
       await common.ServerError(req, res, user.content);

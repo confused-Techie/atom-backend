@@ -49,7 +49,7 @@ class CacheObject {
  * @implments {readFile}
  */
 async function Read(type, name) {
-  if (type == "user") {
+  if (type === "user") {
     let data = await readFile("./data/users.json");
     if (data.ok) {
       // now with the data lets make our cache object, and we can return that.
@@ -61,7 +61,7 @@ async function Read(type, name) {
       // data was not read okay, just return error message.
       return data;
     }
-  } else if (type == "pointer") {
+  } else if (type === "pointer") {
     let data = await readFile("./data/package_pointer.json");
     if (data.ok) {
       let obj = new CacheObject(data.content);
@@ -70,7 +70,7 @@ async function Read(type, name) {
     } else {
       return data;
     }
-  } else if (type == "package") {
+  } else if (type === "package") {
     return readFile(`./data/packages/${name}`);
   }
 }
@@ -84,7 +84,7 @@ async function Read(type, name) {
  * If error returns "Server Error" or "File Not Found".
  */
 async function readFile(path) {
-  if (file_store == "filesystem") {
+  if (file_store === "filesystem") {
     try {
       const data = fs.readFileSync(path, "utf8");
       return { ok: true, content: JSON.parse(data) };
@@ -95,7 +95,7 @@ async function readFile(path) {
         return { ok: false, content: err, short: "Server Error" };
       }
     }
-  } else if (file_store == "gcs") {
+  } else if (file_store === "gcs") {
     // check we have a valid storage object.
     if (gcs_storage === undefined) {
       gcs_storage = new Storage({ keyFilename: GCS_SERVICE_ACCOUNT_FILE });
@@ -126,14 +126,14 @@ async function readFile(path) {
  * @implements {writeFile}
  */
 async function Write(type, data, name) {
-  if (type == "user") {
+  if (type === "user") {
     return writeFile("./data/users.json", JSON.stringify(data, null, 4));
-  } else if (type == "pointer") {
+  } else if (type === "pointer") {
     return writeFile(
       "./data/package_pointers.json",
       JSON.stringify(data, null, 4)
     );
-  } else if (type == "package") {
+  } else if (type === "package") {
     return writeFile(`./data/packages/${name}`, JSON.stringify(data, null, 4));
   }
 }
@@ -148,14 +148,14 @@ async function Write(type, data, name) {
  * Errors returned "Server Error".
  */
 async function writeFile(path, data) {
-  if (file_store == "filesystem") {
+  if (file_store === "filesystem") {
     try {
       fs.writeFileSync(path, data);
       return { ok: true };
     } catch (err) {
       return { ok: false, content: err, short: "Server Error" };
     }
-  } else if (file_store == "gcs") {
+  } else if (file_store === "gcs") {
     // check we have a valid storage object.
     if (gcs_storage === undefined) {
       gcs_storage = new Storage({ keyFilename: GCS_SERVICE_ACCOUNT_FILE });
@@ -186,7 +186,7 @@ async function writeFile(path, data) {
 async function Delete(name) {
   // since we know the only data we ever want to delete from disk will be packages,
   // a type is not needed here.
-  if (file_store == "filesystem") {
+  if (file_store === "filesystem") {
     try {
       let rm = fs.rmSync(`./data/packages/${name}`);
       // since rmSync returns undefined, we can check that, just in case it doesn't throw an error.
@@ -198,7 +198,7 @@ async function Delete(name) {
     } catch (err) {
       return { ok: false, content: err, short: "Server Error" };
     }
-  } else if (file_store == "gcs") {
+  } else if (file_store === "gcs") {
     if (gcs_storage === undefined) {
       gcs_storage = new Storage({ keyFilename: GCS_SERVICE_ACCOUNT_FILE });
     }
