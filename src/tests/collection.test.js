@@ -17,41 +17,48 @@ const data = [
 
 // ================= Sort Testing
 test("Sort returns array with downloads.", async () => {
-  let res = await collection.Sort(data, "downloads");
+  let new_data = await collection.DeepCopy(data);
+  let res = await collection.Sort(new_data, "downloads");
   expect(Array.isArray(res)).toBeTruthy();
 });
 
 test("Sort By downloads, gives downloads desc", async () => {
-  let res = await collection.Sort(data, "downloads");
+  let new_data = await collection.DeepCopy(data);
+  let res = await collection.Sort(new_data, "downloads");
   expect(res[0].downloads).toBe(100);
 });
 
 // ================= Direction Testing
 test("Direction returns Array, when given one and 'desc'", async () => {
-  let res = await collection.Direction(data, "desc");
+  let new_data = await collection.DeepCopy(data);
+  let res = await collection.Direction(new_data, "desc");
   expect(Array.isArray(res)).toBeTruthy();
 });
 
 test("Direction returns Array, when given one and 'asc'", async () => {
-  let res = await collection.Direction(data, "asc");
+  let new_data = await collection.DeepCopy(data);
+  let res = await collection.Direction(new_data, "asc");
   expect(Array.isArray(res)).toBeTruthy();
 });
 
 test("Direction returns Array, when given one and an invalid method", async () => {
-  let res = await collection.Direction(data, "invalid_method");
+  let new_data = await collection.DeepCopy(data);
+  let res = await collection.Direction(new_data, "invalid_method");
   expect(Array.isArray(res)).toBeTruthy();
 });
 
 // TODO: Both of these tests are failing. Directional sorting DOES NOT work currently.
-//test("Direction by 'desc' when 'desc'", async () => {
-//  let res = await collection.Direction(data, "desc");
-//  expect(res[0].name).toBe("one");
-//});
+test("Direction by 'desc' when 'desc'", async () => {
+  let new_data = await collection.DeepCopy(data);
+  let res = await collection.Direction(new_data, "desc");
+  expect(res[0].name).toBe("one");
+});
 
-//test("Direction by 'asc' when 'asc'", async () => {
-//  let res = await collection.Direction(data, "asc");
-//  expect(res[0].name).toBe("three");
-//});
+test("Direction by 'asc' when 'asc'", async () => {
+  let new_data = await collection.DeepCopy(data);
+  let res = await collection.Direction(new_data, "asc");
+  expect(res[0].name).toBe("three");
+});
 
 test("POFPrune Removes created", async () => {
   let data = {
