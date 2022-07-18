@@ -76,12 +76,14 @@ async function POSTPackages(req, res) {
   // Check authentication.
   if (!user.ok) {
     await common.AuthFail(req, res, user);
+    return;
   }
 
   // Check repository format validity.
   if (params.repository === "") {
     // The repository format is invalid.
     res.status(400); // Bad request.
+    return;
   }
 
   // Now here we need to check several things for a new package:
@@ -96,12 +98,14 @@ async function POSTPackages(req, res) {
     // The package exists.
     error.PublishPackageExists(res);
     logger.HTTPLog(req, res);
+    return;
   }
 
   // Even further though we need to check that the error is not found, since errors here can bubble.
   if (exists.short !== "Not Found") {
     // The server failed for some other bubbled reason, and is now encountering an error.
     await common.ServerError(req, res, exists.content);
+    return;
   }
 
   // Now we know the package doesn't exist. And we want to check that the user owns this repo on git.
@@ -112,6 +116,7 @@ async function POSTPackages(req, res) {
     // So we will respond with not supported for now.
     // TODO: Proper error checking based on function.
     await common.NotSupported(req, res);
+    return;
   }
 
   // Now knowing they own the git repo, and it doesn't exist here, lets publish.
@@ -121,6 +126,7 @@ async function POSTPackages(req, res) {
     // TODO: Proper error checking based on function. But this will likely
     // implement the 400 package not valid error.
     await common.NotSupported(req, res);
+    return;
   }
 
   // Now with valid package data, we can pass it along.
@@ -128,6 +134,7 @@ async function POSTPackages(req, res) {
 
   if (!create.ok) {
     await common.ServerError(req, res, create.content);
+    return;
   }
 
   // The package has been successfully created.
@@ -137,6 +144,7 @@ async function POSTPackages(req, res) {
   if (!new_pack.ok) {
     // We were unable to get the new package, and should return an error.
     await common.ServerError(req, res, new_pack.content);
+    return;
   }
 
   new_pack = await collection.POFPrune(new_pack.content); // Package Object Full Prune before return.
