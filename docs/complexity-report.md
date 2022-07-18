@@ -1,10 +1,10 @@
 # Complexity report, 7/18/2022
 
-* Mean per-function logical LOC: 19.165079365079368
+* Mean per-function logical LOC: 19.450793650793653
 * Mean per-function parameter count: 1.123015873015873
-* Mean per-function cyclomatic complexity: 3.849206349206349
-* Mean per-function Halstead effort: 12142.80133381301
-* Mean per-module maintainability index: 62.57398369444892
+* Mean per-function cyclomatic complexity: 4.134920634920634
+* Mean per-function Halstead effort: 13446.815496164694
+* Mean per-module maintainability index: 62.41127611856267
 * First-order density: 4.081632653061225%
 * Change cost: 18.367346938775512%
 * Core size: 100%
