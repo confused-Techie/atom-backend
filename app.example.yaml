@@ -29,3 +29,7 @@ env_variables:
   GCS_SERVICE_ACCOUNT_FILE: "local_file_path"
   # The GH Client ID, for use with OAuth
   GH_CLIENTID: ""
+  # The token to allow us to interact with GitHub.
+  GH_TOKEN: ""
+  # The github username associated with the token.
+  GH_USERNAME: ""

@@ -11,23 +11,23 @@
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/config.js
 
-* Physical LOC: 79
-* Logical LOC: 32
+* Physical LOC: 85
+* Logical LOC: 34
 * Mean parameter count: 0
-* Cyclomatic complexity: 13
-* Cyclomatic complexity density: 40.625%
-* Maintainability index: 47.402605094620405
+* Cyclomatic complexity: 15
+* Cyclomatic complexity density: 44.11764705882353%
+* Maintainability index: 46.26365206341665
 * Dependency count: 2
 * Function: **GetConfig**
     * Line No.: 17
-    * Physical LOC: 64
-    * Logical LOC: 27
+    * Physical LOC: 70
+    * Logical LOC: 29
     * Parameter count: 0
-    * Cyclomatic complexity: 13
-    * Cyclomatic complexity density: 48.148148148148145%
-    * Halstead difficulty: 24.414634146341463
-    * Halstead volume: 1508.9348852299363
-    * Halstead effort: 36840.09317354064
+    * Cyclomatic complexity: 15
+    * Cyclomatic complexity density: 51.724137931034484%
+    * Halstead difficulty: 26.53488372093023
+    * Halstead volume: 1732.3683342069285
+    * Halstead effort: 45968.19231000245
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/error.js
 

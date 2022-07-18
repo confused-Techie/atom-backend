@@ -23,7 +23,9 @@ async function GETPackages(req, res) {
     // we will then need to organize this list, according to our params.
     // additionally remove any fields that are not natively shown to the end user.
     // And finally we would need to modify our headers, to include links for current, next, and last.
-    let packages = await collection.Sort(all_packages.content, params.sort);
+    let packages = await collection.DeepCopy(all_packages.content); // We need to use a deep copy here, to avoid
+    // making changes to the cached package data within data.
+    packages = await collection.Sort(all_packages.content, params.sort);
     packages = await collection.Direction(packages, params.direction);
     // Now with packages sorted in the right direction, lets prune the results.
     let total_pages = Math.ceil(packages.length / paginated_amount);
@@ -179,10 +181,8 @@ async function GETPackagesSearch(req, res) {
   let all_packages = await data.GetAllPackages();
 
   if (all_packages.ok) {
-    let packages = await collection.SearchWithinPackages(
-      params.query,
-      all_packages.content
-    );
+    let packages = await collection.DeepCopy(all_packages.content);
+    packages = await collection.SearchWithinPackages(params.query, packages);
     packages = await collection.Sort(packages, params.sort);
     packages = await collection.Direction(packages, params.direction);
     // Now that the packages are sorted in the proper direction, we need to exempt results, according to our pagination.
@@ -235,6 +235,7 @@ async function GETPackagesDetails(req, res) {
 
   if (pack.ok) {
     // from here we now have the package and just want to prune data from it
+    pack = await collection.DeepCopy(pack);
     pack = await collection.POFPrune(pack.content); // package object full prune
     if (params.engine != "") {
       pack = await collection.EngineFilter(pack, params.engine);
