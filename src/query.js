@@ -126,9 +126,10 @@ function engine(req) {
   // Taken from
   // - https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
   // - https://regex101.com/r/vkijKf/1/
+  // The only difference is that we use \d rather than 0-9 as suggested by Codacy
 
   const regex =
-    /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/;
+    /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][\da-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][\da-zA-Z-]*))*))?(?:\+([\da-zA-Z-]+(?:\.[\da-zA-Z-]+)*))?$/;
 
   // Check if it's a valid semver
   return prov.match(regex) !== null ? prov : false;
@@ -147,7 +148,7 @@ function repo(req) {
     return "";
   }
 
-  const re = /^[a-zA-Z0-9\-][\w\-.]{0,213}\/[a-zA-Z0-9\-][\w\-.]{0,213}$/;
+  const re = /^[a-zA-Z\d\-][\w\-.]{0,213}\/[a-zA-Z\d\-][\w\-.]{0,213}$/;
 
   // Ensure req is in the format "owner/repo" and
   // owner and repo observe the following rules:
