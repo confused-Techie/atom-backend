@@ -237,7 +237,7 @@ async function GETPackagesDetails(req, res) {
     // from here we now have the package and just want to prune data from it
     pack = await collection.DeepCopy(pack);
     pack = await collection.POFPrune(pack.content); // package object full prune
-    if (params.engine != "") {
+    if (params.engine !== "") {
       pack = await collection.EngineFilter(pack, params.engine);
     }
     res.status(200).json(pack);

@@ -23,8 +23,8 @@ function GetConfig() {
     } catch (err) {
       // We failed to get the config file. But if we have env vars in production its okay.
       if (
-        process.env.NODE_ENV != "production" &&
-        process.env.NODE_ENV != "test"
+        process.env.NODE_ENV !== "production" &&
+        process.env.NODE_ENV !== "test"
       ) {
         console.log(`Failed to load app.yaml in non-production env! ${err}`);
         process.exit(1);

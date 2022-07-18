@@ -191,7 +191,7 @@ async function GetAllPackages() {
         } else {
           // this will prioritize giving a response, so if a single package isn't found, it'll log it.
           // then move on.
-          if (pack.short != "Not Found") {
+          if (pack.short !== "Not Found") {
             return pack;
           } else {
             logger.WarningLog(
@@ -416,7 +416,7 @@ async function GetPackageCollection(packages) {
     } else {
       // to prioritize returning something, its possible, that a package has been removed that was stared.
       // so we will check the error returned.
-      if (pack.short != "Not Found") {
+      if (pack.short !== "Not Found") {
         // this will only return an error if the error is not "Not Found", meaning that otherwise it will just continue on.
         return pack;
       } else {
@@ -480,7 +480,7 @@ async function UnStarPackageByName(packageName, userName) {
       }
 
       // after done looping, then we can check our IDX.
-      if (usrIdx != -1) {
+      if (usrIdx !== -1) {
         // now we can remove that element from the array.
         pack.content.star_gazers.splice(usrIdx, 1);
 

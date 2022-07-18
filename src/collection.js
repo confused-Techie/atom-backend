@@ -288,7 +288,7 @@ async function EngineFilter(pack, engine) {
   }
 
   // after the loop ends, or breaks, check the returned value.
-  if (compatible_version != "") {
+  if (compatible_version !== "") {
     // we have a compatible version, lets add its data to the metadata property of the package.
     pack.metadata = pack.versions[compatible_version];
     return pack;
