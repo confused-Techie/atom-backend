@@ -22,7 +22,7 @@ function run() {
     if (coverage.total) {
       let target = coverage.total[config.target];
 
-      if (config.result == "percentage") {
+      if (config.result === "percentage") {
         // since we are doing percentage, lets get the pct or percentage coverage of total.
         let value = target.pct;
 

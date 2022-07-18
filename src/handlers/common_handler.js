@@ -24,7 +24,7 @@ const logger = require("../logger.js");
  * @implements {logger.ErrorLog}
  */
 async function AuthFail(req, res, user) {
-  if (user.short == "Bad Auth") {
+  if (user.short === "Bad Auth") {
     error.MissingAuthJSON(res);
     logger.HTTPLog(req, res);
   } else {

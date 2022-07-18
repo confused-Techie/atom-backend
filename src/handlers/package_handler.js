@@ -72,69 +72,85 @@ async function POSTPackages(req, res) {
     repository: query.repo(req),
     auth: req.get("Authorization"),
   };
+
   let user = await users.VerifyAuth(params.auth);
 
-  if (user.ok) {
-    // Now here we need to check several things for a new package.
-    // The package doesn't exist.
-    // And the user is the proper owner of the repo they are attempting to link to.
-
-    // To see if the package already exists, we will utilize our data.GetPackagePointerByName
-    // to hope it returns an error, that the package doesn't exist, and will avoid reading the package file itself.
-    let exists = await data.GetPackagePointerByName(params.repository);
-
-    if (!exists.ok) {
-      // Even further though we need to check that the error is not found, since errors here can bubble.
-      if (exists.short == "Not Found") {
-        // Now we know the package doesn't exist. And we want to check that the user owns this repo on git.
-        let gitowner = await git.Ownership(user.content, params.repository);
-
-        if (gitowner.ok) {
-          // Now knowing they own the git repo, and it doesn't exist here, lets publish.
-          let pack = git.CreatePackage(params.repository);
-
-          if (pack.ok) {
-            // now with valid package data, we can pass it along.
-            let create = data.NewPackage(pack.content);
-
-            if (create.ok) {
-              // if this returns okay, the package has been successfully created.
-              // And we want to now do a small test, and grab the new package to return it.
-              let new_pack = data.GetPackageByName(params.repository);
-
-              if (new_pack.ok) {
-                new_pack = await collection.POFPrune(new_pack.content); // Package Object Full Prune before return.
-                res.status(201).json(new_pack);
-              } else {
-                // we were unable to get the new package, and should return an error.
-                await common.ServerError(req, res, new_pack.content);
-              }
-            } else {
-              await common.ServerError(req, res, create.content);
-            }
-          } else {
-            // TODO: Proper error checking based on function. But this will likely
-            // implement the 400 package not valid error.
-            await common.NotSupported(req, res);
-          }
-        } else {
-          // Check why its not okay. But since it hasn't been written we can't reliably know how to check, or respond.
-          // So we will respond with not supported for now.
-          // TODO: Proper error checking based on function.
-          await common.NotSupported(req, res);
-        }
-      } else {
-        // the server failed for some other bubbled reason, and is now encountering an error.
-        await common.ServerError(req, res, exists.content);
-      }
-    } else {
-      // this means the exists was okay, or otherwise it found a package by this name.
-      error.PublishPackageExists(res);
-      logger.HTTPLog(req, res);
-    }
-  } else {
+  // Check authentication.
+  if (!user.ok) {
     await common.AuthFail(req, res, user);
+    return;
   }
+
+  // Check repository format validity.
+  if (params.repository === "") {
+    // The repository format is invalid.
+    res.status(400); // Bad request.
+    return;
+  }
+
+  // Now here we need to check several things for a new package:
+  // - The package doesn't exist.
+  // - The user is the proper owner of the repo they are attempting to link to.
+
+  // To see if the package already exists, we will utilize our data.GetPackagePointerByName
+  // to hope it returns an error, that the package doesn't exist, and will avoid reading the package file itself.
+  let exists = await data.GetPackagePointerByName(params.repository);
+
+  if (exists.ok) {
+    // The package exists.
+    error.PublishPackageExists(res);
+    logger.HTTPLog(req, res);
+    return;
+  }
+
+  // Even further though we need to check that the error is not found, since errors here can bubble.
+  if (exists.short !== "Not Found") {
+    // The server failed for some other bubbled reason, and is now encountering an error.
+    await common.ServerError(req, res, exists.content);
+    return;
+  }
+
+  // Now we know the package doesn't exist. And we want to check that the user owns this repo on git.
+  let gitowner = await git.Ownership(user.content, params.repository);
+
+  if (!gitowner.ok) {
+    // Check why its not okay. But since it hasn't been written we can't reliably know how to check, or respond.
+    // So we will respond with not supported for now.
+    // TODO: Proper error checking based on function.
+    await common.NotSupported(req, res);
+    return;
+  }
+
+  // Now knowing they own the git repo, and it doesn't exist here, lets publish.
+  let pack = git.CreatePackage(params.repository);
+
+  if (!pack.ok) {
+    // TODO: Proper error checking based on function. But this will likely
+    // implement the 400 package not valid error.
+    await common.NotSupported(req, res);
+    return;
+  }
+
+  // Now with valid package data, we can pass it along.
+  let create = data.NewPackage(pack.content);
+
+  if (!create.ok) {
+    await common.ServerError(req, res, create.content);
+    return;
+  }
+
+  // The package has been successfully created.
+  // And we want to now do a small test, and grab the new package to return it.
+  let new_pack = data.GetPackageByName(params.repository);
+
+  if (!new_pack.ok) {
+    // We were unable to get the new package, and should return an error.
+    await common.ServerError(req, res, new_pack.content);
+    return;
+  }
+
+  new_pack = await collection.POFPrune(new_pack.content); // Package Object Full Prune before return.
+  res.status(201).json(new_pack);
 }
 
 async function GETPackagesFeatured(req, res) {
@@ -227,9 +243,9 @@ async function GETPackagesDetails(req, res) {
     res.status(200).json(pack);
     logger.HTTPLog(req, res);
   } else {
-    if (pack.short == "Not Found") {
+    if (pack.short === "Not Found") {
       await common.NotFound(req, res);
-    } else if (pack.short == "Server Error") {
+    } else if (pack.short === "Server Error") {
       await common.ServerError(req, res, pack.content);
     }
   }
@@ -255,7 +271,7 @@ async function DELETEPackagesName(req, res) {
         // we have successfully removed the package.
         res.status(204).json({ message: "Success" });
       } else {
-        if (rm.short == "Not Found") {
+        if (rm.short === "Not Found") {
           await common.NotFound(req, res);
         } else {
           // likely a server error.
@@ -381,7 +397,7 @@ async function DELETEPackagesStar(req, res) {
       }
     } else {
       // unable to remove the star from the package, respond with error.
-      if (pack.short == "Not Found") {
+      if (pack.short === "Not Found") {
         // this means the user had never stared this package, or we were unable to find it. So lets move from the original
         // spec and return not found.
         await common.NotFound(req, res);
@@ -406,7 +422,7 @@ async function GETPackagesStargazers(req, res) {
     res.status(200).json(pack.content.star_gazers);
     logger.HTTPLog(req, res);
   } else {
-    if (pack.short == "Not Found") {
+    if (pack.short === "Not Found") {
       await common.NotFound(req, res);
     } else {
       await common.ServerError(req, res, pack.content);
@@ -468,7 +484,7 @@ async function GETPackagesVersion(req, res) {
         await common.NotFound(req, res);
       }
     } else {
-      if (pack.short == "Not Found") {
+      if (pack.short === "Not Found") {
         await common.NotFound(req, res);
       } else {
         await common.ServerError(req, res, pack.content);
@@ -518,7 +534,7 @@ async function DELETEPackageVersion(req, res) {
             // successfully wrote modified data.
             res.status(204).send();
           } else {
-            if (write.short == "Not Found") {
+            if (write.short === "Not Found") {
               await common.NotFound(req, res);
             } else {
               await common.ServerError(req, res, write.content);
@@ -530,7 +546,7 @@ async function DELETEPackageVersion(req, res) {
         }
       } else {
         // getting package returned error.
-        if (pack.short == "Not Found") {
+        if (pack.short === "Not Found") {
           await common.NotFound(req, res);
         } else {
           await common.ServerError(req, res, pack.content);
@@ -569,7 +585,7 @@ async function POSTPackagesEventUninstall(req, res) {
         await common.ServerError(req, res, write.content);
       }
     } else {
-      if (pack.short == "Not Found") {
+      if (pack.short === "Not Found") {
         await common.NotFound(req, res);
       } else {
         await common.ServerError(req, res, pack.content);

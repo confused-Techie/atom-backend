@@ -120,7 +120,7 @@ async function RemoveUserStar(packageName, userName) {
     // find the index of the star in the users stars array
     let starIdx = -1;
     for (let i = 0; i < user.content.stars.length; i++) {
-      if (user.content.stars[i] == packageName) {
+      if (user.content.stars[i] === packageName) {
         starIdx = i;
         break;
       }

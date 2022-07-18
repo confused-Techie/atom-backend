@@ -147,8 +147,15 @@ function repo(req) {
     return "";
   }
 
-  // ensure the repo is in the format "owner/repo"
-  return prov.match(/^[\w\-.]+\/[\w\-.]+$/) !== null ? prov : "";
+  const re = /^[a-zA-Z0-9\-][\w\-.]{0,213}\/[a-zA-Z0-9\-][\w\-.]{0,213}$/;
+
+  // Ensure req is in the format "owner/repo" and
+  // owner and repo observe the following rules:
+  // - less than or equal to 214 characters
+  // - only URL safe characters (letters, digits, dashes, underscores and/or dots)
+  // - cannot begin with a dot or an underscore
+  // - cannot contain a space.
+  return prov.match(re) !== null ? prov : "";
 }
 
 /**
@@ -178,9 +185,9 @@ function rename(req) {
     return false;
   }
 
-  if (prov == "true" || prov == "TRUE") {
+  if (prov === "true" || prov === "TRUE") {
     return true;
-  } else if (prov == "false" || prov == "FALSE") {
+  } else if (prov === "false" || prov === "FALSE") {
     return false;
   } else {
     return false;

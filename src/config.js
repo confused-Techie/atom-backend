@@ -52,7 +52,7 @@ function GetConfig() {
       search_algorithm: process.env.SEARCHALGORITHM
         ? process.env.SEARCHALGORITHM
         : data.env_variables.SEARCHALGORITHM,
-      prod: process.env.NODE_ENV == "production" ? true : false,
+      prod: process.env.NODE_ENV === "production" ? true : false,
       cache_time: process.env.CACHETIME
         ? process.env.CACHETIME
         : data.env_variables.CACHETIME,

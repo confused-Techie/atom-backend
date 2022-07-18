@@ -50,7 +50,7 @@ async function Shutdown() {
   if (deletion_flags.length > 0) {
     logger.DebugLog("Active Deletion Flags Stored. Moving to Delete.");
     for (let i = 0; i < deletion_flags.length; i++) {
-      if (deletion_flags[i].type == "package") {
+      if (deletion_flags[i].type === "package") {
         let rm = await resources.Delete(deletion_flags[i].file);
         if (rm.ok) {
           logger.DebugLog(`Deleted Successfully: ${deletion_flags[i].file}`);
@@ -300,7 +300,7 @@ async function RemovePackageByPointer(pointer) {
 async function RestorePackageByPointer(pointer) {
   let idx = -1;
   for (let i = 0; i < deletion_flags.length; i++) {
-    if (deletion_flags[i].file == pointer) {
+    if (deletion_flags[i].file === pointer) {
       idx = i;
     }
   }
@@ -472,7 +472,7 @@ async function UnStarPackageByName(packageName, userName) {
       // now we need to find the index in the array of the user we want to unstar.
       let usrIdx = -1;
       for (let i = 0; i < pack.content.star_gazers.length; i++) {
-        if (pack.content.star_gazers[i].login == userName) {
+        if (pack.content.star_gazers[i].login === userName) {
           usrIdx = i;
           // since we know we only are looking once, lets just break the loop once we assign the idx
           break;

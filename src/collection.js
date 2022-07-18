@@ -24,7 +24,7 @@ async function Sort(packages, method) {
   // Additional note, this implementation will sort EVERY single package no matter what.
   // TODO: Feature Request: Provide the page requested during sort, or the last item needed to sort,
   // then discard the rest of the array. Pruning length of array may actually be a smart move for all additional functions.
-  if (method == "downloads") {
+  if (method === "downloads") {
     packages.sort((a, b) => {
       if (a.downloads < b.downloads) {
         return 1;
@@ -36,7 +36,7 @@ async function Sort(packages, method) {
     });
 
     return packages;
-  } else if (method == "created_at") {
+  } else if (method === "created_at") {
     packages.sort((a, b) => {
       if (a.created < b.created) {
         return 1;
@@ -48,7 +48,7 @@ async function Sort(packages, method) {
     });
 
     return packages;
-  } else if (method == "updated_at") {
+  } else if (method === "updated_at") {
     packages.sort((a, b) => {
       if (a.updated < b.updated) {
         return 1;
@@ -60,7 +60,7 @@ async function Sort(packages, method) {
     });
 
     return packages;
-  } else if (method == "stars") {
+  } else if (method === "stars") {
     packages.sort((a, b) => {
       if (a.stargazers_count < b.stargazers_count) {
         return 1;
@@ -72,7 +72,7 @@ async function Sort(packages, method) {
     });
 
     return packages;
-  } else if (method == "relevance") {
+  } else if (method === "relevance") {
     packages.sort((a, b) => {
       if (a.relevance < b.relevance) {
         return 1;
@@ -108,10 +108,10 @@ async function Sort(packages, method) {
  */
 async function Direction(packages, method) {
   // While previously
-  if (method == "desc") {
+  if (method === "desc") {
     // since we wrote the sort, we know it will return results, sorted by the default of desc, and we can return.
     return packages;
-  } else if (method == "asc") {
+  } else if (method === "asc") {
     // we will have to flip the array, upside down.
     // this should work, but finding any solid info on time complexity, hasn't been the easiest, we may want additional logging for
     // the collection functions, to measure what the performance is like.
@@ -205,7 +205,7 @@ async function SearchWithinPackages(
   // Due to the high potential of this being reworked later on, we will rely on a config option of searchAlgorithm
   // to define what method we are wanting to use.
 
-  if (searchAlgorithm == "levenshtein_distance") {
+  if (searchAlgorithm === "levenshtein_distance") {
     // The Levenshtein Distance will be the most basic form of search. Simple, not accounting for any word seperators
     // and simply returning the edit distance between strings.
 
@@ -214,7 +214,7 @@ async function SearchWithinPackages(
     }
 
     return packages;
-  } else if (searchAlgorithm == "levenshtein_distance_wsdm") {
+  } else if (searchAlgorithm === "levenshtein_distance_wsdm") {
     for (let i = 0; i < packages.length; i++) {
       packages[i].relevance = search_func.levenshteinWSDM(
         search,
@@ -222,7 +222,7 @@ async function SearchWithinPackages(
       );
     }
     return packages;
-  } else if (searchAlgorithm == "lcs") {
+  } else if (searchAlgorithm === "lcs") {
     for (let i = 0; i < packages.length; i++) {
       packages[i].relevance = search_func.lcs(search, packages[i].name);
     }
