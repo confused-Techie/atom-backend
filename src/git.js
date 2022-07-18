@@ -142,7 +142,7 @@ async function getRepoTags(repo) {
       .get(`https://api.github.com/repos/${repo}/tags`)
       .set({ Authorization: "Basic " + encodedToken });
 
-    if (res.status == 200) {
+    if (res.status === 200) {
       return JSON.parse(res.body);
     } else {
       logger.WarningLog(
