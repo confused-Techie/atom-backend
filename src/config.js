@@ -71,6 +71,8 @@ function GetConfig() {
       GH_CLIENTID: process.env.GH_CLIENTID
         ? process.env.GH_CLIENTID
         : data.env_variables.GH_CLIENTID,
+      GH_TOKEN: process.env.GH_TOKEN ? process.env.GH_TOKEN : data.env_variables.GH_TOKEN,
+      GH_USERNAME: process.env.GH_USERNAME ? process.env.GH_USERNAME : data.env_variables.GH_USERNAME,
     };
   } catch (err) {
     // since this is necessary for the server to startup, we can throw an error here and exit the process.
