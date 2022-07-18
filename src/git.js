@@ -7,7 +7,9 @@ const superagent = require("superagent");
 const { GH_TOKEN, GH_USERNAME } = require("./config.js").GetConfig();
 const logger = require("./logger.js");
 
-const encodedToken = Buffer.from(`${GH_USERNAME}:${GH_TOKEN}`).toString("base64");
+const encodedToken = Buffer.from(`${GH_USERNAME}:${GH_TOKEN}`).toString(
+  "base64"
+);
 
 /**
  * @async
@@ -54,19 +56,30 @@ async function CreatePackage(repo) {
 
   if (!exists) {
     // this could be because of an error, or it truly doesn't exist.
-    return { ok: false, content: `Failed to get repo: ${repo}`, short: "Bad Repo" };
+    return {
+      ok: false,
+      content: `Failed to get repo: ${repo}`,
+      short: "Bad Repo",
+    };
   } else {
     let pack = await getPackageJSON(repo);
 
     if (typeof pack === undefined) {
-      return { ok: false, content: `Failed to get gh package.`, short: "Bad Package" };
+      return {
+        ok: false,
+        content: `Failed to get gh package.`,
+        short: "Bad Package",
+      };
     } else {
       let repoTag = await getRepoTags(repo);
 
       if (typeof repoTag === undefined) {
-        return { ok: false, content: "Failed to get gh tags.", short: "Server Error" };
+        return {
+          ok: false,
+          content: "Failed to get gh tags.",
+          short: "Server Error",
+        };
       } else {
-
       }
     }
   }
@@ -76,49 +89,75 @@ async function CreatePackage(repo) {
 
 async function getRepoExistance(repo) {
   try {
-    const res = await superagent.get(`https://github.com/${repo}`).set({ "Authorization": "Basic " + encodedToken});
+    const res = await superagent
+      .get(`https://github.com/${repo}`)
+      .set({ Authorization: "Basic " + encodedToken });
 
     if (res.status === 200) {
       return true;
     } else if (res.status === 400) {
       return false;
     }
-  } catch(err) {
-    logger.WarningLog(null, null, `Unable to check if repo exists. ${repo} - ${err}`);
+  } catch (err) {
+    logger.WarningLog(
+      null,
+      null,
+      `Unable to check if repo exists. ${repo} - ${err}`
+    );
     return false;
   }
 }
 
 async function getPackageJSON(repo) {
   try {
-    const res = await superagent.get(`https://api.github.com/repos/${repo}/contents/package.json`)
-      .set({ "Authorization": "Basic " + encodedToken });
+    const res = await superagent
+      .get(`https://api.github.com/repos/${repo}/contents/package.json`)
+      .set({ Authorization: "Basic " + encodedToken });
 
     if (res.status === 200) {
-      return JSON.parse(Buffer.from(res.body.content, res.body.encoding).toString());
+      return JSON.parse(
+        Buffer.from(res.body.content, res.body.encoding).toString()
+      );
     } else {
-      logger.WarningLog(null, null, `Unable to Get ${repo} from GH for package.json. HTTP Status ${res.status}`);
+      logger.WarningLog(
+        null,
+        null,
+        `Unable to Get ${repo} from GH for package.json. HTTP Status ${res.status}`
+      );
       return undefined;
     }
-  } catch(err) {
-    logger.WarningLog(null, null, `Failed to Get ${repo} from GH for package.json. Err: ${err}`);
+  } catch (err) {
+    logger.WarningLog(
+      null,
+      null,
+      `Failed to Get ${repo} from GH for package.json. Err: ${err}`
+    );
     return undefined;
   }
 }
 
 async function getRepoTags(repo) {
   try {
-    const res = await superagent.get(`https://api.github.com/repos/${repo}/tags`)
-      .set({ "Authorization": "Basic " + encodedToken });
+    const res = await superagent
+      .get(`https://api.github.com/repos/${repo}/tags`)
+      .set({ Authorization: "Basic " + encodedToken });
 
     if (res.status == 200) {
       return JSON.parse(res.body);
     } else {
-      logger.WarningLog(null, null, `Unable to Get ${repo} from GH for Tags. HTTP Status ${res.status}`);
+      logger.WarningLog(
+        null,
+        null,
+        `Unable to Get ${repo} from GH for Tags. HTTP Status ${res.status}`
+      );
       return undefined;
     }
-  } catch(err) {
-    logger.WarningLog(null, null, `Failed to Get ${repo} from GH for Tags. Err: ${err}`);
+  } catch (err) {
+    logger.WarningLog(
+      null,
+      null,
+      `Failed to Get ${repo} from GH for Tags. Err: ${err}`
+    );
     return undefined;
   }
 }

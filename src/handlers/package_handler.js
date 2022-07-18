@@ -166,10 +166,7 @@ async function GETPackagesSearch(req, res) {
 
   if (all_packages.ok) {
     let packages = await collection.DeepCopy(all_packages.content);
-    packages = await collection.SearchWithinPackages(
-      params.query,
-      packages
-    );
+    packages = await collection.SearchWithinPackages(params.query, packages);
     packages = await collection.Sort(packages, params.sort);
     packages = await collection.Direction(packages, params.direction);
     // Now that the packages are sorted in the proper direction, we need to exempt results, according to our pagination.
