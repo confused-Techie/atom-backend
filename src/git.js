@@ -84,7 +84,11 @@ async function CreatePackage(repo) {
         let readme = await getRepoReadMe(repo);
 
         if (readme === undefined) {
-          return { ok: false, content: "Failed to get gh readme.", short: "Bad Repo" };
+          return {
+            ok: false,
+            content: "Failed to get gh readme.",
+            short: "Bad Repo",
+          };
         } else {
           // Now we should be ready to create the package.
           // readme = The Text data of the current repo readme.
@@ -166,36 +170,55 @@ async function getPackageJSON(repo) {
 
 async function getRepoReadMe(repo) {
   try {
-    const res = await superagent.get(`https://api.github.com/repos/${repo}/README.md`).set({ Authorization: "Basic " + encodedToken });
+    const res = await superagent
+      .get(`https://api.github.com/repos/${repo}/README.md`)
+      .set({ Authorization: "Basic " + encodedToken });
 
     if (res.status === 200) {
       return Buffer.from(res.body.content, res.body.encoding).toString();
     } else {
-      logger.WarningLog(null, null, `Unexpected Status Code during README.md retrevial: ${res}`);
+      logger.WarningLog(
+        null,
+        null,
+        `Unexpected Status Code during README.md retrevial: ${res}`
+      );
       return undefined;
     }
-  } catch(err) {
+  } catch (err) {
     // since this can fail, on a 404, lets check for a lowercase readme
     if (err.status === 404) {
       // then this is not found, and we should try again for the lowercase readme.md
       try {
-        const resLower = await superagent.get(`https://api.github.com/repos/${repo}/readme.md`).set({ Authorization: "Basic " + encodedToken });
+        const resLower = await superagent
+          .get(`https://api.github.com/repos/${repo}/readme.md`)
+          .set({ Authorization: "Basic " + encodedToken });
 
         if (resLower.status === 200) {
           return Buffer.from(res.body.content, res.body.encoding).toString();
         } else {
           // it returned, but not the error code we expect.
-          logger.WarningLog(null, null, `Unexpected Status code during readme.md retrevial: ${resLower}`);
+          logger.WarningLog(
+            null,
+            null,
+            `Unexpected Status code during readme.md retrevial: ${resLower}`
+          );
           return undefined;
         }
-      } catch(err) {
-        logger.WarningLog(null, null, `Unable to get ${repo} from GH for readme.md. Err: ${err}`);
+      } catch (err) {
+        logger.WarningLog(
+          null,
+          null,
+          `Unable to get ${repo} from GH for readme.md. Err: ${err}`
+        );
         return undefined;
       }
-
     } else {
       // any other generic error code. Lets again respond, with undefined
-      logger.WarningLog(null, null, `Unable to Get ${repo} from GH for README.md. Err: ${err}`);
+      logger.WarningLog(
+        null,
+        null,
+        `Unable to Get ${repo} from GH for README.md. Err: ${err}`
+      );
       return undefined;
     }
   }
