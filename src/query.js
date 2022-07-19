@@ -148,7 +148,7 @@ function repo(req) {
     return "";
   }
 
-  const re = /^[a-zA-Z\d-][\w-.]{0,213}\/[a-zA-Z\d-][\w-.]{0,213}$/;
+  const re = /^[-a-zA-Z\d][-\w.]{0,213}\/[-a-zA-Z\d][-\w.]{0,213}$/;
 
   // Ensure req is in the format "owner/repo" and
   // owner and repo observe the following rules:
