@@ -117,27 +117,27 @@ async function CreatePackage(repo) {
           if (pack.repository.includes("github")) {
             newPack.repository = {
               type: "git",
-              url: pack.repository
+              url: pack.repository,
             };
           } else if (pack.repository.includes("bitbucket")) {
             newPack.repository = {
               type: "bit",
-              url: pack.repository
+              url: pack.repository,
             };
           } else if (pack.repository.includes("sourceforge")) {
             newPack.repository = {
               type: "sfr",
-              url: pack.repository
+              url: pack.repository,
             };
           } else if (pack.repository.includes("gitlab")) {
             newPack.repository = {
               type: "lab",
-              url: pack.repository
+              url: pack.repository,
             };
           } else {
             newPack.repository = {
               type: "na",
-              url: pack.repository
+              url: pack.repository,
             };
           }
           // todo releases + version
