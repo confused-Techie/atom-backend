@@ -240,8 +240,8 @@ async function EngineFilter(pack, engine) {
   // Providing other types may lead to unexpected behaviors.
   // Always to be executed after passing the semver format validity.
   const gt = (a1, a2) => {
-    const v1 = a1.map(n => parseInt(n));
-    const v2 = a2.map(n => parseInt(n));
+    const v1 = a1.map((n) => parseInt(n));
+    const v2 = a2.map((n) => parseInt(n));
 
     if (v1[0] > v2[0]) {
       return true;
@@ -255,12 +255,12 @@ async function EngineFilter(pack, engine) {
       return false;
     }
 
-    return (v1[2] > v2[2]);
-  }
+    return v1[2] > v2[2];
+  };
 
   const lt = (a1, a2) => {
-    const v1 = a1.map(n => parseInt(n));
-    const v2 = a2.map(n => parseInt(n));
+    const v1 = a1.map((n) => parseInt(n));
+    const v2 = a2.map((n) => parseInt(n));
 
     if (v1[0] < v2[0]) {
       return true;
@@ -274,12 +274,12 @@ async function EngineFilter(pack, engine) {
       return false;
     }
 
-    return (v1[2] < v2[2]);
-  }
+    return v1[2] < v2[2];
+  };
 
   const eq = (a1, a2) => {
-     return a1[0] === a2[0] && a1[1] === a2[1] && a1[2] === a2[2];
-  }
+    return a1[0] === a2[0] && a1[1] === a2[1] && a1[2] === a2[2];
+  };
 
   // Function start.
   // Validate engine type.
@@ -291,7 +291,7 @@ async function EngineFilter(pack, engine) {
 
   // Validate engine semver format.
   if (eng_sv === null) {
-      return {};
+    return {};
   }
 
   // We will want to loop through each version of the package, and check its engine version against the specified one.
@@ -309,36 +309,60 @@ async function EngineFilter(pack, engine) {
     let upper_end = null;
 
     // Extract the lower end semver condition (i.e >=1.0.0)
-    const low_sv = pack.versions[ver].engines.atom.match(/(>=?)(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/);
+    const low_sv = pack.versions[ver].engines.atom.match(
+      /(>=?)(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/
+    );
 
     if (low_sv != null) {
       // Lower end condition present, so test it.
       switch (low_sv[1]) {
         case ">":
-          lower_end = gt([eng_sv[1], eng_sv[2], eng_sv[3]], [low_sv[2], low_sv[3], low_sv[4]]);
+          lower_end = gt(
+            [eng_sv[1], eng_sv[2], eng_sv[3]],
+            [low_sv[2], low_sv[3], low_sv[4]]
+          );
 
           break;
         case ">=":
-          lower_end = gt([eng_sv[1], eng_sv[2], eng_sv[3]], [low_sv[2], low_sv[3], low_sv[4]]) ||
-              eq([eng_sv[1], eng_sv[2], eng_sv[3]], [low_sv[2], low_sv[3], low_sv[4]]);
+          lower_end =
+            gt(
+              [eng_sv[1], eng_sv[2], eng_sv[3]],
+              [low_sv[2], low_sv[3], low_sv[4]]
+            ) ||
+            eq(
+              [eng_sv[1], eng_sv[2], eng_sv[3]],
+              [low_sv[2], low_sv[3], low_sv[4]]
+            );
 
           break;
       }
     }
 
     // Extract the upper end semver condition (i.e <=2.0.0)
-    const up_sv = pack.versions[ver].engines.atom.match(/(<=?)(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/);
+    const up_sv = pack.versions[ver].engines.atom.match(
+      /(<=?)(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/
+    );
 
     if (up_sv != null) {
       // Upper end condition present, so test it.
       switch (up_sv[1]) {
         case "<":
-          upper_end = lt([eng_sv[1], eng_sv[2], eng_sv[3]], [up_sv[2], up_sv[3], up_sv[4]]);
+          upper_end = lt(
+            [eng_sv[1], eng_sv[2], eng_sv[3]],
+            [up_sv[2], up_sv[3], up_sv[4]]
+          );
 
           break;
         case "<=":
-          upper_end = lt([eng_sv[1], eng_sv[2], eng_sv[3]], [up_sv[2], up_sv[3], up_sv[4]]) ||
-              eq([eng_sv[1], eng_sv[2], eng_sv[3]], [up_sv[2], up_sv[3], up_sv[4]]);
+          upper_end =
+            lt(
+              [eng_sv[1], eng_sv[2], eng_sv[3]],
+              [up_sv[2], up_sv[3], up_sv[4]]
+            ) ||
+            eq(
+              [eng_sv[1], eng_sv[2], eng_sv[3]],
+              [up_sv[2], up_sv[3], up_sv[4]]
+            );
 
           break;
       }
@@ -347,12 +371,17 @@ async function EngineFilter(pack, engine) {
     if (lower_end === null && upper_end === null) {
       // Both lower and upper end condition are unavailable.
       // So, as last resort, check if there is an equality condition (i.e =1.0.0)
-      const eq_sv = pack.versions[ver].engines.atom.match(/^=(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/);
+      const eq_sv = pack.versions[ver].engines.atom.match(
+        /^=(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/
+      );
 
-      if (eq_sv !== null && eq([eng_sv[1], eng_sv[2], eng_sv[3]], [eq_sv[1], eq_sv[2], eq_sv[3]])) {
+      if (
+        eq_sv !== null &&
+        eq([eng_sv[1], eng_sv[2], eng_sv[3]], [eq_sv[1], eq_sv[2], eq_sv[3]])
+      ) {
         compatible_version = ver;
 
-        break;  // Found the compatible version, break the loop.
+        break; // Found the compatible version, break the loop.
       }
 
       // Equality condition unavailable or not satisfied, skip the current loop.
@@ -365,14 +394,14 @@ async function EngineFilter(pack, engine) {
       if (upper_end) {
         compatible_version = ver;
 
-        break;  // The version is under the upper end, break the loop.
+        break; // The version is under the upper end, break the loop.
       }
     } else if (upper_end === null) {
       // Only lower end end available
       if (lower_end) {
         compatible_version = ver;
 
-        break;  // The version is over the upper end, break the loop.
+        break; // The version is over the upper end, break the loop.
       }
     }
 
@@ -380,7 +409,7 @@ async function EngineFilter(pack, engine) {
     if (lower_end && upper_end) {
       compatible_version = ver;
 
-      break;  // The version is within the range, break the loop.
+      break; // The version is within the range, break the loop.
     }
   }
 
