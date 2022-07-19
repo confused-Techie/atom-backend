@@ -64,7 +64,7 @@ function vlEditDistance(s1, s2) {
       } else {
         if (q > 0) {
           let newValue = costs[q - 1];
-          if (s1.charAt(p - 1) != s2.charAt(q - 1)) {
+          if (s1.charAt(p - 1) !== s2.charAt(q - 1)) {
             newValue = Math.min(Math.min(newValue, lastValue), costs[q]) + 1;
           }
           costs[q - 1] = lastValue;

@@ -64,7 +64,7 @@ async function CreatePackage(repo) {
   } else {
     let pack = await getPackageJSON(repo);
 
-    if (typeof pack === undefined) {
+    if (pack === undefined) {
       return {
         ok: false,
         content: `Failed to get gh package.`,
@@ -73,7 +73,7 @@ async function CreatePackage(repo) {
     } else {
       let repoTag = await getRepoTags(repo);
 
-      if (typeof repoTag === undefined) {
+      if (repoTag === undefined) {
         return {
           ok: false,
           content: "Failed to get gh tags.",
@@ -142,7 +142,7 @@ async function getRepoTags(repo) {
       .get(`https://api.github.com/repos/${repo}/tags`)
       .set({ Authorization: "Basic " + encodedToken });
 
-    if (res.status == 200) {
+    if (res.status === 200) {
       return JSON.parse(res.body);
     } else {
       logger.WarningLog(

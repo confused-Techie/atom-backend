@@ -125,7 +125,7 @@ async function RemoveUserStar(packageName, userName) {
         break;
       }
     }
-    if (starIdx != -1) {
+    if (starIdx !== -1) {
       // now to remove
       user.content.stars.splice(starIdx, 1);
 

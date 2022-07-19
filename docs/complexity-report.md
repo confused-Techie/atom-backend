@@ -161,7 +161,7 @@
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/query.js
 
-* Physical LOC: 204
+* Physical LOC: 205
 * Logical LOC: 77
 * Mean parameter count: 1.1111111111111112
 * Cyclomatic complexity: 23
@@ -210,7 +210,7 @@
     * Halstead effort: 1455.2670977288954
 * Function: **engine**
     * Line No.: 119
-    * Physical LOC: 17
+    * Physical LOC: 18
     * Logical LOC: 5
     * Parameter count: 1
     * Cyclomatic complexity: 3
@@ -219,7 +219,7 @@
     * Halstead volume: 129.65784284662087
     * Halstead effort: 1037.262742772967
 * Function: **repo**
-    * Line No.: 143
+    * Line No.: 144
     * Physical LOC: 17
     * Logical LOC: 5
     * Parameter count: 1
@@ -229,7 +229,7 @@
     * Halstead volume: 129.65784284662087
     * Halstead effort: 1037.262742772967
 * Function: **tag**
-    * Line No.: 167
+    * Line No.: 168
     * Physical LOC: 5
     * Logical LOC: 2
     * Parameter count: 1
@@ -239,7 +239,7 @@
     * Halstead volume: 57.359400011538504
     * Halstead effort: 258.1173000519233
 * Function: **rename**
-    * Line No.: 180
+    * Line No.: 181
     * Physical LOC: 16
     * Logical LOC: 10
     * Parameter count: 1
@@ -249,7 +249,7 @@
     * Halstead volume: 165.66917302429982
     * Halstead effort: 1144.6233772587989
 * Function: **pathTraversalAttempt**
-    * Line No.: 205
+    * Line No.: 206
     * Physical LOC: 15
     * Logical LOC: 6
     * Parameter count: 1
