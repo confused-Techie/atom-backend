@@ -235,68 +235,195 @@ async function SearchWithinPackages(
 }
 
 async function EngineFilter(pack, engine) {
-  // We will want to loop through each version of the package, and check its engine version against the specified one.
-  // TODO: This fails, if no engine is supplied.
-  let reg =
-    /(^\W*)([0-9]*).([0-9]*).([0-9]*)\s(\W*)([0-9]*).([0-9]*).([0-9]*)$/;
-  let raw_engine = engine.match(/^([0-9]*).([0-9]*).([0-9]*)/);
-  let engine_semver = {
-    major: raw_engine[1],
-    minor: raw_engine[2],
-    patch: raw_engine[3],
+  // Comparison utils:
+  // These ones expect to get valid strings as parameters, which should be convertible to numbers.
+  // Providing other types may lead to unexpected behaviors.
+  // Always to be executed after passing the semver format validity.
+  const gt = (a1, a2) => {
+    const v1 = a1.map((n) => parseInt(n));
+    const v2 = a2.map((n) => parseInt(n));
+
+    if (v1[0] > v2[0]) {
+      return true;
+    } else if (v1[0] < v2[0]) {
+      return false;
+    }
+
+    if (v1[1] > v2[1]) {
+      return true;
+    } else if (v1[1] < v2[1]) {
+      return false;
+    }
+
+    return v1[2] > v2[2];
   };
+
+  const lt = (a1, a2) => {
+    const v1 = a1.map((n) => parseInt(n));
+    const v2 = a2.map((n) => parseInt(n));
+
+    if (v1[0] < v2[0]) {
+      return true;
+    } else if (v1[0] > v2[0]) {
+      return false;
+    }
+
+    if (v1[1] < v2[1]) {
+      return true;
+    } else if (v1[1] < v2[1]) {
+      return false;
+    }
+
+    return v1[2] < v2[2];
+  };
+
+  const eq = (a1, a2) => {
+    return a1[0] === a2[0] && a1[1] === a2[1] && a1[2] === a2[2];
+  };
+
+  // Function start.
+  // Validate engine type.
+  if (typeof engine !== "string") {
+    return {};
+  }
+
+  const eng_sv = engine.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/);
+
+  // Validate engine semver format.
+  if (eng_sv === null) {
+    return {};
+  }
+
+  // We will want to loop through each version of the package, and check its engine version against the specified one.
   let compatible_version = "";
 
   for (const ver in pack.versions) {
-    if (ver.engines.atom) {
-      // make sure the key we need is available.
-      let raw_match = pack.versions[ver].engines.atom.match(reg);
-      // now to create our simple, overly-verbose semver object.
-      let semver = {
-        start: {
-          mod: raw_match[1],
-          major: raw_match[2],
-          minor: raw_match[3],
-          patch: raw_match[4],
-        },
-        end: {
-          mod: raw_match[5],
-          major: raw_match[6],
-          minor: raw_match[7],
-          patch: raw_match[8],
-        },
-      };
+    // Make sure the key we need is available, otherwise skip the current loop.
+    if (!pack.versions[ver].engines.atom) {
+      continue;
+    }
 
-      // And now to check if this version is compatible with the engine specified.
-      // For the time being, we will assume that start.mod == '>=' and end.mod == '<'
-      // As thats the use case created when using a template to make a package.
-      // TODO: Properly check the mods to see what they specify.
-      if (
-        semver.start.major < engine_semver.major &&
-        semver.start.minor < engine_semver.minor &&
-        semver.start.patch < engine_semver.patch &&
-        semver.end.major > engine_semver.major &&
-        semver.end.minor > engine_semver.minor &&
-        semver.end.patch > engine_semver.patch
-      ) {
-        // only if all portions of the semver declaration are within the bounds of the provided engine, we will return.
-        // we will just return on the first properly found item.
-        compatible_version = ver;
-        break; // exit the loop
+    // Track the upper and lower end conditions.
+    // Null type means not available; Bool type means available with the relative result.
+    let lower_end = null;
+    let upper_end = null;
+
+    // Extract the lower end semver condition (i.e >=1.0.0)
+    const low_sv = pack.versions[ver].engines.atom.match(
+      /(>=?)(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/
+    );
+
+    if (low_sv != null) {
+      // Lower end condition present, so test it.
+      switch (low_sv[1]) {
+        case ">":
+          lower_end = gt(
+            [eng_sv[1], eng_sv[2], eng_sv[3]],
+            [low_sv[2], low_sv[3], low_sv[4]]
+          );
+
+          break;
+        case ">=":
+          lower_end =
+            gt(
+              [eng_sv[1], eng_sv[2], eng_sv[3]],
+              [low_sv[2], low_sv[3], low_sv[4]]
+            ) ||
+            eq(
+              [eng_sv[1], eng_sv[2], eng_sv[3]],
+              [low_sv[2], low_sv[3], low_sv[4]]
+            );
+
+          break;
       }
+    }
+
+    // Extract the upper end semver condition (i.e <=2.0.0)
+    const up_sv = pack.versions[ver].engines.atom.match(
+      /(<=?)(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/
+    );
+
+    if (up_sv != null) {
+      // Upper end condition present, so test it.
+      switch (up_sv[1]) {
+        case "<":
+          upper_end = lt(
+            [eng_sv[1], eng_sv[2], eng_sv[3]],
+            [up_sv[2], up_sv[3], up_sv[4]]
+          );
+
+          break;
+        case "<=":
+          upper_end =
+            lt(
+              [eng_sv[1], eng_sv[2], eng_sv[3]],
+              [up_sv[2], up_sv[3], up_sv[4]]
+            ) ||
+            eq(
+              [eng_sv[1], eng_sv[2], eng_sv[3]],
+              [up_sv[2], up_sv[3], up_sv[4]]
+            );
+
+          break;
+      }
+    }
+
+    if (lower_end === null && upper_end === null) {
+      // Both lower and upper end condition are unavailable.
+      // So, as last resort, check if there is an equality condition (i.e =1.0.0)
+      const eq_sv = pack.versions[ver].engines.atom.match(
+        /^=(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/
+      );
+
+      if (
+        eq_sv !== null &&
+        eq([eng_sv[1], eng_sv[2], eng_sv[3]], [eq_sv[1], eq_sv[2], eq_sv[3]])
+      ) {
+        compatible_version = ver;
+
+        break; // Found the compatible version, break the loop.
+      }
+
+      // Equality condition unavailable or not satisfied, skip the current loop.
+      continue;
+    }
+
+    // One of the semver condition may still be not present.
+    if (lower_end === null) {
+      // Only upper end available
+      if (upper_end) {
+        compatible_version = ver;
+
+        break; // The version is under the upper end, break the loop.
+      }
+    } else if (upper_end === null) {
+      // Only lower end available
+      if (lower_end) {
+        compatible_version = ver;
+
+        break; // The version is over the lower end, break the loop.
+      }
+    }
+
+    // Both lower and upper end are available.
+    if (lower_end && upper_end) {
+      compatible_version = ver;
+
+      break; // The version is within the range, break the loop.
     }
   }
 
-  // after the loop ends, or breaks, check the returned value.
-  if (compatible_version !== "") {
-    // we have a compatible version, lets add its data to the metadata property of the package.
-    pack.metadata = pack.versions[compatible_version];
-    return pack;
-  } else {
-    // no valid version can be returned from the engine parameter.
-    // we may want to return en empty object.
+  // After the loop ends, or breaks, check the returned value.
+  if (compatible_version === "") {
+    // No valid version can be returned from the engine parameter.
+    // We may want to return en empty object.
     return {};
   }
+
+  // We have a compatible version, let's add its data to the metadata property of the package.
+  pack.metadata = pack.versions[compatible_version];
+
+  return pack;
 }
 
 async function DeepCopy(obj) {
