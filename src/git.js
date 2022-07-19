@@ -80,6 +80,68 @@ async function CreatePackage(repo) {
           short: "Server Error",
         };
       } else {
+        // now to get our readme
+        let readme = await getRepoReadMe(repo);
+
+        if (readme === undefined) {
+          return {
+            ok: false,
+            content: "Failed to get gh readme.",
+            short: "Bad Repo",
+          };
+        } else {
+          // Now we should be ready to create the package.
+          // readme = The Text data of the current repo readme.
+          // repoTag = the API JSON response for repo tags, including the tags, and their sha hash, and tarball_url
+          // pack = the package.json file within the repo, as JSON.
+          // And we want to funnel all of this data into newPack and return it.
+
+          const time = Date.now();
+
+          // One note about the difference in atom created package.json files, is the 'repository'
+          // is an object rather than a string like NPM.
+          newPack.name = pack.name;
+          //newPack.repository = pack.repository; // the auto gen package.json does not include the repo in a valid format.
+          newPack.created = time;
+          newPack.updated = time;
+          newPack.creation_method = "User Made Package";
+          newPack.downloads = 0;
+          newPack.stargazers_count = 0;
+          newPack.star_gazers = [];
+          newPack.readme = readme;
+          newPack.metadata = pack; // The metadata tag is the most recent package.json file, in full.
+
+          // currently there is no purpose to store the type of repo. But for the time being,
+          // we will assume this could be used in the future as a way to determine how to interact with a repo.
+          // The functionality will only be declarative for now, and may change later on.
+          if (pack.repository.includes("github")) {
+            newPack.repository = {
+              type: "git",
+              url: pack.repository,
+            };
+          } else if (pack.repository.includes("bitbucket")) {
+            newPack.repository = {
+              type: "bit",
+              url: pack.repository,
+            };
+          } else if (pack.repository.includes("sourceforge")) {
+            newPack.repository = {
+              type: "sfr",
+              url: pack.repository,
+            };
+          } else if (pack.repository.includes("gitlab")) {
+            newPack.repository = {
+              type: "lab",
+              url: pack.repository,
+            };
+          } else {
+            newPack.repository = {
+              type: "na",
+              url: pack.repository,
+            };
+          }
+          // todo releases + version
+        }
       }
     }
   }
@@ -133,6 +195,62 @@ async function getPackageJSON(repo) {
       `Failed to Get ${repo} from GH for package.json. Err: ${err}`
     );
     return undefined;
+  }
+}
+
+async function getRepoReadMe(repo) {
+  try {
+    const res = await superagent
+      .get(`https://api.github.com/repos/${repo}/README.md`)
+      .set({ Authorization: "Basic " + encodedToken });
+
+    if (res.status === 200) {
+      return Buffer.from(res.body.content, res.body.encoding).toString();
+    } else {
+      logger.WarningLog(
+        null,
+        null,
+        `Unexpected Status Code during README.md retrevial: ${res}`
+      );
+      return undefined;
+    }
+  } catch (err) {
+    // since this can fail, on a 404, lets check for a lowercase readme
+    if (err.status === 404) {
+      // then this is not found, and we should try again for the lowercase readme.md
+      try {
+        const resLower = await superagent
+          .get(`https://api.github.com/repos/${repo}/readme.md`)
+          .set({ Authorization: "Basic " + encodedToken });
+
+        if (resLower.status === 200) {
+          return Buffer.from(res.body.content, res.body.encoding).toString();
+        } else {
+          // it returned, but not the error code we expect.
+          logger.WarningLog(
+            null,
+            null,
+            `Unexpected Status code during readme.md retrevial: ${resLower}`
+          );
+          return undefined;
+        }
+      } catch (err) {
+        logger.WarningLog(
+          null,
+          null,
+          `Unable to get ${repo} from GH for readme.md. Err: ${err}`
+        );
+        return undefined;
+      }
+    } else {
+      // any other generic error code. Lets again respond, with undefined
+      logger.WarningLog(
+        null,
+        null,
+        `Unable to Get ${repo} from GH for README.md. Err: ${err}`
+      );
+      return undefined;
+    }
   }
 }
 

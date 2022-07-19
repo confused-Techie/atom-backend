@@ -8,6 +8,18 @@
 
 > This is originally based off the research done on [Atom Community Server Backend](https://github.com/confused-Techie/atom-community-server-backend) which was written in Golang. But has been switched to JS for more broad support.
 
+## Updated Information
+
+**Atom-Community-Server-Backend-JS is MOVING**
+
+While this is currently the home for the new backend during development, that won't always be the case.
+
+The long term goals will be to have this package move to the new `Pulsar-Edit` repo. If you are wondering what's 'Pulsar' while the title here says 'Atom-Community' [read more](https://github.com/pulsar-edit/.github/tree/main/profile) about this change.
+
+The goal for now is of course to keep this new Backend compatible with any fork of Atom that may arise, as currently it should be a drop in replacement of the currently existing backend.
+
+If you'd like to get more involved in the new 'Community-Based, Hackable, Text Editor' feel free to visit the ['Pulsar-Edit' Org](https://github.com/pulsar-edit) and get involved however you can. Additionally there's a ['Pulsar-Edit' Discord](https://discord.gg/QFxZjW4ZuS) to get involved with other maintainers.
+
 ## Get Started
 
 To start developing with this package, it should be rather quick.
