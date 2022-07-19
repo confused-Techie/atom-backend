@@ -101,7 +101,7 @@ async function CreatePackage(repo) {
           // One note about the difference in atom created package.json files, is the 'repository'
           // is an object rather than a string like NPM.
           newPack.name = pack.name;
-          newPack.repository = pack.repository;
+          //newPack.repository = pack.repository; // the auto gen package.json does not include the repo in a valid format.
           newPack.created = time;
           newPack.updated = time;
           newPack.creation_method = "User Made Package";
@@ -110,7 +110,37 @@ async function CreatePackage(repo) {
           newPack.star_gazers = [];
           newPack.readme = readme;
           newPack.metadata = pack; // The metadata tag is the most recent package.json file, in full.
-          // todo releases + versions
+
+          // currently there is no purpose to store the type of repo. But for the time being,
+          // we will assume this could be used in the future as a way to determine how to interact with a repo.
+          // The functionality will only be declarative for now, and may change later on.
+          if (pack.repository.includes("github")) {
+            newPack.repository = {
+              type: "git",
+              url: pack.repository
+            };
+          } else if (pack.repository.includes("bitbucket")) {
+            newPack.repository = {
+              type: "bit",
+              url: pack.repository
+            };
+          } else if (pack.repository.includes("sourceforge")) {
+            newPack.repository = {
+              type: "sfr",
+              url: pack.repository
+            };
+          } else if (pack.repository.includes("gitlab")) {
+            newPack.repository = {
+              type: "lab",
+              url: pack.repository
+            };
+          } else {
+            newPack.repository = {
+              type: "na",
+              url: pack.repository
+            };
+          }
+          // todo releases + version
         }
       }
     }
