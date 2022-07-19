@@ -397,11 +397,11 @@ async function EngineFilter(pack, engine) {
         break; // The version is under the upper end, break the loop.
       }
     } else if (upper_end === null) {
-      // Only lower end end available
+      // Only lower end available
       if (lower_end) {
         compatible_version = ver;
 
-        break; // The version is over the upper end, break the loop.
+        break; // The version is over the lower end, break the loop.
       }
     }
 
