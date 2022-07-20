@@ -13,6 +13,11 @@ collections, to be returned to the user.</p>
 for data in general. Containing the <code>Shutdown</code> function, as well as gathering the users,
 packages, package_pointer, and additionally handling any modifications of the packages.</p>
 </dd>
+<dt><a href="#module_debug_util">debug_util</a></dt>
+<dd><p>A collection of simple functions to help devs debug the application during runtime,
+to better assist in tracking down bugs. Since many sets of data cannot be reliably output to the console
+this can help to view the transmutations of data as its handled.</p>
+</dd>
 <dt><a href="#module_error">error</a></dt>
 <dd><p>Contains different error messages that can be returned, adding them and their
 respective HTTP Status Codes to the <code>Response</code> object provided to them.
@@ -200,6 +205,26 @@ the package object.
 | Param | Type | Description |
 | --- | --- | --- |
 | id | <code>string</code> | The ID of the package, like `UUIDv4.json`. |
+
+<a name="module_debug_util"></a>
+
+## debug\_util
+A collection of simple functions to help devs debug the application during runtime,
+to better assist in tracking down bugs. Since many sets of data cannot be reliably output to the console
+this can help to view the transmutations of data as its handled.
+
+<a name="module_debug_util..roughSizeOfObject"></a>
+
+### debug_util~roughSizeOfObject(obj) ⇒ <code>integer</code>
+Returns the rough size of the object in memory, in Bytes. Can be used
+to help determine how an object changes over time.
+
+**Kind**: inner method of [<code>debug\_util</code>](#module_debug_util)  
+**Returns**: <code>integer</code> - Returns the integer value of the object in Bytes.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| obj | <code>object</code> | The Object to inspect. |
 
 <a name="module_error"></a>
 
