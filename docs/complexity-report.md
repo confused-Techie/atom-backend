@@ -1,12 +1,12 @@
-# Complexity report, 7/19/2022
+# Complexity report, 7/20/2022
 
-* Mean per-function logical LOC: 19.450793650793653
-* Mean per-function parameter count: 1.123015873015873
-* Mean per-function cyclomatic complexity: 4.134920634920634
-* Mean per-function Halstead effort: 13446.815496164694
-* Mean per-module maintainability index: 62.41127611856267
-* First-order density: 4.081632653061225%
-* Change cost: 18.367346938775512%
+* Mean per-function logical LOC: 19.394444444444446
+* Mean per-function parameter count: 1.1076388888888888
+* Mean per-function cyclomatic complexity: 4.118055555555555
+* Mean per-function Halstead effort: 12887.223887002743
+* Mean per-module maintainability index: 61.3243108483779
+* First-order density: 3.125%
+* Change cost: 15.625%
 * Core size: 100%
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/config.js
@@ -28,6 +28,26 @@
     * Halstead difficulty: 26.53488372093023
     * Halstead volume: 1732.3683342069285
     * Halstead effort: 45968.19231000245
+
+## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/debug_utils.js
+
+* Physical LOC: 30
+* Logical LOC: 22
+* Mean parameter count: 1
+* Cyclomatic complexity: 4
+* Cyclomatic complexity density: 18.181818181818183%
+* Maintainability index: 53.71555395708454
+* Dependency count: 0
+* Function: **roughSizeOfObject**
+    * Line No.: 15
+    * Physical LOC: 26
+    * Logical LOC: 19
+    * Parameter count: 1
+    * Cyclomatic complexity: 4
+    * Cyclomatic complexity density: 21.052631578947366%
+    * Halstead difficulty: 18.857142857142858
+    * Halstead volume: 475.6861996976024
+    * Halstead effort: 8970.082622869073
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/error.js
 
