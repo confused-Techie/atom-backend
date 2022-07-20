@@ -174,7 +174,7 @@ async function CreatePackage(repo) {
         }
       }
     }
-  } catch(err) {
+  } catch (err) {
     // an error occured somewhere during package generation
     return { ok: false, content: err, short: "Server Error" };
   }
