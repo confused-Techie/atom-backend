@@ -4,7 +4,8 @@
  */
 
 const superagent = require("superagent");
-const { GH_TOKEN, GH_USERNAME, GH_USERAGENT } = require("./config.js").GetConfig();
+const { GH_TOKEN, GH_USERNAME, GH_USERAGENT } =
+  require("./config.js").GetConfig();
 const logger = require("./logger.js");
 
 const encodedToken = Buffer.from(`${GH_USERNAME}:${GH_TOKEN}`).toString(
@@ -154,7 +155,6 @@ async function CreatePackage(repo) {
             // now during migration packages will have a 'versions' key, but otherwise the standard
             // package will just have a 'version', so we will check which is present.
             if (pack.versions) {
-
               // now to add the release data to each release within the package
               for (let i = 0; i < Object.keys(pack.versions).length; i++) {
                 for (let y = 0; y < repoTag.length; y++) {
@@ -174,7 +174,6 @@ async function CreatePackage(repo) {
                   }
                 }
               }
-
             } else if (pack.version) {
               newPack.versions[pack.version] = pack;
               // Otherwise if they only have a version tag, we can make the first entry onto the versions.
@@ -183,12 +182,12 @@ async function CreatePackage(repo) {
               let ver = pack.version;
               for (let i = 0; i < repoTag.length; i++) {
                 if (repoTag[i].name.replace("v", "") == ver) {
-                  newPack.versions[pack.version].tarball_url = repoTag[i].tarball_url;
+                  newPack.versions[pack.version].tarball_url =
+                    repoTag[i].tarball_url;
                   newPack.versions[pack.version].sha = repoTag[i].commit.sha;
                 }
               }
             }
-
 
             // now with all the versions properly filled, we lastly just need the release data.
             newPack.releases = {
@@ -276,7 +275,11 @@ async function getRepoReadMe(repo) {
       return undefined;
     }
   } catch (err) {
-    logger.WarningLog(null, null, `Unable to get ${repo} from GH for README.md, trying readme.md: Err: ${err}`);
+    logger.WarningLog(
+      null,
+      null,
+      `Unable to get ${repo} from GH for README.md, trying readme.md: Err: ${err}`
+    );
     // since this can fail, on a 404, lets check for a lowercase readme
     if (err.status === 404) {
       // then this is not found, and we should try again for the lowercase readme.md
