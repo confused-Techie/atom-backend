@@ -130,7 +130,7 @@ async function Write(type, data, name) {
     return writeFile("./data/users.json", JSON.stringify(data, null, 4));
   } else if (type === "pointer") {
     return writeFile(
-      "./data/package_pointers.json",
+      "./data/package_pointer.json",
       JSON.stringify(data, null, 4)
     );
   } else if (type === "package") {

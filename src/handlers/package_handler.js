@@ -122,17 +122,18 @@ async function POSTPackages(req, res) {
   }
 
   // Now knowing they own the git repo, and it doesn't exist here, lets publish.
-  let pack = git.CreatePackage(params.repository);
+  let pack = await git.CreatePackage(params.repository);
 
   if (!pack.ok) {
     // TODO: Proper error checking based on function. But this will likely
     // implement the 400 package not valid error.
+    console.log(pack.content);
     await common.NotSupported(req, res);
     return;
   }
 
   // Now with valid package data, we can pass it along.
-  let create = data.NewPackage(pack.content);
+  let create = await data.NewPackage(pack.content);
 
   if (!create.ok) {
     await common.ServerError(req, res, create.content);
@@ -141,7 +142,7 @@ async function POSTPackages(req, res) {
 
   // The package has been successfully created.
   // And we want to now do a small test, and grab the new package to return it.
-  let new_pack = data.GetPackageByName(params.repository);
+  let new_pack = await data.GetPackageByName(pack.content.name);
 
   if (!new_pack.ok) {
     // We were unable to get the new package, and should return an error.

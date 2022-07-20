@@ -33,3 +33,5 @@ env_variables:
   GH_TOKEN: ""
   # The github username associated with the token.
   GH_USERNAME: ""
+  # The User Agent thats used to communicate with GitHub
+  GH_USERAGENT: "Pulsar-Edit Bot"

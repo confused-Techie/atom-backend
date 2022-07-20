@@ -541,7 +541,7 @@ async function NewPackage(data) {
   let pointers = await GetPackagePointer();
 
   if (pointers.ok) {
-    pointers.content[data.name] = id;
+    pointers.content[data.name] = `${id}.json`;
     let write_pointer = await SetPackagePointer(pointers.content);
 
     if (write_pointer.ok) {

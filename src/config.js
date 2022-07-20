@@ -77,6 +77,7 @@ function GetConfig() {
       GH_USERNAME: process.env.GH_USERNAME
         ? process.env.GH_USERNAME
         : data.env_variables.GH_USERNAME,
+      GH_USERAGENT: process.env.GH_USERAGENT ? process.env.GH_USERAGENT : data.env_variables.GH_USERAGENT,
     };
   } catch (err) {
     // since this is necessary for the server to startup, we can throw an error here and exit the process.

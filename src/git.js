@@ -4,7 +4,7 @@
  */
 
 const superagent = require("superagent");
-const { GH_TOKEN, GH_USERNAME } = require("./config.js").GetConfig();
+const { GH_TOKEN, GH_USERNAME, GH_USERAGENT } = require("./config.js").GetConfig();
 const logger = require("./logger.js");
 
 const encodedToken = Buffer.from(`${GH_USERNAME}:${GH_TOKEN}`).toString(
@@ -115,53 +115,80 @@ async function CreatePackage(repo) {
             // currently there is no purpose to store the type of repo. But for the time being,
             // we will assume this could be used in the future as a way to determine how to interact with a repo.
             // The functionality will only be declarative for now, and may change later on.
-            if (pack.repository.includes("github")) {
-              newPack.repository = {
-                type: "git",
-                url: pack.repository,
-              };
-            } else if (pack.repository.includes("bitbucket")) {
-              newPack.repository = {
-                type: "bit",
-                url: pack.repository,
-              };
-            } else if (pack.repository.includes("sourceforge")) {
-              newPack.repository = {
-                type: "sfr",
-                url: pack.repository,
-              };
-            } else if (pack.repository.includes("gitlab")) {
-              newPack.repository = {
-                type: "lab",
-                url: pack.repository,
-              };
+            // Although first party packages do already have the regular package object. So we
+            // will need to check if its an object or string.
+            if (typeof pack.repository !== "string") {
+              newPack.repository = pack.repository; // likely a first party package, with an
+              // already valid package object, that can just be added over.
             } else {
-              newPack.repository = {
-                type: "na",
-                url: pack.repository,
-              };
+              if (pack.repository.includes("github")) {
+                newPack.repository = {
+                  type: "git",
+                  url: pack.repository,
+                };
+              } else if (pack.repository.includes("bitbucket")) {
+                newPack.repository = {
+                  type: "bit",
+                  url: pack.repository,
+                };
+              } else if (pack.repository.includes("sourceforge")) {
+                newPack.repository = {
+                  type: "sfr",
+                  url: pack.repository,
+                };
+              } else if (pack.repository.includes("gitlab")) {
+                newPack.repository = {
+                  type: "lab",
+                  url: pack.repository,
+                };
+              } else {
+                newPack.repository = {
+                  type: "na",
+                  url: pack.repository,
+                };
+              }
             }
 
             newPack.versions = {};
-            // now to add the release data to each release within the package
-            for (let i = 0; i < Object.keys(pack.versions).length; i++) {
-              for (let y = 0; y < repoTag.length; y++) {
-                let ver = Object.keys(pack.versions)[i];
-                if (repoTag[y].name.replace("v", "") == ver) {
-                  // they match tag and version, stuff the data into the package.
-                  newPack.versions[ver] = pack;
-                  // TODO::
-                  // Its worthy to note that ^^^ assigns the current package.json file within the repo
-                  // as the version tag. Now this in most cases during a publish should be fine.
-                  // But if a user were to publish a version to the backend AFTER having published several
-                  // versions to their repo, this would cause identical versions to be created, although
-                  // would have the correct download URL. So the error would only be visual when browsing
-                  // the packages details.
-                  newPack.versions[ver].tarball_url = repoTag[y].tarball_url;
-                  newPack.versions[ver].sha = repoTag[y].commit.sha;
+
+            // now during migration packages will have a 'versions' key, but otherwise the standard
+            // package will just have a 'version', so we will check which is present.
+            if (pack.versions) {
+
+              // now to add the release data to each release within the package
+              for (let i = 0; i < Object.keys(pack.versions).length; i++) {
+                for (let y = 0; y < repoTag.length; y++) {
+                  let ver = Object.keys(pack.versions)[i];
+                  if (repoTag[y].name.replace("v", "") == ver) {
+                    // they match tag and version, stuff the data into the package.
+                    newPack.versions[ver] = pack;
+                    // TODO::
+                    // Its worthy to note that ^^^ assigns the current package.json file within the repo
+                    // as the version tag. Now this in most cases during a publish should be fine.
+                    // But if a user were to publish a version to the backend AFTER having published several
+                    // versions to their repo, this would cause identical versions to be created, although
+                    // would have the correct download URL. So the error would only be visual when browsing
+                    // the packages details.
+                    newPack.versions[ver].tarball_url = repoTag[y].tarball_url;
+                    newPack.versions[ver].sha = repoTag[y].commit.sha;
+                  }
+                }
+              }
+
+            } else if (pack.version) {
+              newPack.versions[pack.version] = pack;
+              // Otherwise if they only have a version tag, we can make the first entry onto the versions.
+              // This first entry of course, contains the package.json currently, and in the future, will allow modifications.
+              // But now we do need to retreive, the tarball data.
+              let ver = pack.version;
+              for (let i = 0; i < repoTag.length; i++) {
+                if (repoTag[i].name.replace("v", "") == ver) {
+                  newPack.versions[pack.version].tarball_url = repoTag[i].tarball_url;
+                  newPack.versions[pack.version].sha = repoTag[i].commit.sha;
                 }
               }
             }
+
 
             // now with all the versions properly filled, we lastly just need the release data.
             newPack.releases = {
@@ -203,9 +230,11 @@ async function getRepoExistance(repo) {
 
 async function getPackageJSON(repo) {
   try {
+    console.log(`https://api.github.com/repos/${repo}/contents/package.json`);
     const res = await superagent
       .get(`https://api.github.com/repos/${repo}/contents/package.json`)
-      .set({ Authorization: "Basic " + encodedToken });
+      .set({ Authorization: "Basic " + encodedToken })
+      .set({ "User-Agent": GH_USERAGENT });
 
     if (res.status === 200) {
       return JSON.parse(
@@ -232,8 +261,9 @@ async function getPackageJSON(repo) {
 async function getRepoReadMe(repo) {
   try {
     const res = await superagent
-      .get(`https://api.github.com/repos/${repo}/README.md`)
-      .set({ Authorization: "Basic " + encodedToken });
+      .get(`https://api.github.com/repos/${repo}/contents/README.md`)
+      .set({ Authorization: "Basic " + encodedToken })
+      .set({ "User-Agent": GH_USERAGENT });
 
     if (res.status === 200) {
       return Buffer.from(res.body.content, res.body.encoding).toString();
@@ -246,13 +276,16 @@ async function getRepoReadMe(repo) {
       return undefined;
     }
   } catch (err) {
+    logger.WarningLog(null, null, `Unable to get ${repo} from GH for README.md, trying readme.md: Err: ${err}`);
     // since this can fail, on a 404, lets check for a lowercase readme
     if (err.status === 404) {
       // then this is not found, and we should try again for the lowercase readme.md
       try {
+        console.log(`https://api.github.com/repos/${repo}/contents/readme.md`);
         const resLower = await superagent
-          .get(`https://api.github.com/repos/${repo}/readme.md`)
-          .set({ Authorization: "Basic " + encodedToken });
+          .get(`https://api.github.com/repos/${repo}/contents/readme.md`)
+          .set({ Authorization: "Basic " + encodedToken })
+          .set({ "User-Agent": GH_USERAGENT });
 
         if (resLower.status === 200) {
           return Buffer.from(res.body.content, res.body.encoding).toString();
@@ -289,10 +322,11 @@ async function getRepoTags(repo) {
   try {
     const res = await superagent
       .get(`https://api.github.com/repos/${repo}/tags`)
-      .set({ Authorization: "Basic " + encodedToken });
+      .set({ Authorization: "Basic " + encodedToken })
+      .set({ "User-Agent": GH_USERAGENT });
 
     if (res.status === 200) {
-      return JSON.parse(res.body);
+      return res.body;
     } else {
       logger.WarningLog(
         null,
