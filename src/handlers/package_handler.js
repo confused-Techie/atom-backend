@@ -232,7 +232,9 @@ async function GETPackagesDetails(req, res) {
     name: decodeURIComponent(req.params.packageName),
   };
   let pack = await data.GetPackageByName(params.name);
-  console.log(`GetPackageByName Size: ${common.roughSizeOfObject(pack.content)}`);
+  console.log(
+    `GetPackageByName Size: ${common.roughSizeOfObject(pack.content)}`
+  );
 
   if (pack.ok) {
     // from here we now have the package and just want to prune data from it
@@ -240,7 +242,8 @@ async function GETPackagesDetails(req, res) {
     pack = await collection.POFPrune(pack.content); // package object full prune
     // without any concern over being given a valid engine.
     pack = await collection.EngineFilter(pack, params.engine);
-    if (params.engine) { // query.engine returns false if no valid query param is found.
+    if (params.engine) {
+      // query.engine returns false if no valid query param is found.
       // before using EngineFilter we need to check the truthiness of it.
       pack = await collection.EngineFilter(pack, params.engine);
     }
