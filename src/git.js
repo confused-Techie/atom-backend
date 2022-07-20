@@ -50,103 +50,134 @@ async function Ownership(user, repo) {
  * also be uncompleted.
  */
 async function CreatePackage(repo) {
-  let newPack = {};
-  // this ^^^ will be what we append all data to.
-  let exists = await getRepoExistance(repo);
+  try {
+    let newPack = {};
+    // this ^^^ will be what we append all data to.
+    let exists = await getRepoExistance(repo);
 
-  if (!exists) {
-    // this could be because of an error, or it truly doesn't exist.
-    return {
-      ok: false,
-      content: `Failed to get repo: ${repo}`,
-      short: "Bad Repo",
-    };
-  } else {
-    let pack = await getPackageJSON(repo);
-
-    if (pack === undefined) {
+    if (!exists) {
+      // this could be because of an error, or it truly doesn't exist.
       return {
         ok: false,
-        content: `Failed to get gh package.`,
-        short: "Bad Package",
+        content: `Failed to get repo: ${repo}`,
+        short: "Bad Repo",
       };
     } else {
-      let repoTag = await getRepoTags(repo);
+      let pack = await getPackageJSON(repo);
 
-      if (repoTag === undefined) {
+      if (pack === undefined) {
         return {
           ok: false,
-          content: "Failed to get gh tags.",
-          short: "Server Error",
+          content: `Failed to get gh package.`,
+          short: "Bad Package",
         };
       } else {
-        // now to get our readme
-        let readme = await getRepoReadMe(repo);
+        let repoTag = await getRepoTags(repo);
 
-        if (readme === undefined) {
+        if (repoTag === undefined) {
           return {
             ok: false,
-            content: "Failed to get gh readme.",
-            short: "Bad Repo",
+            content: "Failed to get gh tags.",
+            short: "Server Error",
           };
         } else {
-          // Now we should be ready to create the package.
-          // readme = The Text data of the current repo readme.
-          // repoTag = the API JSON response for repo tags, including the tags, and their sha hash, and tarball_url
-          // pack = the package.json file within the repo, as JSON.
-          // And we want to funnel all of this data into newPack and return it.
+          // now to get our readme
+          let readme = await getRepoReadMe(repo);
 
-          const time = Date.now();
-
-          // One note about the difference in atom created package.json files, is the 'repository'
-          // is an object rather than a string like NPM.
-          newPack.name = pack.name;
-          //newPack.repository = pack.repository; // the auto gen package.json does not include the repo in a valid format.
-          newPack.created = time;
-          newPack.updated = time;
-          newPack.creation_method = "User Made Package";
-          newPack.downloads = 0;
-          newPack.stargazers_count = 0;
-          newPack.star_gazers = [];
-          newPack.readme = readme;
-          newPack.metadata = pack; // The metadata tag is the most recent package.json file, in full.
-
-          // currently there is no purpose to store the type of repo. But for the time being,
-          // we will assume this could be used in the future as a way to determine how to interact with a repo.
-          // The functionality will only be declarative for now, and may change later on.
-          if (pack.repository.includes("github")) {
-            newPack.repository = {
-              type: "git",
-              url: pack.repository,
-            };
-          } else if (pack.repository.includes("bitbucket")) {
-            newPack.repository = {
-              type: "bit",
-              url: pack.repository,
-            };
-          } else if (pack.repository.includes("sourceforge")) {
-            newPack.repository = {
-              type: "sfr",
-              url: pack.repository,
-            };
-          } else if (pack.repository.includes("gitlab")) {
-            newPack.repository = {
-              type: "lab",
-              url: pack.repository,
+          if (readme === undefined) {
+            return {
+              ok: false,
+              content: "Failed to get gh readme.",
+              short: "Bad Repo",
             };
           } else {
-            newPack.repository = {
-              type: "na",
-              url: pack.repository,
+            // Now we should be ready to create the package.
+            // readme = The Text data of the current repo readme.
+            // repoTag = the API JSON response for repo tags, including the tags, and their sha hash, and tarball_url
+            // pack = the package.json file within the repo, as JSON.
+            // And we want to funnel all of this data into newPack and return it.
+
+            const time = Date.now();
+
+            // One note about the difference in atom created package.json files, is the 'repository'
+            // is an object rather than a string like NPM.
+            newPack.name = pack.name;
+            //newPack.repository = pack.repository; // the auto gen package.json does not include the repo in a valid format.
+            newPack.created = time;
+            newPack.updated = time;
+            newPack.creation_method = "User Made Package";
+            newPack.downloads = 0;
+            newPack.stargazers_count = 0;
+            newPack.star_gazers = [];
+            newPack.readme = readme;
+            newPack.metadata = pack; // The metadata tag is the most recent package.json file, in full.
+
+            // currently there is no purpose to store the type of repo. But for the time being,
+            // we will assume this could be used in the future as a way to determine how to interact with a repo.
+            // The functionality will only be declarative for now, and may change later on.
+            if (pack.repository.includes("github")) {
+              newPack.repository = {
+                type: "git",
+                url: pack.repository,
+              };
+            } else if (pack.repository.includes("bitbucket")) {
+              newPack.repository = {
+                type: "bit",
+                url: pack.repository,
+              };
+            } else if (pack.repository.includes("sourceforge")) {
+              newPack.repository = {
+                type: "sfr",
+                url: pack.repository,
+              };
+            } else if (pack.repository.includes("gitlab")) {
+              newPack.repository = {
+                type: "lab",
+                url: pack.repository,
+              };
+            } else {
+              newPack.repository = {
+                type: "na",
+                url: pack.repository,
+              };
+            }
+
+            newPack.versions = {};
+            // now to add the release data to each release within the package
+            for (let i = 0; i < Object.keys(pack.versions).length; i++) {
+              for (let y = 0; y < repoTag.length; y++) {
+                let ver = Object.keys(pack.versions)[i];
+                if (repoTag[y].name.replace("v", "") == ver) {
+                  // they match tag and version, stuff the data into the package.
+                  newPack.versions[ver] = pack;
+                  // TODO::
+                  // Its worthy to note that ^^^ assigns the current package.json file within the repo
+                  // as the version tag. Now this in most cases during a publish should be fine.
+                  // But if a user were to publish a version to the backend AFTER having published several
+                  // versions to their repo, this would cause identical versions to be created, although
+                  // would have the correct download URL. So the error would only be visual when browsing
+                  // the packages details.
+                  newPack.versions[ver].tarball_url = repoTag[y].tarball_url;
+                  newPack.versions[ver].sha = repoTag[y].commit.sha;
+                }
+              }
+            }
+
+            // now with all the versions properly filled, we lastly just need the release data.
+            newPack.releases = {
+              latest: repoTag[0].name.replace("v", ""),
             };
+            // for this we just use the most recent tag published to the repo.
+            // and now the object is complete, lets return the pack, as a Server Status Object.
+            return { ok: true, content: newPack };
           }
-          // todo releases + version
         }
       }
     }
+  } catch(err) {
+    // an error occured somewhere during package generation
+    return { ok: false, content: err, short: "Server Error" };
   }
-  // TODO: ALL OF IT
-  // This is expected to generate the internal package metadata, to be directly used as the Server Package Object.
 }
 
 async function getRepoExistance(repo) {
