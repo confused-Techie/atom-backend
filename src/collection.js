@@ -270,7 +270,7 @@ async function EngineFilter(pack, engine) {
 
     if (v1[1] < v2[1]) {
       return true;
-    } else if (v1[1] < v2[1]) {
+    } else if (v1[1] > v2[1]) {
       return false;
     }
 
