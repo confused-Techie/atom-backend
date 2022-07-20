@@ -284,7 +284,8 @@ async function EngineFilter(pack, engine) {
   // Function start.
   // Validate engine type.
   if (typeof engine !== "string") {
-    return {};
+    // On an invalid engine type, we will return an unmodified package, so that it is usable to the consumer.
+    return pack;
   }
 
   const eng_sv = engine.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/);
