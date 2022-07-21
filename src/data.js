@@ -436,72 +436,72 @@ async function StarPackageByName(packageName, userName) {
 
   let point = await GetPackagePointerByName(packageName);
 
-  if (point.ok) {
-    // now with the pointer, we can get the package
-    let pack = await GetPackageByID(point.content);
-
-    if (pack.ok) {
-      // now we have the package
-      pack.content.star_gazers.push({ login: userName });
-
-      const write = await SetPackageByID(point.content, pack.content);
-
-      if (write.ok) {
-        // on successful completion we want to return the package.
-        return { ok: true, content: pack.content };
-      } else {
-        // write unsuccessful.
-        return write;
-      }
-    } else {
-      return pack;
-    }
-  } else {
+  if (!point.ok) {
     return point;
+  }
+
+  // Now with the pointer, we can get the package
+  let pack = await GetPackageByID(point.content);
+
+  if (!pack.ok) {
+    return pack;
+  }
+
+  // Now we have the package
+  pack.content.star_gazers.push({ login: userName });
+
+  const write = await SetPackageByID(point.content, pack.content);
+
+  if (write.ok) {
+    // on successful completion we want to return the package.
+    return { ok: true, content: pack.content };
+  } else {
+    // write unsuccessful.
+    return write;
   }
 }
 
 async function UnStarPackageByName(packageName, userName) {
   const point = await GetPackagePointerByName(packageName);
 
-  if (point.ok) {
-    const pack = await GetPackageByID(point.content);
-
-    if (pack.ok) {
-      // now we need to find the index in the array of the user we want to unstar.
-      let usrIdx = -1;
-      for (let i = 0; i < pack.content.star_gazers.length; i++) {
-        if (pack.content.star_gazers[i].login === userName) {
-          usrIdx = i;
-          // since we know we only are looking once, lets just break the loop once we assign the idx
-          break;
-        }
-      }
-
-      // after done looping, then we can check our IDX.
-      if (usrIdx !== -1) {
-        // now we can remove that element from the array.
-        pack.content.star_gazers.splice(usrIdx, 1);
-
-        // now to write the content.
-        const write = await SetPackageByID(point.content, pack.content);
-
-        if (write.ok) {
-          // and we will return the new content.
-          return { ok: true, content: pack.content };
-        } else {
-          // write was unsuccessful
-          return write;
-        }
-      } else {
-        // if it does still equal -1, then we were never able to find our user on the star_gazers list.
-        return { ok: false, content: "Not Found", short: "Not Found" };
-      }
-    } else {
-      return pack;
-    }
-  } else {
+  if (!point.ok) {
     return point;
+  }
+
+  const pack = await GetPackageByID(point.content);
+
+  if (!pack.ok) {
+    return pack;
+  }
+
+  // Now we need to find the index in the array of the user we want to unstar.
+  let usrIdx = -1;
+  for (let i = 0; i < pack.content.star_gazers.length; i++) {
+    if (pack.content.star_gazers[i].login === userName) {
+      usrIdx = i;
+      // since we know we only are looking once, lets just break the loop once we assign the idx
+      break;
+    }
+  }
+
+  // After done looping, then we can check our IDX.
+  if (usrIdx === -1) {
+    // if it does still equal -1, then we were never able to find our user on the star_gazers list.
+    return { ok: false, content: "Not Found", short: "Not Found" };
+  }
+
+  // now we can remove that element from the array.
+  pack.content.star_gazers.splice(usrIdx, 1);
+
+  // now to write the content.
+  const write = await SetPackageByID(point.content, pack.content);
+
+  if (write.ok) {
+    // and we will return the new content.
+    return { ok: true, content: pack.content };
+  } else {
+    // write was unsuccessful
+    return write;
   }
 }
 
