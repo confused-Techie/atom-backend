@@ -94,32 +94,32 @@ async function GetUsers() {
     logger.DebugLog("Creating User Cache.");
     // user object is not cached.
     return getNew();
+  }
+
+  // The user object is cached.
+  // With the object cached we can check that its still valid.
+  if (!cached_user.Expired) {
+    logger.DebugLog("User data IS NOT expired.");
+    // object is not expired, lets return it.
+    return { ok: true, content: cached_user.data };
+  }
+
+  // Object is now expired, we will want to get an updated copy after ensuring thers no data to write.
+  logger.DebugLog("User data IS expired, getting new.");
+  // But before we do, lets make sure there aren't any unsaved changes.
+  if (!cached_user.invalidated) {
+    // no changes to save. Lets get new data.
+    return getNew();
+  }
+
+  logger.DebugLog("Saving Invalidated, Expired User Cache.");
+  let save = resources.Write("user", cached_user.data);
+  if (save.ok) {
+    // now with the data saved, lets get it agian, and refresh the cache.
+    return getNew();
   } else {
-    // the user object is cached.
-    // With the object cached we can check that its still valid.
-    if (cached_user.Expired) {
-      // object is now expired, we will want to get an updated copy after ensuring thers no data to write.
-      logger.DebugLog("User data IS expired, getting new.");
-      // The object is expired, we want to get a new one. But before we do, lets make sure there aren't any unsaved changes.
-      if (cached_user.invalidated) {
-        logger.DebugLog("Saving Invalidated, Expired User Cache.");
-        let save = resources.Write("user", cached_user.data);
-        if (save.ok) {
-          // now with the data saved, lets get it agian, and refresh the cache.
-          return getNew();
-        } else {
-          // the save failed. Return the error.
-          return save;
-        }
-      } else {
-        // no changes to save. Lets get new data.
-        return getNew();
-      }
-    } else {
-      logger.DebugLog("User data IS NOT expired.");
-      // object is not expired, lets return it.
-      return { ok: true, content: cached_user.data };
-    }
+    // the save failed. Return the error.
+    return save;
   }
 }
 
@@ -182,58 +182,58 @@ async function GetAllPackages() {
     const pointers = await GetPackagePointer();
     if (!pointers.ok) {
       return pointers;
-    } else {
-      let package_collection = [];
-      for (const pointer in pointers.content) {
-        let pack = await GetPackageByID(pointers.content[pointer]);
-        if (pack.ok) {
-          package_collection.push(pack.content);
+    }
+
+    let package_collection = [];
+    for (const pointer in pointers.content) {
+      let pack = await GetPackageByID(pointers.content[pointer]);
+      if (pack.ok) {
+        package_collection.push(pack.content);
+      } else {
+        // this will prioritize giving a response, so if a single package isn't found, it'll log it.
+        // then move on.
+        if (pack.short !== "Not Found") {
+          return pack;
         } else {
-          // this will prioritize giving a response, so if a single package isn't found, it'll log it.
-          // then move on.
-          if (pack.short !== "Not Found") {
-            return pack;
-          } else {
-            logger.WarningLog(
-              undefined,
-              undefined,
-              `Missing Package during GetAllPackages: ${pointers.content[pointer]}`
-            );
-          }
+          logger.WarningLog(
+            undefined,
+            undefined,
+            `Missing Package during GetAllPackages: ${pointers.content[pointer]}`
+          );
         }
       }
-      // once all packages have been iterated, return the collection, to the internal caller.
-      return { ok: true, content: package_collection };
     }
+    // once all packages have been iterated, return the collection, to the internal caller.
+    return { ok: true, content: package_collection };
   };
 
   if (cached_packages === undefined) {
     logger.DebugLog("Creating Full Package Cache.");
     let tmpcache = await getNew();
-    if (tmpcache.ok) {
-      cached_packages = new resources.CacheObject(tmpcache.content);
-      cached_packages.last_validate = Date.now();
-      return { ok: true, content: cached_packages.data };
-    } else {
+    if (!tmpcache.ok) {
       return tmpcache;
     }
-  } else {
-    // packages are cached
-    if (cached_packages.Expired) {
-      logger.DebugLog("Full Package data IS expired.");
-      let tmpcache = await getNew();
-      if (tmpcache.ok) {
-        cached_packages = new resources.CacheObject(tmpcache.content);
-        cached_packages.last_validate = Date.now();
-        return { ok: true, content: cached_packages.data };
-      } else {
-        return tmpcache;
-      }
-    } else {
-      logger.DebugLog("Full Package data IS NOT expired.");
-      return { ok: true, content: cached_packages.data };
-    }
+
+    cached_packages = new resources.CacheObject(tmpcache.content);
+    cached_packages.last_validate = Date.now();
+    return { ok: true, content: cached_packages.data };
   }
+
+  // Packages are cached
+  if (!cached_packages.Expired) {
+    logger.DebugLog("Full Package data IS NOT expired.");
+    return { ok: true, content: cached_packages.data };
+  }
+
+  logger.DebugLog("Full Package data IS expired.");
+  let tmpcache = await getNew();
+  if (!tmpcache.ok) {
+    return tmpcache;
+  }
+
+  cached_packages = new resources.CacheObject(tmpcache.content);
+  cached_packages.last_validate = Date.now();
+  return { ok: true, content: cached_packages.data };
 }
 
 /**
@@ -320,53 +320,52 @@ async function RestorePackageByPointer(pointer) {
 async function RemovePackageByName(name) {
   let pointers = await GetPackagePointer();
 
-  if (pointers.ok) {
-    if (pointers.content[name]) {
-      let pack_pointer = pointers.content[name];
-
-      let new_pointer = pointers.content;
-
-      delete new_pointer[name];
-
-      let rm = await RemovePackageByPointer(pack_pointer);
-
-      if (rm.ok) {
-        // Now we can write the new packages, since we don't want to do that then have this fail.
-        let rewrite = await SetPackagePointer(new_pointer);
-
-        if (rewrite.ok) {
-          return { ok: true, content: rewrite.content };
-        } else {
-          // Since the RemovePackageByPointer only marks the file for deletion, if this fails, we can then go back,
-          // and call for it to be resotred.
-          let rs = await RestorePackageByPointer(pack_pointer);
-
-          if (rs.ok) {
-            // This still did fail to remove the file. But we recovered and will  return an error.
-            return {
-              ok: false,
-              content:
-                "Failed to rewrite the package pointer file. Recovered Package File. No Change.",
-              short: "Server Error",
-            };
-          } else {
-            return {
-              ok: false,
-              content:
-                "Failed to rewrite the package pointer file. The Package is still marked for deletion. The Old pointer still exists!",
-              short: "Server Error",
-            };
-          }
-        }
-      } else {
-        // if this first part fails we can return the standard error, knowing that nothing permentant has been done.
-        return rm;
-      }
-    } else {
-      return { ok: false, content: "Not Found", short: "Not Found" };
-    }
-  } else {
+  if (!pointers.ok) {
     return pointers;
+  }
+
+  if (!pointers.content[name]) {
+    return { ok: false, content: "Not Found", short: "Not Found" };
+  }
+
+  let pack_pointer = pointers.content[name];
+  let new_pointer = pointers.content;
+
+  delete new_pointer[name];
+
+  let rm = await RemovePackageByPointer(pack_pointer);
+
+  if (!rm.ok) {
+    // if this first part fails we can return the standard error, knowing that nothing permentant has been done.
+    return rm;
+  }
+
+  // We can write the new packages, since we don't want to do that then have this fail.
+  let rewrite = await SetPackagePointer(new_pointer);
+
+  if (rewrite.ok) {
+    return { ok: true, content: rewrite.content };
+  }
+
+  // Since the RemovePackageByPointer only marks the file for deletion, if this fails, we can then go back,
+  // and call for it to be resotred.
+  let rs = await RestorePackageByPointer(pack_pointer);
+
+  if (rs.ok) {
+    // This still did fail to remove the file. But we recovered and will return an error.
+    return {
+      ok: false,
+      content:
+        "Failed to rewrite the package pointer file. Recovered Package File. No Change.",
+      short: "Server Error",
+    };
+  } else {
+    return {
+      ok: false,
+      content:
+        "Failed to rewrite the package pointer file. The Package is still marked for deletion. The Old pointer still exists!",
+      short: "Server Error",
+    };
   }
 }
 
@@ -437,96 +436,92 @@ async function StarPackageByName(packageName, userName) {
 
   let point = await GetPackagePointerByName(packageName);
 
-  if (point.ok) {
-    // now with the pointer, we can get the package
-    let pack = await GetPackageByID(point.content);
-
-    if (pack.ok) {
-      // now we have the package
-      pack.content.star_gazers.push({ login: userName });
-
-      const write = await SetPackageByID(point.content, pack.content);
-
-      if (write.ok) {
-        // on successful completion we want to return the package.
-        return { ok: true, content: pack.content };
-      } else {
-        // write unsuccessful.
-        return write;
-      }
-    } else {
-      return pack;
-    }
-  } else {
+  if (!point.ok) {
     return point;
+  }
+
+  // Now with the pointer, we can get the package
+  let pack = await GetPackageByID(point.content);
+
+  if (!pack.ok) {
+    return pack;
+  }
+
+  // Now we have the package
+  pack.content.star_gazers.push({ login: userName });
+
+  const write = await SetPackageByID(point.content, pack.content);
+
+  if (write.ok) {
+    // on successful completion we want to return the package.
+    return { ok: true, content: pack.content };
+  } else {
+    // write unsuccessful.
+    return write;
   }
 }
 
 async function UnStarPackageByName(packageName, userName) {
   const point = await GetPackagePointerByName(packageName);
 
-  if (point.ok) {
-    const pack = await GetPackageByID(point.content);
-
-    if (pack.ok) {
-      // now we need to find the index in the array of the user we want to unstar.
-      let usrIdx = -1;
-      for (let i = 0; i < pack.content.star_gazers.length; i++) {
-        if (pack.content.star_gazers[i].login === userName) {
-          usrIdx = i;
-          // since we know we only are looking once, lets just break the loop once we assign the idx
-          break;
-        }
-      }
-
-      // after done looping, then we can check our IDX.
-      if (usrIdx !== -1) {
-        // now we can remove that element from the array.
-        pack.content.star_gazers.splice(usrIdx, 1);
-
-        // now to write the content.
-        const write = await SetPackageByID(point.content, pack.content);
-
-        if (write.ok) {
-          // and we will return the new content.
-          return { ok: true, content: pack.content };
-        } else {
-          // write was unsuccessful
-          return write;
-        }
-      } else {
-        // if it does still equal -1, then we were never able to find our user on the star_gazers list.
-        return { ok: false, content: "Not Found", short: "Not Found" };
-      }
-    } else {
-      return pack;
-    }
-  } else {
+  if (!point.ok) {
     return point;
+  }
+
+  const pack = await GetPackageByID(point.content);
+
+  if (!pack.ok) {
+    return pack;
+  }
+
+  // Now we need to find the index in the array of the user we want to unstar.
+  let usrIdx = -1;
+  for (let i = 0; i < pack.content.star_gazers.length; i++) {
+    if (pack.content.star_gazers[i].login === userName) {
+      usrIdx = i;
+      // since we know we only are looking once, lets just break the loop once we assign the idx
+      break;
+    }
+  }
+
+  // After done looping, then we can check our IDX.
+  if (usrIdx === -1) {
+    // if it does still equal -1, then we were never able to find our user on the star_gazers list.
+    return { ok: false, content: "Not Found", short: "Not Found" };
+  }
+
+  // now we can remove that element from the array.
+  pack.content.star_gazers.splice(usrIdx, 1);
+
+  // now to write the content.
+  const write = await SetPackageByID(point.content, pack.content);
+
+  if (write.ok) {
+    // and we will return the new content.
+    return { ok: true, content: pack.content };
+  } else {
+    // write was unsuccessful
+    return write;
   }
 }
 
 async function SetPackageByName(name, data) {
   const pointers = await GetPackagePointer();
 
-  if (pointers.ok) {
-    if (pointers.content[name]) {
-      let write = await SetPackageByID(pointers.content[name], data);
-
-      if (write.ok) {
-        return { ok: true };
-      } else {
-        return write;
-      }
-    } else {
-      return {
-        ok: false,
-        content: "Unable to Find Package within Package Pointer Keys",
-        short: "Not Found",
-      };
-    }
-  } else {
+  if (!pointers.ok) {
     return pointers;
+  }
+
+  if (pointers.content[name]) {
+    let write = await SetPackageByID(pointers.content[name], data);
+
+    return write.ok ? { ok: true } : write;
+  } else {
+    return {
+      ok: false,
+      content: "Unable to Find Package within Package Pointer Keys",
+      short: "Not Found",
+    };
   }
 }
 
@@ -540,42 +535,41 @@ async function NewPackage(data) {
   // then the pointers.
   let pointers = await GetPackagePointer();
 
-  if (pointers.ok) {
-    pointers.content[data.name] = `${id}.json`;
-    let write_pointer = await SetPackagePointer(pointers.content);
-
-    if (write_pointer.ok) {
-      // now with the pointers updated, lets write the package itself.
-      let write_pack = await SetPackageByID(`${id}.json`, data);
-
-      if (write_pack.ok) {
-        return { ok: true };
-      } else {
-        // writing the package was unsuccessful. We will remove the new pointer, and write that to disk.
-        // then return.
-        delete pointers.content[data.name];
-        let rewrite_pointer = await SetPackagePointer(pointers.content);
-
-        if (rewrite_pointer.ok) {
-          return {
-            ok: false,
-            content:
-              "Failed to write package. Removed new Pointer. State Unchanged.",
-            short: "Server Error",
-          };
-        } else {
-          return {
-            ok: false,
-            content: `Failed to write package. Failed to remove new pointer. State Changed: ${write_pack.content}`,
-            short: "Server Error",
-          };
-        }
-      }
-    } else {
-      return write_pointer;
-    }
-  } else {
+  if (!pointers.ok) {
     return pointers;
+  }
+
+  pointers.content[data.name] = `${id}.json`;
+  let write_pointer = await SetPackagePointer(pointers.content);
+
+  if (!write_pointer.ok) {
+    return write_pointer;
+  }
+
+  // now with the pointers updated, lets write the package itself.
+  let write_pack = await SetPackageByID(`${id}.json`, data);
+
+  if (write_pack.ok) {
+    return { ok: true };
+  }
+
+  // Writing the package was unsuccessful. We will remove the new pointer, and write that to disk.
+  // Then return.
+  delete pointers.content[data.name];
+  let rewrite_pointer = await SetPackagePointer(pointers.content);
+
+  if (rewrite_pointer.ok) {
+    return {
+      ok: false,
+      content: "Failed to write package. Removed new Pointer. State Unchanged.",
+      short: "Server Error",
+    };
+  } else {
+    return {
+      ok: false,
+      content: `Failed to write package. Failed to remove new pointer. State Changed: ${write_pack.content}`,
+      short: "Server Error",
+    };
   }
 }
 

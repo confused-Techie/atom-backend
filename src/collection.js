@@ -24,74 +24,78 @@ async function Sort(packages, method) {
   // Additional note, this implementation will sort EVERY single package no matter what.
   // TODO: Feature Request: Provide the page requested during sort, or the last item needed to sort,
   // then discard the rest of the array. Pruning length of array may actually be a smart move for all additional functions.
-  if (method === "downloads") {
-    packages.sort((a, b) => {
-      if (a.downloads < b.downloads) {
-        return 1;
-      }
-      if (a.downloads > b.downloads) {
-        return -1;
-      }
-      return 0;
-    });
 
-    return packages;
-  } else if (method === "created_at") {
-    packages.sort((a, b) => {
-      if (a.created < b.created) {
-        return 1;
-      }
-      if (a.created > b.created) {
-        return -1;
-      }
-      return 0;
-    });
+  switch (method) {
+    case "downloads":
+      packages.sort((a, b) => {
+        if (a.downloads < b.downloads) {
+          return 1;
+        }
+        if (a.downloads > b.downloads) {
+          return -1;
+        }
+        return 0;
+      });
+      break;
 
-    return packages;
-  } else if (method === "updated_at") {
-    packages.sort((a, b) => {
-      if (a.updated < b.updated) {
-        return 1;
-      }
-      if (a.updated > b.updated) {
-        return -1;
-      }
-      return 0;
-    });
+    case "created_at":
+      packages.sort((a, b) => {
+        if (a.created < b.created) {
+          return 1;
+        }
+        if (a.created > b.created) {
+          return -1;
+        }
+        return 0;
+      });
+      break;
 
-    return packages;
-  } else if (method === "stars") {
-    packages.sort((a, b) => {
-      if (a.stargazers_count < b.stargazers_count) {
-        return 1;
-      }
-      if (a.stargazers_count > b.stargazers_count) {
-        return -1;
-      }
-      return 0;
-    });
+    case "updated_at":
+      packages.sort((a, b) => {
+        if (a.updated < b.updated) {
+          return 1;
+        }
+        if (a.updated > b.updated) {
+          return -1;
+        }
+        return 0;
+      });
+      break;
 
-    return packages;
-  } else if (method === "relevance") {
-    packages.sort((a, b) => {
-      if (a.relevance < b.relevance) {
-        return 1;
-      }
-      if (a.relevance > b.relevance) {
-        return -1;
-      }
-      return 0;
-    });
+    case "stars":
+      packages.sort((a, b) => {
+        if (a.stargazers_count < b.stargazers_count) {
+          return 1;
+        }
+        if (a.stargazers_count > b.stargazers_count) {
+          return -1;
+        }
+        return 0;
+      });
+      break;
 
-    return packages;
-  } else {
-    logger.WarningLog(
-      null,
-      null,
-      `Unrecognized Sorting Method Provided: ${method}`
-    );
-    return packages;
+    case "relevance":
+      packages.sort((a, b) => {
+        if (a.relevance < b.relevance) {
+          return 1;
+        }
+        if (a.relevance > b.relevance) {
+          return -1;
+        }
+        return 0;
+      });
+      break;
+
+    default:
+      logger.WarningLog(
+        null,
+        null,
+        `Unrecognized Sorting Method Provided: ${method}`
+      );
+      break;
   }
+
+  return packages;
 }
 
 /**
@@ -199,39 +203,48 @@ async function SearchWithinPackages(
   packages,
   searchAlgorithm = search_algorithm
 ) {
-  // this will be the method which data is searched, where once searched through will apply a relevance score to each object.
+  // This will be the method which data is searched, where once searched through will apply a relevance score to each object.
   // This score can then be used to sort the results.
 
   // Due to the high potential of this being reworked later on, we will rely on a config option of searchAlgorithm
   // to define what method we are wanting to use.
 
-  if (searchAlgorithm === "levenshtein_distance") {
-    // The Levenshtein Distance will be the most basic form of search. Simple, not accounting for any word seperators
-    // and simply returning the edit distance between strings.
+  switch (searchAlgorithm) {
+    case "levenshtein_distance":
+      // The Levenshtein Distance will be the most basic form of search.
+      // Simple, not accounting for any word seperators
+      // and simply returning the edit distance between strings.
 
-    for (let i = 0; i < packages.length; i++) {
-      packages[i].relevance = search_func.levenshtein(search, packages[i].name);
-    }
+      for (let i = 0; i < packages.length; i++) {
+        packages[i].relevance = search_func.levenshtein(
+          search,
+          packages[i].name
+        );
+      }
+      break;
 
-    return packages;
-  } else if (searchAlgorithm === "levenshtein_distance_wsdm") {
-    for (let i = 0; i < packages.length; i++) {
-      packages[i].relevance = search_func.levenshteinWSDM(
-        search,
-        packages[i].name
+    case "levenshtein_distance_wsdm":
+      for (let i = 0; i < packages.length; i++) {
+        packages[i].relevance = search_func.levenshteinWSDM(
+          search,
+          packages[i].name
+        );
+      }
+      break;
+
+    case "lcs":
+      for (let i = 0; i < packages.length; i++) {
+        packages[i].relevance = search_func.lcs(search, packages[i].name);
+      }
+      break;
+
+    default:
+      throw new Error(
+        `Unrecognized Search Algorithm in Config: ${searchAlgorithm}`
       );
-    }
-    return packages;
-  } else if (searchAlgorithm === "lcs") {
-    for (let i = 0; i < packages.length; i++) {
-      packages[i].relevance = search_func.lcs(search, packages[i].name);
-    }
-    return packages;
-  } else {
-    throw new Error(
-      `Unrecognized Search Algorithm in Config: ${searchAlgorithm}`
-    );
   }
+
+  return packages;
 }
 
 async function EngineFilter(pack, engine) {
