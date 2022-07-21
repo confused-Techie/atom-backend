@@ -47,7 +47,6 @@ test("Direction returns Array, when given one and an invalid method", async () =
   expect(Array.isArray(res)).toBeTruthy();
 });
 
-// TODO: Both of these tests are failing. Directional sorting DOES NOT work currently.
 test("Direction by 'desc' when 'desc'", async () => {
   let new_data = await collection.DeepCopy(data);
   let res = await collection.Direction(new_data, "desc");

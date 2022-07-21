@@ -14,20 +14,6 @@ const encodedToken = Buffer.from(`${GH_USERNAME}:${GH_TOKEN}`).toString(
 
 /**
  * @async
- * @function VerifyAuth
- * @desc This <b>Unfinished</b> function is intended to return true or false,
- * if the provided token owns the provided repo. The rest of the documentation will
- * wait until this function is completed. Apon further inspection it seems this function
- * is not actually implemented, or intended to be implemented anywhere, and possibly should be removed.
- */
-async function VerifyAuth(token, repo) {
-  // until this is properly implemented, lets return true;
-  // TODO: All of it; Stopper: Github Auth
-  return { ok: true, content: "Fake Function" };
-}
-
-/**
- * @async
  * @function Ownership
  * @desc This <b>Unfinished</b> function is intended to return a Server Status Object.
  * Proving ownership over a GitHub repo. Which is used to determine if the user
@@ -350,7 +336,6 @@ async function getRepoTags(repo) {
 }
 
 module.exports = {
-  VerifyAuth,
   Ownership,
   CreatePackage,
 };

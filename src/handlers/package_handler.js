@@ -538,8 +538,38 @@ async function GETPackagesVersionTarball(req, res) {
     packageName: decodeURIComponent(req.params.packageName),
     versionName: req.params.versionName,
   };
-  // TODO: All of it, read above comment.
-  await common.NotSupported(req, res);
+  // Now that migration has began we know that each version will have
+  // a tarball_url key on it, linking directly to the tarball from gh for that version.
+
+  // first lets get the package
+  let pack = await data.GetPackageByName(params.packageName);
+
+  if (!pack.ok) {
+    await common.NotFound(req, res);
+    return;
+  }
+
+  if (!pack.content.versions[params.versionName]) {
+    // the package doesn't contain the version requested.
+    await common.NotFound(req, res);
+    return;
+  }
+
+  // lets add the download to the package.
+  pack.content.downloads++;
+
+  // then lets save this updated info.
+  let save = await data.SetPackageByName(params.packageName, pack.content);
+
+  if (!save.ok) {
+    logger.WarningLog(req, res, save.content);
+    // we don't want to exit on a failed to update downloads count, but should be logged.
+  }
+  // For simplicity, we will redirect the request to gh tarball url, to allow
+  // the download to take place from their servers.
+  res.redirect(pack.content.versions[params.versionName].tarball_url);
+  logger.HTTPLog(req, res);
+  return;
 }
 
 async function DELETEPackageVersion(req, res) {
