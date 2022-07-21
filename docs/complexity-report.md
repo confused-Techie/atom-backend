@@ -1,4 +1,4 @@
-# Complexity report, 7/20/2022
+# Complexity report, 7/21/2022
 
 * Mean per-function logical LOC: 19.519444444444446
 * Mean per-function parameter count: 1.1076388888888888
@@ -51,12 +51,12 @@
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/error.js
 
-* Physical LOC: 83
-* Logical LOC: 25
+* Physical LOC: 112
+* Logical LOC: 31
 * Mean parameter count: 1
 * Cyclomatic complexity: 1
-* Cyclomatic complexity density: 4%
-* Maintainability index: 84.01966208734825
+* Cyclomatic complexity density: 3.225806451612903%
+* Maintainability index: 84.01966208734827
 * Dependency count: 0
 * Function: **NotFoundJSON**
     * Line No.: 17
@@ -108,8 +108,28 @@
     * Halstead difficulty: 2.2857142857142856
     * Halstead volume: 48.43204266092217
     * Halstead effort: 110.70181179639353
+* Function: **BadRepoJSON**
+    * Line No.: 83
+    * Physical LOC: 6
+    * Logical LOC: 2
+    * Parameter count: 1
+    * Cyclomatic complexity: 1
+    * Cyclomatic complexity density: 50%
+    * Halstead difficulty: 2.2857142857142856
+    * Halstead volume: 48.43204266092217
+    * Halstead effort: 110.70181179639353
+* Function: **BadPackageJSON**
+    * Line No.: 98
+    * Physical LOC: 5
+    * Logical LOC: 2
+    * Parameter count: 1
+    * Cyclomatic complexity: 1
+    * Cyclomatic complexity density: 50%
+    * Halstead difficulty: 2.2857142857142856
+    * Halstead volume: 48.43204266092217
+    * Halstead effort: 110.70181179639353
 * Function: **UnsupportedJSON**
-    * Line No.: 85
+    * Line No.: 114
     * Physical LOC: 6
     * Logical LOC: 2
     * Parameter count: 1

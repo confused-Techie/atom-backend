@@ -61,6 +61,9 @@ to modify, or compile user data specifically.</p>
 So these can be called as an async function without more complex functions, reducing
 verbosity, and duplication within the codebase.</p>
 </dd>
+<dt><a href="#module_package_handler">package_handler</a></dt>
+<dd><p>Endpoint Handlers in all relating to the packages themselves.</p>
+</dd>
 <dt><a href="#module_star_handler">star_handler</a></dt>
 <dd><p>Handler for any endpoints whose slug after <code>/api/</code> is <code>star</code>.</p>
 </dd>
@@ -241,6 +244,8 @@ to them from different handlers.
     * [~MissingAuthJSON(res)](#module_error..MissingAuthJSON)
     * [~ServerErrorJSON(res)](#module_error..ServerErrorJSON)
     * [~PublishPackageExists(res)](#module_error..PublishPackageExists)
+    * [~BadRepoJSON(res)](#module_error..BadRepoJSON)
+    * [~BadPackageJSON(res)](#module_error..BadPackageJSON)
     * [~UnsupportedJSON(res)](#module_error..UnsupportedJSON)
 
 <a name="module_error..NotFoundJSON"></a>
@@ -317,6 +322,34 @@ JSON Response announcing a package already exists.
 | --- | --- | --- |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
+<a name="module_error..BadRepoJSON"></a>
+
+### error~BadRepoJSON(res)
+JSON Response announcing that the repo doesn't exist, or is inaccessible.
+###### Setting:
+* Status Code: 400
+* JSON Response Body: message: That repo does not exist, isn't an atom package, or atombot does not have access.
+
+**Kind**: inner method of [<code>error</code>](#module_error)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_error..BadPackageJSON"></a>
+
+### error~BadPackageJSON(res)
+JSON Response annoucning that the package.json of a repo is invalid.
+###### Setting:
+* Status Code: 400
+* JSON Response Body: message: The package.json at owner/repo isn't valid.
+
+**Kind**: inner method of [<code>error</code>](#module_error)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
 <a name="module_error..UnsupportedJSON"></a>
 
 ### error~UnsupportedJSON(res)
@@ -342,7 +375,7 @@ Assists in interactions between the backend and GitHub.
 * [git](#module_git)
     * [~VerifyAuth()](#module_git..VerifyAuth)
     * [~Ownership()](#module_git..Ownership)
-    * [~CreatePackage()](#module_git..CreatePackage)
+    * [~CreatePackage(repo)](#module_git..CreatePackage) ⇒ <code>object</code>
 
 <a name="module_git..VerifyAuth"></a>
 
@@ -365,13 +398,18 @@ not be fully documented.
 **Kind**: inner method of [<code>git</code>](#module_git)  
 <a name="module_git..CreatePackage"></a>
 
-### git~CreatePackage()
-This <b>Unfinished</b> function is intended to create a compatible package object
-to be used directly as a `Server Package Object`. Meaning it will need to create
-all properties, and fill all keys. Until this is completed, the documentation will
-also be uncompleted.
+### git~CreatePackage(repo) ⇒ <code>object</code>
+Creates a compatible `Server Object Full` object, from only receiving a `repo` as in
+`owner/repo`. With this it contacts GitHub API's and modifies data as needed to
+return back a proper `Server Object Full` object within a `Server Status`.content object.
 
 **Kind**: inner method of [<code>git</code>](#module_git)  
+**Returns**: <code>object</code> - A `Server Status` Object where `content` is the `Server Package Full` object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| repo | <code>string</code> | The Repo to use in the form `owner/repo`. |
+
 <a name="module_logger"></a>
 
 ## logger
@@ -953,6 +991,8 @@ verbosity, and duplication within the codebase.
     * [~NotFound(req, res)](#module_common_handler..NotFound)
     * [~NotSupported(req, res)](#module_common_handler..NotSupported)
     * [~SiteWideNotFound(req, res)](#module_common_handler..SiteWideNotFound)
+    * [~BadRepoJSON(req, res)](#module_common_handler..BadRepoJSON)
+    * [~BadPackageJSON(req, res)](#module_common_handler..BadPackageJSON)
 
 <a name="module_common_handler..AuthFail"></a>
 
@@ -1016,6 +1056,52 @@ Returns the SiteWide 404 page to the end user.
 
 **Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
 **Implements**: <code>error.SiteWide404</code>, <code>logger.HTTPLog</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_common_handler..BadRepoJSON"></a>
+
+### common_handler~BadRepoJSON(req, res)
+Returns the BadRepoJSON message to the user.
+
+**Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
+**Implements**: <code>error.BadRepoJSON</code>, <code>logger.HTTPLog</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_common_handler..BadPackageJSON"></a>
+
+### common_handler~BadPackageJSON(req, res)
+Returns the BadPackageJSON message to the user.
+
+**Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
+**Implements**: <code>error.BadPackageJSON</code>, <code>logger.HTTPLog</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_package_handler"></a>
+
+## package\_handler
+Endpoint Handlers in all relating to the packages themselves.
+
+**Implements**: <code>common\_handler</code>, <code>users</code>, <code>data</code>, <code>collection</code>, <code>query</code>, <code>git</code>, <code>logger</code>, <code>error</code>, <code>config</code>  
+<a name="module_package_handler..POSTPackages"></a>
+
+### package_handler~POSTPackages(req, res)
+This endpoint is used to publish a new package to the backend server.
+Taking the repo, and your authentication for it, determines if it can be published,
+then goes about doing so.
+
+**Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
 
 | Param | Type | Description |
 | --- | --- | --- |
