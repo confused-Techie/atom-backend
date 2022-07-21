@@ -94,28 +94,28 @@ async function SiteWideNotFound(req, res) {
 }
 
 /**
-* @async
-* @function BadRepoJSON
-* @desc Returns the BadRepoJSON message to the user.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-* @implements {error.BadRepoJSON}
-* @implements {logger.HTTPLog}
-*/
+ * @async
+ * @function BadRepoJSON
+ * @desc Returns the BadRepoJSON message to the user.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ * @implements {error.BadRepoJSON}
+ * @implements {logger.HTTPLog}
+ */
 async function BadRepoJSON(req, res) {
   error.BadRepoJSON(res);
   logger.HTTPLog(req, res);
 }
 
 /**
-* @async
-* @function BadPackageJSON
-* @desc Returns the BadPackageJSON message to the user.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-* @implements {error.BadPackageJSON}
-* @implements {logger.HTTPLog}
-*/
+ * @async
+ * @function BadPackageJSON
+ * @desc Returns the BadPackageJSON message to the user.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ * @implements {error.BadPackageJSON}
+ * @implements {logger.HTTPLog}
+ */
 async function BadPackageJSON(req, res) {
   error.BadPackageJSON(res);
   logger.HTTPLog(req, res);
