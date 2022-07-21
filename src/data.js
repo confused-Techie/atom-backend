@@ -320,53 +320,52 @@ async function RestorePackageByPointer(pointer) {
 async function RemovePackageByName(name) {
   let pointers = await GetPackagePointer();
 
-  if (pointers.ok) {
-    if (pointers.content[name]) {
-      let pack_pointer = pointers.content[name];
-
-      let new_pointer = pointers.content;
-
-      delete new_pointer[name];
-
-      let rm = await RemovePackageByPointer(pack_pointer);
-
-      if (rm.ok) {
-        // Now we can write the new packages, since we don't want to do that then have this fail.
-        let rewrite = await SetPackagePointer(new_pointer);
-
-        if (rewrite.ok) {
-          return { ok: true, content: rewrite.content };
-        } else {
-          // Since the RemovePackageByPointer only marks the file for deletion, if this fails, we can then go back,
-          // and call for it to be resotred.
-          let rs = await RestorePackageByPointer(pack_pointer);
-
-          if (rs.ok) {
-            // This still did fail to remove the file. But we recovered and will  return an error.
-            return {
-              ok: false,
-              content:
-                "Failed to rewrite the package pointer file. Recovered Package File. No Change.",
-              short: "Server Error",
-            };
-          } else {
-            return {
-              ok: false,
-              content:
-                "Failed to rewrite the package pointer file. The Package is still marked for deletion. The Old pointer still exists!",
-              short: "Server Error",
-            };
-          }
-        }
-      } else {
-        // if this first part fails we can return the standard error, knowing that nothing permentant has been done.
-        return rm;
-      }
-    } else {
-      return { ok: false, content: "Not Found", short: "Not Found" };
-    }
-  } else {
+  if (!pointers.ok) {
     return pointers;
+  }
+
+  if (!pointers.content[name]) {
+    return { ok: false, content: "Not Found", short: "Not Found" };
+  }
+
+  let pack_pointer = pointers.content[name];
+  let new_pointer = pointers.content;
+
+  delete new_pointer[name];
+
+  let rm = await RemovePackageByPointer(pack_pointer);
+
+  if (!rm.ok) {
+    // if this first part fails we can return the standard error, knowing that nothing permentant has been done.
+    return rm;
+  }
+
+  // We can write the new packages, since we don't want to do that then have this fail.
+  let rewrite = await SetPackagePointer(new_pointer);
+
+  if (rewrite.ok) {
+    return { ok: true, content: rewrite.content };
+  }
+
+  // Since the RemovePackageByPointer only marks the file for deletion, if this fails, we can then go back,
+  // and call for it to be resotred.
+  let rs = await RestorePackageByPointer(pack_pointer);
+
+  if (rs.ok) {
+    // This still did fail to remove the file. But we recovered and will return an error.
+    return {
+      ok: false,
+      content:
+      "Failed to rewrite the package pointer file. Recovered Package File. No Change.",
+      short: "Server Error",
+    };
+  } else {
+    return {
+      ok: false,
+      content:
+      "Failed to rewrite the package pointer file. The Package is still marked for deletion. The Old pointer still exists!",
+      short: "Server Error",
+    };
   }
 }
 
