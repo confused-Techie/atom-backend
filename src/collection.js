@@ -203,39 +203,45 @@ async function SearchWithinPackages(
   packages,
   searchAlgorithm = search_algorithm
 ) {
-  // this will be the method which data is searched, where once searched through will apply a relevance score to each object.
+  // This will be the method which data is searched, where once searched through will apply a relevance score to each object.
   // This score can then be used to sort the results.
 
   // Due to the high potential of this being reworked later on, we will rely on a config option of searchAlgorithm
   // to define what method we are wanting to use.
 
-  if (searchAlgorithm === "levenshtein_distance") {
-    // The Levenshtein Distance will be the most basic form of search. Simple, not accounting for any word seperators
-    // and simply returning the edit distance between strings.
+  switch (searchAlgorithm) {
+    case "levenshtein_distance":
+      // The Levenshtein Distance will be the most basic form of search.
+      // Simple, not accounting for any word seperators
+      // and simply returning the edit distance between strings.
 
-    for (let i = 0; i < packages.length; i++) {
-      packages[i].relevance = search_func.levenshtein(search, packages[i].name);
-    }
+      for (let i = 0; i < packages.length; i++) {
+        packages[i].relevance = search_func.levenshtein(search, packages[i].name);
+      }
+      break;
 
-    return packages;
-  } else if (searchAlgorithm === "levenshtein_distance_wsdm") {
-    for (let i = 0; i < packages.length; i++) {
-      packages[i].relevance = search_func.levenshteinWSDM(
-        search,
-        packages[i].name
+    case "levenshtein_distance_wsdm":
+      for (let i = 0; i < packages.length; i++) {
+        packages[i].relevance = search_func.levenshteinWSDM(
+          search,
+          packages[i].name
+        );
+      }
+      break;
+
+    case "lcs":
+      for (let i = 0; i < packages.length; i++) {
+        packages[i].relevance = search_func.lcs(search, packages[i].name);
+      }
+      break;
+
+    default:
+      throw new Error(
+        `Unrecognized Search Algorithm in Config: ${searchAlgorithm}`
       );
-    }
-    return packages;
-  } else if (searchAlgorithm === "lcs") {
-    for (let i = 0; i < packages.length; i++) {
-      packages[i].relevance = search_func.lcs(search, packages[i].name);
-    }
-    return packages;
-  } else {
-    throw new Error(
-      `Unrecognized Search Algorithm in Config: ${searchAlgorithm}`
-    );
   }
+
+  return packages;
 }
 
 async function EngineFilter(pack, engine) {
