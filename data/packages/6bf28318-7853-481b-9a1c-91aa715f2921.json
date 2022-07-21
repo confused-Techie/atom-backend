@@ -1,7 +1,7 @@
 {
     "name": "language-css",
-    "created": 1658306969422,
-    "updated": 1658306969422,
+    "created": 1658367065894,
+    "updated": 1658367065894,
     "creation_method": "User Made Package",
     "downloads": 0,
     "stargazers_count": 0,
@@ -33,7 +33,7 @@
         "dependencies": {
             "tree-sitter-css": "^0.19.0"
         },
-        "tarball_rul": "https://api.github.com/repos/pulsar-edit/language-css/tarball/refs/tags/v0.45.4",
+        "tarball_url": "https://api.github.com/repos/pulsar-edit/language-css/tarball/refs/tags/v0.45.4",
         "sha": "9c8840bb4ef0a105d0cb25d12a265ed6db1ee6f7"
     },
     "repository": {

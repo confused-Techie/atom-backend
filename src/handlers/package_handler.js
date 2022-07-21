@@ -117,7 +117,8 @@ async function POSTPackages(req, res) {
 
   // To see if the package already exists, we will utilize our data.GetPackagePointerByName
   // to hope it returns an error, that the package doesn't exist, and will avoid reading the package file itself.
-  let exists = await data.GetPackagePointerByName(params.repository);
+  // currently though, the repository, is `owner/repo` meanwhile GetPackagePointerByName expects just `repo`
+  let exists = await data.GetPackagePointerByName(params.repository.split('/')[1]);
 
   if (exists.ok) {
     // The package exists.
@@ -261,9 +262,6 @@ async function GETPackagesDetails(req, res) {
     name: decodeURIComponent(req.params.packageName),
   };
   let pack = await data.GetPackageByName(params.name);
-  console.log(
-    `GetPackageByName Size: ${common.roughSizeOfObject(pack.content)}`
-  );
 
   if (pack.ok) {
     // from here we now have the package and just want to prune data from it
