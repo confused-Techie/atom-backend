@@ -94,32 +94,32 @@ async function GetUsers() {
     logger.DebugLog("Creating User Cache.");
     // user object is not cached.
     return getNew();
+  }
+
+  // The user object is cached.
+  // With the object cached we can check that its still valid.
+  if (!cached_user.Expired) {
+    logger.DebugLog("User data IS NOT expired.");
+    // object is not expired, lets return it.
+    return { ok: true, content: cached_user.data };
+  }
+
+  // Object is now expired, we will want to get an updated copy after ensuring thers no data to write.
+  logger.DebugLog("User data IS expired, getting new.");
+  // But before we do, lets make sure there aren't any unsaved changes.
+  if (!cached_user.invalidated) {
+    // no changes to save. Lets get new data.
+    return getNew();
+  }
+
+  logger.DebugLog("Saving Invalidated, Expired User Cache.");
+  let save = resources.Write("user", cached_user.data);
+  if (save.ok) {
+    // now with the data saved, lets get it agian, and refresh the cache.
+    return getNew();
   } else {
-    // the user object is cached.
-    // With the object cached we can check that its still valid.
-    if (cached_user.Expired) {
-      // object is now expired, we will want to get an updated copy after ensuring thers no data to write.
-      logger.DebugLog("User data IS expired, getting new.");
-      // The object is expired, we want to get a new one. But before we do, lets make sure there aren't any unsaved changes.
-      if (cached_user.invalidated) {
-        logger.DebugLog("Saving Invalidated, Expired User Cache.");
-        let save = resources.Write("user", cached_user.data);
-        if (save.ok) {
-          // now with the data saved, lets get it agian, and refresh the cache.
-          return getNew();
-        } else {
-          // the save failed. Return the error.
-          return save;
-        }
-      } else {
-        // no changes to save. Lets get new data.
-        return getNew();
-      }
-    } else {
-      logger.DebugLog("User data IS NOT expired.");
-      // object is not expired, lets return it.
-      return { ok: true, content: cached_user.data };
-    }
+    // the save failed. Return the error.
+    return save;
   }
 }
 
