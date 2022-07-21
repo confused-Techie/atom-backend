@@ -373,19 +373,9 @@ Assists in interactions between the backend and GitHub.
 
 
 * [git](#module_git)
-    * [~VerifyAuth()](#module_git..VerifyAuth)
     * [~Ownership()](#module_git..Ownership)
     * [~CreatePackage(repo)](#module_git..CreatePackage) ⇒ <code>object</code>
 
-<a name="module_git..VerifyAuth"></a>
-
-### git~VerifyAuth()
-This <b>Unfinished</b> function is intended to return true or false,
-if the provided token owns the provided repo. The rest of the documentation will
-wait until this function is completed. Apon further inspection it seems this function
-is not actually implemented, or intended to be implemented anywhere, and possibly should be removed.
-
-**Kind**: inner method of [<code>git</code>](#module_git)  
 <a name="module_git..Ownership"></a>
 
 ### git~Ownership()
