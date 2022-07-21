@@ -265,26 +265,32 @@ async function GETPackagesDetails(req, res) {
   };
   let pack = await data.GetPackageByName(params.name);
 
-  if (pack.ok) {
-    // from here we now have the package and just want to prune data from it
-    pack = await collection.DeepCopy(pack);
-    pack = await collection.POFPrune(pack.content); // package object full prune
-    // without any concern over being given a valid engine.
-    pack = await collection.EngineFilter(pack, params.engine);
-    if (params.engine) {
-      // query.engine returns false if no valid query param is found.
-      // before using EngineFilter we need to check the truthiness of it.
-      pack = await collection.EngineFilter(pack, params.engine);
+  if (!pack.ok) {
+    switch (pack.short) {
+      case "Not Found":
+        await common.NotFound(req, res);
+        break;
+      default:
+        // Mostly the case of pack.short === "Server Error"
+        await common.ServerError(req, res, pack.content);
+        break;
     }
-    res.status(200).json(pack);
-    logger.HTTPLog(req, res);
-  } else {
-    if (pack.short === "Not Found") {
-      await common.NotFound(req, res);
-    } else if (pack.short === "Server Error") {
-      await common.ServerError(req, res, pack.content);
-    }
+
+    return;
   }
+
+  // From here we now have the package and just want to prune data from it
+  pack = await collection.DeepCopy(pack);
+  pack = await collection.POFPrune(pack.content); // package object full prune
+
+  if (params.engine) {
+    // query.engine returns false if no valid query param is found.
+    // before using EngineFilter we need to check the truthiness of it.
+    pack = await collection.EngineFilter(pack, params.engine);
+  }
+
+  res.status(200).json(pack);
+  logger.HTTPLog(req, res);
 }
 
 async function DELETEPackagesName(req, res) {

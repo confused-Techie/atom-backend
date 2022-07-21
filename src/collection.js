@@ -282,9 +282,11 @@ async function EngineFilter(pack, engine) {
   };
 
   // Function start.
+  // If a compatible version is found, we add its data to the metadata property of the package
+  // Otherwise we return an unmodified package, so that it is usable to the consumer.
+
   // Validate engine type.
   if (typeof engine !== "string") {
-    // On an invalid engine type, we will return an unmodified package, so that it is usable to the consumer.
     return pack;
   }
 
@@ -292,7 +294,7 @@ async function EngineFilter(pack, engine) {
 
   // Validate engine semver format.
   if (eng_sv === null) {
-    return {};
+    return pack;
   }
 
   // We will want to loop through each version of the package, and check its engine version against the specified one.
@@ -414,11 +416,10 @@ async function EngineFilter(pack, engine) {
     }
   }
 
-  // After the loop ends, or breaks, check the returned value.
+  // After the loop ends, or breaks, check the extracted compatible version.
   if (compatible_version === "") {
-    // No valid version can be returned from the engine parameter.
-    // We may want to return en empty object.
-    return {};
+    // No valid version found.
+    return pack;
   }
 
   // We have a compatible version, let's add its data to the metadata property of the package.
