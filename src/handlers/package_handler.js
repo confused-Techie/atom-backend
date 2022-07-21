@@ -1,16 +1,16 @@
 /**
-* @module package_handler
-* @desc Endpoint Handlers in all relating to the packages themselves.
-* @implements {common_handler}
-* @implements {users}
-* @implements {data}
-* @implements {collection}
-* @implements {query}
-* @implements {git}
-* @implements {logger}
-* @implements {error}
-* @implements {config}
-*/
+ * @module package_handler
+ * @desc Endpoint Handlers in all relating to the packages themselves.
+ * @implements {common_handler}
+ * @implements {users}
+ * @implements {data}
+ * @implements {collection}
+ * @implements {query}
+ * @implements {git}
+ * @implements {logger}
+ * @implements {error}
+ * @implements {config}
+ */
 
 const common = require("./common_handler.js");
 const users = require("../users.js");
@@ -81,14 +81,14 @@ async function GETPackages(req, res) {
 }
 
 /**
-* @async
-* @function POSTPackages
-* @desc This endpoint is used to publish a new package to the backend server.
-* Taking the repo, and your authentication for it, determines if it can be published,
-* then goes about doing so.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-*/
+ * @async
+ * @function POSTPackages
+ * @desc This endpoint is used to publish a new package to the backend server.
+ * Taking the repo, and your authentication for it, determines if it can be published,
+ * then goes about doing so.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 async function POSTPackages(req, res) {
   // POST /api/packages
   let params = {

@@ -73,27 +73,34 @@ function PublishPackageExists(res) {
 }
 
 /**
-* @function BadRepoJSON
-* @desc JSON Response announcing that the repo doesn't exist, or is inaccessible.
-* ###### Setting:
-* * Status Code: 400
-* * JSON Response Body: message: That repo does not exist, isn't an atom package, or atombot does not have access.
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-*/
+ * @function BadRepoJSON
+ * @desc JSON Response announcing that the repo doesn't exist, or is inaccessible.
+ * ###### Setting:
+ * * Status Code: 400
+ * * JSON Response Body: message: That repo does not exist, isn't an atom package, or atombot does not have access.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 function BadRepoJSON(res) {
-  res.status(400).json({ message: "That repo does not exist, isn't an atom package, or atombot does not have access." });
+  res
+    .status(400)
+    .json({
+      message:
+        "That repo does not exist, isn't an atom package, or atombot does not have access.",
+    });
 }
 
 /**
-* @function BadPackageJSON
-* @desc JSON Response annoucning that the package.json of a repo is invalid.
-* ###### Setting:
-* * Status Code: 400
-* * JSON Response Body: message: The package.json at owner/repo isn't valid.
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-*/
+ * @function BadPackageJSON
+ * @desc JSON Response annoucning that the package.json of a repo is invalid.
+ * ###### Setting:
+ * * Status Code: 400
+ * * JSON Response Body: message: The package.json at owner/repo isn't valid.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 function BadPackageJSON(res) {
-  res.status(400).json({ message: "The package.json at owner/repo isn't valid." });
+  res
+    .status(400)
+    .json({ message: "The package.json at owner/repo isn't valid." });
 }
 
 /**
