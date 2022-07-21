@@ -32,52 +32,54 @@ async function GETPackages(req, res) {
 
   let all_packages = await data.GetAllPackages();
 
-  if (all_packages.ok) {
-    // Now we have all_packages.content which is an array of every package
-    // we will then need to organize this list, according to our params.
-    // additionally remove any fields that are not natively shown to the end user.
-    // And finally we would need to modify our headers, to include links for current, next, and last.
-    let packages = await collection.DeepCopy(all_packages.content); // We need to use a deep copy here, to avoid
-    // making changes to the cached package data within data.
-    packages = await collection.Sort(all_packages.content, params.sort);
-    packages = await collection.Direction(packages, params.direction);
-    // Now with packages sorted in the right direction, lets prune the results.
-    let total_pages = Math.ceil(packages.length / paginated_amount);
-    if (params.page !== 1) {
-      packages.splice(0, params.page * paginated_amount); // Remove from the start to however many packages, should be visible.
-    }
-    if (params.page !== total_pages) {
-      packages.splice(
-        params.page * paginated_amount + paginated_amount,
-        packages.length
-      );
-      // Start after our paginated items, and remove till the end, as long as we aren't on the last page.
-    }
-    packages = await collection.POSPrune(packages); // Use the Package Object Short Prune
-    // One note of concern with chaining all of these together, is that this will potentially loop
-    // through the entire array of packages 3 times, resulting in a
-    // linear time complexity of O(3). But testing will have to determine how much that is a factor of concern.
-
-    res.append(
-      "Link",
-      `<${server_url}/api/packages?page=${params.page}&sort=${
-        params.sort
-      }&order=${
-        params.direction
-      }>; rel="self", <${server_url}/api/packages?page=${total_pages}&sort=${
-        params.sort
-      }&order=${
-        params.direction
-      }>; rel="last", <${server_url}/api/packages?page=${params.page++}&sort=${
-        params.sort
-      }&order=${params.direction}>; rel="next"`
-    );
-
-    res.status(200).json(packages);
-    logger.HTTPLog(req, res);
-  } else {
+  if (!all_packages.ok) {
     common.ServerError(req, res, all_packages.content);
+    return;
   }
+
+  // Now we have all_packages.content which is an array of every package
+  // we will then need to organize this list, according to our params.
+  // additionally remove any fields that are not natively shown to the end user.
+  // And finally we would need to modify our headers, to include links for current, next, and last.
+  let packages = await collection.DeepCopy(all_packages.content); // We need to use a deep copy here, to avoid
+  // making changes to the cached package data within data.
+  packages = await collection.Sort(all_packages.content, params.sort);
+  packages = await collection.Direction(packages, params.direction);
+
+  // Now with packages sorted in the right direction, lets prune the results.
+  let total_pages = Math.ceil(packages.length / paginated_amount);
+  if (params.page !== 1) {
+    packages.splice(0, params.page * paginated_amount); // Remove from the start to however many packages, should be visible.
+  }
+  if (params.page !== total_pages) {
+    packages.splice(
+      params.page * paginated_amount + paginated_amount,
+      packages.length
+    );
+    // Start after our paginated items, and remove till the end, as long as we aren't on the last page.
+  }
+  packages = await collection.POSPrune(packages); // Use the Package Object Short Prune
+  // One note of concern with chaining all of these together, is that this will potentially loop
+  // through the entire array of packages 3 times, resulting in a
+  // linear time complexity of O(3). But testing will have to determine how much that is a factor of concern.
+
+  res.append(
+    "Link",
+    `<${server_url}/api/packages?page=${params.page}&sort=${
+      params.sort
+    }&order=${
+      params.direction
+    }>; rel="self", <${server_url}/api/packages?page=${total_pages}&sort=${
+      params.sort
+    }&order=${
+      params.direction
+    }>; rel="last", <${server_url}/api/packages?page=${params.page++}&sort=${
+      params.sort
+    }&order=${params.direction}>; rel="next"`
+  );
+
+  res.status(200).json(packages);
+  logger.HTTPLog(req, res);
 }
 
 /**
