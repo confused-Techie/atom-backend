@@ -508,24 +508,20 @@ async function UnStarPackageByName(packageName, userName) {
 async function SetPackageByName(name, data) {
   const pointers = await GetPackagePointer();
 
-  if (pointers.ok) {
-    if (pointers.content[name]) {
-      let write = await SetPackageByID(pointers.content[name], data);
-
-      if (write.ok) {
-        return { ok: true };
-      } else {
-        return write;
-      }
-    } else {
-      return {
-        ok: false,
-        content: "Unable to Find Package within Package Pointer Keys",
-        short: "Not Found",
-      };
-    }
-  } else {
+  if (!pointers.ok) {
     return pointers;
+  }
+
+  if (pointers.content[name]) {
+    let write = await SetPackageByID(pointers.content[name], data);
+
+    return (write.ok) ? { ok: true } : write;
+  } else {
+    return {
+      ok: false,
+      content: "Unable to Find Package within Package Pointer Keys",
+      short: "Not Found",
+    };
   }
 }
 
@@ -539,42 +535,42 @@ async function NewPackage(data) {
   // then the pointers.
   let pointers = await GetPackagePointer();
 
-  if (pointers.ok) {
-    pointers.content[data.name] = `${id}.json`;
-    let write_pointer = await SetPackagePointer(pointers.content);
-
-    if (write_pointer.ok) {
-      // now with the pointers updated, lets write the package itself.
-      let write_pack = await SetPackageByID(`${id}.json`, data);
-
-      if (write_pack.ok) {
-        return { ok: true };
-      } else {
-        // writing the package was unsuccessful. We will remove the new pointer, and write that to disk.
-        // then return.
-        delete pointers.content[data.name];
-        let rewrite_pointer = await SetPackagePointer(pointers.content);
-
-        if (rewrite_pointer.ok) {
-          return {
-            ok: false,
-            content:
-              "Failed to write package. Removed new Pointer. State Unchanged.",
-            short: "Server Error",
-          };
-        } else {
-          return {
-            ok: false,
-            content: `Failed to write package. Failed to remove new pointer. State Changed: ${write_pack.content}`,
-            short: "Server Error",
-          };
-        }
-      }
-    } else {
-      return write_pointer;
-    }
-  } else {
+  if (!pointers.ok) {
     return pointers;
+  }
+
+  pointers.content[data.name] = `${id}.json`;
+  let write_pointer = await SetPackagePointer(pointers.content);
+
+  if (!write_pointer.ok) {
+    return write_pointer;
+  }
+
+  // now with the pointers updated, lets write the package itself.
+  let write_pack = await SetPackageByID(`${id}.json`, data);
+
+  if (write_pack.ok) {
+    return { ok: true };
+  }
+
+  // Writing the package was unsuccessful. We will remove the new pointer, and write that to disk.
+  // Then return.
+  delete pointers.content[data.name];
+  let rewrite_pointer = await SetPackagePointer(pointers.content);
+
+  if (rewrite_pointer.ok) {
+    return {
+      ok: false,
+      content:
+      "Failed to write package. Removed new Pointer. State Unchanged.",
+      short: "Server Error",
+    };
+  } else {
+    return {
+      ok: false,
+      content: `Failed to write package. Failed to remove new pointer. State Changed: ${write_pack.content}`,
+      short: "Server Error",
+    };
   }
 }
 
