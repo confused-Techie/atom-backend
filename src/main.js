@@ -29,18 +29,20 @@ app.use((req, res, next) => {
 });
 
 /**
-* @web
-* @ignore
-* @path /
-* @desc A non-essential endpoint, returning a status message, and the server version.
-* @method GET
-* @auth FALSE
-*/
+ * @web
+ * @ignore
+ * @path /
+ * @desc A non-essential endpoint, returning a status message, and the server version.
+ * @method GET
+ * @auth FALSE
+ */
 app.get("/", (req, res) => {
   // While originally here in case this became the endpoint to host the
   // frontend website, now that that is no longer planned, it can be used
   // as a way to check the version of the server. Not needed, but may become helpful.
-  res.status(200).json({ message: `Server is up and running Version ${server_version}` });
+  res
+    .status(200)
+    .json({ message: `Server is up and running Version ${server_version}` });
 });
 
 /**
