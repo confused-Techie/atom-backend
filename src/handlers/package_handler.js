@@ -118,7 +118,9 @@ async function POSTPackages(req, res) {
   // To see if the package already exists, we will utilize our data.GetPackagePointerByName
   // to hope it returns an error, that the package doesn't exist, and will avoid reading the package file itself.
   // currently though, the repository, is `owner/repo` meanwhile GetPackagePointerByName expects just `repo`
-  let exists = await data.GetPackagePointerByName(params.repository.split('/')[1]);
+  let exists = await data.GetPackagePointerByName(
+    params.repository.split("/")[1]
+  );
 
   if (exists.ok) {
     // The package exists.

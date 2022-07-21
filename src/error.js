@@ -81,12 +81,10 @@ function PublishPackageExists(res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
 function BadRepoJSON(res) {
-  res
-    .status(400)
-    .json({
-      message:
-        "That repo does not exist, isn't an atom package, or atombot does not have access.",
-    });
+  res.status(400).json({
+    message:
+      "That repo does not exist, isn't an atom package, or atombot does not have access.",
+  });
 }
 
 /**
