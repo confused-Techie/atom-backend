@@ -1,3 +1,7 @@
+# **[GET]** /
+A non-essential endpoint, returning a status message, and the server version.
+
+Auth: `FALSE`
 # **[GET]** /api/oauth
 OAuth Callback URL. Other details TBD.
 

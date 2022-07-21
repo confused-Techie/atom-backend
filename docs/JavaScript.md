@@ -1084,12 +1084,44 @@ Returns the BadPackageJSON message to the user.
 Endpoint Handlers in all relating to the packages themselves.
 
 **Implements**: <code>common\_handler</code>, <code>users</code>, <code>data</code>, <code>collection</code>, <code>query</code>, <code>git</code>, <code>logger</code>, <code>error</code>, <code>config</code>  
+
+* [package_handler](#module_package_handler)
+    * [~POSTPackages(req, res)](#module_package_handler..POSTPackages)
+    * [~GETPackagesStargazers(req, res)](#module_package_handler..GETPackagesStargazers)
+    * [~POSTPackagesEventUninstall(req, res)](#module_package_handler..POSTPackagesEventUninstall)
+
 <a name="module_package_handler..POSTPackages"></a>
 
 ### package_handler~POSTPackages(req, res)
 This endpoint is used to publish a new package to the backend server.
 Taking the repo, and your authentication for it, determines if it can be published,
 then goes about doing so.
+
+**Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_package_handler..GETPackagesStargazers"></a>
+
+### package_handler~GETPackagesStargazers(req, res)
+Endpoint returns the array of `star_gazers` from a specified package.
+Taking only the package wanted, and returning it directly.
+
+**Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_package_handler..POSTPackagesEventUninstall"></a>
+
+### package_handler~POSTPackagesEventUninstall(req, res)
+Used when a package is uninstalled, decreases the download count by 1.
+And saves this data. Originally an undocumented endpoint.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
 
