@@ -182,58 +182,58 @@ async function GetAllPackages() {
     const pointers = await GetPackagePointer();
     if (!pointers.ok) {
       return pointers;
-    } else {
-      let package_collection = [];
-      for (const pointer in pointers.content) {
-        let pack = await GetPackageByID(pointers.content[pointer]);
-        if (pack.ok) {
-          package_collection.push(pack.content);
+    }
+
+    let package_collection = [];
+    for (const pointer in pointers.content) {
+      let pack = await GetPackageByID(pointers.content[pointer]);
+      if (pack.ok) {
+        package_collection.push(pack.content);
+      } else {
+        // this will prioritize giving a response, so if a single package isn't found, it'll log it.
+        // then move on.
+        if (pack.short !== "Not Found") {
+          return pack;
         } else {
-          // this will prioritize giving a response, so if a single package isn't found, it'll log it.
-          // then move on.
-          if (pack.short !== "Not Found") {
-            return pack;
-          } else {
-            logger.WarningLog(
-              undefined,
-              undefined,
-              `Missing Package during GetAllPackages: ${pointers.content[pointer]}`
-            );
-          }
+          logger.WarningLog(
+            undefined,
+            undefined,
+            `Missing Package during GetAllPackages: ${pointers.content[pointer]}`
+          );
         }
       }
-      // once all packages have been iterated, return the collection, to the internal caller.
-      return { ok: true, content: package_collection };
     }
+    // once all packages have been iterated, return the collection, to the internal caller.
+    return { ok: true, content: package_collection };
   };
 
   if (cached_packages === undefined) {
     logger.DebugLog("Creating Full Package Cache.");
     let tmpcache = await getNew();
-    if (tmpcache.ok) {
-      cached_packages = new resources.CacheObject(tmpcache.content);
-      cached_packages.last_validate = Date.now();
-      return { ok: true, content: cached_packages.data };
-    } else {
+    if (!tmpcache.ok) {
       return tmpcache;
     }
-  } else {
-    // packages are cached
-    if (cached_packages.Expired) {
-      logger.DebugLog("Full Package data IS expired.");
-      let tmpcache = await getNew();
-      if (tmpcache.ok) {
-        cached_packages = new resources.CacheObject(tmpcache.content);
-        cached_packages.last_validate = Date.now();
-        return { ok: true, content: cached_packages.data };
-      } else {
-        return tmpcache;
-      }
-    } else {
-      logger.DebugLog("Full Package data IS NOT expired.");
-      return { ok: true, content: cached_packages.data };
-    }
+
+    cached_packages = new resources.CacheObject(tmpcache.content);
+    cached_packages.last_validate = Date.now();
+    return { ok: true, content: cached_packages.data };
   }
+
+  // Packages are cached
+  if (!cached_packages.Expired) {
+    logger.DebugLog("Full Package data IS NOT expired.");
+    return { ok: true, content: cached_packages.data };
+  }
+
+  logger.DebugLog("Full Package data IS expired.");
+  let tmpcache = await getNew();
+  if (!tmpcache.ok) {
+    return tmpcache;
+  }
+
+  cached_packages = new resources.CacheObject(tmpcache.content);
+  cached_packages.last_validate = Date.now();
+  return { ok: true, content: cached_packages.data };
 }
 
 /**
