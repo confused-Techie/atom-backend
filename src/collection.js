@@ -24,74 +24,78 @@ async function Sort(packages, method) {
   // Additional note, this implementation will sort EVERY single package no matter what.
   // TODO: Feature Request: Provide the page requested during sort, or the last item needed to sort,
   // then discard the rest of the array. Pruning length of array may actually be a smart move for all additional functions.
-  if (method === "downloads") {
-    packages.sort((a, b) => {
-      if (a.downloads < b.downloads) {
-        return 1;
-      }
-      if (a.downloads > b.downloads) {
-        return -1;
-      }
-      return 0;
-    });
 
-    return packages;
-  } else if (method === "created_at") {
-    packages.sort((a, b) => {
-      if (a.created < b.created) {
-        return 1;
-      }
-      if (a.created > b.created) {
-        return -1;
-      }
-      return 0;
-    });
+  switch (method) {
+    case "downloads":
+      packages.sort((a, b) => {
+        if (a.downloads < b.downloads) {
+          return 1;
+        }
+        if (a.downloads > b.downloads) {
+          return -1;
+        }
+        return 0;
+      });
+      break;
 
-    return packages;
-  } else if (method === "updated_at") {
-    packages.sort((a, b) => {
-      if (a.updated < b.updated) {
-        return 1;
-      }
-      if (a.updated > b.updated) {
-        return -1;
-      }
-      return 0;
-    });
+    case "created_at":
+      packages.sort((a, b) => {
+        if (a.created < b.created) {
+          return 1;
+        }
+        if (a.created > b.created) {
+          return -1;
+        }
+        return 0;
+      });
+      break;
 
-    return packages;
-  } else if (method === "stars") {
-    packages.sort((a, b) => {
-      if (a.stargazers_count < b.stargazers_count) {
-        return 1;
-      }
-      if (a.stargazers_count > b.stargazers_count) {
-        return -1;
-      }
-      return 0;
-    });
+    case "updated_at":
+      packages.sort((a, b) => {
+        if (a.updated < b.updated) {
+          return 1;
+        }
+        if (a.updated > b.updated) {
+          return -1;
+        }
+        return 0;
+      });
+      break;
 
-    return packages;
-  } else if (method === "relevance") {
-    packages.sort((a, b) => {
-      if (a.relevance < b.relevance) {
-        return 1;
-      }
-      if (a.relevance > b.relevance) {
-        return -1;
-      }
-      return 0;
-    });
+    case "stars":
+      packages.sort((a, b) => {
+        if (a.stargazers_count < b.stargazers_count) {
+          return 1;
+        }
+        if (a.stargazers_count > b.stargazers_count) {
+          return -1;
+        }
+        return 0;
+      });
+      break;
 
-    return packages;
-  } else {
-    logger.WarningLog(
-      null,
-      null,
-      `Unrecognized Sorting Method Provided: ${method}`
-    );
-    return packages;
+    case "relevance":
+      packages.sort((a, b) => {
+        if (a.relevance < b.relevance) {
+          return 1;
+        }
+        if (a.relevance > b.relevance) {
+          return -1;
+        }
+        return 0;
+      });
+      break;
+
+    default:
+      logger.WarningLog(
+        null,
+        null,
+        `Unrecognized Sorting Method Provided: ${method}`
+      );
+      break;
   }
+
+  return packages;
 }
 
 /**
