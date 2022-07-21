@@ -446,6 +446,14 @@ async function DELETEPackagesStar(req, res) {
   }
 }
 
+/**
+ * @async
+ * @function GETPackagesStargazers
+ * @desc Endpoint returns the array of `star_gazers` from a specified package.
+ * Taking only the package wanted, and returning it directly.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 async function GETPackagesStargazers(req, res) {
   // GET /api/packages/:packageName/stargazers
   let params = {
@@ -453,17 +461,19 @@ async function GETPackagesStargazers(req, res) {
   };
   let pack = await data.GetPackageByName(params.packageName);
 
-  if (pack.ok) {
-    // then we can just directly return the star_gazers object.
-    res.status(200).json(pack.content.star_gazers);
-    logger.HTTPLog(req, res);
-  } else {
+  if (!pack.ok) {
     if (pack.short === "Not Found") {
       await common.NotFound(req, res);
+      return;
     } else {
       await common.ServerError(req, res, pack.content);
+      return;
     }
   }
+
+  // then we can just directly return the star_gazers object
+  res.status(200).json(pack.content.star_gazers);
+  logger.HTTPLog(req, res);
 }
 
 async function POSTPackagesVersion(req, res) {
@@ -627,9 +637,17 @@ async function DELETEPackageVersion(req, res) {
   }
 }
 
+/**
+ * @async
+ * @function POSTPackagesEventUninstall
+ * @desc Used when a package is uninstalled, decreases the download count by 1.
+ * And saves this data. Originally an undocumented endpoint.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 async function POSTPackagesEventUninstall(req, res) {
   // POST /api/packages/:packageName/versions/:versionName/events/uninstall
-  // This was originall an Undocumented endpoint, discovered as the endpoint using during an uninstall by APM.
+  // This was originally an Undocumented endpoint, discovered as the endpoint using during an uninstall by APM.
   // https://github.com/atom/apm/blob/master/src/uninstall.coffee
   // The decision to return a '201' was based on how other POST endpoints return, during a successful event.
 
@@ -641,22 +659,29 @@ async function POSTPackagesEventUninstall(req, res) {
 
   await DetermineUserPackagePermission(req, res, params.auth, async () => {
     let pack = await data.GetPackageByName(params.packageName);
-    if (pack.ok) {
-      pack.content.downloads--;
-      let write = await data.SetPackageByName(params.packageName, pack.content);
-      if (write.ok) {
-        res.status(200).json({ ok: true });
-        logger.HTTPLog(req, res);
-      } else {
-        await common.ServerError(req, res, write.content);
-      }
-    } else {
+
+    if (!pack.ok) {
       if (pack.short === "Not Found") {
         await common.NotFound(req, res);
+        return;
       } else {
         await common.ServerError(req, res, pack.content);
+        return;
       }
     }
+
+    pack.content.downloads--;
+
+    let write = await data.SetPackageByName(params.packageName, pack.content);
+
+    if (!write.ok) {
+      await common.ServerError(req, res, write.content);
+      return;
+    }
+
+    res.status(201).json({ ok: true });
+    logger.HTTPLog(req, res);
+    return;
   });
 }
 

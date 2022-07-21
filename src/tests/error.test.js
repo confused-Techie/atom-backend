@@ -35,7 +35,7 @@ test("SiteWide404 modifies the status to 404", async () => {
   expect(res.statusCode).toBe(404);
 });
 
-test("SiteWide404 modifies the body to proper TEMP message.", async () => {
+test("SiteWide404 modifies the body to proper temporary message.", async () => {
   // TODO, the return here will have to be retested after the siteWide404 is setup.
   let res = new NewRes();
   await error.SiteWide404(res);

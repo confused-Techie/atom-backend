@@ -20,6 +20,7 @@ const theme_handler = require("./handlers/theme_handler.js");
 const package_handler = require("./handlers/package_handler.js");
 const common_handler = require("./handlers/common_handler.js");
 const oauth_handler = require("./handlers/oauth_handler.js");
+const server_version = require("../package.json").version;
 
 app.use((req, res, next) => {
   // This adds a start to the request, logging the exact time a request was received.
@@ -27,10 +28,19 @@ app.use((req, res, next) => {
   next();
 });
 
+/**
+* @web
+* @ignore
+* @path /
+* @desc A non-essential endpoint, returning a status message, and the server version.
+* @method GET
+* @auth FALSE
+*/
 app.get("/", (req, res) => {
-  // this is to display the ability to use this as the normal web page handler as well.
-  // TODO: remove this, or modify as needed.
-  res.send("Hello World");
+  // While originally here in case this became the endpoint to host the
+  // frontend website, now that that is no longer planned, it can be used
+  // as a way to check the version of the server. Not needed, but may become helpful.
+  res.status(200).json({ message: `Server is up and running Version ${server_version}` });
 });
 
 /**
