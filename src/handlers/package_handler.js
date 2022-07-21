@@ -151,16 +151,20 @@ async function POSTPackages(req, res) {
   let pack = await git.CreatePackage(params.repository);
 
   if (!pack.ok) {
-    if (pack.short === "Bad Repo") {
-      await common.BadRepoJSON(req, res);
-      return;
-    } else if (pack.short === "Bad Package") {
-      await common.BadPackageJSON(req, res);
-      return;
-    } else {
-      await common.ServerError(req, res, pack.content);
-      return;
+    switch (pack.short) {
+      case "Bad Repo":
+        await common.BadRepoJSON(req, res);
+        break;
+      case "Bad Package":
+        common.BadPackageJSON(req, res);
+        break;
+      default:
+        // Mostly the case of "Server Error"
+        await common.ServerError(req, res, pack.content);
+        break;
     }
+
+    return;
   }
 
   // Now with valid package data, we can pass it along.
@@ -265,26 +269,32 @@ async function GETPackagesDetails(req, res) {
   };
   let pack = await data.GetPackageByName(params.name);
 
-  if (pack.ok) {
-    // from here we now have the package and just want to prune data from it
-    pack = await collection.DeepCopy(pack);
-    pack = await collection.POFPrune(pack.content); // package object full prune
-    // without any concern over being given a valid engine.
-    pack = await collection.EngineFilter(pack, params.engine);
-    if (params.engine) {
-      // query.engine returns false if no valid query param is found.
-      // before using EngineFilter we need to check the truthiness of it.
-      pack = await collection.EngineFilter(pack, params.engine);
+  if (!pack.ok) {
+    switch (pack.short) {
+      case "Not Found":
+        await common.NotFound(req, res);
+        break;
+      default:
+        // Mostly the case of "Server Error"
+        await common.ServerError(req, res, pack.content);
+        break;
     }
-    res.status(200).json(pack);
-    logger.HTTPLog(req, res);
-  } else {
-    if (pack.short === "Not Found") {
-      await common.NotFound(req, res);
-    } else if (pack.short === "Server Error") {
-      await common.ServerError(req, res, pack.content);
-    }
+
+    return;
   }
+
+  // From here we now have the package and just want to prune data from it
+  pack = await collection.DeepCopy(pack);
+  pack = await collection.POFPrune(pack.content); // package object full prune
+
+  if (params.engine) {
+    // query.engine returns false if no valid query param is found.
+    // before using EngineFilter we need to check the truthiness of it.
+    pack = await collection.EngineFilter(pack, params.engine);
+  }
+
+  res.status(200).json(pack);
+  logger.HTTPLog(req, res);
 }
 
 async function DELETEPackagesName(req, res) {
@@ -307,11 +317,14 @@ async function DELETEPackagesName(req, res) {
         // we have successfully removed the package.
         res.status(204).json({ message: "Success" });
       } else {
-        if (rm.short === "Not Found") {
-          await common.NotFound(req, res);
-        } else {
-          // likely a server error.
-          await common.ServerError(req, res, rm.content);
+        switch (rm.short) {
+          case "Not Found":
+            await common.NotFound(req, res);
+            break;
+          default:
+            // Mostly the case of "Server Error"
+            await common.ServerError(req, res, rm.content);
+            break;
         }
       }
     } else {
@@ -433,12 +446,14 @@ async function DELETEPackagesStar(req, res) {
       }
     } else {
       // unable to remove the star from the package, respond with error.
-      if (pack.short === "Not Found") {
-        // this means the user had never stared this package, or we were unable to find it. So lets move from the original
-        // spec and return not found.
-        await common.NotFound(req, res);
-      } else {
-        await common.ServerError(req, res, pack.content);
+      switch (pack.short) {
+        case "Not Found":
+          await common.NotFound(req, res);
+          break;
+        default:
+          // Mostly the case of "Server Error"
+          await common.ServerError(req, res, pack.content);
+          break;
       }
     }
   } else {
@@ -462,13 +477,17 @@ async function GETPackagesStargazers(req, res) {
   let pack = await data.GetPackageByName(params.packageName);
 
   if (!pack.ok) {
-    if (pack.short === "Not Found") {
-      await common.NotFound(req, res);
-      return;
-    } else {
-      await common.ServerError(req, res, pack.content);
-      return;
+    switch (pack.short) {
+      case "Not Found":
+        await common.NotFound(req, res);
+        break;
+      default:
+        // Mostly the case of "Server Error"
+        await common.ServerError(req, res, pack.content);
+        break;
     }
+
+    return;
   }
 
   // then we can just directly return the star_gazers object
@@ -530,10 +549,14 @@ async function GETPackagesVersion(req, res) {
         await common.NotFound(req, res);
       }
     } else {
-      if (pack.short === "Not Found") {
-        await common.NotFound(req, res);
-      } else {
-        await common.ServerError(req, res, pack.content);
+      switch (pack.short) {
+        case "Not Found":
+          await common.NotFound(req, res);
+          break;
+        default:
+          // Mostly the case of "Server Error"
+          await common.ServerError(req, res, pack.content);
+          break;
       }
     }
   } else {
@@ -610,10 +633,14 @@ async function DELETEPackageVersion(req, res) {
             // successfully wrote modified data.
             res.status(204).send();
           } else {
-            if (write.short === "Not Found") {
-              await common.NotFound(req, res);
-            } else {
-              await common.ServerError(req, res, write.content);
+            switch (write.short) {
+              case "Not Found":
+                await common.NotFound(req, res);
+                break;
+              default:
+                // Mostly the case of "Server Error"
+                await common.ServerError(req, res, write.content);
+                break;
             }
           }
         } else {
@@ -622,10 +649,14 @@ async function DELETEPackageVersion(req, res) {
         }
       } else {
         // getting package returned error.
-        if (pack.short === "Not Found") {
-          await common.NotFound(req, res);
-        } else {
-          await common.ServerError(req, res, pack.content);
+        switch (pack.short) {
+          case "Not Found":
+            await common.NotFound(req, res);
+            break;
+          default:
+            // Mostly the case of "Server Error"
+            await common.ServerError(req, res, pack.content);
+            break;
         }
       }
     } else {
@@ -661,13 +692,17 @@ async function POSTPackagesEventUninstall(req, res) {
     let pack = await data.GetPackageByName(params.packageName);
 
     if (!pack.ok) {
-      if (pack.short === "Not Found") {
-        await common.NotFound(req, res);
-        return;
-      } else {
-        await common.ServerError(req, res, pack.content);
-        return;
+      switch (pack.short) {
+        case "Not Found":
+          await common.NotFound(req, res);
+          break;
+        default:
+          // Mostly the case of "Server Error"
+          await common.ServerError(req, res, pack.content);
+          break;
       }
+
+      return;
     }
 
     pack.content.downloads--;
