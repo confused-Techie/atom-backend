@@ -1,3 +1,17 @@
+/**
+* @module package_handler
+* @desc Endpoint Handlers in all relating to the packages themselves.
+* @implements {common_handler}
+* @implements {users}
+* @implements {data}
+* @implements {collection}
+* @implements {query}
+* @implements {git}
+* @implements {logger}
+* @implements {error}
+* @implements {config}
+*/
+
 const common = require("./common_handler.js");
 const users = require("../users.js");
 const data = require("../data.js");
@@ -66,6 +80,15 @@ async function GETPackages(req, res) {
   }
 }
 
+/**
+* @async
+* @function POSTPackages
+* @desc This endpoint is used to publish a new package to the backend server.
+* Taking the repo, and your authentication for it, determines if it can be published,
+* then goes about doing so.
+* @param {object} req - The `Request` object inherited from the Express endpoint.
+* @param {object} res - The `Response` object inherited from the Express endpoint.
+*/
 async function POSTPackages(req, res) {
   // POST /api/packages
   let params = {
@@ -84,7 +107,7 @@ async function POSTPackages(req, res) {
   // Check repository format validity.
   if (params.repository === "") {
     // The repository format is invalid.
-    res.status(400); // Bad request.
+    await common.BadRepoJSON(req, res);
     return;
   }
 
@@ -125,11 +148,16 @@ async function POSTPackages(req, res) {
   let pack = await git.CreatePackage(params.repository);
 
   if (!pack.ok) {
-    // TODO: Proper error checking based on function. But this will likely
-    // implement the 400 package not valid error.
-    console.log(pack.content);
-    await common.NotSupported(req, res);
-    return;
+    if (pack.short === "Bad Repo") {
+      await common.BadRepoJSON(req, res);
+      return;
+    } else if (pack.short === "Bad Package") {
+      await common.BadPackageJSON(req, res);
+      return;
+    } else {
+      await common.ServerError(req, res, pack.content);
+      return;
+    }
   }
 
   // Now with valid package data, we can pass it along.

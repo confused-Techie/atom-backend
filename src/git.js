@@ -45,10 +45,11 @@ async function Ownership(user, repo) {
 /**
  * @async
  * @function CreatePackage
- * @desc This <b>Unfinished</b> function is intended to create a compatible package object
- * to be used directly as a `Server Package Object`. Meaning it will need to create
- * all properties, and fill all keys. Until this is completed, the documentation will
- * also be uncompleted.
+ * @desc Creates a compatible `Server Object Full` object, from only receiving a `repo` as in
+ * `owner/repo`. With this it contacts GitHub API's and modifies data as needed to
+ * return back a proper `Server Object Full` object within a `Server Status`.content object.
+ * @param {string} repo - The Repo to use in the form `owner/repo`.
+ * @returns {object} A `Server Status` Object where `content` is the `Server Package Full` object.
  */
 async function CreatePackage(repo) {
   try {
