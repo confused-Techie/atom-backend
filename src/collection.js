@@ -216,7 +216,10 @@ async function SearchWithinPackages(
       // and simply returning the edit distance between strings.
 
       for (let i = 0; i < packages.length; i++) {
-        packages[i].relevance = search_func.levenshtein(search, packages[i].name);
+        packages[i].relevance = search_func.levenshtein(
+          search,
+          packages[i].name
+        );
       }
       break;
 

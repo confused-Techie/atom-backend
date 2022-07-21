@@ -356,14 +356,14 @@ async function RemovePackageByName(name) {
     return {
       ok: false,
       content:
-      "Failed to rewrite the package pointer file. Recovered Package File. No Change.",
+        "Failed to rewrite the package pointer file. Recovered Package File. No Change.",
       short: "Server Error",
     };
   } else {
     return {
       ok: false,
       content:
-      "Failed to rewrite the package pointer file. The Package is still marked for deletion. The Old pointer still exists!",
+        "Failed to rewrite the package pointer file. The Package is still marked for deletion. The Old pointer still exists!",
       short: "Server Error",
     };
   }
@@ -515,7 +515,7 @@ async function SetPackageByName(name, data) {
   if (pointers.content[name]) {
     let write = await SetPackageByID(pointers.content[name], data);
 
-    return (write.ok) ? { ok: true } : write;
+    return write.ok ? { ok: true } : write;
   } else {
     return {
       ok: false,
@@ -561,8 +561,7 @@ async function NewPackage(data) {
   if (rewrite_pointer.ok) {
     return {
       ok: false,
-      content:
-      "Failed to write package. Removed new Pointer. State Unchanged.",
+      content: "Failed to write package. Removed new Pointer. State Unchanged.",
       short: "Server Error",
     };
   } else {
