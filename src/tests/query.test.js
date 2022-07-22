@@ -59,6 +59,7 @@ const query_cases = [
   [{ query: { q: "search-term" } }, "search-term"],
   [{ query: {} }, ""],
   [{ query: { q: "../your-secret.env" } }, ""],
+  [{ query: { q: "%" } }, ""], // purposly causes a decodeURIComponent Error.
 ];
 
 describe("Verify 'Query' Query Returns", () => {

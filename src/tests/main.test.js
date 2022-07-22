@@ -43,3 +43,38 @@ describe("DELETE /api/packages/:packageName", () => {
     expect(res.statusCode).toBe(401); // Otherwise the no auth http status code.
   });
 });
+
+describe("GET /api/updates", () => {
+  // TODO: /api/updates returns NotSupported at this time.
+  test("Returns NotSupported Status Code.", async () => {
+    const res = await request(app).get("/api/updates");
+    expect(res.statusCode).toBe(501);
+  });
+  test("Returns NotSupported Message", async () => {
+    const res = await request(app).get("/api/updates");
+    expect(res.body.message).toBe("While under development this feature is not supported.");
+  });
+});
+
+describe("GET Theme Featured", () => {
+  // TODO: /api/themes/featured returns NotSupported at this time.
+  test("Returns NotSupported Status Code", async () => {
+    const res = await request(app).get("/api/themes/featured");
+    expect(res.statusCode).toBe(501);
+  });
+  test("Returns NotSupported Message", async () => {
+    const res = await request(app).get("/api/updates");
+    expect(res.body.message).toBe("While under development this feature is not supported.");
+  });
+});
+
+describe("GET /api/stars", () => {
+  test("Returns Unauthenticated Status Code", async () => {
+    const res = await request(app).get("/api/stars").set('Authorization', 'invalid_key');
+    expect(res.statusCode).toBe(401);
+  });
+  test("Returns Unauthenticated JSON", async () => {
+    const res = await request(app).get("/api/stars").set("Authorization", "invalid_key");
+    expect(res.body.message).toBe("Requires authentication. Please update your otken if you haven't done so recently.");
+  });
+});

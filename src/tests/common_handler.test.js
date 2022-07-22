@@ -79,3 +79,31 @@ test("SiteWideNotFound Modifies HTTP Status", async () => {
   await common.SiteWideNotFound(req, res);
   expect(res.statusCode).toBe(404);
 });
+
+test("BadRepoJSON Modifies HTTP Status", async () => {
+  let res = new NewRes();
+  let req = new NewReq();
+  await common.BadRepoJSON(req, res);
+  expect(res.statusCode).toBe(400);
+});
+
+test("BadRepoJSON Modifies JSON", async () => {
+  let res = new NewRes();
+  let req = new NewReq();
+  await common.BadRepoJSON(req, res);
+  expect(res.JSONObj.message).toBe("That repo does not exist, isn't an atom package, or atombot does not have access.");
+});
+
+test("BadPackageJSON Modifies HTTP Status", async () => {
+  let res = new NewRes();
+  let req = new NewReq();
+  await common.BadPackageJSON(req, res);
+  expect(res.statusCode).toBe(400);
+});
+
+test ("BadPackageJSON Modifies JSON", async () => {
+  let req = new NewReq();
+  let res = new NewRes();
+  await common.BadPackageJSON(req, res);
+  expect(res.JSONObj.message).toBe("The package.json at owner/repo isn't valid.");
+})
