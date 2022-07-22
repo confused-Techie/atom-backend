@@ -75,6 +75,6 @@ describe("GET /api/stars", () => {
   });
   test("Returns Unauthenticated JSON", async () => {
     const res = await request(app).get("/api/stars").set("Authorization", "invalid_key");
-    expect(res.body.message).toBe("Requires authentication. Please update your otken if you haven't done so recently.");
+    expect(res.body.message).toBe("Requires authentication. Please update your token if you haven't done so recently.");
   });
 });
