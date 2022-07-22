@@ -1,21 +1,21 @@
 /**
-* @module oauth_handler
-* @desc Endpoint Handlers for Authentication URLs
-* @implements {config}
-* @implements {common_handler}
-*/
+ * @module oauth_handler
+ * @desc Endpoint Handlers for Authentication URLs
+ * @implements {config}
+ * @implements {common_handler}
+ */
 
 const { GH_CLIENTID } = require("../config.js").GetConfig();
 const common = require("./common_handler.js");
 
 /**
-* @async
-* @function GETLogin
-* @desc Endpoint used to direct users to login, directing the user to the
-* proper GitHub OAuth Page based on the backends client id.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-*/
+ * @async
+ * @function GETLogin
+ * @desc Endpoint used to direct users to login, directing the user to the
+ * proper GitHub OAuth Page based on the backends client id.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 async function GETLogin(req, res) {
   // GET /api/oauth
 
@@ -32,13 +32,13 @@ async function GETLogin(req, res) {
 }
 
 /**
-* @async
-* @function GETOauth
-* @desc Endpoint intended to use as the actual return from GitHub to login.
-* @todo
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-*/
+ * @async
+ * @function GETOauth
+ * @desc Endpoint intended to use as the actual return from GitHub to login.
+ * @todo
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 async function GETOauth(req, res) {
   await common.NotSupported(req, res);
 }

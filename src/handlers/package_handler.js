@@ -23,13 +23,13 @@ const error = require("../error.js");
 const { server_url, paginated_amount } = require("../config.js").GetConfig();
 
 /**
-* @async
-* @function GETPackages
-* @desc Endpoint to return all packages to the user. Based on any filtering
-* theyved applied via query parameters.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-*/
+ * @async
+ * @function GETPackages
+ * @desc Endpoint to return all packages to the user. Based on any filtering
+ * theyved applied via query parameters.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 async function GETPackages(req, res) {
   // GET /api/packages
   let params = {
@@ -216,13 +216,13 @@ async function GETPackagesFeatured(req, res) {
 }
 
 /**
-* @async
-* @function GETPackagesSearch
-* @desc Allows user to search through all packages. Using their specified
-* query parameter.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-*/
+ * @async
+ * @function GETPackagesSearch
+ * @desc Allows user to search through all packages. Using their specified
+ * query parameter.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 async function GETPackagesSearch(req, res) {
   // GET /api/packages/search
   let params = {
@@ -320,12 +320,12 @@ async function GETPackagesDetails(req, res) {
 }
 
 /**
-* @async
-* @function DELETEPackagesName
-* @desc Allows the user to delete a repo they have ownership of.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-*/
+ * @async
+ * @function DELETEPackagesName
+ * @desc Allows the user to delete a repo they have ownership of.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 async function DELETEPackagesName(req, res) {
   // DELETE /api/packages/:packageName
   let params = {
@@ -528,14 +528,14 @@ async function GETPackagesStargazers(req, res) {
 }
 
 /**
-* @async
-* @function POSTPackagesVersion
-* @desc Allows a new version of a package to be published. But also can allow
-* a user to rename their application during this process.
-* @todo
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-*/
+ * @async
+ * @function POSTPackagesVersion
+ * @desc Allows a new version of a package to be published. But also can allow
+ * a user to rename their application during this process.
+ * @todo
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 async function POSTPackagesVersion(req, res) {
   // POST /api/packages/:packageName/versions
   let params = {
@@ -609,13 +609,13 @@ async function GETPackagesVersion(req, res) {
 }
 
 /**
-* @async
-* @function GETPackagesVersionTarball
-* @desc Allows the user to get the tarball for a specific package version.
-* Which should initiate a download of said tarball on their end.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-*/
+ * @async
+ * @function GETPackagesVersionTarball
+ * @desc Allows the user to get the tarball for a specific package version.
+ * Which should initiate a download of said tarball on their end.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 async function GETPackagesVersionTarball(req, res) {
   // GET /api/packages/:packageName/versions/:versionName/tarball
   let params = {
@@ -628,7 +628,7 @@ async function GETPackagesVersionTarball(req, res) {
   // we initially want to ensure we have a valid version.
   if (!params.versionName) {
     // since query.engine gives false if invalid, we can just check if its truthy
-    // additionally if its false, we know the version will never be found. 
+    // additionally if its false, we know the version will never be found.
     await common.NotFound(req, res);
     return;
   }
@@ -665,12 +665,12 @@ async function GETPackagesVersionTarball(req, res) {
 }
 
 /**
-* @async
-* @function DELETEPackageVersion
-* @desc Allows a user to delete a specific version of their package.
-* @param {object} req - The `Request` object inherited from the Express endpoint.
-* @param {object} res - The `Response` object inherited from the Express endpoint.
-*/
+ * @async
+ * @function DELETEPackageVersion
+ * @desc Allows a user to delete a specific version of their package.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 async function DELETEPackageVersion(req, res) {
   // DELETE /api/packages/:packageName/versions/:versionName
   let params = {
