@@ -72,6 +72,8 @@ async function Read(type, name) {
     }
   } else if (type === "package") {
     return readFile(`./data/packages/${name}`);
+  } else if (type === "name_ban_list") {
+    return readFile(`./data/name_ban_list.json`);
   }
 }
 
