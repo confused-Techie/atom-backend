@@ -80,7 +80,11 @@ describe("GET /api/stars", () => {
     expect(res.statusCode).toBe(401);
   });
   test("Returns Unauthenticated JSON", async () => {
-    const res = await request(app).get("/api/stars").set("Authorization", "invalid_key");
-    expect(res.body.message).toBe("Requires authentication. Please update your token if you haven't done so recently.");
+    const res = await request(app)
+      .get("/api/stars")
+      .set("Authorization", "invalid_key");
+    expect(res.body.message).toBe(
+      "Requires authentication. Please update your token if you haven't done so recently."
+    );
   });
 });
