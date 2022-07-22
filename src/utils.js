@@ -1,11 +1,11 @@
 /**
-* @module utils
-* @desc A helper for any functions that are agnostic in hanlders.
-* @implements {resources}
-* @implements {logger}
-* @implements {users}
-* @implements {common}
-*/
+ * @module utils
+ * @desc A helper for any functions that are agnostic in hanlders.
+ * @implements {resources}
+ * @implements {logger}
+ * @implements {users}
+ * @implements {common}
+ */
 const resources = require("./resources.js");
 const logger = require("./logger.js");
 const users = require("./users.js");
@@ -32,17 +32,17 @@ async function IsPackageNameBanned(name) {
 }
 
 /**
-* @async
-* @function LocalUserLoggedIn
-* @desc Used as a less verbose way to check if the current user token, is associated
-* with a logged in user. If not handles errors automatically, if so calls the callback
-* function passing the Server Status Object, where content is User.
-* @param {object} req -
-* @param {object} res -
-* @param {string} params_user - Usually `params.auth` or otherwise the authorization
-* token within the header field.
-* @param {function} callback - The callback to invoke only if the user is properly authenticated.
-*/
+ * @async
+ * @function LocalUserLoggedIn
+ * @desc Used as a less verbose way to check if the current user token, is associated
+ * with a logged in user. If not handles errors automatically, if so calls the callback
+ * function passing the Server Status Object, where content is User.
+ * @param {object} req -
+ * @param {object} res -
+ * @param {string} params_user - Usually `params.auth` or otherwise the authorization
+ * token within the header field.
+ * @param {function} callback - The callback to invoke only if the user is properly authenticated.
+ */
 async function LocalUserLoggedIn(req, res, params_user, callback) {
   let user = await users.VerifyAuth(params_user);
 
