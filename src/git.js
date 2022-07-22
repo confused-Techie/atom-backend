@@ -278,7 +278,10 @@ async function getRepoReadMe(repo) {
           .set({ "User-Agent": GH_USERAGENT });
 
         if (resLower.status === 200) {
-          return Buffer.from(resLower.body.content, resLower.body.encoding).toString();
+          return Buffer.from(
+            resLower.body.content,
+            resLower.body.encoding
+          ).toString();
         } else {
           // it returned, but not the error code we expect.
           logger.WarningLog(
