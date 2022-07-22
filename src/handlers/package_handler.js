@@ -22,6 +22,14 @@ const logger = require("../logger.js");
 const error = require("../error.js");
 const { server_url, paginated_amount } = require("../config.js").GetConfig();
 
+/**
+* @async
+* @function GETPackages
+* @desc Endpoint to return all packages to the user. Based on any filtering
+* theyved applied via query parameters.
+* @param {object} req - The `Request` object inherited from the Express endpoint.
+* @param {object} res - The `Response` object inherited from the Express endpoint.
+*/
 async function GETPackages(req, res) {
   // GET /api/packages
   let params = {
@@ -207,6 +215,14 @@ async function GETPackagesFeatured(req, res) {
   await common.NotSupported(req, res);
 }
 
+/**
+* @async
+* @function GETPackagesSearch
+* @desc Allows user to search through all packages. Using their specified
+* query parameter.
+* @param {object} req - The `Request` object inherited from the Express endpoint.
+* @param {object} res - The `Response` object inherited from the Express endpoint.
+*/
 async function GETPackagesSearch(req, res) {
   // GET /api/packages/search
   let params = {
@@ -218,49 +234,53 @@ async function GETPackagesSearch(req, res) {
 
   let all_packages = await data.GetAllPackages();
 
-  if (all_packages.ok) {
-    let packages = await collection.DeepCopy(all_packages.content);
-    packages = await collection.SearchWithinPackages(params.query, packages);
-    packages = await collection.Sort(packages, params.sort);
-    packages = await collection.Direction(packages, params.direction);
-    // Now that the packages are sorted in the proper direction, we need to exempt results, according to our pagination.
-    let total_pages = Math.ceil(packages.length / paginated_amount); // We need to get the total before we start splicing and dicing.
-    if (params.page !== 1) {
-      packages.splice(0, params.page * paginated_amount); // Remove from the start to however many packages, should be visible on previous pages.
-    }
-    if (params.page !== total_pages) {
-      packages.splice(
-        params.page * paginated_amount + paginated_amount,
-        packages.length
-      );
-      // This will start after our paginated options, and remove till the end of the array, since we aren't on the last page.
-    }
-    packages = await collection.POSPrune(packages); // Package Object Short Prune.
-
-    // now to get headers.
-
-    res.append(
-      "Link",
-      `<${server_url}/api/packages/search?q=${params.query}&page=${
-        params.page
-      }&sort=${params.sort}&order=${
-        params.direction
-      }>; rel="self", <${server_url}/api/packages?q=${
-        params.query
-      }&page=${total_pages}&sort=${params.sort}&order=${
-        params.direction
-      }>; rel="last", <${server_url}/api/packages/search?q=${
-        params.query
-      }&page=${params.page++}&sort=${params.sort}&order=${
-        params.direction
-      }>; rel="next"`
-    );
-
-    res.status(200).json(packages);
-    logger.HTTPLog(req, res);
-  } else {
+  if (!all_packages.ok) {
     await common.ServerError(req, res, all_packages.content);
+    return;
   }
+
+  let packages = await collection.DeepCopy(all_packages.content);
+  packages = await collection.SearchWithinPackages(params.query, packages);
+  packages = await collection.Sort(packages, params.sort);
+  packages = await collection.Direction(packages, params.direction);
+  // Now that the packages are sorted in the proper direction, we
+  // need to exempt results, according to our pagination.
+  let total_pages = Math.ceil(packages.length / paginated_amount);
+  // ^^^ We need to get the total before we start splicing and dicing.
+  if (params.page !== 1) {
+    packages.splice(0, params.page * paginated_amount);
+    // Remove from the start to however many packages, should be visible on previous pages.
+  }
+  if (params.page !== total_pages) {
+    packages.splice(
+      params.page * paginated_amount + paginated_amount,
+      packages.length
+    );
+    // This will start after our paginated options, and remove till the
+    // end of the array, since we aren't on the last page.
+  }
+  packages = await collection.POSPrune(packages); // Package Object Short Prune.
+
+  // now to get headers.
+  res.append(
+    "Link",
+    `<${server_url}/api/packages/search?q=${params.query}&page=${
+      params.page
+    }&sort=${params.sort}&order=${
+      params.direction
+    }>; rel="self", <${server_url}/api/packages?q=${
+      params.query
+    }&page=${total_pages}&sort=${params.sort}&order=${
+      params.direction
+    }>; rel="last", <${server_url}/api/packages/search?q=${
+      params.query
+    }&page=${params.page++}&sort=${params.sort}&order=${
+      params.direction
+    }>; rel="next"`
+  );
+
+  res.status(200).json(packages);
+  logger.HTTPLog(req, res);
 }
 
 async function GETPackagesDetails(req, res) {
@@ -299,6 +319,13 @@ async function GETPackagesDetails(req, res) {
   logger.HTTPLog(req, res);
 }
 
+/**
+* @async
+* @function DELETEPackagesName
+* @desc Allows the user to delete a repo they have ownership of.
+* @param {object} req - The `Request` object inherited from the Express endpoint.
+* @param {object} res - The `Response` object inherited from the Express endpoint.
+*/
 async function DELETEPackagesName(req, res) {
   // DELETE /api/packages/:packageName
   let params = {
@@ -307,35 +334,38 @@ async function DELETEPackagesName(req, res) {
   };
   let user = await users.VerifyAuth(params.auth);
 
-  if (user.ok) {
-    let gitowner = await git.Ownership(user.content, params.packageName);
-
-    if (gitowner.ok) {
-      // they are logged in properly, and own the git repo they are referencing via the package name.
-      // Now we can delete the package.
-      let rm = await data.RemovePackageByName(params.packageName);
-
-      if (rm.ok) {
-        // we have successfully removed the package.
-        res.status(204).json({ message: "Success" });
-      } else {
-        switch (rm.short) {
-          case "Not Found":
-            await common.NotFound(req, res);
-            break;
-          default:
-            // Mostly the case of "Server Error"
-            await common.ServerError(req, res, rm.content);
-            break;
-        }
-      }
-    } else {
-      // TODO: This cannot be written as we don't know yet what errors this will return.
-      await common.NotSupported(req, res);
-    }
-  } else {
+  if (!user.ok) {
     await common.AuthFail(req, res, user);
+    return;
   }
+
+  let gitowner = await git.Ownership(user.content, params.packageName);
+
+  if (!gitowner.ok) {
+    // TODO: Unable to know git.Ownership returns without it written
+    await common.NotSupported(req, res);
+    return;
+  }
+
+  // they are logged in properly, and own the git repo they are referencing via the package name.
+  // Now we can delete the package.
+  let rm = await data.RemovePackageByName(params.packageName);
+
+  if (!rm.ok) {
+    switch (rm.short) {
+      case "Not Found":
+        await common.NotFound(req, res);
+        break;
+      default:
+        // Mostly the case of "Server Error"
+        await common.ServerError(req, res, rm.content);
+        break;
+    }
+  }
+
+  // we have successfully removed the package.
+  res.status(204).json({ message: "Success" });
+  logger.HTTPLog(req, res);
 }
 
 async function POSTPackagesStar(req, res) {
@@ -497,6 +527,15 @@ async function GETPackagesStargazers(req, res) {
   logger.HTTPLog(req, res);
 }
 
+/**
+* @async
+* @function POSTPackagesVersion
+* @desc Allows a new version of a package to be published. But also can allow
+* a user to rename their application during this process.
+* @todo
+* @param {object} req - The `Request` object inherited from the Express endpoint.
+* @param {object} res - The `Response` object inherited from the Express endpoint.
+*/
 async function POSTPackagesVersion(req, res) {
   // POST /api/packages/:packageName/versions
   let params = {
@@ -507,19 +546,21 @@ async function POSTPackagesVersion(req, res) {
   };
   let user = await users.VerifyAuth(params.auth);
 
-  if (user.ok) {
-    let gitowner = await git.Ownership(user.content, params.packageName);
-
-    if (gitowner.ok) {
-      // TODO: unknown how to handle a rename, so that should be planned before finishing.
-      await common.NotSupported(req, res);
-    } else {
-      // TODO: cannot handle errors here, until we know what errors it will return.
-      await common.NotSupported(req, res);
-    }
-  } else {
+  if (!user.ok) {
     await common.AuthFail(req, res, user);
+    return;
   }
+
+  let gitowner = await git.Ownership(user.content, params.packageName);
+
+  if (!gitowner.ok) {
+    // TODO: cannot handle git.Ownership errors until written.
+    await common.NotSupported(req, res);
+    return;
+  }
+
+  // TODO: Unkown how to handle a rename, so it must be planned before completion.
+  await common.NotSupported(req, res);
 }
 
 async function GETPackagesVersion(req, res) {
@@ -567,14 +608,30 @@ async function GETPackagesVersion(req, res) {
   }
 }
 
+/**
+* @async
+* @function GETPackagesVersionTarball
+* @desc Allows the user to get the tarball for a specific package version.
+* Which should initiate a download of said tarball on their end.
+* @param {object} req - The `Request` object inherited from the Express endpoint.
+* @param {object} res - The `Response` object inherited from the Express endpoint.
+*/
 async function GETPackagesVersionTarball(req, res) {
   // GET /api/packages/:packageName/versions/:versionName/tarball
   let params = {
     packageName: decodeURIComponent(req.params.packageName),
-    versionName: req.params.versionName,
+    versionName: query.engine(req.params.versionName),
   };
   // Now that migration has began we know that each version will have
   // a tarball_url key on it, linking directly to the tarball from gh for that version.
+
+  // we initially want to ensure we have a valid version.
+  if (!params.versionName) {
+    // since query.engine gives false if invalid, we can just check if its truthy
+    // additionally if its false, we know the version will never be found. 
+    await common.NotFound(req, res);
+    return;
+  }
 
   // first lets get the package
   let pack = await data.GetPackageByName(params.packageName);
@@ -607,6 +664,13 @@ async function GETPackagesVersionTarball(req, res) {
   return;
 }
 
+/**
+* @async
+* @function DELETEPackageVersion
+* @desc Allows a user to delete a specific version of their package.
+* @param {object} req - The `Request` object inherited from the Express endpoint.
+* @param {object} res - The `Response` object inherited from the Express endpoint.
+*/
 async function DELETEPackageVersion(req, res) {
   // DELETE /api/packages/:packageName/versions/:versionName
   let params = {
@@ -616,58 +680,60 @@ async function DELETEPackageVersion(req, res) {
   };
   let user = await users.VerifyAuth(params.auth);
 
-  if (user.ok) {
-    let gitowner = await git.Ownership(user.content, params.packageName);
-
-    if (gitowner.ok) {
-      // now since they are signed in and own the repo, lets modify the repo by removing the requested version.
-      let pack = await data.GetPackageByName(params.packageName);
-
-      if (pack.ok) {
-        if (pack.content[params.versionName]) {
-          // the version exists.
-          delete pack.content[params.versionName];
-
-          // now to write back the modified data.
-          let write = data.SetPackageByName(params.packageName, pack.content);
-
-          if (write.ok) {
-            // successfully wrote modified data.
-            res.status(204).send();
-          } else {
-            switch (write.short) {
-              case "Not Found":
-                await common.NotFound(req, res);
-                break;
-              default:
-                // Mostly the case of "Server Error"
-                await common.ServerError(req, res, write.content);
-                break;
-            }
-          }
-        } else {
-          // we will return not found for a non-existant version deletion.
-          await common.NotFound(req, res);
-        }
-      } else {
-        // getting package returned error.
-        switch (pack.short) {
-          case "Not Found":
-            await common.NotFound(req, res);
-            break;
-          default:
-            // Mostly the case of "Server Error"
-            await common.ServerError(req, res, pack.content);
-            break;
-        }
-      }
-    } else {
-      // TODO: Cannot write error handling without knowing what errors it'll return.
-      await common.NotSupported(req, res);
-    }
-  } else {
+  if (!user.ok) {
     await common.AuthFail(req, res, user);
+    return;
   }
+
+  let gitowner = await git.Ownership(user.content, params.packageName);
+
+  if (!gitowner.ok) {
+    // TODO: Unkown how to handle git.Ownership errors till written.
+    await common.NotSupported(req, res);
+    return;
+  }
+
+  let pack = await data.GetPackageByName(params.packageName);
+
+  if (!pack.ok) {
+    // getting package returned error.
+    switch (pack.short) {
+      case "Not Found":
+        await common.NotFound(req, res);
+        break;
+      default:
+        // Mostly the case of "Server Error"
+        await common.ServerError(req, res, pack.content);
+        break;
+    }
+  }
+
+  if (!pack.content[params.versionName]) {
+    // the version does not exist.
+    // we will return not found for a non-existant version deletion.
+    await common.NotFound(req, res);
+  }
+
+  // the version exists
+  delete pack.content[params.versionName];
+
+  // now to write back the modified data.
+  let write = data.SetPackageByName(params.packageName, pack.content);
+
+  if (!write.ok) {
+    switch (write.short) {
+      case "Not Found":
+        await common.NotFound(req, res);
+        break;
+      default:
+        // Mostly the case of "Server Error"
+        await common.ServerError(req, res, write.content);
+        break;
+    }
+  }
+
+  // successfully wrote the modified data
+  res.status(204).send();
 }
 
 /**
@@ -722,7 +788,7 @@ async function POSTPackagesEventUninstall(req, res) {
   });
 }
 
-// ========== Helper Functions ==========
+// ========== Helper Functions ========== //
 async function DetermineUserPackagePermission(req, res, auth, callback) {
   let user = await users.VerifyAuth(auth);
 
