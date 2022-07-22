@@ -52,7 +52,9 @@ describe("GET /api/updates", () => {
   });
   test("Returns NotSupported Message", async () => {
     const res = await request(app).get("/api/updates");
-    expect(res.body.message).toBe("While under development this feature is not supported.");
+    expect(res.body.message).toBe(
+      "While under development this feature is not supported."
+    );
   });
 });
 
@@ -64,17 +66,25 @@ describe("GET Theme Featured", () => {
   });
   test("Returns NotSupported Message", async () => {
     const res = await request(app).get("/api/updates");
-    expect(res.body.message).toBe("While under development this feature is not supported.");
+    expect(res.body.message).toBe(
+      "While under development this feature is not supported."
+    );
   });
 });
 
 describe("GET /api/stars", () => {
   test("Returns Unauthenticated Status Code", async () => {
-    const res = await request(app).get("/api/stars").set('Authorization', 'invalid_key');
+    const res = await request(app)
+      .get("/api/stars")
+      .set("Authorization", "invalid_key");
     expect(res.statusCode).toBe(401);
   });
   test("Returns Unauthenticated JSON", async () => {
-    const res = await request(app).get("/api/stars").set("Authorization", "invalid_key");
-    expect(res.body.message).toBe("Requires authentication. Please update your otken if you haven't done so recently.");
+    const res = await request(app)
+      .get("/api/stars")
+      .set("Authorization", "invalid_key");
+    expect(res.body.message).toBe(
+      "Requires authentication. Please update your otken if you haven't done so recently."
+    );
   });
 });

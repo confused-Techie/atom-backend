@@ -13,10 +13,10 @@ describe("HTTPLog Testing", () => {
         start: "0",
         method: "GET",
         url: "https://dev.com",
-        protocol: "HTTP"
+        protocol: "HTTP",
       },
       {
-        statusCode: "200"
+        statusCode: "200",
       }
     );
     // Attempting to expect the timing its handled, has proved to be unreliable.
