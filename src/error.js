@@ -125,4 +125,6 @@ module.exports = {
   ServerErrorJSON,
   UnsupportedJSON,
   PublishPackageExists,
+  BadRepoJSON,
+  BadPackageJSON,
 };

@@ -28,6 +28,7 @@ async function AuthFail(req, res, user) {
     case "Bad Auth":
       error.MissingAuthJSON(res);
       logger.HTTPLog(req, res);
+      break;
     default:
       error.ServerErrorJSON(res);
       logger.HTTPLog(req, res);
@@ -128,4 +129,6 @@ module.exports = {
   NotFound,
   SiteWideNotFound,
   NotSupported,
+  BadRepoJSON,
+  BadPackageJSON,
 };
