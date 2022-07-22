@@ -1,52 +1,56 @@
 {
-  "name": "what-a-package",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/kiteco/atom-plugin"
-  },
-  "created": 1657072373,
-  "updated": 1657072373,
-  "star_gazers": [
-    { "login": "confused-Techie" },
-    { "login": "not-a-user" }
-  ],
-  "downloads": 25,
-  "stargazers_count": 4,
-  "releases": {
-    "latest": "0.206.0"
-  },
-  "versions": {
-    "0.206.0": {
-      "name": "what-a-package",
-      "main": "./dist/main",
-      "version": "0.206.0",
-      "description": "Not really a good description, at all.",
-      "repository": "https://github.com/kiteco/atom-plugin",
-      "license": "MIT",
-      "engines": {
-        "atom": ">=1.0.0 <2.0.0"
-      }
-    },
-    "0.205.0": {
-      "name": "what-a-package",
-      "main": "./dist/main",
-      "version": "0.205.0",
-      "description": "Not really a good description, at all. From 0.205.0",
-      "repository": "https://github.com/kiteco/atom-plugin",
-      "license": "MIT",
-      "engines": {
-        "atom": ">=1.0.0 <2.0.0"
-      }
-    }
-  },
-  "readme": "What a terrible readme. Theres no detail? And its seemingly self aware?? How strange, peculiar, some would even go as far to say, an oddity.",
-  "metadata": {
     "name": "what-a-package",
-    "main": "./dist/main",
-    "version": "0.206.0",
-    "description": "Not really a good description, at all. From 0.205.0",
-    "engines": {
-      "atom": ">=1.0.0 <2.0.0"
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kiteco/atom-plugin"
+    },
+    "created": 1657072373,
+    "updated": 1657072373,
+    "star_gazers": [
+        {
+            "login": "confused-Techie"
+        },
+        {
+            "login": "not-a-user"
+        }
+    ],
+    "downloads": 24,
+    "stargazers_count": 4,
+    "releases": {
+        "latest": "0.206.0"
+    },
+    "versions": {
+        "0.206.0": {
+            "name": "what-a-package",
+            "main": "./dist/main",
+            "version": "0.206.0",
+            "description": "Not really a good description, at all.",
+            "repository": "https://github.com/kiteco/atom-plugin",
+            "license": "MIT",
+            "engines": {
+                "atom": ">=1.0.0 <2.0.0"
+            }
+        },
+        "0.205.0": {
+            "name": "what-a-package",
+            "main": "./dist/main",
+            "version": "0.205.0",
+            "description": "Not really a good description, at all. From 0.205.0",
+            "repository": "https://github.com/kiteco/atom-plugin",
+            "license": "MIT",
+            "engines": {
+                "atom": ">=1.0.0 <2.0.0"
+            }
+        }
+    },
+    "readme": "What a terrible readme. Theres no detail? And its seemingly self aware?? How strange, peculiar, some would even go as far to say, an oddity.",
+    "metadata": {
+        "name": "what-a-package",
+        "main": "./dist/main",
+        "version": "0.206.0",
+        "description": "Not really a good description, at all. From 0.205.0",
+        "engines": {
+            "atom": ">=1.0.0 <2.0.0"
+        }
     }
-  }
 }

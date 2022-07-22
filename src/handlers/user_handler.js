@@ -34,6 +34,7 @@ async function GETLoginStars(req, res) {
   let params = {
     login: req.params.login,
   };
+
   let user = await users.GetUser(params.login);
 
   if (user.ok) {

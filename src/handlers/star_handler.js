@@ -12,6 +12,7 @@ const users = require("../users.js");
 const data = require("../data.js");
 const common = require("./common_handler.js");
 const collection = require("../collection.js");
+const utils = require("../utils.js");
 
 /**
  * @async
@@ -31,26 +32,22 @@ async function GETStars(req, res) {
   let params = {
     auth: req.get("Authorization"),
   };
-  let user = await users.VerifyAuth(params.auth);
 
-  if (!user.ok) {
-    await common.AuthFail(req, res, user);
-    return;
-  }
+  await utils.LocalUserLoggedIn(req, res, params.auth, async (user) => {
+    let packageCollection = await data.GetPackageCollection(user.content.stars);
 
-  let packageCollection = await data.GetPackageCollection(user.content.stars);
+    if (!packageCollection.ok) {
+      await common.ServerError(req, res, packageCollection.content);
+      return;
+    }
 
-  if (!packageCollection.ok) {
-    await common.ServerError(req, res, packageCollection.content);
-    return;
-  }
+    // We need to prune these items from a Server Package Full Item.
+    let newCollection = await collection.DeepCopy(packageCollection.content);
+    newCollection = await collection.POSPrune(newCollection);
 
-  // We need to prune these items from a Server Package Full Item.
-  let newCollection = collection.DeepCopy(packageCollection.content);
-  newCollection = collection.POSPrune(newCollection);
-
-  res.status(200).json(newCollection);
-  logger.HTTPLog(req, res);
+    res.status(200).json(newCollection);
+    logger.HTTPLog(req, res);
+  });
 }
 
 module.exports = {

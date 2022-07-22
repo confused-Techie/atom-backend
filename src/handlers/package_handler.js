@@ -21,6 +21,7 @@ const git = require("../git.js");
 const logger = require("../logger.js");
 const error = require("../error.js");
 const { server_url, paginated_amount } = require("../config.js").GetConfig();
+const utils = require("../utils.js");
 
 /**
  * @async
@@ -152,7 +153,7 @@ async function POSTPackages(req, res) {
   if (!gitowner.ok) {
     // Check why its not okay. But since it hasn't been written we can't reliably know how to check, or respond.
     // So we will respond with not supported for now.
-    // TODO: Proper error checking based on function.
+    // TODO: Error Response to git.Ownership()
     await common.NotSupported(req, res);
     return;
   }
@@ -212,6 +213,7 @@ async function GETPackagesFeatured(req, res) {
   // Sort by package name, in alphabetical order is implemented client side. Wether this means we want to implement it
   // or leave it to the client is hard to say.
 
+  // See https://github.com/confused-Techie/atom-community-server-backend-JS/issues/23
   await common.NotSupported(req, res);
 }
 
@@ -756,7 +758,7 @@ async function POSTPackagesEventUninstall(req, res) {
     versionName: req.params.versionName,
   };
 
-  await DetermineUserPackagePermission(req, res, params.auth, async () => {
+  await utils.LocalUserLoggedIn(req, res, params.auth, async () => {
     let pack = await data.GetPackageByName(params.packageName);
 
     if (!pack.ok) {
