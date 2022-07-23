@@ -153,12 +153,12 @@ async function POSTPackages(req, res) {
   if (!gitowner.ok) {
     // Check why its not okay. But since it hasn't been written we can't reliably know how to check, or respond.
     // So we will respond with not supported for now.
-    switch(gitowner.short) {
-      case("No Repo Access"):
+    switch (gitowner.short) {
+      case "No Repo Access":
         await common.AuthFail(req, res, gitowner.content);
         return;
         break;
-      case("Server Error"):
+      case "Server Error":
       default:
         await common.ServerError(req, res, gitowner.content);
         return;
