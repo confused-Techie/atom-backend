@@ -154,14 +154,14 @@ async function POSTPackages(req, res) {
     switch (gitowner.short) {
       case "No Repo Access":
         await common.AuthFail(req, res, gitowner.content);
-        return;
         break;
       case "Server Error":
       default:
         await common.ServerError(req, res, gitowner.content);
-        return;
         break;
     }
+
+    return;
   }
 
   // Now knowing they own the git repo, and it doesn't exist here, lets publish.
@@ -353,14 +353,14 @@ async function DELETEPackagesName(req, res) {
     switch (gitowner.short) {
       case "No Repo Access":
         await common.AuthFail(req, res, gitowner.content);
-        return;
         break;
       case "Server Error":
       default:
         await common.ServerError(req, res, gitowner.content);
-        return;
         break;
     }
+
+    return;
   }
 
   // they are logged in properly, and own the git repo they are referencing via the package name.
@@ -573,14 +573,14 @@ async function POSTPackagesVersion(req, res) {
     switch (gitowner.short) {
       case "No Repo Access":
         await common.AuthFail(req, res, gitowner.content);
-        return;
         break;
       case "Server Error":
       default:
         await common.ServerError(req, res, gitowner.content);
-        return;
         break;
     }
+
+    return;
   }
 
   // TODO: Unkown how to handle a rename, so it must be planned before completion.
@@ -715,14 +715,14 @@ async function DELETEPackageVersion(req, res) {
     switch (gitowner.short) {
       case "No Repo Access":
         await common.AuthFail(req, res, gitowner.content);
-        return;
         break;
       case "Server Error":
       default:
         await common.ServerError(req, res, gitowner.content);
-        return;
         break;
     }
+
+    return;
   }
 
   let pack = await data.GetPackageByName(params.packageName);
@@ -849,14 +849,14 @@ async function DetermineUserPackageGitPermission(
       switch (gitowner.short) {
         case "No Repo Access":
           await common.AuthFail(req, res, gitowner.content);
-          return;
           break;
         case "Server Error":
         default:
           await common.ServerError(req, res, gitowner.content);
-          return;
           break;
       }
+
+      return;
     }
   } else {
     await common.AuthFail(req, res, user);
