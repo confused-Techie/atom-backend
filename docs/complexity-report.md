@@ -1,12 +1,12 @@
-# Complexity report, 7/21/2022
+# Complexity report, 7/23/2022
 
-* Mean per-function logical LOC: 19.519444444444446
-* Mean per-function parameter count: 1.1076388888888888
-* Mean per-function cyclomatic complexity: 4.243055555555555
-* Mean per-function Halstead effort: 13489.53712184999
-* Mean per-module maintainability index: 61.25815799959277
-* First-order density: 3.125%
-* Change cost: 15.625%
+* Mean per-function logical LOC: 18.017283950617283
+* Mean per-function parameter count: 0.9845679012345678
+* Mean per-function cyclomatic complexity: 3.882716049382716
+* Mean per-function Halstead effort: 12171.289959120451
+* Mean per-module maintainability index: 62.90355422503316
+* First-order density: 3.7037037037037033%
+* Change cost: 16.049382716049383%
 * Core size: 100%
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/config.js
@@ -51,11 +51,11 @@
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/error.js
 
-* Physical LOC: 112
-* Logical LOC: 31
+* Physical LOC: 114
+* Logical LOC: 33
 * Mean parameter count: 1
 * Cyclomatic complexity: 1
-* Cyclomatic complexity density: 3.225806451612903%
+* Cyclomatic complexity density: 3.0303030303030303%
 * Maintainability index: 84.01966208734827
 * Dependency count: 0
 * Function: **NotFoundJSON**
@@ -419,13 +419,23 @@
     * Halstead volume: 91.37651812938249
     * Halstead effort: 186.9065143555551
 
-## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/tests/query.test.js
+## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/tests/logger.test.js
 
-* Physical LOC: 117
-* Logical LOC: 75
+* Physical LOC: 39
+* Logical LOC: 4
 * Mean parameter count: 0
 * Cyclomatic complexity: 1
-* Cyclomatic complexity density: 1.3333333333333335%
-* Maintainability index: 38.2272132895994
+* Cyclomatic complexity density: 25%
+* Maintainability index: 76.39879935103494
+* Dependency count: 1
+
+## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/tests/query.test.js
+
+* Physical LOC: 118
+* Logical LOC: 77
+* Mean parameter count: 0
+* Cyclomatic complexity: 1
+* Cyclomatic complexity density: 1.2987012987012987%
+* Maintainability index: 37.89513796712087
 * Dependency count: 1
 
