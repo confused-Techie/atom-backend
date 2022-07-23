@@ -1127,7 +1127,7 @@ Note that it's designed to be called as the last async function before the retur
 | short | <code>string</code> | The short string which specifies the type of the error. |
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
-| content | <code>string</code> | The detailed error message to log server side. |
+| content | <code>string</code> \| <code>object</code> | The detailed error message to log server side or the Raw Status Object of the User, expected to return from `VerifyAuth`. |
 
 <a name="module_oauth_handler"></a>
 
