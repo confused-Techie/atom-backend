@@ -151,8 +151,6 @@ async function POSTPackages(req, res) {
   let gitowner = await git.Ownership(user.content, params.repository);
 
   if (!gitowner.ok) {
-    // Check why its not okay. But since it hasn't been written we can't reliably know how to check, or respond.
-    // So we will respond with not supported for now.
     switch (gitowner.short) {
       case "No Repo Access":
         await common.AuthFail(req, res, gitowner.content);
@@ -352,9 +350,17 @@ async function DELETEPackagesName(req, res) {
   let gitowner = await git.Ownership(user.content, params.packageName);
 
   if (!gitowner.ok) {
-    // TODO: Unable to know git.Ownership returns without it written
-    await common.NotSupported(req, res);
-    return;
+    switch(gitowner.short) {
+      case("No Repo Access"):
+        await common.AuthFail(req, res, gitowner.content);
+        return;
+        break;
+      case("Server Error"):
+      default:
+        await common.ServerError(req, res, gitowner.content);
+        return;
+        break;
+    }
   }
 
   // they are logged in properly, and own the git repo they are referencing via the package name.
@@ -564,9 +570,17 @@ async function POSTPackagesVersion(req, res) {
   let gitowner = await git.Ownership(user.content, params.packageName);
 
   if (!gitowner.ok) {
-    // TODO: cannot handle git.Ownership errors until written.
-    await common.NotSupported(req, res);
-    return;
+    switch(gitowner.short) {
+      case("No Repo Access"):
+        await common.AuthFail(req, res, gitowner.content);
+        return;
+        break;
+      case("Server Error"):
+      default:
+        await common.ServerError(req, res, gitowner.content);
+        return;
+        break;
+    }
   }
 
   // TODO: Unkown how to handle a rename, so it must be planned before completion.
@@ -698,9 +712,17 @@ async function DELETEPackageVersion(req, res) {
   let gitowner = await git.Ownership(user.content, params.packageName);
 
   if (!gitowner.ok) {
-    // TODO: Unkown how to handle git.Ownership errors till written.
-    await common.NotSupported(req, res);
-    return;
+    switch(gitowner.short) {
+      case("No Repo Access"):
+        await common.AuthFail(req, res, gitowner.content);
+        return;
+        break;
+      case("Server Error"):
+      default:
+        await common.ServerError(req, res, gitowner.content);
+        return;
+        break;
+    }
   }
 
   let pack = await data.GetPackageByName(params.packageName);
@@ -824,8 +846,17 @@ async function DetermineUserPackageGitPermission(
     if (gitowner.ok) {
       callback(user, gitowner);
     } else {
-      // TODO: Once determined the errors this will return, then we can impement. For now...
-      await common.NotSupported(req, res);
+      switch(gitowner.short) {
+        case("No Repo Access"):
+          await common.AuthFail(req, res, gitowner.content);
+          return;
+          break;
+        case("Server Error"):
+        default:
+          await common.ServerError(req, res, gitowner.content);
+          return;
+          break;
+      }
     }
   } else {
     await common.AuthFail(req, res, user);
