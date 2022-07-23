@@ -133,7 +133,8 @@ async function BadPackageJSON(req, res) {
  * @param {string} short - The short string which specifies the type of the error.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
- * @param {string} content - The detailed error message to log server side.
+ * @param {string|object} content - The detailed error message to log server side or
+ * the Raw Status Object of the User, expected to return from `VerifyAuth`.
  */
 async function HandleError(short, req, res, content) {
   switch (short) {
@@ -146,10 +147,13 @@ async function HandleError(short, req, res, content) {
       break;
 
     case "Bad Package":
-      BadPackageJSON(req, res);
+      await BadPackageJSON(req, res);
       break;
 
     case "No Repo Access":
+      await common.AuthFail(req, res, content);
+      break;
+
     case "Server Error":
     default:
       await ServerError(req, res, content);
