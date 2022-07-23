@@ -15,17 +15,51 @@ const encodedToken = Buffer.from(`${GH_USERNAME}:${GH_TOKEN}`).toString(
 /**
  * @async
  * @function Ownership
- * @desc This <b>Unfinished</b> function is intended to return a Server Status Object.
- * Proving ownership over a GitHub repo. Which is used to determine if the user
- * is allowed to make changes to its corresponding package. Should return true
- * in the Server Status Object if ownership is valid. But until it is written, will
- * not be fully documented.
+ * @desc Allows the ability to check if a user has permissions to write to a repo.
+ * <b>MUST</b> Be provided `owner/repo` to successfully function, and expects the 
+ * full `user` object. Returns `ok: true` where content is the repo data from GitHub 
+ * on success, returns `short: "No Repo Access"` if they do not have permisison 
+ * to affect said repo or `short: "Server Error"` if any other error has occured.
+ * @param {object} user - The Full User object, including `name`, `github_token`.
+ * @param {string} repo - The `owner/repo` of the repo changes are intended to affect.
  */
 async function Ownership(user, repo) {
   // user here is a full fledged user object. And repo is a text representation of the repository.
   // Since git auth is not setup, this will return positive.
-  // TODO: All of it; Stopper: Github Auth
-  return { ok: true, content: "Fake Function" };
+  
+  let withinPackages = await doesUserHaveRepo(user, repo);
+  
+  // doesUserHaveRepo returns several different results, which need to be checked for 
+  
+  if (withinPackages.ok) {
+    // if the user has access directly return withinPackages 
+    return withinPackages;
+  } else {
+    // if the user doesn't have access check one of the many returns 
+    switch(withinPackages.short) {
+      case("No Access"):
+        // the user does not have any access to the repo.
+        return { ok: false, short: "No Repo Access" };
+        break;
+      case("Failed Request"):
+        // the request returned an unexpected error. For now return error 
+        return { ok: false, short: "Server Error", content: "GitHub Returned an unexpected error." };
+        break;
+      case("Server Error"):
+        // an error occured.
+        return { ok: false, short: "Server Error", content: withinPackages.content };
+        break;
+      case("No Auth"):
+        // the token used is invalid 
+        // TODO: properly handle token refresh.
+        return { ok: false, short: "Server Error", content: "Unrefreshed token." };
+        break;
+      default:
+        // unkown short provided 
+        return { ok: false, short: "Server Error", content: "Unkown short provided during git.Ownership" };
+        break;
+    }
+  }
 }
 
 /**
@@ -193,15 +227,59 @@ async function CreatePackage(repo) {
   }
 }
 
+async function doesUserHaveRepo(user, repo, page = 1) {
+  try {
+    const res = await superagent
+      .get(`https://api.github.com/user/repos?page=${page}`)
+      .set({ Authorization: 'Basic ' + Buffer.from(`${user.name}:${user.github_token}`).toString("base64") })
+      .set({ "User-Agent": GH_USERAGENT });
+      
+    if (res.status === 200) {
+      for (let i = 0; i < res.body.length; i++) {
+        if (res.body[i].full_name === repo) {
+          return { ok: true, content: res.body[i] };
+        }
+      }
+      
+      // after going through every repo returned, we haven't found a repo 
+      // the user owns. Lets check if theres multiple pages of returns.
+      //console.log(res.headers);
+      if (res.headers["link"].includes(`?page=${page++}`)) {
+        // if the link headers on the page include the query parameter 
+        // of the next page number 
+        return await doesUserHaveRepo(user, repo, page++);
+      }
+      
+      // if there are no increasing pages, return no access 
+      return { ok: false, short: "No Access" };
+      
+    } else {
+      // we received some other status code, and should return a failure.
+      return { ok: false, short: "Failed Request" };
+    }
+  } catch(err) {
+    console.log(err);
+    console.log(err.response.request.header);
+    if (err.status === 401) {
+      return { ok: false, short: "No Auth" };
+    }
+    
+    return { ok: false, short: "Server Error", content: err };
+  }
+}
+
 async function getRepoExistance(repo) {
   try {
     const res = await superagent
       .get(`https://github.com/${repo}`)
-      .set({ Authorization: "Basic " + encodedToken });
+      .set({ Authorization: "Basic " + encodedToken })
+      .set({ "User-Agent": GH_USERAGENT });
 
     if (res.status === 200) {
       return true;
     } else if (res.status === 400) {
+      return false;
+    } else {
       return false;
     }
   } catch (err) {
