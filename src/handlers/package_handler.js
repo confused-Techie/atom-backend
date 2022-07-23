@@ -153,9 +153,17 @@ async function POSTPackages(req, res) {
   if (!gitowner.ok) {
     // Check why its not okay. But since it hasn't been written we can't reliably know how to check, or respond.
     // So we will respond with not supported for now.
-    // TODO: Error Response to git.Ownership()
-    await common.NotSupported(req, res);
-    return;
+    switch(gitowner.short) {
+      case("No Repo Access"):
+        await common.AuthFail(req, res, gitowner.content);
+        return;
+        break;
+      case("Server Error"):
+      default:
+        await common.ServerError(req, res, gitowner.content);
+        return;
+        break;
+    }
   }
 
   // Now knowing they own the git repo, and it doesn't exist here, lets publish.

@@ -26,6 +26,7 @@ const logger = require("../logger.js");
 async function AuthFail(req, res, user) {
   switch (user.short) {
     case "Bad Auth":
+    case "Auth Fail": // support for being passed a git return.
       error.MissingAuthJSON(res);
       logger.HTTPLog(req, res);
       break;
