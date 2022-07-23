@@ -151,7 +151,7 @@ async function HandleError(short, req, res, content) {
       break;
 
     case "No Repo Access":
-      await common.AuthFail(req, res, content);
+      await AuthFail(req, res, content);
       break;
 
     case "Server Error":
