@@ -485,7 +485,6 @@ async function GETPackagesStargazers(req, res) {
  * @function POSTPackagesVersion
  * @desc Allows a new version of a package to be published. But also can allow
  * a user to rename their application during this process.
- * @todo
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
