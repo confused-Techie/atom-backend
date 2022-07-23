@@ -25,22 +25,47 @@ This is implemented as a method of 'bubbling up' any errors, to let the server r
 
 #### Data.js
 
-* GetUsers(): "File Not Found", "Server Error"
-* SetUsers(): "Server Error"
-* GetPackagePointer(): "File Not Found", "Server Error"
-* SetPackagePointer(): NOT IMPLEMENTED
-* GetPackageByID(): "File Not Found", "Server Error"
+* GetUsers(): 
+  - Bubbles from resources.Read()
+  - Bubbles from resources.Write()
+* GetPackagePointer(): 
+  - Bubbles from resources.Read()
+* GetAllPackages(): "Not Found"
+  - Bubbles from data.GetPackagePointer()
+  - Bubbles from getNew()
+* GetPackageByID(): 
+  - Bubbles from resources.Read()
+* SetUsers():
+  - Bubbles from resources.Write()
+* SetPackagePointer():
+  - Bubbles from resources.Write()
+* SetPackageByID():
+  - Bubbles from resources.Write()
+* RemovePackageByPointer(): "Server Error"
+* RestorePackageByPointer(): "Not Found"
+* RemovePackageByName(): "Not Found", "Server Error"
+  - Bubbles from data.GetPackagePointer()
+  - Bubbles from data.RemovePackageByPointer()
 * GetPackageByName(): "Server Error", "Not Found"
-  - Bubbles from GetPackagePointer()
+  - Bubbles from data.GetPackagePointer()
 * GetPackagePointerByName(): "Not Found"
-  - Bubbles from GetPacakgePointer()
-* GetAllPackages():
-  - Bubbles from GetPackagePointer()
-  - Bubbles from GetPackageByID()
-* GetPackageCollection():
-  - Bubbles from GetPackageByName()
-* SetPackage(): NOT IMPLEMENTED
-* NewPackage(): NOT IMPLEMENTED
+  - Bubbles from data.GetPackagePointer()
+* GetPackageCollection(): 
+  - Bubbles from data.GetPackageByName() (EXCEPT Not Found)
+* StarPackageByName():
+  - Bubbles from data.GetPackagePointerByName()
+  - Bubbles from data.GetPackageByID()
+  - Bubbles from data.SetPackageByID()
+* UnStarPackageByName(): "Not Found"
+  - Bubbles from data.GetPackagePointerByName()
+  - Bubbles from data.GetPackageByID()
+  - Bubbles from data.SetPackageByID()
+* SetPackageByName(): "Not Found"
+  - Bubbles from data.GetPackagePointer()
+  - Bubbles from data.SetPackageByID()
+* NewPackage(): "Server Error"
+  - Bubbles from data.GetPackagePointer()
+  - Bubbles from data.SetPackagePointer()
 
 #### Users.js
 
@@ -56,3 +81,19 @@ This is implemented as a method of 'bubbling up' any errors, to let the server r
   - Bubbles from GetUser()
   - Bubbles from data.GetUsers()
   - Bubbles from data.SetUsers()
+
+#### Resources.js
+
+* Read(): 
+  - Bubbles from resources.readFile()
+* readFile(): "File Not Found", "Server Error"
+* Write():
+  - Bubbles from resources.writeFile()
+* writeFile(): "Server Error"
+* Delete(): "Server Error"
+
+#### Git.js
+
+* Ownership(): "No Repo Access", "Server Error"
+* CreatePackage(): "Bad Repo", "Bad Package", "Server Error"
+* doesUserHaveRepo(): "No Access", "Failed Request", "No Auth", "Server Error"
