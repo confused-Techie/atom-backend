@@ -151,36 +151,15 @@ async function POSTPackages(req, res) {
   let gitowner = await git.Ownership(user.content, params.repository);
 
   if (!gitowner.ok) {
-    switch (gitowner.short) {
-      case "No Repo Access":
-        await common.AuthFail(req, res, gitowner.content);
-        return;
-        break;
-      case "Server Error":
-      default:
-        await common.ServerError(req, res, gitowner.content);
-        return;
-        break;
-    }
+    await common.HandleError(gitowner.short, req, res, gitowner.content);
+    return;
   }
 
   // Now knowing they own the git repo, and it doesn't exist here, lets publish.
   let pack = await git.CreatePackage(params.repository);
 
   if (!pack.ok) {
-    switch (pack.short) {
-      case "Bad Repo":
-        await common.BadRepoJSON(req, res);
-        break;
-      case "Bad Package":
-        common.BadPackageJSON(req, res);
-        break;
-      default:
-        // Mostly the case of "Server Error"
-        await common.ServerError(req, res, pack.content);
-        break;
-    }
-
+    await common.HandleError(pack.short, req, res, pack.content);
     return;
   }
 
@@ -300,16 +279,7 @@ async function GETPackagesDetails(req, res) {
   let pack = await data.GetPackageByName(params.name);
 
   if (!pack.ok) {
-    switch (pack.short) {
-      case "Not Found":
-        await common.NotFound(req, res);
-        break;
-      default:
-        // Mostly the case of "Server Error"
-        await common.ServerError(req, res, pack.content);
-        break;
-    }
-
+    await common.HandleError(pack.short, req, res, pack.content);
     return;
   }
 
@@ -350,17 +320,8 @@ async function DELETEPackagesName(req, res) {
   let gitowner = await git.Ownership(user.content, params.packageName);
 
   if (!gitowner.ok) {
-    switch (gitowner.short) {
-      case "No Repo Access":
-        await common.AuthFail(req, res, gitowner.content);
-        return;
-        break;
-      case "Server Error":
-      default:
-        await common.ServerError(req, res, gitowner.content);
-        return;
-        break;
-    }
+    await common.HandleError(gitowner.short, req, res, gitowner.content);
+    return;
   }
 
   // they are logged in properly, and own the git repo they are referencing via the package name.
@@ -368,15 +329,8 @@ async function DELETEPackagesName(req, res) {
   let rm = await data.RemovePackageByName(params.packageName);
 
   if (!rm.ok) {
-    switch (rm.short) {
-      case "Not Found":
-        await common.NotFound(req, res);
-        break;
-      default:
-        // Mostly the case of "Server Error"
-        await common.ServerError(req, res, rm.content);
-        break;
-    }
+    await common.HandleError(rm.short, req, res, rm.content);
+    return;
   }
 
   // we have successfully removed the package.
@@ -494,15 +448,7 @@ async function DELETEPackagesStar(req, res) {
       }
     } else {
       // unable to remove the star from the package, respond with error.
-      switch (pack.short) {
-        case "Not Found":
-          await common.NotFound(req, res);
-          break;
-        default:
-          // Mostly the case of "Server Error"
-          await common.ServerError(req, res, pack.content);
-          break;
-      }
+      await common.HandleError(pack.short, req, res, pack.content);
     }
   } else {
     await common.AuthFail(req, res, user);
@@ -525,16 +471,7 @@ async function GETPackagesStargazers(req, res) {
   let pack = await data.GetPackageByName(params.packageName);
 
   if (!pack.ok) {
-    switch (pack.short) {
-      case "Not Found":
-        await common.NotFound(req, res);
-        break;
-      default:
-        // Mostly the case of "Server Error"
-        await common.ServerError(req, res, pack.content);
-        break;
-    }
-
+    await common.HandleError(pack.short, req, res, pack.content);
     return;
   }
 
@@ -548,7 +485,6 @@ async function GETPackagesStargazers(req, res) {
  * @function POSTPackagesVersion
  * @desc Allows a new version of a package to be published. But also can allow
  * a user to rename their application during this process.
- * @todo
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
@@ -570,17 +506,8 @@ async function POSTPackagesVersion(req, res) {
   let gitowner = await git.Ownership(user.content, params.packageName);
 
   if (!gitowner.ok) {
-    switch (gitowner.short) {
-      case "No Repo Access":
-        await common.AuthFail(req, res, gitowner.content);
-        return;
-        break;
-      case "Server Error":
-      default:
-        await common.ServerError(req, res, gitowner.content);
-        return;
-        break;
-    }
+    await common.HandleError(gitowner.short, req, res, gitowner.content);
+    return;
   }
 
   // TODO: Unkown how to handle a rename, so it must be planned before completion.
@@ -616,15 +543,7 @@ async function GETPackagesVersion(req, res) {
         await common.NotFound(req, res);
       }
     } else {
-      switch (pack.short) {
-        case "Not Found":
-          await common.NotFound(req, res);
-          break;
-        default:
-          // Mostly the case of "Server Error"
-          await common.ServerError(req, res, pack.content);
-          break;
-      }
+      await common.HandleError(pack.short, req, res, pack.content);
     }
   } else {
     // we return a 404 for the version, since its an invalid format.
@@ -712,32 +631,16 @@ async function DELETEPackageVersion(req, res) {
   let gitowner = await git.Ownership(user.content, params.packageName);
 
   if (!gitowner.ok) {
-    switch (gitowner.short) {
-      case "No Repo Access":
-        await common.AuthFail(req, res, gitowner.content);
-        return;
-        break;
-      case "Server Error":
-      default:
-        await common.ServerError(req, res, gitowner.content);
-        return;
-        break;
-    }
+    await common.HandleError(gitowner.short, req, res, gitowner.content);
+    return;
   }
 
   let pack = await data.GetPackageByName(params.packageName);
 
   if (!pack.ok) {
     // getting package returned error.
-    switch (pack.short) {
-      case "Not Found":
-        await common.NotFound(req, res);
-        break;
-      default:
-        // Mostly the case of "Server Error"
-        await common.ServerError(req, res, pack.content);
-        break;
-    }
+    await common.HandleError(pack.short, req, res, pack.content);
+    return;
   }
 
   if (!pack.content[params.versionName]) {
@@ -753,15 +656,8 @@ async function DELETEPackageVersion(req, res) {
   let write = data.SetPackageByName(params.packageName, pack.content);
 
   if (!write.ok) {
-    switch (write.short) {
-      case "Not Found":
-        await common.NotFound(req, res);
-        break;
-      default:
-        // Mostly the case of "Server Error"
-        await common.ServerError(req, res, write.content);
-        break;
-    }
+    await common.HandleError(write.short, req, res, write.content);
+    return;
   }
 
   // successfully wrote the modified data
@@ -792,16 +688,7 @@ async function POSTPackagesEventUninstall(req, res) {
     let pack = await data.GetPackageByName(params.packageName);
 
     if (!pack.ok) {
-      switch (pack.short) {
-        case "Not Found":
-          await common.NotFound(req, res);
-          break;
-        default:
-          // Mostly the case of "Server Error"
-          await common.ServerError(req, res, pack.content);
-          break;
-      }
-
+      await common.HandleError(pack.short, req, res, pack.content);
       return;
     }
 
@@ -846,17 +733,8 @@ async function DetermineUserPackageGitPermission(
     if (gitowner.ok) {
       callback(user, gitowner);
     } else {
-      switch (gitowner.short) {
-        case "No Repo Access":
-          await common.AuthFail(req, res, gitowner.content);
-          return;
-          break;
-        case "Server Error":
-        default:
-          await common.ServerError(req, res, gitowner.content);
-          return;
-          break;
-      }
+      await common.HandleError(gitowner.short, req, res, gitowner.content);
+      return;
     }
   } else {
     await common.AuthFail(req, res, user);

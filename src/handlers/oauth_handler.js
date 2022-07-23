@@ -35,7 +35,6 @@ async function GETLogin(req, res) {
  * @async
  * @function GETOauth
  * @desc Endpoint intended to use as the actual return from GitHub to login.
- * @todo
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */

@@ -40,7 +40,7 @@ async function Ownership(user, repo) {
       case "No Access":
         // the user does not have any access to the repo.
         return { ok: false, short: "No Repo Access" };
-        break;
+
       case "Failed Request":
         // the request returned an unexpected error. For now return error
         return {
@@ -48,7 +48,7 @@ async function Ownership(user, repo) {
           short: "Server Error",
           content: "GitHub Returned an unexpected error.",
         };
-        break;
+
       case "Server Error":
         // an error occured.
         return {
@@ -56,7 +56,7 @@ async function Ownership(user, repo) {
           short: "Server Error",
           content: withinPackages.content,
         };
-        break;
+
       case "No Auth":
         // the token used is invalid
         // TODO: properly handle token refresh.
@@ -65,7 +65,7 @@ async function Ownership(user, repo) {
           short: "Server Error",
           content: "Unrefreshed token.",
         };
-        break;
+
       default:
         // unkown short provided
         return {
@@ -73,7 +73,6 @@ async function Ownership(user, repo) {
           short: "Server Error",
           content: "Unkown short provided during git.Ownership",
         };
-        break;
     }
   }
 }
@@ -294,12 +293,12 @@ async function getRepoExistance(repo) {
       .set({ Authorization: "Basic " + encodedToken })
       .set({ "User-Agent": GH_USERAGENT });
 
-    if (res.status === 200) {
-      return true;
-    } else if (res.status === 400) {
-      return false;
-    } else {
-      return false;
+    switch (res.status) {
+      case 200:
+        return true;
+      case 400:
+      default:
+        return false;
     }
   } catch (err) {
     logger.WarningLog(

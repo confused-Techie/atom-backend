@@ -56,10 +56,16 @@ to listen on. As well as handling a graceful shutdown of the server.</p>
 <dd><p>Focused on interacting with User Data only. Provides functions required
 to modify, or compile user data specifically.</p>
 </dd>
+<dt><a href="#module_utils">utils</a></dt>
+<dd><p>A helper for any functions that are agnostic in hanlders.</p>
+</dd>
 <dt><a href="#module_common_handler">common_handler</a></dt>
 <dd><p>Provides a simplistic way to refer to implement common endpoint returns.
 So these can be called as an async function without more complex functions, reducing
 verbosity, and duplication within the codebase.</p>
+</dd>
+<dt><a href="#module_oauth_handler">oauth_handler</a></dt>
+<dd><p>Endpoint Handlers for Authentication URLs</p>
 </dd>
 <dt><a href="#module_package_handler">package_handler</a></dt>
 <dd><p>Endpoint Handlers in all relating to the packages themselves.</p>
@@ -373,19 +379,25 @@ Assists in interactions between the backend and GitHub.
 
 
 * [git](#module_git)
-    * [~Ownership()](#module_git..Ownership)
+    * [~Ownership(user, repo)](#module_git..Ownership)
     * [~CreatePackage(repo)](#module_git..CreatePackage) ⇒ <code>object</code>
 
 <a name="module_git..Ownership"></a>
 
-### git~Ownership()
-This <b>Unfinished</b> function is intended to return a Server Status Object.
-Proving ownership over a GitHub repo. Which is used to determine if the user
-is allowed to make changes to its corresponding package. Should return true
-in the Server Status Object if ownership is valid. But until it is written, will
-not be fully documented.
+### git~Ownership(user, repo)
+Allows the ability to check if a user has permissions to write to a repo.
+<b>MUST</b> Be provided `owner/repo` to successfully function, and expects the
+full `user` object. Returns `ok: true` where content is the repo data from GitHub
+on success, returns `short: "No Repo Access"` if they do not have permisison
+to affect said repo or `short: "Server Error"` if any other error has occured.
 
 **Kind**: inner method of [<code>git</code>](#module_git)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| user | <code>object</code> | The Full User object, including `name`, `github_token`. |
+| repo | <code>string</code> | The `owner/repo` of the repo changes are intended to affect. |
+
 <a name="module_git..CreatePackage"></a>
 
 ### git~CreatePackage(repo) ⇒ <code>object</code>
@@ -966,6 +978,28 @@ This pruned item should never be written back to disk, as removed the data from 
 | --- | --- | --- |
 | userObj | <code>object</code> | The object of which to preform the pruning on. |
 
+<a name="module_utils"></a>
+
+## utils
+A helper for any functions that are agnostic in hanlders.
+
+**Implements**: <code>resources</code>, <code>logger</code>, <code>users</code>, <code>common</code>  
+<a name="module_utils..LocalUserLoggedIn"></a>
+
+### utils~LocalUserLoggedIn(req, res, params_user, callback)
+Used as a less verbose way to check if the current user token, is associated
+with a logged in user. If not handles errors automatically, if so calls the callback
+function passing the Server Status Object, where content is User.
+
+**Kind**: inner method of [<code>utils</code>](#module_utils)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | - |
+| res | <code>object</code> | - |
+| params_user | <code>string</code> | Usually `params.auth` or otherwise the authorization token within the header field. |
+| callback | <code>function</code> | The callback to invoke only if the user is properly authenticated. |
+
 <a name="module_common_handler"></a>
 
 ## common\_handler
@@ -983,6 +1017,7 @@ verbosity, and duplication within the codebase.
     * [~SiteWideNotFound(req, res)](#module_common_handler..SiteWideNotFound)
     * [~BadRepoJSON(req, res)](#module_common_handler..BadRepoJSON)
     * [~BadPackageJSON(req, res)](#module_common_handler..BadPackageJSON)
+    * [~HandleError(short, req, res, content)](#module_common_handler..HandleError)
 
 <a name="module_common_handler..AuthFail"></a>
 
@@ -1078,6 +1113,58 @@ Returns the BadPackageJSON message to the user.
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
+<a name="module_common_handler..HandleError"></a>
+
+### common_handler~HandleError(short, req, res, content)
+Generic error handler mostly used to reduce the duplication of error handling in other modules.
+It checks the short error string and calls the relative endpoint.
+Note that it's designed to be called as the last async function before the return.
+
+**Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| short | <code>string</code> | The short string which specifies the type of the error. |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+| content | <code>string</code> \| <code>object</code> | The detailed error message to log server side or the Raw Status Object of the User, expected to return from `VerifyAuth`. |
+
+<a name="module_oauth_handler"></a>
+
+## oauth\_handler
+Endpoint Handlers for Authentication URLs
+
+**Implements**: <code>config</code>, <code>common\_handler</code>  
+
+* [oauth_handler](#module_oauth_handler)
+    * [~GETLogin(req, res)](#module_oauth_handler..GETLogin)
+    * [~GETOauth(req, res)](#module_oauth_handler..GETOauth)
+
+<a name="module_oauth_handler..GETLogin"></a>
+
+### oauth_handler~GETLogin(req, res)
+Endpoint used to direct users to login, directing the user to the
+proper GitHub OAuth Page based on the backends client id.
+
+**Kind**: inner method of [<code>oauth\_handler</code>](#module_oauth_handler)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_oauth_handler..GETOauth"></a>
+
+### oauth_handler~GETOauth(req, res)
+Endpoint intended to use as the actual return from GitHub to login.
+
+**Kind**: inner method of [<code>oauth\_handler</code>](#module_oauth_handler)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
 <a name="module_package_handler"></a>
 
 ## package\_handler
@@ -1086,9 +1173,28 @@ Endpoint Handlers in all relating to the packages themselves.
 **Implements**: <code>common\_handler</code>, <code>users</code>, <code>data</code>, <code>collection</code>, <code>query</code>, <code>git</code>, <code>logger</code>, <code>error</code>, <code>config</code>  
 
 * [package_handler](#module_package_handler)
+    * [~GETPackages(req, res)](#module_package_handler..GETPackages)
     * [~POSTPackages(req, res)](#module_package_handler..POSTPackages)
+    * [~GETPackagesSearch(req, res)](#module_package_handler..GETPackagesSearch)
+    * [~DELETEPackagesName(req, res)](#module_package_handler..DELETEPackagesName)
     * [~GETPackagesStargazers(req, res)](#module_package_handler..GETPackagesStargazers)
+    * [~POSTPackagesVersion(req, res)](#module_package_handler..POSTPackagesVersion)
+    * [~GETPackagesVersionTarball(req, res)](#module_package_handler..GETPackagesVersionTarball)
+    * [~DELETEPackageVersion(req, res)](#module_package_handler..DELETEPackageVersion)
     * [~POSTPackagesEventUninstall(req, res)](#module_package_handler..POSTPackagesEventUninstall)
+
+<a name="module_package_handler..GETPackages"></a>
+
+### package_handler~GETPackages(req, res)
+Endpoint to return all packages to the user. Based on any filtering
+theyved applied via query parameters.
+
+**Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
 <a name="module_package_handler..POSTPackages"></a>
 
@@ -1104,11 +1210,74 @@ then goes about doing so.
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
+<a name="module_package_handler..GETPackagesSearch"></a>
+
+### package_handler~GETPackagesSearch(req, res)
+Allows user to search through all packages. Using their specified
+query parameter.
+
+**Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_package_handler..DELETEPackagesName"></a>
+
+### package_handler~DELETEPackagesName(req, res)
+Allows the user to delete a repo they have ownership of.
+
+**Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
 <a name="module_package_handler..GETPackagesStargazers"></a>
 
 ### package_handler~GETPackagesStargazers(req, res)
 Endpoint returns the array of `star_gazers` from a specified package.
 Taking only the package wanted, and returning it directly.
+
+**Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_package_handler..POSTPackagesVersion"></a>
+
+### package_handler~POSTPackagesVersion(req, res)
+Allows a new version of a package to be published. But also can allow
+a user to rename their application during this process.
+
+**Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_package_handler..GETPackagesVersionTarball"></a>
+
+### package_handler~GETPackagesVersionTarball(req, res)
+Allows the user to get the tarball for a specific package version.
+Which should initiate a download of said tarball on their end.
+
+**Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_package_handler..DELETEPackageVersion"></a>
+
+### package_handler~DELETEPackageVersion(req, res)
+Allows a user to delete a specific version of their package.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
 
