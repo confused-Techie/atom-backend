@@ -37,28 +37,22 @@ async function GETLoginStars(req, res) {
 
   let user = await users.GetUser(params.login);
 
-  if (user.ok) {
-    let packages = await data.GetPackageCollection(user.content.stars);
-
-    if (packages.ok) {
-      packages = await collection.POSPrune(packages.content); // package object short prune
-
-      res.status(200).json(packages);
-      logger.HTTPLog(req, res);
-    } else {
-      await common.ServerError(req, res, packages.content);
-    }
-  } else {
-    switch (user.short) {
-      case "Not Found":
-        await common.NotFound(req, res);
-        break;
-      default:
-        // Mostly the case of "Server Error"
-        await common.ServerError(req, res, user.content);
-        break;
-    }
+  if (!user.ok) {
+    await common.HandleError(user.short, req, res, user.content);
+    return;
   }
+
+  let packages = await data.GetPackageCollection(user.content.stars);
+
+  if (!packages.ok) {
+    await common.ServerError(req, res, packages.content);
+    return;
+  }
+
+  packages = await collection.POSPrune(packages.content); // package object short prune
+
+  res.status(200).json(packages);
+  logger.HTTPLog(req, res);
 }
 
 module.exports = {

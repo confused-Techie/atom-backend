@@ -124,6 +124,39 @@ async function BadPackageJSON(req, res) {
   logger.HTTPLog(req, res);
 }
 
+/**
+ * @async
+ * @function HandleError
+ * @desc Generic error handler mostly used to reduce the duplication of error handling in other modules.
+ * It checks the short error string and calls the relative endpoint.
+ * Note that it's designed to be called as the last async function before the return.
+ * @param {string} short - The short string which specifies the type of the error.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ * @param {string} content - The detailed error message to log server side.
+ */
+async function HandleError(short, req, res, content) {
+  switch (short) {
+    case "Not Found":
+      await NotFound(req, res);
+      break;
+
+    case "Bad Repo":
+      await BadRepoJSON(req, res);
+      break;
+
+    case "Bad Package":
+      BadPackageJSON(req, res);
+      break;
+
+    case "No Repo Access":
+    case "Server Error":
+    default:
+      await ServerError(req, res, content);
+      break;
+  }
+}
+
 module.exports = {
   AuthFail,
   ServerError,
@@ -132,4 +165,5 @@ module.exports = {
   NotSupported,
   BadRepoJSON,
   BadPackageJSON,
+  HandleError,
 };
