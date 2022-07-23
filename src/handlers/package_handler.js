@@ -350,12 +350,12 @@ async function DELETEPackagesName(req, res) {
   let gitowner = await git.Ownership(user.content, params.packageName);
 
   if (!gitowner.ok) {
-    switch(gitowner.short) {
-      case("No Repo Access"):
+    switch (gitowner.short) {
+      case "No Repo Access":
         await common.AuthFail(req, res, gitowner.content);
         return;
         break;
-      case("Server Error"):
+      case "Server Error":
       default:
         await common.ServerError(req, res, gitowner.content);
         return;
@@ -570,12 +570,12 @@ async function POSTPackagesVersion(req, res) {
   let gitowner = await git.Ownership(user.content, params.packageName);
 
   if (!gitowner.ok) {
-    switch(gitowner.short) {
-      case("No Repo Access"):
+    switch (gitowner.short) {
+      case "No Repo Access":
         await common.AuthFail(req, res, gitowner.content);
         return;
         break;
-      case("Server Error"):
+      case "Server Error":
       default:
         await common.ServerError(req, res, gitowner.content);
         return;
@@ -712,12 +712,12 @@ async function DELETEPackageVersion(req, res) {
   let gitowner = await git.Ownership(user.content, params.packageName);
 
   if (!gitowner.ok) {
-    switch(gitowner.short) {
-      case("No Repo Access"):
+    switch (gitowner.short) {
+      case "No Repo Access":
         await common.AuthFail(req, res, gitowner.content);
         return;
         break;
-      case("Server Error"):
+      case "Server Error":
       default:
         await common.ServerError(req, res, gitowner.content);
         return;
@@ -846,12 +846,12 @@ async function DetermineUserPackageGitPermission(
     if (gitowner.ok) {
       callback(user, gitowner);
     } else {
-      switch(gitowner.short) {
-        case("No Repo Access"):
+      switch (gitowner.short) {
+        case "No Repo Access":
           await common.AuthFail(req, res, gitowner.content);
           return;
           break;
-        case("Server Error"):
+        case "Server Error":
         default:
           await common.ServerError(req, res, gitowner.content);
           return;
