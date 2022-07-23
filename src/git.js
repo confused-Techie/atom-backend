@@ -293,12 +293,12 @@ async function getRepoExistance(repo) {
       .set({ Authorization: "Basic " + encodedToken })
       .set({ "User-Agent": GH_USERAGENT });
 
-    if (res.status === 200) {
-      return true;
-    } else if (res.status === 400) {
-      return false;
-    } else {
-      return false;
+    switch (res.status) {
+      case 200:
+        return true;
+      case 400:
+      default:
+        return false;
     }
   } catch (err) {
     logger.WarningLog(
