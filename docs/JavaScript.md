@@ -1017,7 +1017,7 @@ verbosity, and duplication within the codebase.
     * [~SiteWideNotFound(req, res)](#module_common_handler..SiteWideNotFound)
     * [~BadRepoJSON(req, res)](#module_common_handler..BadRepoJSON)
     * [~BadPackageJSON(req, res)](#module_common_handler..BadPackageJSON)
-    * [~HandleError(short, req, res, content)](#module_common_handler..HandleError)
+    * [~HandleError(req, res, obj)](#module_common_handler..HandleError)
 
 <a name="module_common_handler..AuthFail"></a>
 
@@ -1115,7 +1115,7 @@ Returns the BadPackageJSON message to the user.
 
 <a name="module_common_handler..HandleError"></a>
 
-### common_handler~HandleError(short, req, res, content)
+### common_handler~HandleError(req, res, obj)
 Generic error handler mostly used to reduce the duplication of error handling in other modules.
 It checks the short error string and calls the relative endpoint.
 Note that it's designed to be called as the last async function before the return.
@@ -1124,10 +1124,9 @@ Note that it's designed to be called as the last async function before the retur
 
 | Param | Type | Description |
 | --- | --- | --- |
-| short | <code>string</code> | The short string which specifies the type of the error. |
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
-| content | <code>string</code> \| <code>object</code> | The detailed error message to log server side or the Raw Status Object of the User, expected to return from `VerifyAuth`. |
+| obj | <code>object</code> | the Raw Status Object of the User, expected to return from `VerifyAuth`. |
 
 <a name="module_oauth_handler"></a>
 
