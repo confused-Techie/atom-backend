@@ -399,30 +399,39 @@ async function DELETEPackagesStar(req, res) {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),
   };
-  
+
   const onLogin = async (user) => {
     // now to unstar the package, by first removing the users star from the package.
-    let pack = await data.UnStarPackageByName(params.packageName, user.content.name);
-    
+    let pack = await data.UnStarPackageByName(
+      params.packageName,
+      user.content.name
+    );
+
     if (!pack.ok) {
       await common.HandleError(req, res, pack);
       return;
     }
     // we have removed the star from the package, then remove from the user.
-    let unstar = await users.RemoveUserStar(params.packageName, user.content.name);
-    
+    let unstar = await users.RemoveUserStar(
+      params.packageName,
+      user.content.name
+    );
+
     if (!unstar.ok) {
       // BUT important to note, the star was already removed from the package itself, so this means the package doesn't
       // list the user, but the user still lists the package, so we would need to restar the package
       // to allow this whole flow to try again, else it will fail to unstar the package on a second attempt, leaving the user
       // no way to actually remove the star later on.
-      let restar = await data.StarPackageByName(params.packageName, user.content.name);
-      
+      let restar = await data.StarPackageByName(
+        params.packageName,
+        user.content.name
+      );
+
       if (restar.ok) {
         await common.ServerError(req, res, unstar.content);
         return;
       }
-      
+
       // We failed to restar the package after failing to unstar the user, rough...
       error.ServerErrorJSON(res);
       logger.HTTPLog(req, res);
@@ -435,14 +444,12 @@ async function DELETEPackagesStar(req, res) {
       logger.ErrorLog(req, res, restar.content);
       return;
     }
-    
+
     // now the star is successfully removed from the user, and from the package.
     res.status(201).send();
-    
   };
-  
-  await utils.LocalUserLoggedIn(req, res, params.auth, onLogin);
 
+  await utils.LocalUserLoggedIn(req, res, params.auth, onLogin);
 }
 
 /**
@@ -486,19 +493,19 @@ async function POSTPackagesVersion(req, res) {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),
   };
-  
+
   const onLogin = async (user) => {
     let gitowner = await git.Ownership(user.content, params.packageName);
-    
+
     if (!gitowner.ok) {
       await common.HandleError(req, res, gitowner);
       return;
     }
-    
+
     // TODO: Unkown how to handle a rename, so it must be planned before completion.
     await common.NotSupported(req, res);
   };
-  
+
   await utils.LocalUserLoggedIn(req, res, params.auth, onLogin);
 }
 
@@ -671,7 +678,7 @@ async function POSTPackagesEventUninstall(req, res) {
     packageName: decodeURIComponent(req.params.packageName),
     versionName: req.params.versionName,
   };
-  
+
   const onLogin = async (user) => {
     let pack = await data.GetPackageByName(params.packageName);
 
@@ -693,7 +700,7 @@ async function POSTPackagesEventUninstall(req, res) {
     logger.HTTPLog(req, res);
     return;
   };
-  
+
   await utils.LocalUserLoggedIn(req, res, params.auth, onLogin);
 }
 

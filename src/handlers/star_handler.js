@@ -32,22 +32,22 @@ async function GETStars(req, res) {
   let params = {
     auth: req.get("Authorization"),
   };
-  
+
   const onLogin = async (user) => {
     let packageCollection = await data.GetPackageCollection(user.content.stars);
-    
+
     if (!packageCollection.ok) {
       await common.HandleError(req, res, packageCollection);
       return;
     }
-    
+
     let newCol = await collection.DeepCopy(packageCollection.content);
     newCol = await collection.POSPrune(newCol);
-    
+
     res.status(200).json(newCol);
     logger.HTTPLog(req, res);
   };
-  
+
   await utils.LocalUserLoggedIn(req, res, params.auth, onLogin);
 }
 
