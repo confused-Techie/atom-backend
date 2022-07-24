@@ -318,6 +318,11 @@ async function EngineFilter(pack, engine) {
     if (!pack.versions[ver].engines.atom) {
       continue;
     }
+    
+    // Core Atom Packages contain '*' as the engine type, and will require a manual check.
+    if (pack.versions[ver].engines.atom === "*") {
+      break;
+    }
 
     // Track the upper and lower end conditions.
     // Null type means not available; Bool type means available with the relative result.

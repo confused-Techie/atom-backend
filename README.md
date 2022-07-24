@@ -2,9 +2,10 @@
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/d4ca4ded429c446fb28d0654c8c05d6d)](https://www.codacy.com/gh/confused-Techie/atom-community-server-backend-JS/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=confused-Techie/atom-community-server-backend-JS&amp;utm_campaign=Badge_Grade)
 [![Coverage Status](https://coveralls.io/repos/github/confused-Techie/atom-community-server-backend-JS/badge.svg?branch=main)](https://coveralls.io/github/confused-Techie/atom-community-server-backend-JS?branch=main)
-[![CI - Documentation](https://github.com/confused-Techie/atom-community-server-backend-JS/actions/workflows/node-docs.js.yml/badge.svg)](https://github.com/confused-Techie/atom-community-server-backend-JS/actions/workflows/node-docs.js.yml)
-[![CI - Lint](https://github.com/confused-Techie/atom-community-server-backend-JS/actions/workflows/node-lint.js.yml/badge.svg)](https://github.com/confused-Techie/atom-community-server-backend-JS/actions/workflows/node-lint.js.yml)
-[![CI - Tests, Coverage Badging](https://github.com/confused-Techie/atom-community-server-backend-JS/actions/workflows/node-test.js.yml/badge.svg)](https://github.com/confused-Techie/atom-community-server-backend-JS/actions/workflows/node-test.js.yml)
+
+[![Node.js CI - Documentation](https://github.com/confused-Techie/atom-community-server-backend-JS/actions/workflows/node-docs.js.yml/badge.svg)](https://github.com/confused-Techie/atom-community-server-backend-JS/actions/workflows/node-docs.js.yml)
+[![Node.js CI - Lint](https://github.com/confused-Techie/atom-community-server-backend-JS/actions/workflows/node-lint.js.yml/badge.svg)](https://github.com/confused-Techie/atom-community-server-backend-JS/actions/workflows/node-lint.js.yml)
+[![Node.js CI - Tests, Coverage Badging](https://github.com/confused-Techie/atom-community-server-backend-JS/actions/workflows/node-test.js.yml/badge.svg)](https://github.com/confused-Techie/atom-community-server-backend-JS/actions/workflows/node-test.js.yml)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->

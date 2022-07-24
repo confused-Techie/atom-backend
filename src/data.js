@@ -254,6 +254,14 @@ async function GetPackageByID(id) {
   }
 }
 
+/**
+* @function SetUsers 
+* @desc Will persist user data to the disk. Will first do this by adding to the 
+* user cache object, if it exists, otherwise will write directly to disk.
+* @param {object} data - The new full user data to persist.
+* @returns {object} A Server Status object of success, containing only `ok`.
+* Or bubbling from `resources.Write()`.
+*/
 function SetUsers(data) {
   // Instead of actually writing to disk, this will just update its cached data.
   if (cached_user === undefined) {
@@ -269,6 +277,14 @@ function SetUsers(data) {
   }
 }
 
+/**
+* @function SetPackagePointer 
+* @desc Persists Package Pointer Data to disk. By saving to the cache object if 
+* available, or otherwise writing directly to disk.
+* @param {object} data - The Package Pointer Object in its entirety.
+* @returns {object} A Server Status Object of success with only `ok` if successul,
+* or otherwise bubbling from `resources.Write()`. 
+*/
 function SetPackagePointer(data) {
   if (cached_pointer === undefined) {
     // well our cache doesn't exist. Ignoring the implecation we are writing data we didn't grab lets save just in case.
@@ -280,10 +296,27 @@ function SetPackagePointer(data) {
   }
 }
 
+/**
+* @async 
+* @function SetPackageByID
+* @desc Persists Package Data to disk. Since no cache objects exist for individual
+* packages, really is a wrapper around `resources.Write()` with some presets.
+* @param {string} id - The name of the package file to persists. In format 
+* `package-uuidv4.json`.
+* @param {object} data - The object data of the package to write.
+* @returns {object} A server status object bubbled directly from `resources.Write()`.
+*/
 async function SetPackageByID(id, data) {
   return resources.Write("package", data, id);
 }
 
+/**
+* @async 
+* @function RemovePackageByPointer
+* @desc Marks a package for deletion on server shutdown, using its `package.json`.
+* @param {string} pointer - The Package Name to mark, in format `package-uuidv4.json`.
+* @returns {object} A Server Status Object, where if success only has `ok`.
+*/
 async function RemovePackageByPointer(pointer) {
   try {
     deletion_flags.push({
@@ -297,6 +330,14 @@ async function RemovePackageByPointer(pointer) {
   }
 }
 
+/**
+* @async 
+* @function RestorePackageByPointer
+* @desc Restores a previously marked package for deletion. Causing it to no 
+* longer be marked for deletion.
+* @param {string} pointer - The Package Name to mark, in format `package-uuidv4.json`.
+* @returns {objject} A Server Status Object, where on success only contains `ok`.
+*/
 async function RestorePackageByPointer(pointer) {
   let idx = -1;
   for (let i = 0; i < deletion_flags.length; i++) {
