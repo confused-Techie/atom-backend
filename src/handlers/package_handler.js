@@ -499,7 +499,7 @@ async function POSTPackagesVersion(req, res) {
     await common.NotSupported(req, res);
   };
   
-  await utils.LocalUserLoggedIn(req, res,, params.auth, onLogin);
+  await utils.LocalUserLoggedIn(req, res, params.auth, onLogin);
 }
 
 async function GETPackagesVersion(req, res) {
