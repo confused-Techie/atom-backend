@@ -32,22 +32,23 @@ async function GETStars(req, res) {
   let params = {
     auth: req.get("Authorization"),
   };
-
-  await utils.LocalUserLoggedIn(req, res, params.auth, async (user) => {
+  
+  const onLogin = async (user) => {
     let packageCollection = await data.GetPackageCollection(user.content.stars);
-
+    
     if (!packageCollection.ok) {
       await common.HandleError(req, res, packageCollection);
       return;
     }
-
-    // We need to prune these items from a Server Package Full Item.
-    let newCollection = await collection.DeepCopy(packageCollection.content);
-    newCollection = await collection.POSPrune(newCollection);
-
-    res.status(200).json(newCollection);
+    
+    let newCol = await collection.DeepCopy(packageCollection.content);
+    newCol = await collection.POSPrune(newCol);
+    
+    res.status(200).json(newCol);
     logger.HTTPLog(req, res);
-  });
+  };
+  
+  await utils.LocalUserLoggedIn(req, res, params.auth, onLogin);
 }
 
 module.exports = {

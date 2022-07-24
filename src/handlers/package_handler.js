@@ -399,60 +399,50 @@ async function DELETEPackagesStar(req, res) {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),
   };
-  let user = await users.VerifyAuth(params.auth);
-
-  if (user.ok) {
-    // now to unstar the package, by first removing the users star from the package itself.
-    let pack = await data.UnStarPackageByName(
-      params.packageName,
-      user.content.name
-    );
-
-    if (pack.ok) {
-      // we have removed the star from the package, now remove it from the user.
-      let unstar = await users.RemoveUserStar(
-        params.packageName,
-        user.content.name
-      );
-
-      if (unstar.ok) {
-        // now the star is successfully removed from the user, and from the package
-        // respond according to spec.
-        res.status(201).send();
-      } else {
-        // else an error has occured.
-        // BUT important to note, the star was already removed from the package itself, so this means the package doesn't
-        // list the user, but the user still lists the package, so we would need to restar the package
-        // to allow this whole flow to try again, else it will fail to unstar the package on a second attempt, leaving the user
-        // no way to actually remove the star later on.
-        let restar = await data.StarPackageByName(
-          params.packageName,
-          user.content.name
-        );
-
-        if (restar.ok) {
-          // we restared to allow the workflow to restart later, but the request still failed.
-          await common.ServerError(req, res, unstar.content);
-        } else {
-          // We failed to restar the package after failing to unstar the user, rough...
-          error.ServerErrorJSON(res);
-          logger.HTTPLog(req, res);
-          logger.ErrorLog(
-            req,
-            res,
-            "Failed to restar the package, after failing to unstar the user. Unstar logs followed by Restar logs..."
-          );
-          logger.ErrorLog(req, res, unstar.content);
-          logger.ErrorLog(req, res, restar.content);
-        }
-      }
-    } else {
-      // unable to remove the star from the package, respond with error.
+  
+  const onLogin = async (user) => {
+    // now to unstar the package, by first removing the users star from the package.
+    let pack = await data.UnStarPackageByName(params.packageName, user.content.name);
+    
+    if (!pack.ok) {
       await common.HandleError(req, res, pack);
+      return;
     }
-  } else {
-    await common.AuthFail(req, res, user);
-  }
+    // we have removed the star from the package, then remove from the user.
+    let unstar = await users.RemoveUserStar(params.packageName, user.content.name);
+    
+    if (!unstar.ok) {
+      // BUT important to note, the star was already removed from the package itself, so this means the package doesn't
+      // list the user, but the user still lists the package, so we would need to restar the package
+      // to allow this whole flow to try again, else it will fail to unstar the package on a second attempt, leaving the user
+      // no way to actually remove the star later on.
+      let restar = await data.StarPackageByName(params.packageName, user.content.name);
+      
+      if (restar.ok) {
+        await common.ServerError(req, res, unstar.content);
+        return;
+      }
+      
+      // We failed to restar the package after failing to unstar the user, rough...
+      error.ServerErrorJSON(res);
+      logger.HTTPLog(req, res);
+      logger.ErrorLog(
+        req,
+        res,
+        "Failed to restar the package, after failing to unstar the user. Unstar logs followed by Restar logs..."
+      );
+      logger.ErrorLog(req, res, unstar.content);
+      logger.ErrorLog(req, res, restar.content);
+      return;
+    }
+    
+    // now the star is successfully removed from the user, and from the package.
+    res.status(201).send();
+    
+  };
+  
+  await utils.LocalUserLoggedIn(req, res, params.auth, onLogin);
+
 }
 
 /**
@@ -496,22 +486,20 @@ async function POSTPackagesVersion(req, res) {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),
   };
-  let user = await users.VerifyAuth(params.auth);
-
-  if (!user.ok) {
-    await common.AuthFail(req, res, user);
-    return;
-  }
-
-  let gitowner = await git.Ownership(user.content, params.packageName);
-
-  if (!gitowner.ok) {
-    await common.HandleError(req, res, gitowner);
-    return;
-  }
-
-  // TODO: Unkown how to handle a rename, so it must be planned before completion.
-  await common.NotSupported(req, res);
+  
+  const onLogin = async (user) => {
+    let gitowner = await git.Ownership(user.content, params.packageName);
+    
+    if (!gitowner.ok) {
+      await common.HandleError(req, res, gitowner);
+      return;
+    }
+    
+    // TODO: Unkown how to handle a rename, so it must be planned before completion.
+    await common.NotSupported(req, res);
+  };
+  
+  await utils.LocalUserLoggedIn(req, res,, params.auth, onLogin);
 }
 
 async function GETPackagesVersion(req, res) {
@@ -683,8 +671,8 @@ async function POSTPackagesEventUninstall(req, res) {
     packageName: decodeURIComponent(req.params.packageName),
     versionName: req.params.versionName,
   };
-
-  await utils.LocalUserLoggedIn(req, res, params.auth, async () => {
+  
+  const onLogin = async (user) => {
     let pack = await data.GetPackageByName(params.packageName);
 
     if (!pack.ok) {
@@ -704,41 +692,9 @@ async function POSTPackagesEventUninstall(req, res) {
     res.status(201).json({ ok: true });
     logger.HTTPLog(req, res);
     return;
-  });
-}
-
-// ========== Helper Functions ========== //
-async function DetermineUserPackagePermission(req, res, auth, callback) {
-  let user = await users.VerifyAuth(auth);
-
-  if (user.ok) {
-    callback(user);
-  } else {
-    await common.AuthFail(req, res, user);
-  }
-}
-
-async function DetermineUserPackageGitPermission(
-  req,
-  res,
-  auth,
-  pack,
-  callback
-) {
-  let user = await users.VerifyAuth(auth);
-
-  if (user.ok) {
-    let gitowner = await git.Ownership(user.content, pack);
-
-    if (gitowner.ok) {
-      callback(user, gitowner);
-    } else {
-      await common.HandleError(req, res, gitowner);
-      return;
-    }
-  } else {
-    await common.AuthFail(req, res, user);
-  }
+  };
+  
+  await utils.LocalUserLoggedIn(req, res, params.auth, onLogin);
 }
 
 module.exports = {
