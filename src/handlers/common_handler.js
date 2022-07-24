@@ -150,7 +150,7 @@ async function HandleError(req, res, obj) {
 
     case "No Repo Access":
     case "Bad Auth":
-      await AuthFail(req, res, obj.content);
+      await AuthFail(req, res, obj);
       break;
 
     case "File Not Found":
