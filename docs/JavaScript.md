@@ -152,6 +152,11 @@ packages, package_pointer, and additionally handling any modifications of the pa
     * [~GetPackagePointer()](#module_data..GetPackagePointer) ⇒ <code>object</code>
     * [~GetAllPackages()](#module_data..GetAllPackages) ⇒ <code>object</code>
     * [~GetPackageByID(id)](#module_data..GetPackageByID) ⇒ <code>object</code>
+    * [~SetUsers(data)](#module_data..SetUsers) ⇒ <code>object</code>
+    * [~SetPackagePointer(data)](#module_data..SetPackagePointer) ⇒ <code>object</code>
+    * [~SetPackageByID(id, data)](#module_data..SetPackageByID) ⇒ <code>object</code>
+    * [~RemovePackageByPointer(pointer)](#module_data..RemovePackageByPointer) ⇒ <code>object</code>
+    * [~RestorePackageByPointer(pointer)](#module_data..RestorePackageByPointer) ⇒ <code>objject</code>
 
 <a name="module_data..Shutdown"></a>
 
@@ -214,6 +219,73 @@ the package object.
 | Param | Type | Description |
 | --- | --- | --- |
 | id | <code>string</code> | The ID of the package, like `UUIDv4.json`. |
+
+<a name="module_data..SetUsers"></a>
+
+### data~SetUsers(data) ⇒ <code>object</code>
+Will persist user data to the disk. Will first do this by adding to the
+user cache object, if it exists, otherwise will write directly to disk.
+
+**Kind**: inner method of [<code>data</code>](#module_data)  
+**Returns**: <code>object</code> - A Server Status object of success, containing only `ok`.
+Or bubbling from `resources.Write()`.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| data | <code>object</code> | The new full user data to persist. |
+
+<a name="module_data..SetPackagePointer"></a>
+
+### data~SetPackagePointer(data) ⇒ <code>object</code>
+Persists Package Pointer Data to disk. By saving to the cache object if
+available, or otherwise writing directly to disk.
+
+**Kind**: inner method of [<code>data</code>](#module_data)  
+**Returns**: <code>object</code> - A Server Status Object of success with only `ok` if successul,
+or otherwise bubbling from `resources.Write()`.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| data | <code>object</code> | The Package Pointer Object in its entirety. |
+
+<a name="module_data..SetPackageByID"></a>
+
+### data~SetPackageByID(id, data) ⇒ <code>object</code>
+Persists Package Data to disk. Since no cache objects exist for individual
+packages, really is a wrapper around `resources.Write()` with some presets.
+
+**Kind**: inner method of [<code>data</code>](#module_data)  
+**Returns**: <code>object</code> - A server status object bubbled directly from `resources.Write()`.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>string</code> | The name of the package file to persists. In format `package-uuidv4.json`. |
+| data | <code>object</code> | The object data of the package to write. |
+
+<a name="module_data..RemovePackageByPointer"></a>
+
+### data~RemovePackageByPointer(pointer) ⇒ <code>object</code>
+Marks a package for deletion on server shutdown, using its `package.json`.
+
+**Kind**: inner method of [<code>data</code>](#module_data)  
+**Returns**: <code>object</code> - A Server Status Object, where if success only has `ok`.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| pointer | <code>string</code> | The Package Name to mark, in format `package-uuidv4.json`. |
+
+<a name="module_data..RestorePackageByPointer"></a>
+
+### data~RestorePackageByPointer(pointer) ⇒ <code>objject</code>
+Restores a previously marked package for deletion. Causing it to no
+longer be marked for deletion.
+
+**Kind**: inner method of [<code>data</code>](#module_data)  
+**Returns**: <code>objject</code> - A Server Status Object, where on success only contains `ok`.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| pointer | <code>string</code> | The Package Name to mark, in format `package-uuidv4.json`. |
 
 <a name="module_debug_util"></a>
 
@@ -381,6 +453,11 @@ Assists in interactions between the backend and GitHub.
 * [git](#module_git)
     * [~Ownership(user, repo)](#module_git..Ownership)
     * [~CreatePackage(repo)](#module_git..CreatePackage) ⇒ <code>object</code>
+    * [~doesUserHaveRepo(user, repo, [page])](#module_git..doesUserHaveRepo) ⇒ <code>object</code>
+    * [~getRepoExistance(repo)](#module_git..getRepoExistance) ⇒ <code>boolean</code>
+    * [~getPackageJSON(repo)](#module_git..getPackageJSON) ⇒ <code>string</code> \| <code>undefined</code>
+    * [~getRepoReadMe(repo)](#module_git..getRepoReadMe) ⇒ <code>string</code> \| <code>undefined</code>
+    * [~getRepoTags(repo)](#module_git..getRepoTags) ⇒ <code>object</code> \| <code>undefined</code>
 
 <a name="module_git..Ownership"></a>
 
@@ -411,6 +488,78 @@ return back a proper `Server Object Full` object within a `Server Status`.conten
 | Param | Type | Description |
 | --- | --- | --- |
 | repo | <code>string</code> | The Repo to use in the form `owner/repo`. |
+
+<a name="module_git..doesUserHaveRepo"></a>
+
+### git~doesUserHaveRepo(user, repo, [page]) ⇒ <code>object</code>
+Unexported function, that determines if the specified user has access
+to the specified repository. Will loop itself through all valid pages
+of users repo list, until it finds a match, otherwise returning accordingly.
+
+**Kind**: inner method of [<code>git</code>](#module_git)  
+**Returns**: <code>object</code> - A server status object of true if they do have access.
+And returns false in all other situations.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| user | <code>object</code> | A valid user object, from the user file. |
+| repo | <code>string</code> | The valid repo in the format `owner/repo` |
+| [page] | <code>int</code> | Not intended to be set directly, but is used to track the current results page number, if or when the function needs to loop itself. |
+
+<a name="module_git..getRepoExistance"></a>
+
+### git~getRepoExistance(repo) ⇒ <code>boolean</code>
+Intends to determine if a repo exists, or at least is accessible and public
+on GitHub.
+
+**Kind**: inner method of [<code>git</code>](#module_git)  
+**Returns**: <code>boolean</code> - A true if the repo exists, false otherwise. Including an error.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| repo | <code>string</code> | A repo in the format `owner/repo`. |
+
+<a name="module_git..getPackageJSON"></a>
+
+### git~getPackageJSON(repo) ⇒ <code>string</code> \| <code>undefined</code>
+Intends to retreive the raw text of the GitHub repo package.
+
+**Kind**: inner method of [<code>git</code>](#module_git)  
+**Returns**: <code>string</code> \| <code>undefined</code> - Returns a proper string of the readme if successful.
+And returns `undefined` otherwise.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| repo | <code>string</code> | The string of the repo in format `owner/repo`. |
+
+<a name="module_git..getRepoReadMe"></a>
+
+### git~getRepoReadMe(repo) ⇒ <code>string</code> \| <code>undefined</code>
+Intends to retreive the GitHub repo readme file. Will look for both
+`readme.md` and `README.md` just in case.
+
+**Kind**: inner method of [<code>git</code>](#module_git)  
+**Returns**: <code>string</code> \| <code>undefined</code> - Returns the raw string of the readme if available,
+otherwise returns undefined.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| repo | <code>string</code> | A valid repo in format `owner/repo`. |
+
+<a name="module_git..getRepoTags"></a>
+
+### git~getRepoTags(repo) ⇒ <code>object</code> \| <code>undefined</code>
+Intends to get all tags associated with a repo. Since this is how APM
+natively publishes new package versions on GitHub.
+
+**Kind**: inner method of [<code>git</code>](#module_git)  
+**Returns**: <code>object</code> \| <code>undefined</code> - Returns the JSON parsed object of all tags if successful,
+and returns undefined otherwise.  
+**See**: https://docs.github.com/en/rest/repos/repos#list-repository-tags  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| repo | <code>string</code> | A valid repo in format `owner/repo`. |
 
 <a name="module_logger"></a>
 
