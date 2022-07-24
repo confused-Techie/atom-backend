@@ -199,21 +199,21 @@ async function GETPackagesFeatured(req, res) {
   // or leave it to the client is hard to say.
 
   // See https://github.com/confused-Techie/atom-community-server-backend-JS/issues/23
-  
-  // As of now, it seems that currently there is no rating system, the featured packages 
-  // were manually choosen by the atom team. While in the future there are plans 
-  // to have an automatic rating system to determine featured packages, 
+
+  // As of now, it seems that currently there is no rating system, the featured packages
+  // were manually choosen by the atom team. While in the future there are plans
+  // to have an automatic rating system to determine featured packages,
   // for now we will do the same. If only to reach feature parity quicker.
   let col = await data.GetFeatured();
-  
+
   if (!col.ok) {
     await common.HandleError(req, res, col);
     return;
   }
-  
+
   let newCol = await collection.DeepCopy(col.content);
   newCol = await collection.POSPrune(newCol);
-  
+
   res.status(200).json(newCol);
 }
 

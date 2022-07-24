@@ -73,7 +73,7 @@ async function Read(type, name) {
       obj.last_validate = Date.now();
       return { ok: true, content: obj };
     }
-    
+
     case "featured_packages":
       return readFile("./data/featured_packages.json");
 
@@ -141,15 +141,24 @@ async function readFile(path) {
  * @implements {writeFile}
  */
 async function Write(type, data, name) {
-  switch(type) {
+  switch (type) {
     case "user":
       return writeFile("./data/users.json", JSON.stringify(data, null, 4));
     case "pointer":
-      return writeFile("./data/package_pointer.js", JSON.stringify(data, null, 4));
+      return writeFile(
+        "./data/package_pointer.js",
+        JSON.stringify(data, null, 4)
+      );
     case "package":
-      return writeFile(`./data/packages/${name}`, JSON.stringify(data, null, 4));
+      return writeFile(
+        `./data/packages/${name}`,
+        JSON.stringify(data, null, 4)
+      );
     case "featured_packages":
-      return writeFile("./data/featured_packages.json", JSON.stringify(data, null, 4));
+      return writeFile(
+        "./data/featured_packages.json",
+        JSON.stringify(data, null, 4)
+      );
     default:
       console.log("UNRECOGNIZED WRITE TYPE GIVEN, EXITING...");
       process.exit(1);
