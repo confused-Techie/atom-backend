@@ -49,31 +49,41 @@ class CacheObject {
  * @implments {readFile}
  */
 async function Read(type, name) {
-  if (type === "user") {
-    let data = await readFile("./data/users.json");
-    if (data.ok) {
-      // now with the data lets make our cache object, and we can return that.
+  switch (type) {
+    case "user": {
+      let data = await readFile("./data/users.json");
+      if (!data.ok) {
+        // data was not read okay, just return error message.
+        return data;
+      }
 
+      // now with the data lets make our cache object, and we can return that.
       let obj = new CacheObject(data.content);
       obj.last_validate = Date.now(); // give it the time we last read from disk.
       return { ok: true, content: obj }; // now its data can be accessed via the data property.
-    } else {
-      // data was not read okay, just return error message.
-      return data;
     }
-  } else if (type === "pointer") {
-    let data = await readFile("./data/package_pointer.json");
-    if (data.ok) {
+
+    case "pointer": {
+      let data = await readFile("./data/package_pointer.json");
+      if (!data.ok) {
+        return data;
+      }
+
       let obj = new CacheObject(data.content);
       obj.last_validate = Date.now();
       return { ok: true, content: obj };
-    } else {
-      return data;
     }
-  } else if (type === "package") {
-    return readFile(`./data/packages/${name}`);
-  } else if (type === "name_ban_list") {
-    return readFile(`./data/name_ban_list.json`);
+
+    case "package":
+      return readFile(`./data/packages/${name}`);
+
+    case "name_ban_list":
+      return readFile(`./data/name_ban_list.json`);
+
+    default:
+    // TODO: log a warning in case an unrecognized type is given.
+    // console.log("UNRECOGNIZED READ TYPE GIVEN! Exiting...");
+    // process.exit(1);
   }
 }
 

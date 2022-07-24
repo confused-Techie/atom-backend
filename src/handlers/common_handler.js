@@ -130,11 +130,9 @@ async function BadPackageJSON(req, res) {
  * @desc Generic error handler mostly used to reduce the duplication of error handling in other modules.
  * It checks the short error string and calls the relative endpoint.
  * Note that it's designed to be called as the last async function before the return.
- * @param {string} short - The short string which specifies the type of the error.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
- * @param {string|object} content - The detailed error message to log server side or
- * the Raw Status Object of the User, expected to return from `VerifyAuth`.
+ * @param {object} obj - the Raw Status Object of the User, expected to return from `VerifyAuth`.
  */
 async function HandleError(req, res, obj) {
   switch (obj.short) {
@@ -152,7 +150,7 @@ async function HandleError(req, res, obj) {
 
     case "No Repo Access":
     case "Bad Auth":
-      await AuthFail(req, res, obj.content);
+      await AuthFail(req, res, obj);
       break;
 
     case "File Not Found":
