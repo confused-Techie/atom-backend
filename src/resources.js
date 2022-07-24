@@ -73,6 +73,9 @@ async function Read(type, name) {
       obj.last_validate = Date.now();
       return { ok: true, content: obj };
     }
+    
+    case "featured_packages":
+      return readFile("./data/featured_packages.json");
 
     case "package":
       return readFile(`./data/packages/${name}`);
@@ -81,9 +84,9 @@ async function Read(type, name) {
       return readFile(`./data/name_ban_list.json`);
 
     default:
-    // TODO: log a warning in case an unrecognized type is given.
-    // console.log("UNRECOGNIZED READ TYPE GIVEN! Exiting...");
-    // process.exit(1);
+      console.log("UNRECOGNIZED READ TYPE GIVEN! Exiting...");
+      process.exit(1);
+      break;
   }
 }
 
@@ -138,15 +141,18 @@ async function readFile(path) {
  * @implements {writeFile}
  */
 async function Write(type, data, name) {
-  if (type === "user") {
-    return writeFile("./data/users.json", JSON.stringify(data, null, 4));
-  } else if (type === "pointer") {
-    return writeFile(
-      "./data/package_pointer.json",
-      JSON.stringify(data, null, 4)
-    );
-  } else if (type === "package") {
-    return writeFile(`./data/packages/${name}`, JSON.stringify(data, null, 4));
+  switch(type) {
+    case "user":
+      return writeFile("./data/users.json", JSON.stringify(data, null, 4));
+    case "pointer":
+      return writeFile("./data/package_pointer.js", JSON.stringify(data, null, 4));
+    case "package":
+      return writeFile(`./data/packages/${name}`, JSON.stringify(data, null, 4));
+    case "featured_packages":
+      return writeFile("./data/featured_packages.json", JSON.stringify(data, null, 4));
+    default:
+      console.log("UNRECOGNIZED WRITE TYPE GIVEN, EXITING...");
+      process.exit(1);
   }
 }
 

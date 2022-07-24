@@ -10,7 +10,7 @@ const logger = require("./logger.js");
 const resources = require("./resources.js");
 
 // Collection of data global variables. Used for caching read data.
-let cached_user, cached_pointer, cached_packages;
+let cached_user, cached_pointer, cached_packages, cached_packages_featured;
 let deletion_flags = [];
 
 /**
@@ -65,6 +65,53 @@ async function Shutdown() {
         );
       }
     }
+  }
+}
+
+/**
+* @async 
+* @function GetFeatured
+* @desc Gets the featured packages, from the file of `featured_packages.json`.
+* While it isn't planned to always use this file, it helps get us to feature parity 
+* faster, since this is how it was done originally on Atom.io
+* Will return the cached object if available, or otherwise will read from disk.
+* @returns {object} An array of packages, that have manually been decided to be 
+* featured.
+*/
+async function GetFeatured() {
+  const getNew = async function() {
+    let packs = await resources.Read("featured_packages");
+    if (!packs.ok) {
+      return packs;
+    }
+    // now with an array of packages to have featured, lets get the full form of them.
+    let col = await GetPackageCollection(packs.content);
+    if (!col.ok) {
+      return col;
+    }
+    
+    cached_packages_featured = new resources.CacheObject(col.content);
+    cached_packages_featured.last_validate = Date.now();
+    return { ok: true, content: cached_packages_featured.data };
+  };
+  
+  if (cached_packages_featured === undefined) {
+    logger.DebugLog("Creating Featured Packages Cache.");
+    return getNew();
+  }
+  
+  // use object is cached 
+  if (!cached_packages_featured.Expired) {
+    logger.DebugLog("Featured Packages data IS NOT expired.");
+    return { ok: true, content: cached_packages_featured.data };
+  }
+  
+  logger.DebugLog("Featured Packages data IS expired, getting new.");
+  let save = resources.Write("featured_packages", cached_packages_featured.data);
+  if (save.ok) {
+    return getNew();
+  } else {
+    return save;
   }
 }
 
@@ -615,6 +662,7 @@ async function NewPackage(data) {
 }
 
 module.exports = {
+  GetFeatured,
   GetUsers,
   SetUsers,
   GetPackagePointer,

@@ -59,7 +59,6 @@ describe("GET /api/updates", () => {
 });
 
 describe("GET Theme Featured", () => {
-  // TODO: /api/themes/featured returns NotSupported at this time.
   test("Returns NotSupported Status Code", async () => {
     const res = await request(app).get("/api/themes/featured");
     expect(res.statusCode).toBe(501);
@@ -69,6 +68,13 @@ describe("GET Theme Featured", () => {
     expect(res.body.message).toBe(
       "While under development this feature is not supported."
     );
+  });
+});
+
+describe("GET Packages Featured", () => {
+  test("Returns Successful Status Code", async () => {
+    const res = await request(app).get("/api/packages/featured");
+    expect(res.statusCode).toBe(200);
   });
 });
 
