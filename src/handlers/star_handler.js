@@ -37,7 +37,7 @@ async function GETStars(req, res) {
     let packageCollection = await data.GetPackageCollection(user.content.stars);
 
     if (!packageCollection.ok) {
-      await common.ServerError(req, res, packageCollection.content);
+      await common.HandleError(req, res, packageCollection);
       return;
     }
 

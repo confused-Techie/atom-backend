@@ -38,20 +38,20 @@ async function GETLoginStars(req, res) {
   let user = await users.GetUser(params.login);
 
   if (!user.ok) {
-    await common.HandleError(user.short, req, res, user.content);
+    await common.HandleError(req, res, user);
     return;
   }
 
   let packages = await data.GetPackageCollection(user.content.stars);
 
   if (!packages.ok) {
-    await common.ServerError(req, res, packages.content);
+    await common.HandleError(req, res, packages);
     return;
   }
+  let cpPackages = await collection.DeepCopy(packages.content);
+  cpPackages = await collection.POSPrune(cpPackages.content); // package object short prune
 
-  packages = await collection.POSPrune(packages.content); // package object short prune
-
-  res.status(200).json(packages);
+  res.status(200).json(cpPackages);
   logger.HTTPLog(req, res);
 }
 

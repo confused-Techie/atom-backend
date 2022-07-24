@@ -111,7 +111,7 @@ async function POSTPackages(req, res) {
 
   // Check authentication.
   if (!user.ok) {
-    await common.AuthFail(req, res, user);
+    await common.HandleError(req, res, user);
     return;
   }
 
@@ -143,7 +143,7 @@ async function POSTPackages(req, res) {
   // Even further though we need to check that the error is not found, since errors here can bubble.
   if (exists.short !== "Not Found") {
     // The server failed for some other bubbled reason, and is now encountering an error.
-    await common.ServerError(req, res, exists.content);
+    await common.HandleError(req, res, exists);
     return;
   }
 
@@ -151,7 +151,7 @@ async function POSTPackages(req, res) {
   let gitowner = await git.Ownership(user.content, params.repository);
 
   if (!gitowner.ok) {
-    await common.HandleError(gitowner.short, req, res, gitowner.content);
+    await common.HandleError(req, res, gitowner);
     return;
   }
 
@@ -159,7 +159,7 @@ async function POSTPackages(req, res) {
   let pack = await git.CreatePackage(params.repository);
 
   if (!pack.ok) {
-    await common.HandleError(pack.short, req, res, pack.content);
+    await common.HandleError(req, res, pack);
     return;
   }
 
@@ -167,7 +167,7 @@ async function POSTPackages(req, res) {
   let create = await data.NewPackage(pack.content);
 
   if (!create.ok) {
-    await common.ServerError(req, res, create.content);
+    await common.HandleError(req, res, create);
     return;
   }
 
@@ -177,7 +177,7 @@ async function POSTPackages(req, res) {
 
   if (!new_pack.ok) {
     // We were unable to get the new package, and should return an error.
-    await common.ServerError(req, res, new_pack.content);
+    await common.HandleError(req, res, new_pack);
     return;
   }
 
@@ -222,7 +222,7 @@ async function GETPackagesSearch(req, res) {
   let all_packages = await data.GetAllPackages();
 
   if (!all_packages.ok) {
-    await common.ServerError(req, res, all_packages.content);
+    await common.HandleError(req, res, all_packages);
     return;
   }
 
@@ -279,7 +279,7 @@ async function GETPackagesDetails(req, res) {
   let pack = await data.GetPackageByName(params.name);
 
   if (!pack.ok) {
-    await common.HandleError(pack.short, req, res, pack.content);
+    await common.HandleError(req, res, pack);
     return;
   }
 
@@ -313,14 +313,14 @@ async function DELETEPackagesName(req, res) {
   let user = await users.VerifyAuth(params.auth);
 
   if (!user.ok) {
-    await common.AuthFail(req, res, user);
+    await common.HandleError(req, res, user);
     return;
   }
 
   let gitowner = await git.Ownership(user.content, params.packageName);
 
   if (!gitowner.ok) {
-    await common.HandleError(gitowner.short, req, res, gitowner.content);
+    await common.HandleError(req, res, gitowner);
     return;
   }
 
@@ -329,7 +329,7 @@ async function DELETEPackagesName(req, res) {
   let rm = await data.RemovePackageByName(params.packageName);
 
   if (!rm.ok) {
-    await common.HandleError(rm.short, req, res, rm.content);
+    await common.HandleError(req, res, rm);
     return;
   }
 
@@ -448,7 +448,7 @@ async function DELETEPackagesStar(req, res) {
       }
     } else {
       // unable to remove the star from the package, respond with error.
-      await common.HandleError(pack.short, req, res, pack.content);
+      await common.HandleError(req, res, pack);
     }
   } else {
     await common.AuthFail(req, res, user);
@@ -471,7 +471,7 @@ async function GETPackagesStargazers(req, res) {
   let pack = await data.GetPackageByName(params.packageName);
 
   if (!pack.ok) {
-    await common.HandleError(pack.short, req, res, pack.content);
+    await common.HandleError(req, res, pack);
     return;
   }
 
@@ -506,7 +506,7 @@ async function POSTPackagesVersion(req, res) {
   let gitowner = await git.Ownership(user.content, params.packageName);
 
   if (!gitowner.ok) {
-    await common.HandleError(gitowner.short, req, res, gitowner.content);
+    await common.HandleError(req, res, gitowner);
     return;
   }
 
@@ -543,7 +543,7 @@ async function GETPackagesVersion(req, res) {
         await common.NotFound(req, res);
       }
     } else {
-      await common.HandleError(pack.short, req, res, pack.content);
+      await common.HandleError(req, res, pack);
     }
   } else {
     // we return a 404 for the version, since its an invalid format.
@@ -631,7 +631,7 @@ async function DELETEPackageVersion(req, res) {
   let gitowner = await git.Ownership(user.content, params.packageName);
 
   if (!gitowner.ok) {
-    await common.HandleError(gitowner.short, req, res, gitowner.content);
+    await common.HandleError(req, res, gitowner);
     return;
   }
 
@@ -639,7 +639,7 @@ async function DELETEPackageVersion(req, res) {
 
   if (!pack.ok) {
     // getting package returned error.
-    await common.HandleError(pack.short, req, res, pack.content);
+    await common.HandleError(req, res, pack);
     return;
   }
 
@@ -656,7 +656,7 @@ async function DELETEPackageVersion(req, res) {
   let write = data.SetPackageByName(params.packageName, pack.content);
 
   if (!write.ok) {
-    await common.HandleError(write.short, req, res, write.content);
+    await common.HandleError(req, res, write);
     return;
   }
 
@@ -697,7 +697,7 @@ async function POSTPackagesEventUninstall(req, res) {
     let write = await data.SetPackageByName(params.packageName, pack.content);
 
     if (!write.ok) {
-      await common.ServerError(req, res, write.content);
+      await common.HandleError(req, res, write);
       return;
     }
 
@@ -733,7 +733,7 @@ async function DetermineUserPackageGitPermission(
     if (gitowner.ok) {
       callback(user, gitowner);
     } else {
-      await common.HandleError(gitowner.short, req, res, gitowner.content);
+      await common.HandleError(req, res, gitowner);
       return;
     }
   } else {
