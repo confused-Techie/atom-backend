@@ -42,7 +42,7 @@ async function GETPackages(req, res) {
   let all_packages = await data.GetAllPackages();
 
   if (!all_packages.ok) {
-    common.ServerError(req, res, all_packages.content);
+    await common.HandleError(req, res, all_packages);
     return;
   }
 
@@ -688,7 +688,7 @@ async function POSTPackagesEventUninstall(req, res) {
     let pack = await data.GetPackageByName(params.packageName);
 
     if (!pack.ok) {
-      await common.HandleError(pack.short, req, res, pack.content);
+      await common.HandleError(req, res, pack);
       return;
     }
 

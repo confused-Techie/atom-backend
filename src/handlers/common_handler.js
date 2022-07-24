@@ -136,8 +136,8 @@ async function BadPackageJSON(req, res) {
  * @param {string|object} content - The detailed error message to log server side or
  * the Raw Status Object of the User, expected to return from `VerifyAuth`.
  */
-async function HandleError(short, req, res, content) {
-  switch (short) {
+async function HandleError(req, res, obj) {
+  switch (obj.short) {
     case "Not Found":
       await NotFound(req, res);
       break;
@@ -151,12 +151,14 @@ async function HandleError(short, req, res, content) {
       break;
 
     case "No Repo Access":
-      await AuthFail(req, res, content);
+    case "Bad Auth":
+      await AuthFail(req, res, obj.content);
       break;
 
+    case "File Not Found":
     case "Server Error":
     default:
-      await ServerError(req, res, content);
+      await ServerError(req, res, obj.content);
       break;
   }
 }

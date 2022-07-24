@@ -30,9 +30,9 @@ This is implemented as a method of 'bubbling up' any errors, to let the server r
   - Bubbles from resources.Write()
 * GetPackagePointer(): 
   - Bubbles from resources.Read()
-* GetAllPackages(): "Not Found"
+* GetAllPackages():
   - Bubbles from data.GetPackagePointer()
-  - Bubbles from getNew()
+  - Bubbles from GetPacakgeByID()
 * GetPackageByID(): 
   - Bubbles from resources.Read()
 * SetUsers():
