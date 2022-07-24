@@ -243,18 +243,18 @@ async function CreatePackage(repo) {
 }
 
 /**
-* @async 
-* @function doesUserHaveRepo
-* @desc Unexported function, that determines if the specified user has access 
-* to the specified repository. Will loop itself through all valid pages 
-* of users repo list, until it finds a match, otherwise returning accordingly.
-* @param {object} user - A valid user object, from the user file.
-* @param {string} repo - The valid repo in the format `owner/repo`
-* @param {int} [page] - Not intended to be set directly, but is used to track the
-* current results page number, if or when the function needs to loop itself.
-* @returns {object} A server status object of true if they do have access.
-* And returns false in all other situations.
-*/
+ * @async
+ * @function doesUserHaveRepo
+ * @desc Unexported function, that determines if the specified user has access
+ * to the specified repository. Will loop itself through all valid pages
+ * of users repo list, until it finds a match, otherwise returning accordingly.
+ * @param {object} user - A valid user object, from the user file.
+ * @param {string} repo - The valid repo in the format `owner/repo`
+ * @param {int} [page] - Not intended to be set directly, but is used to track the
+ * current results page number, if or when the function needs to loop itself.
+ * @returns {object} A server status object of true if they do have access.
+ * And returns false in all other situations.
+ */
 async function doesUserHaveRepo(user, repo, page = 1) {
   try {
     const res = await superagent
@@ -300,13 +300,13 @@ async function doesUserHaveRepo(user, repo, page = 1) {
 }
 
 /**
-* @async 
-* @function getRepoExistance
-* @desc Intends to determine if a repo exists, or at least is accessible and public 
-* on GitHub. 
-* @param {string} repo - A repo in the format `owner/repo`.
-* @returns {boolean} A true if the repo exists, false otherwise. Including an error.
-*/
+ * @async
+ * @function getRepoExistance
+ * @desc Intends to determine if a repo exists, or at least is accessible and public
+ * on GitHub.
+ * @param {string} repo - A repo in the format `owner/repo`.
+ * @returns {boolean} A true if the repo exists, false otherwise. Including an error.
+ */
 async function getRepoExistance(repo) {
   try {
     const res = await superagent
@@ -332,13 +332,13 @@ async function getRepoExistance(repo) {
 }
 
 /**
-* @async 
-* @function getPackageJSON
-* @desc Intends to retreive the raw text of the GitHub repo package.
-* @param {string} repo - The string of the repo in format `owner/repo`.
-* @returns {string|undefined} Returns a proper string of the readme if successful.
-* And returns `undefined` otherwise.
-*/
+ * @async
+ * @function getPackageJSON
+ * @desc Intends to retreive the raw text of the GitHub repo package.
+ * @param {string} repo - The string of the repo in format `owner/repo`.
+ * @returns {string|undefined} Returns a proper string of the readme if successful.
+ * And returns `undefined` otherwise.
+ */
 async function getPackageJSON(repo) {
   try {
     const res = await superagent
@@ -369,14 +369,14 @@ async function getPackageJSON(repo) {
 }
 
 /**
-* @async 
-* @function getRepoReadMe
-* @desc Intends to retreive the GitHub repo readme file. Will look for both 
-* `readme.md` and `README.md` just in case.
-* @param {string} repo - A valid repo in format `owner/repo`.
-* @returns {string|undefined} Returns the raw string of the readme if available,
-* otherwise returns undefined.
-*/
+ * @async
+ * @function getRepoReadMe
+ * @desc Intends to retreive the GitHub repo readme file. Will look for both
+ * `readme.md` and `README.md` just in case.
+ * @param {string} repo - A valid repo in format `owner/repo`.
+ * @returns {string|undefined} Returns the raw string of the readme if available,
+ * otherwise returns undefined.
+ */
 async function getRepoReadMe(repo) {
   try {
     const res = await superagent
@@ -445,15 +445,15 @@ async function getRepoReadMe(repo) {
 }
 
 /**
-* @async 
-* @function getRepoTags
-* @desc Intends to get all tags associated with a repo. Since this is how APM 
-* natively publishes new package versions on GitHub.
-* @param {string} repo - A valid repo in format `owner/repo`.
-* @returns {object|undefined} Returns the JSON parsed object of all tags if successful,
-* and returns undefined otherwise.
-* @see https://docs.github.com/en/rest/repos/repos#list-repository-tags
-*/
+ * @async
+ * @function getRepoTags
+ * @desc Intends to get all tags associated with a repo. Since this is how APM
+ * natively publishes new package versions on GitHub.
+ * @param {string} repo - A valid repo in format `owner/repo`.
+ * @returns {object|undefined} Returns the JSON parsed object of all tags if successful,
+ * and returns undefined otherwise.
+ * @see https://docs.github.com/en/rest/repos/repos#list-repository-tags
+ */
 async function getRepoTags(repo) {
   try {
     const res = await superagent
