@@ -148,6 +148,7 @@ packages, package_pointer, and additionally handling any modifications of the pa
 
 * [data](#module_data)
     * [~Shutdown()](#module_data..Shutdown)
+    * [~GetFeatured()](#module_data..GetFeatured) ⇒ <code>object</code>
     * [~GetUsers()](#module_data..GetUsers) ⇒ <code>object</code>
     * [~GetPackagePointer()](#module_data..GetPackagePointer) ⇒ <code>object</code>
     * [~GetAllPackages()](#module_data..GetAllPackages) ⇒ <code>object</code>
@@ -166,6 +167,17 @@ only data to be written to disk. Checking the Cached User Data, Cached Pointer
 Data, as well as checking for any items marked for deletion, and deleting them.
 
 **Kind**: inner method of [<code>data</code>](#module_data)  
+<a name="module_data..GetFeatured"></a>
+
+### data~GetFeatured() ⇒ <code>object</code>
+Gets the featured packages, from the file of `featured_packages.json`.
+While it isn't planned to always use this file, it helps get us to feature parity
+faster, since this is how it was done originally on Atom.io
+Will return the cached object if available, or otherwise will read from disk.
+
+**Kind**: inner method of [<code>data</code>](#module_data)  
+**Returns**: <code>object</code> - An array of packages, that have manually been decided to be
+featured.  
 <a name="module_data..GetUsers"></a>
 
 ### data~GetUsers() ⇒ <code>object</code>
