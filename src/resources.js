@@ -81,9 +81,9 @@ async function Read(type, name) {
       return readFile(`./data/name_ban_list.json`);
 
     default:
-      // TODO: log a warning in case an unrecognized type is given.
-      // console.log("UNRECOGNIZED READ TYPE GIVEN! Exiting...");
-      // process.exit(1);
+    // TODO: log a warning in case an unrecognized type is given.
+    // console.log("UNRECOGNIZED READ TYPE GIVEN! Exiting...");
+    // process.exit(1);
   }
 }
 
