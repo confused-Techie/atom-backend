@@ -103,38 +103,42 @@ async function Read(type, name) {
  * If error returns "Server Error" or "File Not Found".
  */
 async function readFile(path) {
-  if (file_store === "filesystem") {
-    try {
-      const data = fs.readFileSync(path, "utf8");
-      return { ok: true, content: JSON.parse(data) };
-    } catch (err) {
-      if (err.code === "ENOENT") {
-        return { ok: false, content: err, short: "File Not Found" };
-      } else {
+  switch (file_store) {
+    case "filesystem":
+      try {
+        const data = fs.readFileSync(path, "utf8");
+        return { ok: true, content: JSON.parse(data) };
+      } catch (err) {
+        if (err.code === "ENOENT") {
+          return { ok: false, content: err, short: "File Not Found" };
+        } else {
+          return { ok: false, content: err, short: "Server Error" };
+        }
+      }
+
+    case "gcs": {
+      // check we have a valid storage object.
+      if (gcs_storage === undefined) {
+        gcs_storage = new Storage({
+          keyFilename: GOOGLE_APPLICATION_CREDENTIALS,
+        });
+      }
+      // then continue on
+
+      try {
+        let contents = await gcs_storage
+          .bucket(GCLOUD_STORAGE_BUCKET)
+          .file(path.replace("./", ""))
+          .download();
+        return { ok: true, content: JSON.parse(contents) };
+      } catch (err) {
         return { ok: false, content: err, short: "Server Error" };
       }
     }
-  } else if (file_store === "gcs") {
-    // check we have a valid storage object.
-    if (gcs_storage === undefined) {
-      gcs_storage = new Storage({
-        keyFilename: GOOGLE_APPLICATION_CREDENTIALS,
-      });
-    }
 
-    // then continue on
-    try {
-      let contents = await gcs_storage
-        .bucket(GCLOUD_STORAGE_BUCKET)
-        .file(path.replace("./", ""))
-        .download();
-      return { ok: true, content: JSON.parse(contents) };
-    } catch (err) {
-      return { ok: false, content: err, short: "Server Error" };
-    }
-  } else {
-    console.log("UNRECOGNIZED FILE STORE METHOD! Exiting...");
-    process.exit(1);
+    default:
+      console.log("UNRECOGNIZED FILE STORE METHOD! Exiting...");
+      process.exit(1);
   }
 }
 
@@ -150,7 +154,7 @@ async function readFile(path) {
  * @implements {writeFile}
  */
 async function Write(type, data, name) {
-  switch (type) {
+  switch (file_store) {
     case "user":
       return writeFile("./data/users.json", JSON.stringify(data, null, 4));
     case "pointer":
@@ -184,34 +188,38 @@ async function Write(type, data, name) {
  * Errors returned "Server Error".
  */
 async function writeFile(path, data) {
-  if (file_store === "filesystem") {
-    try {
-      fs.writeFileSync(path, data);
-      return { ok: true };
-    } catch (err) {
-      return { ok: false, content: err, short: "Server Error" };
-    }
-  } else if (file_store === "gcs") {
-    // check we have a valid storage object.
-    if (gcs_storage === undefined) {
-      gcs_storage = new Storage({
-        keyFilename: GOOGLE_APPLICATION_CREDENTIALS,
-      });
+  switch (file_store) {
+    case "filesystem":
+      try {
+        fs.writeFileSync(path, data);
+        return { ok: true };
+      } catch (err) {
+        return { ok: false, content: err, short: "Server Error" };
+      }
+
+    case "gcs": {
+      // check we have a valid storage object.
+      if (gcs_storage === undefined) {
+        gcs_storage = new Storage({
+          keyFilename: GOOGLE_APPLICATION_CREDENTIALS,
+        });
+      }
+      // then continue on
+
+      try {
+        await gcs_storage
+          .bucket(GCLOUD_STORAGE_BUCKET)
+          .file(path.replace("./", ""))
+          .save(data);
+        return { ok: true };
+      } catch (err) {
+        return { ok: false, content: err, short: "Server Error" };
+      }
     }
 
-    // then continue on
-    try {
-      await gcs_storage
-        .bucket(GCLOUD_STORAGE_BUCKET)
-        .file(path.replace("./", ""))
-        .save(data);
-      return { ok: true };
-    } catch (err) {
-      return { ok: false, content: err, short: "Server Error" };
-    }
-  } else {
-    console.log("UNRECOGNIZED FILE STORE METHOD! Exiting...");
-    process.exit(1);
+    default:
+      console.log("UNRECOGNIZED FILE STORE METHOD! Exiting...");
+      process.exit(1);
   }
 }
 
@@ -227,31 +235,38 @@ async function writeFile(path, data) {
 async function Delete(name) {
   // since we know the only data we ever want to delete from disk will be packages,
   // a type is not needed here.
-  if (file_store === "filesystem") {
-    try {
-      let rm = fs.rmSync(`./data/packages/${name}`);
-      // since rmSync returns undefined, we can check that, just in case it doesn't throw an error.
-      if (rm === undefined) {
-        return { ok: true };
-      } else {
-        return { ok: false, content: "Not Available", short: "Server Error" };
+  switch (file_store) {
+    case "filesystem":
+      try {
+        let rm = fs.rmSync(`./data/packages/${name}`);
+        // since rmSync returns undefined, we can check that, just in case it doesn't throw an error.
+        if (rm === undefined) {
+          return { ok: true };
+        } else {
+          return { ok: false, content: "Not Available", short: "Server Error" };
+        }
+      } catch (err) {
+        return { ok: false, content: err, short: "Server Error" };
       }
-    } catch (err) {
-      return { ok: false, content: err, short: "Server Error" };
+
+    case "gcs": {
+      // check we have a valid storage object.
+      if (gcs_storage === undefined) {
+        gcs_storage = new Storage({ keyFilename: GCS_SERVICE_ACCOUNT_FILE });
+      }
+      // then continue on
+
+      try {
+        await gcs_storage.bucket(GCS_BUCKET).file(name).delete();
+        return { ok: true };
+      } catch (err) {
+        return { ok: false, content: err, short: "Server Error" };
+      }
     }
-  } else if (file_store === "gcs") {
-    if (gcs_storage === undefined) {
-      gcs_storage = new Storage({ keyFilename: GCS_SERVICE_ACCOUNT_FILE });
-    }
-    try {
-      await gcs_storage.bucket(GCS_BUCKET).file(name).delete();
-      return { ok: true };
-    } catch (err) {
-      return { ok: false, content: err, short: "Server Error" };
-    }
-  } else {
-    console.log("UNRECOGNIZED FILE STORE METHOD! Exiting...");
-    process.exit(1);
+
+    default:
+      console.log("UNRECOGNIZED FILE STORE METHOD! Exiting...");
+      process.exit(1);
   }
 }
 
