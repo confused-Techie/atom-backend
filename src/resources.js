@@ -8,8 +8,12 @@
 
 const fs = require("fs");
 const { Storage } = require("@google-cloud/storage");
-const { cache_time, file_store, GCLOUD_STORAGE_BUCKET, GOOGLE_APPLICATION_CREDENTIALS } =
-  require("./config.js").GetConfig();
+const {
+  cache_time,
+  file_store,
+  GCLOUD_STORAGE_BUCKET,
+  GOOGLE_APPLICATION_CREDENTIALS,
+} = require("./config.js").GetConfig();
 
 let gcs_storage;
 
@@ -113,12 +117,17 @@ async function readFile(path) {
   } else if (file_store === "gcs") {
     // check we have a valid storage object.
     if (gcs_storage === undefined) {
-      gcs_storage = new Storage({ keyFilename: GOOGLE_APPLICATION_CREDENTIALS });
+      gcs_storage = new Storage({
+        keyFilename: GOOGLE_APPLICATION_CREDENTIALS,
+      });
     }
 
     // then continue on
     try {
-      let contents = await gcs_storage.bucket(GCLOUD_STORAGE_BUCKET).file(path.replace("./", "")).download();
+      let contents = await gcs_storage
+        .bucket(GCLOUD_STORAGE_BUCKET)
+        .file(path.replace("./", ""))
+        .download();
       return { ok: true, content: JSON.parse(contents) };
     } catch (err) {
       return { ok: false, content: err, short: "Server Error" };
@@ -185,12 +194,17 @@ async function writeFile(path, data) {
   } else if (file_store === "gcs") {
     // check we have a valid storage object.
     if (gcs_storage === undefined) {
-      gcs_storage = new Storage({ keyFilename: GOOGLE_APPLICATION_CREDENTIALS });
+      gcs_storage = new Storage({
+        keyFilename: GOOGLE_APPLICATION_CREDENTIALS,
+      });
     }
 
     // then continue on
     try {
-      await gcs_storage.bucket(GCLOUD_STORAGE_BUCKET).file(path.replace("./","")).save(data);
+      await gcs_storage
+        .bucket(GCLOUD_STORAGE_BUCKET)
+        .file(path.replace("./", ""))
+        .save(data);
       return { ok: true };
     } catch (err) {
       return { ok: false, content: err, short: "Server Error" };
