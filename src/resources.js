@@ -257,7 +257,10 @@ async function Delete(name) {
       // then continue on
 
       try {
-        await gcs_storage.bucket(GCS_BUCKET).file(`data/packages/${name}`).delete();
+        await gcs_storage
+          .bucket(GCS_BUCKET)
+          .file(`data/packages/${name}`)
+          .delete();
         return { ok: true };
       } catch (err) {
         return { ok: false, content: err, short: "Server Error" };
