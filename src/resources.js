@@ -154,7 +154,7 @@ async function readFile(path) {
  * @implements {writeFile}
  */
 async function Write(type, data, name) {
-  switch (file_store) {
+  switch (type) {
     case "user":
       return writeFile("./data/users.json", JSON.stringify(data, null, 4));
     case "pointer":
