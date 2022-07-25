@@ -1,0 +1,17 @@
+.gcloudignore
+# Git Tooling / NPM Tooling
+node_modules/
+.git/
+.github/
+.gitattributes
+.gitignore
+README.md
+LICENSE
+# Other repo data not needed 
+.all-contributorsrc
+.complexrc
+.prettierignore
+app.example.yaml
+data/
+coverage/
+docs/

@@ -7,6 +7,7 @@
     "node": ">= 10.7.0 < 14.15.0"
   },
   "scripts": {
+    "start": "node ./src/server.js",
     "test": "set NODE_ENV=test&& jest",
     "gen-badge": "echo 'This is no longer needed, after Coveralls Integration. Running anyway...' && node ./src/tests/genBadges.js",
     "api-docs": "quick-webserver-docs -i ./src/main.js -o ./docs/api.md",

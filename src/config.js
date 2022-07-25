@@ -62,12 +62,12 @@ function GetConfig() {
       file_store: process.env.FILESTORE
         ? process.env.FILESTORE
         : data.env_variables.FILESTORE,
-      GCS_BUCKET: process.env.GCS_BUCKET
-        ? process.env.GCS_BUCKET
-        : data.env_variables.GCS_BUCKET,
-      GCS_SERVICE_ACCOUNT_FILE: process.env.GCS_SERVICE_ACCOUNT_FILE
-        ? process.env.GCS_SERVICE_ACCOUNT_FILE
-        : data.env_variables.GCS_SERVICE_ACCOUNT_FILE,
+      GCLOUD_STORAGE_BUCKET: process.env.GCLOUD_STORAGE_BUCKET
+        ? process.env.GCLOUD_STORAGE_BUCKET
+        : data.env_variables.GCLOUD_STORAGE_BUCKET,
+      GOOGLE_APPLICATION_CREDENTIALS: process.env.GOOGLE_APPLICATION_CREDENTIALS
+        ? process.env.GOOGLE_APPLICATION_CREDENTIALS
+        : data.env_variables.GOOGLE_APPLICATION_CREDENTIALS,
       GH_CLIENTID: process.env.GH_CLIENTID
         ? process.env.GH_CLIENTID
         : data.env_variables.GH_CLIENTID,
