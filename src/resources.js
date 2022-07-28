@@ -142,7 +142,7 @@ async function readFile(path) {
         return { ok: false, content: err, short: "Server Error" };
       }
     }
-    
+
     case "sql": {
       try {
         if (sql_storage === undefined) {
@@ -154,13 +154,15 @@ async function readFile(path) {
             port: DB_PORT,
             ssl: {
               rejectUnauthorized: true,
-              ca: fs.readFileSync(DB_SSL_CERT).toString()
-            }
+              ca: fs.readFileSync(DB_SSL_CERT).toString(),
+            },
           });
         }
-        
+
         if (path.startsWith("./data/packages")) {
-          let packName = path.replace("./data/packages/","").replace(".json","");
+          let packName = path
+            .replace("./data/packages/", "")
+            .replace(".json", "");
           console.log(packName);
           const command = await sql_storage`
             SELECT data FROM packages 
@@ -168,12 +170,11 @@ async function readFile(path) {
           `;
           console.log(command);
           return { ok: true, content: command[0].data };
-          
         } else if (path === "./data/package_pointer.json") {
           const command = await sql_storage`
             SELECT * FROM pointers;
           `;
-          
+
           // then to make this familair we need to construct an object.
           // Reading from the DB raw has { name: "pack-name", pointer: 'uuid' };
           // But the rest of the application expects [ "pack-name": "uuid" ];
@@ -183,8 +184,7 @@ async function readFile(path) {
           }
           return { ok: true, content: obj };
         }
-        
-      } catch(err) {
+      } catch (err) {
         console.log(err);
         return { ok: false, content: err, short: "Server Error" };
       }

@@ -249,8 +249,8 @@ async function GetAllPackages() {
       if (!pointers.ok) {
         return pointers;
       }
-      console.log('successfully retreived pointers.');
-  
+      console.log("successfully retreived pointers.");
+
       let package_collection = [];
       for (const pointer in pointers.content) {
         let pack = await GetPackageByID(pointers.content[pointer]);
@@ -274,31 +274,31 @@ async function GetAllPackages() {
       // once all packages have been iterated, return the collection, to the internal caller.
       return { ok: true, content: package_collection };
     };
-  
+
     if (cached_packages === undefined) {
       logger.DebugLog("Creating Full Package Cache.");
       let tmpcache = await getNew();
       if (!tmpcache.ok) {
         return tmpcache;
       }
-  
+
       cached_packages = new resources.CacheObject(tmpcache.content);
       cached_packages.last_validate = Date.now();
       return { ok: true, content: cached_packages.data };
     }
-  
+
     // Packages are cached
     if (!cached_packages.Expired) {
       logger.DebugLog("Full Package data IS NOT expired.");
       return { ok: true, content: cached_packages.data };
     }
-  
+
     logger.DebugLog("Full Package data IS expired.");
     let tmpcache = await getNew();
     if (!tmpcache.ok) {
       return tmpcache;
     }
-  
+
     cached_packages = new resources.CacheObject(tmpcache.content);
     cached_packages.last_validate = Date.now();
     return { ok: true, content: cached_packages.data };

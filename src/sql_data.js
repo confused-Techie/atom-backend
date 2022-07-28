@@ -1,13 +1,7 @@
 const fs = require("fs");
 const postgres = require("postgres");
-const {
-  DB_HOST,
-  DB_USER,
-  DB_PASS,
-  DB_DB,
-  DB_PORT,
-  DB_SSL_CERT,
-} = require("./config.js").GetConfig();
+const { DB_HOST, DB_USER, DB_PASS, DB_DB, DB_PORT, DB_SSL_CERT } =
+  require("./config.js").GetConfig();
 
 let sql_storage;
 
@@ -20,8 +14,8 @@ function setupSQL() {
     port: DB_PORT,
     ssl: {
       rejectUnauthorized: true,
-      ca: fs.readFileSync(DB_SSL_CERT).toString()
-    }
+      ca: fs.readFileSync(DB_SSL_CERT).toString(),
+    },
   });
 }
 
@@ -29,19 +23,18 @@ async function GetAllPackagesSQL() {
   if (sql_storage === undefined) {
     setupSQL();
   }
-  
+
   try {
     const command = await sql_storage`
       SELECT data FROM packages 
     `;
-    
+
     let packArray = [];
     for (let i = 0; i < command.length; i++) {
       packArray.push(command[i].data);
     }
     return { ok: true, content: packArray };
-    
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }

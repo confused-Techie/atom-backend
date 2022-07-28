@@ -40,7 +40,7 @@ async function GETPackages(req, res) {
   };
 
   let all_packages = await data.GetAllPackages();
-  console.log('retreived all packages');
+  console.log("retreived all packages");
 
   if (!all_packages.ok) {
     await common.HandleError(req, res, all_packages);

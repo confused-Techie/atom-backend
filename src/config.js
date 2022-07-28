@@ -80,12 +80,22 @@ function GetConfig() {
       GH_USERAGENT: process.env.GH_USERAGENT
         ? process.env.GH_USERAGENT
         : data.env_variables.GH_USERAGENT,
-      DB_HOST: process.env.DB_HOST ? process.env.DB_HOST : data.env_variables.DB_HOST,
-      DB_USER: process.env.DB_USER ? process.env.DB_USER : data.env_variables.DB_USER,
-      DB_PASS: process.env.DB_PASS ? process.env.DB_PASS : data.env_variables.DB_PASS,
+      DB_HOST: process.env.DB_HOST
+        ? process.env.DB_HOST
+        : data.env_variables.DB_HOST,
+      DB_USER: process.env.DB_USER
+        ? process.env.DB_USER
+        : data.env_variables.DB_USER,
+      DB_PASS: process.env.DB_PASS
+        ? process.env.DB_PASS
+        : data.env_variables.DB_PASS,
       DB_DB: process.env.DB_DB ? process.env.DB_DB : data.env_variables.DB_DB,
-      DB_PORT: process.env.DB_PORT ? process.env.DB_PORT : data.env_variables.DB_PORT,
-      DB_SSL_CERT: process.env.DB_SSL_CERT ? process.env.DB_SSL_CERT : data.env_variables.DB_SSL_CERT,
+      DB_PORT: process.env.DB_PORT
+        ? process.env.DB_PORT
+        : data.env_variables.DB_PORT,
+      DB_SSL_CERT: process.env.DB_SSL_CERT
+        ? process.env.DB_SSL_CERT
+        : data.env_variables.DB_SSL_CERT,
     };
   } catch (err) {
     // since this is necessary for the server to startup, we can throw an error here and exit the process.
