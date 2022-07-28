@@ -1,3 +1,4 @@
 node_modules/
 app.yaml
 pulsar-*.json
+ca-certificate.crt

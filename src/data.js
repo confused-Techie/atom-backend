@@ -8,6 +8,8 @@
 const { v4: uuidv4 } = require("uuid");
 const logger = require("./logger.js");
 const resources = require("./resources.js");
+const { file_store } = require("./config.js").GetConfig();
+const sql_data = require("./sql_data.js");
 
 // Collection of data global variables. Used for caching read data.
 let cached_user, cached_pointer, cached_packages, cached_packages_featured;
@@ -228,62 +230,79 @@ async function GetPackagePointer() {
  * @implements {GetPackageByID}
  */
 async function GetAllPackages() {
-  const getNew = async function () {
-    const pointers = await GetPackagePointer();
-    if (!pointers.ok) {
-      return pointers;
+  if (file_store === "sql") {
+    if (cached_packages === undefined) {
+      logger.DebugLog("Creating Full Package Cache from SQL");
+      let packArray = await sql_data.GetAllPackagesSQL();
+      if (!packArray.ok) {
+        console.log("FAILED TO CACHE PACKAGES!");
+      }
+      cached_packages = new resources.CacheObject(packArray.content);
+      cached_packages.last_validate = Date.now();
+      return { ok: true, content: cached_packages.data };
+    } else {
+      return { ok: true, content: cached_packages.data };
     }
-
-    let package_collection = [];
-    for (const pointer in pointers.content) {
-      let pack = await GetPackageByID(pointers.content[pointer]);
-      if (pack.ok) {
-        package_collection.push(pack.content);
-      } else {
-        // this will prioritize giving a response, so if a single package isn't found, it'll log it.
-        // then move on.
-        if (pack.short !== "Not Found") {
-          return pack;
+  } else {
+    const getNew = async function () {
+      const pointers = await GetPackagePointer();
+      if (!pointers.ok) {
+        return pointers;
+      }
+      console.log('successfully retreived pointers.');
+  
+      let package_collection = [];
+      for (const pointer in pointers.content) {
+        let pack = await GetPackageByID(pointers.content[pointer]);
+        console.log(`Got Package ${pack.content.name}`);
+        if (pack.ok) {
+          package_collection.push(pack.content);
         } else {
-          logger.WarningLog(
-            undefined,
-            undefined,
-            `Missing Package during GetAllPackages: ${pointers.content[pointer]}`
-          );
+          // this will prioritize giving a response, so if a single package isn't found, it'll log it.
+          // then move on.
+          if (pack.short !== "Not Found") {
+            return pack;
+          } else {
+            logger.WarningLog(
+              undefined,
+              undefined,
+              `Missing Package during GetAllPackages: ${pointers.content[pointer]}`
+            );
+          }
         }
       }
+      // once all packages have been iterated, return the collection, to the internal caller.
+      return { ok: true, content: package_collection };
+    };
+  
+    if (cached_packages === undefined) {
+      logger.DebugLog("Creating Full Package Cache.");
+      let tmpcache = await getNew();
+      if (!tmpcache.ok) {
+        return tmpcache;
+      }
+  
+      cached_packages = new resources.CacheObject(tmpcache.content);
+      cached_packages.last_validate = Date.now();
+      return { ok: true, content: cached_packages.data };
     }
-    // once all packages have been iterated, return the collection, to the internal caller.
-    return { ok: true, content: package_collection };
-  };
-
-  if (cached_packages === undefined) {
-    logger.DebugLog("Creating Full Package Cache.");
+  
+    // Packages are cached
+    if (!cached_packages.Expired) {
+      logger.DebugLog("Full Package data IS NOT expired.");
+      return { ok: true, content: cached_packages.data };
+    }
+  
+    logger.DebugLog("Full Package data IS expired.");
     let tmpcache = await getNew();
     if (!tmpcache.ok) {
       return tmpcache;
     }
-
+  
     cached_packages = new resources.CacheObject(tmpcache.content);
     cached_packages.last_validate = Date.now();
     return { ok: true, content: cached_packages.data };
   }
-
-  // Packages are cached
-  if (!cached_packages.Expired) {
-    logger.DebugLog("Full Package data IS NOT expired.");
-    return { ok: true, content: cached_packages.data };
-  }
-
-  logger.DebugLog("Full Package data IS expired.");
-  let tmpcache = await getNew();
-  if (!tmpcache.ok) {
-    return tmpcache;
-  }
-
-  cached_packages = new resources.CacheObject(tmpcache.content);
-  cached_packages.last_validate = Date.now();
-  return { ok: true, content: cached_packages.data };
 }
 
 /**

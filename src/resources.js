@@ -8,14 +8,21 @@
 
 const fs = require("fs");
 const { Storage } = require("@google-cloud/storage");
+const postgres = require("postgres");
 const {
   cache_time,
   file_store,
   GCLOUD_STORAGE_BUCKET,
   GOOGLE_APPLICATION_CREDENTIALS,
+  DB_HOST,
+  DB_USER,
+  DB_PASS,
+  DB_DB,
+  DB_PORT,
+  DB_SSL_CERT,
 } = require("./config.js").GetConfig();
 
-let gcs_storage;
+let gcs_storage, sql_storage;
 
 /**
  * @class
@@ -132,6 +139,53 @@ async function readFile(path) {
           .download();
         return { ok: true, content: JSON.parse(contents) };
       } catch (err) {
+        return { ok: false, content: err, short: "Server Error" };
+      }
+    }
+    
+    case "sql": {
+      try {
+        if (sql_storage === undefined) {
+          sql_storage = postgres({
+            host: DB_HOST,
+            username: DB_USER,
+            password: DB_PASS,
+            database: DB_DB,
+            port: DB_PORT,
+            ssl: {
+              rejectUnauthorized: true,
+              ca: fs.readFileSync(DB_SSL_CERT).toString()
+            }
+          });
+        }
+        
+        if (path.startsWith("./data/packages")) {
+          let packName = path.replace("./data/packages/","").replace(".json","");
+          console.log(packName);
+          const command = await sql_storage`
+            SELECT data FROM packages 
+            WHERE pointer = ${packName};
+          `;
+          console.log(command);
+          return { ok: true, content: command[0].data };
+          
+        } else if (path === "./data/package_pointer.json") {
+          const command = await sql_storage`
+            SELECT * FROM pointers;
+          `;
+          
+          // then to make this familair we need to construct an object.
+          // Reading from the DB raw has { name: "pack-name", pointer: 'uuid' };
+          // But the rest of the application expects [ "pack-name": "uuid" ];
+          let obj = {};
+          for (let i = 0; i < command.length; i++) {
+            obj[command[i].name] = command[i].pointer;
+          }
+          return { ok: true, content: obj };
+        }
+        
+      } catch(err) {
+        console.log(err);
         return { ok: false, content: err, short: "Server Error" };
       }
     }
