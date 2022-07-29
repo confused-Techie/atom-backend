@@ -60,3 +60,25 @@ users.js - The major endpoint to any raw data handling for users.
 # Handling File System Operations
 
 resources.js - Purely handles reading, writing, deleting from disk
+
+--------------------
+--------------------
+
+The new plan:
+
+Realistically, there will be many features that can have better performance via direct interaction with the database.
+
+Preliminarly what may be the best architecture:
+
+sever.js -> main.js =>>
+            common_handler.js
+            oauth_handler.js
+            package_handler.js
+            star_handler.js
+            theme_handler.js
+            update_handler.js
+            user_handler.js
+            
+Much like before, then with the standard utility functions. But instead of the special data and file system modules they will all be replaced by 
+
+database.js : Which should then be a large handler, for all database functionality,
