@@ -22,6 +22,7 @@ const logger = require("../logger.js");
 const error = require("../error.js");
 const { server_url, paginated_amount } = require("../config.js").GetConfig();
 const utils = require("../utils.js");
+const database = require("../database.js");
 
 /**
  * @async
@@ -287,28 +288,28 @@ async function GETPackagesSearch(req, res) {
 }
 
 async function GETPackagesDetails(req, res) {
-  // GET /api/packages/:packageName
+  // GET /api/packages/:packageName 
   let params = {
     engine: query.engine(req),
     name: decodeURIComponent(req.params.packageName),
   };
-  let pack = await data.GetPackageByName(params.name);
-
+  let pack = await database.getPackageByName(params.name);
+  
   if (!pack.ok) {
     await common.HandleError(req, res, pack);
     return;
   }
-
-  // From here we now have the package and just want to prune data from it
-  pack = await collection.DeepCopy(pack);
-  pack = await collection.POFPrune(pack.content); // package object full prune
-
+  
+  // now that we are using a database, and the data is no longer stored in a cache like 
+  // before, we don't have to worry about deep copy nonsense 
+  pack = await collection.PORFPrune(pack.content); // Package Object Full Prune 
+  
   if (params.engine) {
     // query.engine returns false if no valid query param is found.
     // before using EngineFilter we need to check the truthiness of it.
     pack = await collection.EngineFilter(pack, params.engine);
   }
-
+  
   res.status(200).json(pack);
   logger.HTTPLog(req, res);
 }
@@ -481,7 +482,7 @@ async function GETPackagesStargazers(req, res) {
   let params = {
     packageName: decodeURIComponent(req.params.packageName),
   };
-  let pack = await data.GetPackageByName(params.packageName);
+  let pack = await database.getPackageByName(params.packageName);
 
   if (!pack.ok) {
     await common.HandleError(req, res, pack);
@@ -533,31 +534,31 @@ async function GETPackagesVersion(req, res) {
   };
   // To ensure the version we have been handed is a valid SemVer, we can pass it through the query.engine filter
   // if we get the same object back, we know its valid.
-  if (params.versionName == query.engine(params.versionName)) {
-    // Now we know the version is a valid semver.
-    let pack = await data.GetPackageByName(params.packageName);
+  if (params.versionName != query.engine(params.versionName)) {
+    // we return a 404 for the version, since its an invalid format 
+    await common.NotFound(req, res);
+    return;
+  }
+  // Now we know the version is a valid semver.
+  let pack = await database.getPackageByName(params.packageName);
+  
+  if (!pack.ok) {
+    await common.HandleError(req, res, pack);
+    return;
+  }
+  // now with the package itself, lets see if that version is a valid key within in the version obj.
+  if (pack.content.versions[params.versionName]) {
+    // the version does exist, lets return it.
+    // Now additionally, we need to add a link to the tarball endpoint.
+    pack.content.versions[params.versionName].dist = {
+      tarball: `${server_url}/api/packages/${params.packageName}/versions/${params.versionName}/tarball`,
+    };
 
-    if (pack.ok) {
-      // now with the package itself, lets see if that version is a valid key within in the version obj.
-      if (pack.content.versions[params.versionName]) {
-        // the version does exist, lets return it.
-        // Now additionally, we need to add a link to the tarball endpoint.
-        pack.content.versions[params.versionName].dist = {
-          tarball: `${server_url}/api/packages/${params.packageName}/versions/${params.versionName}/tarball`,
-        };
-
-        // now we can return the modified object.
-        res.status(200).json(pack.content.versions[params.versionName]);
-        logger.HTTPLog(req, res);
-      } else {
-        // the version does not exist, return 404
-        await common.NotFound(req, res);
-      }
-    } else {
-      await common.HandleError(req, res, pack);
-    }
+    // now we can return the modified object.
+    res.status(200).json(pack.content.versions[params.versionName]);
+    logger.HTTPLog(req, res);
   } else {
-    // we return a 404 for the version, since its an invalid format.
+    // the version does not exist, return 404
     await common.NotFound(req, res);
   }
 }
@@ -588,10 +589,10 @@ async function GETPackagesVersionTarball(req, res) {
   }
 
   // first lets get the package
-  let pack = await data.GetPackageByName(params.packageName);
+  let pack = await database.getPackageByName(params.packageName);
 
   if (!pack.ok) {
-    await common.NotFound(req, res);
+    await common.HandleError(req, res, pack);
     return;
   }
 

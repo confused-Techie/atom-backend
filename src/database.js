@@ -48,7 +48,8 @@ async function getPackageByID(id) {
 
 async function getPackageByName(name) {
   checkSQLSetup();
-  
+  // It may be smart to have this use getPackagePointer, then direct 
+  // to getPackageByID, instead of reimplementing this command here.
   try {
     const command = await sql_storage`
       SELECT pointer FROM pointers
@@ -66,9 +67,41 @@ async function getPackageByName(name) {
   }
 }
 
+async function getPackagePointerByName(name) {
+  checkSQLSetup();
+  
+  try {
+    const command = await sql_storage`
+      SELECT poionter FROM pointers 
+      WHERE name=${name};
+    `;
+    
+    if (command.length === 0) {
+      return { ok: false, content: `${name} was not found within pointer db.`, short: "Not Found" };
+    }
+    return { ok: true, content: command[0].pointer };
+    
+  } catch(err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+async function getPackageCollection(packArray) {
+  checkSQLSetup();
+  
+  try {
+    // Could look at generating a query using UNION, but theres likely a better way.
+    // TODO 
+  } catch(err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
 module.exports = {
   checkSQLSetup,
   shutdownSQL,
   getPackageByID,
-  getPackageByName
-}
+  getPackagePointerByName,
+  getPackageByName,
+  getPackageCollection,
+};
