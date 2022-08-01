@@ -119,7 +119,7 @@ function query(req) {
 function engine(req) {
   // adding support for being passed the request object, or a specific version to check.
   let prov;
-  if (typeof req === 'object') {
+  if (typeof req === "object") {
     prov = req.query.engine;
   } else {
     prov = req;

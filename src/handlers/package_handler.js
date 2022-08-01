@@ -534,7 +534,7 @@ async function GETPackagesVersion(req, res) {
   };
   // Check the truthiness of the returned query engine.
   if (!params.versionName) {
-    console.log('returning not found due to invalid semver.');
+    console.log("returning not found due to invalid semver.");
     // we return a 404 for the version, since its an invalid format
     await common.NotFound(req, res);
     return;
