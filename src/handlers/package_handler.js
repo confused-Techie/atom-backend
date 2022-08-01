@@ -288,28 +288,28 @@ async function GETPackagesSearch(req, res) {
 }
 
 async function GETPackagesDetails(req, res) {
-  // GET /api/packages/:packageName 
+  // GET /api/packages/:packageName
   let params = {
     engine: query.engine(req),
     name: decodeURIComponent(req.params.packageName),
   };
   let pack = await database.getPackageByName(params.name);
-  
+
   if (!pack.ok) {
     await common.HandleError(req, res, pack);
     return;
   }
-  
-  // now that we are using a database, and the data is no longer stored in a cache like 
-  // before, we don't have to worry about deep copy nonsense 
-  pack = await collection.PORFPrune(pack.content); // Package Object Full Prune 
-  
+
+  // now that we are using a database, and the data is no longer stored in a cache like
+  // before, we don't have to worry about deep copy nonsense
+  pack = await collection.PORFPrune(pack.content); // Package Object Full Prune
+
   if (params.engine) {
     // query.engine returns false if no valid query param is found.
     // before using EngineFilter we need to check the truthiness of it.
     pack = await collection.EngineFilter(pack, params.engine);
   }
-  
+
   res.status(200).json(pack);
   logger.HTTPLog(req, res);
 }
@@ -535,13 +535,13 @@ async function GETPackagesVersion(req, res) {
   // To ensure the version we have been handed is a valid SemVer, we can pass it through the query.engine filter
   // if we get the same object back, we know its valid.
   if (params.versionName != query.engine(params.versionName)) {
-    // we return a 404 for the version, since its an invalid format 
+    // we return a 404 for the version, since its an invalid format
     await common.NotFound(req, res);
     return;
   }
   // Now we know the version is a valid semver.
   let pack = await database.getPackageByName(params.packageName);
-  
+
   if (!pack.ok) {
     await common.HandleError(req, res, pack);
     return;
