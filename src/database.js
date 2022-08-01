@@ -1,9 +1,10 @@
 const fs = require("fs");
 const postgres = require("postgres");
-const { DB_HOST, DB_USER, DB_PASS, DB_DB, DB_PORT, DB_SSL_CERT } = require("./config.js").GetConfig();
+const { DB_HOST, DB_USER, DB_PASS, DB_DB, DB_PORT, DB_SSL_CERT } =
+  require("./config.js").GetConfig();
 
 let sql_storage; // sql object, to interact with the DB,
-                // should be set after first call.
+// should be set after first call.
 
 function checkSQLSetup() {
   if (sql_storage === undefined) {
@@ -29,19 +30,22 @@ function shutdownSQL() {
 
 async function getPackageByID(id) {
   checkSQLSetup();
-  
+
   try {
     const command = await sql_storage`
       SELECT data FROM packages 
       WHERE pointer=${id};
     `;
-    
+
     if (command.length === 0) {
-      return { ok: false, content: `${id} was not found within packages db.`, short: "Not Found" };
+      return {
+        ok: false,
+        content: `${id} was not found within packages db.`,
+        short: "Not Found",
+      };
     }
     return { ok: true, content: command[0].data };
-    
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
@@ -55,14 +59,18 @@ async function getPackageByName(name) {
       SELECT pointer FROM pointers
       WHERE name=${name};
     `;
-    
+
     // the above should give us the UUID of the package name,
-    // now we can rely on getPackageByID 
+    // now we can rely on getPackageByID
     if (command.length === 0) {
-      return { ok: false, content: `${name} was not found within pointer db.`, short: "Not Found" };
+      return {
+        ok: false,
+        content: `${name} was not found within pointer db.`,
+        short: "Not Found",
+      };
     }
     return await getPackageByID(command[0].pointer);
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
