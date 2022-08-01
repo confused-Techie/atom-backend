@@ -117,7 +117,13 @@ function query(req) {
  * @returns {string|boolean} Returns the valid 'engine' specified, or if none, returns false.
  */
 function engine(req) {
-  let prov = req.query.engine;
+  // adding support for being passed the request object, or a specific version to check.
+  let prov;
+  if (typeof req === 'object') {
+    prov = req.query.engine;
+  } else {
+    prov = req;
+  }
 
   if (prov === undefined) {
     return false;

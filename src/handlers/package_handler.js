@@ -302,7 +302,7 @@ async function GETPackagesDetails(req, res) {
 
   // now that we are using a database, and the data is no longer stored in a cache like
   // before, we don't have to worry about deep copy nonsense
-  pack = await collection.PORFPrune(pack.content); // Package Object Full Prune
+  pack = await collection.POFPrune(pack.content); // Package Object Full Prune
 
   if (params.engine) {
     // query.engine returns false if no valid query param is found.
@@ -530,11 +530,11 @@ async function GETPackagesVersion(req, res) {
   // GET /api/packages/:packageName/versions/:versionName
   let params = {
     packageName: decodeURIComponent(req.params.packageName),
-    versionName: req.params.versionName,
+    versionName: query.engine(req.params.versionName),
   };
-  // To ensure the version we have been handed is a valid SemVer, we can pass it through the query.engine filter
-  // if we get the same object back, we know its valid.
-  if (params.versionName != query.engine(params.versionName)) {
+  // Check the truthiness of the returned query engine.
+  if (!params.versionName) {
+    console.log('returning not found due to invalid semver.');
     // we return a 404 for the version, since its an invalid format
     await common.NotFound(req, res);
     return;
