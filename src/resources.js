@@ -1,6 +1,6 @@
 /**
  * @module resources
- * @desc This module provides a way for other functions to read/write/delete data without knowing or
+ * @desc This module provides a way for other functions to read/write/remove data without knowing or
  * thinking about the underlying file structure. Providing abstraction if the data resides on a local
  * filesystem, Google Cloud Storage, or something else entirely.
  * @implements {config}
@@ -279,14 +279,14 @@ async function writeFile(path, data) {
 
 /**
  * @async
- * @function delete
+ * @function remove
  * @descc Exported function to delete data from the filesystem, whatever that may be. But since we know
  * we will only ever be deleting packages, these will only ever attempt to delete a package.
  * @param {string} name - The name of the package we want to delete. <b>MUST</b> include `.json`, as in `UUID.json`.
  * @return {object} A Server Status Object, with `content` non-existant on a successful deletion.
  * Errors returned as "Server Error".
  */
-async function delete(name) {
+async function remove(name) {
   // since we know the only data we ever want to delete from disk will be packages,
   // a type is not needed here.
   switch (file_store) {
@@ -330,6 +330,6 @@ async function delete(name) {
 module.exports = {
   read,
   write,
-  delete,
+  remove,
   cacheObject,
 };

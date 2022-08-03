@@ -53,7 +53,7 @@ async function shutdown() {
     logger.debugLog("Active Deletion Flags Stored. Moving to Delete.");
     for (let i = 0; i < deletion_flags.length; i++) {
       if (deletion_flags[i].type === "package") {
-        let rm = await resources.delete(deletion_flags[i].file);
+        let rm = await resources.remove(deletion_flags[i].file);
         if (rm.ok) {
           logger.debugLog(`Deleted Successfully: ${deletion_flags[i].file}`);
         } else {

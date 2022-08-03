@@ -265,7 +265,7 @@ app.get("/api/packages/:packageName", async (req, res) => {
  *   @Rtype application/json
  *   @Rdesc Unauthorized.
  */
-app.delete("/api/packages/:packageName", async (req, res) => {
+app.remove("/api/packages/:packageName", async (req, res) => {
   await package_handler.DELETEPackagesName(req, res);
 });
 
@@ -320,7 +320,7 @@ app.post("/api/packages/:packageName/star", async (req, res) => {
  *  @status 201
  *  @Rdesc An empty response to convey successfully unstaring a package.
  */
-app.delete("/api/packages/:packageName/star", async (req, res) => {
+app.remove("/api/packages/:packageName/star", async (req, res) => {
   await package_handler.DELETEPackagesStar(req, res);
 });
 
@@ -470,7 +470,7 @@ app.get(
  *  @status 204
  *  @Rdesc Indicates a successful deletion.
  */
-app.delete(
+app.remove(
   "/api/packages/:packageName/versions/:versionName",
   async (req, res) => {
     await package_handler.DELETEPackageVersion(req, res);
