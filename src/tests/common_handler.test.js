@@ -35,7 +35,7 @@ test("AuthFail Modifies 'Server Error' HTTP Status", async () => {
     content: "DEV",
     short: "Server Error",
   };
-  await common.AuthFail(req, res, user);
+  await common.authFail(req, res, user);
   expect(res.statusCode).toBe(500);
 });
 
@@ -47,7 +47,7 @@ test("AuthFail Modifies 'Bad Auth' HTTP Status", async () => {
     content: "DEV",
     short: "Bad Auth",
   };
-  await common.AuthFail(req, res, user);
+  await common.authFail(req, res, user);
   expect(res.statusCode).toBe(401);
 });
 
@@ -55,42 +55,42 @@ test("ServerError Modifies HTTP Status", async () => {
   let res = new NewRes();
   let req = new NewReq();
   let err = "DEV Error";
-  await common.ServerError(req, res, err);
+  await common.serverError(req, res, err);
   expect(res.statusCode).toBe(500);
 });
 
 test("NotFound Modifies HTTP Status", async () => {
   let res = new NewRes();
   let req = new NewReq();
-  await common.NotFound(req, res);
+  await common.notFound(req, res);
   expect(res.statusCode).toBe(404);
 });
 
 test("NotSupported Modifies HTTP Status", async () => {
   let res = new NewRes();
   let req = new NewReq();
-  await common.NotSupported(req, res);
+  await common.notSupported(req, res);
   expect(res.statusCode).toBe(501);
 });
 
 test("SiteWideNotFound Modifies HTTP Status", async () => {
   let res = new NewRes();
   let req = new NewReq();
-  await common.SiteWideNotFound(req, res);
+  await common.siteWideNotFound(req, res);
   expect(res.statusCode).toBe(404);
 });
 
 test("BadRepoJSON Modifies HTTP Status", async () => {
   let res = new NewRes();
   let req = new NewReq();
-  await common.BadRepoJSON(req, res);
+  await common.badRepoJSON(req, res);
   expect(res.statusCode).toBe(400);
 });
 
 test("BadRepoJSON Modifies JSON", async () => {
   let res = new NewRes();
   let req = new NewReq();
-  await common.BadRepoJSON(req, res);
+  await common.badRepoJSON(req, res);
   expect(res.JSONObj.message).toBe(
     "That repo does not exist, isn't an atom package, or atombot does not have access."
   );
@@ -99,14 +99,14 @@ test("BadRepoJSON Modifies JSON", async () => {
 test("BadPackageJSON Modifies HTTP Status", async () => {
   let res = new NewRes();
   let req = new NewReq();
-  await common.BadPackageJSON(req, res);
+  await common.badPackageJSON(req, res);
   expect(res.statusCode).toBe(400);
 });
 
 test("BadPackageJSON Modifies JSON", async () => {
   let req = new NewReq();
   let res = new NewRes();
-  await common.BadPackageJSON(req, res);
+  await common.badPackageJSON(req, res);
   expect(res.JSONObj.message).toBe(
     "The package.json at owner/repo isn't valid."
   );

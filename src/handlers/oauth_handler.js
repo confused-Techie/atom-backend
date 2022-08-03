@@ -5,7 +5,7 @@
  * @implements {common_handler}
  */
 
-const { GH_CLIENTID } = require("../config.js").GetConfig();
+const { GH_CLIENTID } = require("../config.js").getConfig();
 const common = require("./common_handler.js");
 
 /**
@@ -39,7 +39,7 @@ async function GETLogin(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
 async function GETOauth(req, res) {
-  await common.NotSupported(req, res);
+  await common.notSupported(req, res);
 }
 
 module.exports = {

@@ -588,7 +588,7 @@ app.get("/api/updates", async (req, res) => {
 app.use((req, res) => {
   // Having this as the last route, will handle all other unknown routes.
   // Ensure to leave this at the very last position to handle properly.
-  common_handler.SiteWideNotFound(req, res);
+  common_handler.siteWideNotFound(req, res);
 });
 
 module.exports = app;

@@ -32,7 +32,7 @@ describe("InfoLog Testing", () => {
     jest.clearAllMocks();
   });
   test("Normal InfoLog Call", () => {
-    logger.InfoLog("test");
+    logger.infoLog("test");
     expect(console.log).toBeCalledTimes(1);
     expect(console.log).toHaveBeenLastCalledWith("INFO:: test");
   });

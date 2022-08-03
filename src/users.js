@@ -8,7 +8,7 @@
 const data = require("./data.js");
 
 /**
- * @function VerifyAuth
+ * @function verifyAuth
  * @desc Checks every existing user within the users file, to see if the token provided exists within their valid
  * tokens. If it does will return the entire user object. If an optional callback is provided will invoke the
  * callback passing the user object, otherwise will just return the user object.
@@ -18,8 +18,8 @@ const data = require("./data.js");
  * @implements {GetUsers}
  * @returns {object} Error Object bubbled from GetUsers, Error Object of 'Bad Auth', Object containing the User Object.
  */
-async function VerifyAuth(token) {
-  const users = await data.GetUsers();
+async function verifyAuth(token) {
+  const users = await data.getUsers();
 
   if (!users.ok) {
     return users;
@@ -37,7 +37,7 @@ async function VerifyAuth(token) {
 }
 
 /**
- * @function GetUser
+ * @function getUser
  * @desc Searches for a user within the user file, and if found will return the standard object
  * containing the full User Object. Otherwise an error.
  * @implements {GetUsers}
@@ -45,8 +45,8 @@ async function VerifyAuth(token) {
  * @returns {object} An error object bubbled up from GetUsers, Error Object of 'Not Found',
  * Object containing full User Object.
  */
-async function GetUser(username) {
-  const users = await data.GetUsers();
+async function getUser(username) {
+  const users = await data.getUsers();
 
   if (!users.ok) {
     return users;
@@ -62,7 +62,7 @@ async function GetUser(username) {
 }
 
 /**
- * @function AddUserStar
+ * @function addUserStar
  * @desc Adds the desired Package to the list of packages the User has starred.
  * @implements {GetUser}
  * @implements {GetUsers}
@@ -72,9 +72,9 @@ async function GetUser(username) {
  * @returns {object} Error Object Bubbled from GetUser, Error Object Bubbled from GetUsers,
  * Error Object Bubbled from SetUsers, Short Object of 'ok' if successful.
  */
-async function AddUserStar(packageName, userName) {
+async function addUserStar(packageName, userName) {
   // this lets us add the packageName to the users list of stars.
-  let user = await GetUser(userName);
+  let user = await getUser(userName);
 
   if (!user.ok) {
     return user;
@@ -85,7 +85,7 @@ async function AddUserStar(packageName, userName) {
   // then write the user data.
 
   // A bug discovered is this writes the user data singular object, not the entire user file object.
-  let users = await data.GetUsers();
+  let users = await data.getUsers();
 
   if (!users.ok) {
     //unable to read file
@@ -95,13 +95,13 @@ async function AddUserStar(packageName, userName) {
   users.content[userName] = user.content;
 
   // now with the new user object assigned as the key to the user file, we can save.
-  const write = data.SetUsers(users.content);
+  const write = data.setUsers(users.content);
 
   return write.ok ? { ok: true } : write;
 }
 
 /**
- * @function RemoveUserStar
+ * @function removeUserStar
  * @desc Removes the specified Package from the Users list of stars.
  * @implements {GetUser}
  * @implements {GetUsers}
@@ -111,8 +111,8 @@ async function AddUserStar(packageName, userName) {
  * @returns {object} Error Object Bubbled from GetUser, ErrorObject Bubbled from GetUsers,
  * Error Object Bubbled from SetUsers, Error Object of 'Not Found', Short Object of successful write ok.
  */
-async function RemoveUserStar(packageName, userName) {
-  let user = await GetUser(userName);
+async function removeUserStar(packageName, userName) {
+  let user = await getUser(userName);
 
   if (!user.ok) {
     return user;
@@ -137,26 +137,26 @@ async function RemoveUserStar(packageName, userName) {
 
   // then to write the new user data
   // Same bug as AddUserStar
-  let users = await data.GetUsers();
+  let users = await data.getUsers();
 
   if (!users.ok) {
     return users;
   }
 
   users.content[userName] = user.content;
-  const write = data.SetUsers(users.content);
+  const write = data.setUsers(users.content);
 
   return write.ok ? { ok: true } : write;
 }
 
 /**
- * @function Prune
+ * @function prune
  * @desc Takes a single User Object, and prunes any server side only data from the object to return to the user.
  * This pruned item should never be written back to disk, as removed the data from it removes any pointers to those values.
  * @param {object} userObj The object of which to preform the pruning on.
  * @returns {object} The Pruned userObj.
  */
-async function Prune(userObj) {
+async function prune(userObj) {
   // WARNING!! : Here I will use the delete operator on the object to prune data, not suitable to the end user.
   // Based on my current research delete only deletes the objects reference to the value, not the value itself.
   // Meaning delete can be used on the shallow copy of data without affecting the original copy. This will need to be tested.
@@ -175,9 +175,9 @@ async function Prune(userObj) {
 }
 
 module.exports = {
-  VerifyAuth,
-  GetUser,
-  Prune,
-  AddUserStar,
-  RemoveUserStar,
+  verifyAuth,
+  getUser,
+  prune,
+  addUserStar,
+  removeUserStar,
 };

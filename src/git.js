@@ -5,7 +5,7 @@
 
 const superagent = require("superagent");
 const { GH_TOKEN, GH_USERNAME, GH_USERAGENT } =
-  require("./config.js").GetConfig();
+  require("./config.js").getConfig();
 const logger = require("./logger.js");
 
 const encodedToken = Buffer.from(`${GH_USERNAME}:${GH_TOKEN}`).toString(
@@ -14,7 +14,7 @@ const encodedToken = Buffer.from(`${GH_USERNAME}:${GH_TOKEN}`).toString(
 
 /**
  * @async
- * @function Ownership
+ * @function ownership
  * @desc Allows the ability to check if a user has permissions to write to a repo.
  * <b>MUST</b> Be provided `owner/repo` to successfully function, and expects the
  * full `user` object. Returns `ok: true` where content is the repo data from GitHub
@@ -23,7 +23,7 @@ const encodedToken = Buffer.from(`${GH_USERNAME}:${GH_TOKEN}`).toString(
  * @param {object} user - The Full User object, including `name`, `github_token`.
  * @param {string} repo - The `owner/repo` of the repo changes are intended to affect.
  */
-async function Ownership(user, repo) {
+async function ownership(user, repo) {
   // user here is a full fledged user object. And repo is a text representation of the repository.
   // Since git auth is not setup, this will return positive.
 
@@ -79,14 +79,14 @@ async function Ownership(user, repo) {
 
 /**
  * @async
- * @function CreatePackage
+ * @function createPackage
  * @desc Creates a compatible `Server Object Full` object, from only receiving a `repo` as in
  * `owner/repo`. With this it contacts GitHub API's and modifies data as needed to
  * return back a proper `Server Object Full` object within a `Server Status`.content object.
  * @param {string} repo - The Repo to use in the form `owner/repo`.
  * @returns {object} A `Server Status` Object where `content` is the `Server Package Full` object.
  */
-async function CreatePackage(repo) {
+async function createPackage(repo) {
   try {
     let newPack = {};
     // this ^^^ will be what we append all data to.
@@ -322,7 +322,7 @@ async function getRepoExistance(repo) {
         return false;
     }
   } catch (err) {
-    logger.WarningLog(
+    logger.warningLog(
       null,
       null,
       `Unable to check if repo exists. ${repo} - ${err}`
@@ -351,7 +351,7 @@ async function getPackageJSON(repo) {
         Buffer.from(res.body.content, res.body.encoding).toString()
       );
     } else {
-      logger.WarningLog(
+      logger.warningLog(
         null,
         null,
         `Unable to Get ${repo} from GH for package.json. HTTP Status ${res.status}`
@@ -359,7 +359,7 @@ async function getPackageJSON(repo) {
       return undefined;
     }
   } catch (err) {
-    logger.WarningLog(
+    logger.warningLog(
       null,
       null,
       `Failed to Get ${repo} from GH for package.json. Err: ${err}`
@@ -387,7 +387,7 @@ async function getRepoReadMe(repo) {
     if (res.status === 200) {
       return Buffer.from(res.body.content, res.body.encoding).toString();
     } else {
-      logger.WarningLog(
+      logger.warningLog(
         null,
         null,
         `Unexpected Status Code during README.md retrevial: ${res}`
@@ -395,7 +395,7 @@ async function getRepoReadMe(repo) {
       return undefined;
     }
   } catch (err) {
-    logger.WarningLog(
+    logger.warningLog(
       null,
       null,
       `Unable to get ${repo} from GH for README.md, trying readme.md: Err: ${err}`
@@ -417,7 +417,7 @@ async function getRepoReadMe(repo) {
           ).toString();
         } else {
           // it returned, but not the error code we expect.
-          logger.WarningLog(
+          logger.warningLog(
             null,
             null,
             `Unexpected Status code during readme.md retrevial: ${resLower}`
@@ -425,7 +425,7 @@ async function getRepoReadMe(repo) {
           return undefined;
         }
       } catch (err) {
-        logger.WarningLog(
+        logger.warningLog(
           null,
           null,
           `Unable to get ${repo} from GH for readme.md. Err: ${err}`
@@ -434,7 +434,7 @@ async function getRepoReadMe(repo) {
       }
     } else {
       // any other generic error code. Lets again respond, with undefined
-      logger.WarningLog(
+      logger.warningLog(
         null,
         null,
         `Unable to Get ${repo} from GH for README.md. Err: ${err}`
@@ -464,7 +464,7 @@ async function getRepoTags(repo) {
     if (res.status === 200) {
       return res.body;
     } else {
-      logger.WarningLog(
+      logger.warningLog(
         null,
         null,
         `Unable to Get ${repo} from GH for Tags. HTTP Status ${res.status}`
@@ -472,7 +472,7 @@ async function getRepoTags(repo) {
       return undefined;
     }
   } catch (err) {
-    logger.WarningLog(
+    logger.warningLog(
       null,
       null,
       `Failed to Get ${repo} from GH for Tags. Err: ${err}`
@@ -482,6 +482,6 @@ async function getRepoTags(repo) {
 }
 
 module.exports = {
-  Ownership,
-  CreatePackage,
+  ownership,
+  createPackage,
 };

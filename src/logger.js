@@ -5,7 +5,7 @@
  * @implements {config}
  */
 
-const { debug } = require("./config.js").GetConfig();
+const { debug } = require("./config.js").getConfig();
 
 /**
  * @function HTTPLog
@@ -26,7 +26,7 @@ function HTTPLog(req, res) {
 }
 
 /**
- * @function ErrorLog
+ * @function errorLog
  * @desc An endpoint to log errors, as well as exactly where they occured. Allowing some insight into what caused
  * them, as well as how the server reacted to the end user.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
@@ -35,7 +35,7 @@ function HTTPLog(req, res) {
  * @example <caption>Logging Output Format</caption>
  * ERROR:: IP "HTTP_METHOD URL PROTOCOL" STATUS_CODE DURATION_OF_REQUESTms ! ERROR
  */
-function ErrorLog(req, res, err) {
+function errorLog(req, res, err) {
   // this will be a generic error logger to grab some stats about what happened, how the server handled it. And of course the error.
   let duration = Date.now() - req.start;
   console.log(
@@ -44,7 +44,7 @@ function ErrorLog(req, res, err) {
 }
 
 /**
- * @function WarningLog
+ * @function warningLog
  * @desc An endpoint to log warnings. This should be used for when an error recovered, but the server
  * did its best to recover from it. Providing no error to the end user.
  * @param {object} [req] - The Optional `Request` object inherited from the Express endpoint.
@@ -55,7 +55,7 @@ function ErrorLog(req, res, err) {
  * @example <caption>Logging Output Format w/o Req and Res.</caption>
  * WARNING:: ERROR
  */
-function WarningLog(req, res, err) {
+function warningLog(req, res, err) {
   if (req === undefined || res === undefined || req === null || res === null) {
     console.log(`WARNING:: ${err}`);
   } else {
@@ -67,25 +67,25 @@ function WarningLog(req, res, err) {
 }
 
 /**
- * @function InfoLog
+ * @function infoLog
  * @desc An endpoint to log information only. Used sparingly, but may be helpful.
  * @param {string} value - The value of whatever is being logged.
  * @example <caption>Logging Output Format</caption>
  * INFO:: VALUE
  */
-function InfoLog(value) {
+function infoLog(value) {
   console.log(`INFO:: ${value}`);
 }
 
 /**
- * @function DebugLog
+ * @function debugLog
  * @desc An endpoint to log debug information only. This log will only show if enabled in the Config file.
  * That is if the `app.yaml` file has DEBUG as true.
  * @param {string} value - The value of whatever is being logged.
  * @example <caption>Logging Output Format</caption>
  * DEBUG:: VALUE
  */
-function DebugLog(value) {
+function debugLog(value) {
   if (debug) {
     console.log(`DEBUG:: ${value}`);
   }
@@ -93,8 +93,8 @@ function DebugLog(value) {
 
 module.exports = {
   HTTPLog,
-  ErrorLog,
-  WarningLog,
-  InfoLog,
-  DebugLog,
+  errorLog,
+  warningLog,
+  infoLog,
+  debugLog,
 };

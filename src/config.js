@@ -9,12 +9,12 @@ const yaml = require("js-yaml");
 /**
  * @desc Used to get Server Config data from the `app.yaml` file at the root of the project.
  * Or from environment variables. Prioritizing environment variables.
- * @function GetConfig
+ * @function getConfig
  * @return {object} The different available configuration values.
- * @example <caption>Using `GetConfig()` during an import for a single value.</caption>
- * const { search_algorithm } = require("./config.js").GetConfig();
+ * @example <caption>Using `getConfig()` during an import for a single value.</caption>
+ * const { search_algorithm } = require("./config.js").getConfig();
  */
-function GetConfig() {
+function getConfig() {
   try {
     let data;
     try {
@@ -105,5 +105,5 @@ function GetConfig() {
 }
 
 module.exports = {
-  GetConfig,
+  getConfig,
 };
