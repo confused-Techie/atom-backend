@@ -7,7 +7,7 @@ describe("HTTPLog Testing", () => {
     jest.clearAllMocks();
   });
   test("Normal HTTPLog Call", () => {
-    logger.HTTPLog(
+    logger.httpLog(
       {
         ip: "0.0.0.0",
         start: "0",

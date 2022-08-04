@@ -54,7 +54,7 @@ app.get("/", (req, res) => {
  * @auth FALSE
  */
 app.get("/api/login", async (req, res) => {
-  await oauth_handler.GETLogin(req, res);
+  await oauth_handler.getLogin(req, res);
 });
 
 /**
@@ -66,7 +66,7 @@ app.get("/api/login", async (req, res) => {
  * @auth FALSE
  */
 app.get("/api/oauth", async (req, res) => {
-  await oauth_handler.GETOauth(req, res);
+  await oauth_handler.getOauth(req, res);
 });
 
 /**
@@ -104,7 +104,7 @@ app.get("/api/oauth", async (req, res) => {
  *   @Rdesc Returns a list of all packages. Paginated 30 at a time. Links to the next and last pages are in the 'Link' Header.
  */
 app.get("/api/packages", async (req, res) => {
-  await package_handler.GETPackages(req, res);
+  await package_handler.getPackages(req, res);
 });
 
 /**
@@ -141,7 +141,7 @@ app.get("/api/packages", async (req, res) => {
  *   @Rdesc A package by that name already exists.
  */
 app.post("/api/packages", async (req, res) => {
-  await package_handler.POSTPackages(req, res);
+  await package_handler.postPackages(req, res);
 });
 
 /**
@@ -156,7 +156,7 @@ app.post("/api/packages", async (req, res) => {
  *   @Rdesc An array of packages similar to /api/packages endpoint.
  */
 app.get("/api/packages/featured", async (req, res) => {
-  await package_handler.GETPackagesFeatured(req, res);
+  await package_handler.getPackagesFeatured(req, res);
 });
 
 /**
@@ -200,7 +200,7 @@ app.get("/api/packages/featured", async (req, res) => {
  *   @Rdesc Same format as listing packages, additionally paginated at 30 items.
  */
 app.get("/api/packages/search", async (req, res) => {
-  await package_handler.GETPackagesSearch(req, res);
+  await package_handler.getPackagesSearch(req, res);
 });
 
 /**
@@ -228,7 +228,7 @@ app.get("/api/packages/search", async (req, res) => {
  *   @Rdesc Returns package details and versions for a single package.
  */
 app.get("/api/packages/:packageName", async (req, res) => {
-  await package_handler.GETPackagesDetails(req, res);
+  await package_handler.getPackagesDetails(req, res);
 });
 
 /**
@@ -266,7 +266,7 @@ app.get("/api/packages/:packageName", async (req, res) => {
  *   @Rdesc Unauthorized.
  */
 app.remove("/api/packages/:packageName", async (req, res) => {
-  await package_handler.DELETEPackagesName(req, res);
+  await package_handler.deletePackagesName(req, res);
 });
 
 /**
@@ -294,7 +294,7 @@ app.remove("/api/packages/:packageName", async (req, res) => {
  *    @Rdesc Returns the package that was stared.
  */
 app.post("/api/packages/:packageName/star", async (req, res) => {
-  await package_handler.POSTPackagesStar(req, res);
+  await package_handler.postPackagesStar(req, res);
 });
 
 /**
@@ -321,7 +321,7 @@ app.post("/api/packages/:packageName/star", async (req, res) => {
  *  @Rdesc An empty response to convey successfully unstaring a package.
  */
 app.remove("/api/packages/:packageName/star", async (req, res) => {
-  await package_handler.DELETEPackagesStar(req, res);
+  await package_handler.deletePackagesStar(req, res);
 });
 
 /**
@@ -341,7 +341,7 @@ app.remove("/api/packages/:packageName/star", async (req, res) => {
  *  @Rexample [ { "login": "aperson" }, { "login": "anotherperson" } ]
  */
 app.get("/api/packages/:packageName/stargazers", async (req, res) => {
-  await package_handler.GETPackagesStargazers(req, res);
+  await package_handler.getPackagesStargazers(req, res);
 });
 
 /**
@@ -382,7 +382,7 @@ app.get("/api/packages/:packageName/stargazers", async (req, res) => {
  *  @Rdesc Version exists.
  */
 app.post("/api/packages/:packageName/versions", async (req, res) => {
-  await package_handler.POSTPackagesVersion(req, res);
+  await package_handler.postPackagesVersion(req, res);
 });
 
 /**
@@ -409,7 +409,7 @@ app.post("/api/packages/:packageName/versions", async (req, res) => {
 app.get(
   "/api/packages/:packageName/versions/:versionName",
   async (req, res) => {
-    await package_handler.GETPackagesVersion(req, res);
+    await package_handler.getPackagesVersion(req, res);
   }
 );
 
@@ -440,7 +440,7 @@ app.get(
 app.get(
   "/api/packages/:packageName/versions/:versionName/tarball",
   async (req, res) => {
-    await package_handler.GETPackagesVersionTarball(req, res);
+    await package_handler.getPackagesVersionTarball(req, res);
   }
 );
 
@@ -473,7 +473,7 @@ app.get(
 app.remove(
   "/api/packages/:packageName/versions/:versionName",
   async (req, res) => {
-    await package_handler.DELETEPackageVersion(req, res);
+    await package_handler.deletePackageVersion(req, res);
   }
 );
 
@@ -506,7 +506,7 @@ app.remove(
 app.post(
   "/api/packages/:packageName/versions/:versionName/events/uninstall",
   async (req, res) => {
-    await package_handler.POSTPackagesEventUninstall(req, res);
+    await package_handler.postPackagesEventUninstall(req, res);
   }
 );
 
@@ -522,7 +522,7 @@ app.post(
  *   @Rdesc Returns an array of Theme Packages. Similar to the /api/packages Endpoint.
  */
 app.get("/api/themes/featured", async (req, res) => {
-  await theme_handler.GETThemeFeatured(req, res);
+  await theme_handler.getThemeFeatured(req, res);
 });
 
 /**
@@ -545,7 +545,7 @@ app.get("/api/themes/featured", async (req, res) => {
  *  @Rdesc If the login does not exist, a 404 is returned.
  */
 app.get("/api/users/:login/stars", async (req, res) => {
-  await user_handler.GETLoginStars(req, res);
+  await user_handler.getLoginStars(req, res);
 });
 
 /**
@@ -567,7 +567,7 @@ app.get("/api/users/:login/stars", async (req, res) => {
  *   @Rtype application/json
  */
 app.get("/api/stars", async (req, res) => {
-  await star_handler.GETStars(req, res);
+  await star_handler.getStars(req, res);
 });
 
 /**
@@ -582,7 +582,7 @@ app.get("/api/stars", async (req, res) => {
  *   @Rdesc Atom update feed, following the format expected by Squirrel.
  */
 app.get("/api/updates", async (req, res) => {
-  await update_handler.GETUpdates(req, res);
+  await update_handler.getUpdates(req, res);
 });
 
 app.use((req, res) => {

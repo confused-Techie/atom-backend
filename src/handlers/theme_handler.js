@@ -1,6 +1,6 @@
 const common = require("./common_handler.js");
 
-async function GETThemeFeatured(req, res) {
+async function getThemeFeatured(req, res) {
   // GET /api/themes/featured
 
   // TODO: Undocumented Endpoint discovered, as the endpoint in use by APM to get featured themes.
@@ -18,5 +18,5 @@ async function GETThemeFeatured(req, res) {
 }
 
 module.exports = {
-  GETThemeFeatured,
+  getThemeFeatured,
 };

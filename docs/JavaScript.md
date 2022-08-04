@@ -582,15 +582,15 @@ logging methods if a log server is ever implemented.
 **Implements**: <code>config</code>  
 
 * [logger](#module_logger)
-    * [~HTTPLog(req, res)](#module_logger..HTTPLog)
+    * [~httpLog(req, res)](#module_logger..httpLog)
     * [~errorLog(req, res, err)](#module_logger..errorLog)
     * [~warningLog([req], [res], err)](#module_logger..warningLog)
     * [~infoLog(value)](#module_logger..infoLog)
     * [~debugLog(value)](#module_logger..debugLog)
 
-<a name="module_logger..HTTPLog"></a>
+<a name="module_logger..httpLog"></a>
 
-### logger~HTTPLog(req, res)
+### logger~httpLog(req, res)
 The standard logger for HTTP calls. Logging in a modified 'Apache Combined Log Format'.
 
 **Kind**: inner method of [<code>logger</code>](#module_logger)  
@@ -1297,12 +1297,12 @@ Endpoint Handlers for Authentication URLs
 **Implements**: <code>config</code>, <code>common\_handler</code>  
 
 * [oauth_handler](#module_oauth_handler)
-    * [~GETLogin(req, res)](#module_oauth_handler..GETLogin)
-    * [~GETOauth(req, res)](#module_oauth_handler..GETOauth)
+    * [~getLogin(req, res)](#module_oauth_handler..getLogin)
+    * [~getOauth(req, res)](#module_oauth_handler..getOauth)
 
-<a name="module_oauth_handler..GETLogin"></a>
+<a name="module_oauth_handler..getLogin"></a>
 
-### oauth_handler~GETLogin(req, res)
+### oauth_handler~getLogin(req, res)
 Endpoint used to direct users to login, directing the user to the
 proper GitHub OAuth Page based on the backends client id.
 
@@ -1313,9 +1313,9 @@ proper GitHub OAuth Page based on the backends client id.
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_oauth_handler..GETOauth"></a>
+<a name="module_oauth_handler..getOauth"></a>
 
-### oauth_handler~GETOauth(req, res)
+### oauth_handler~getOauth(req, res)
 Endpoint intended to use as the actual return from GitHub to login.
 
 **Kind**: inner method of [<code>oauth\_handler</code>](#module_oauth_handler)  
@@ -1333,19 +1333,19 @@ Endpoint Handlers in all relating to the packages themselves.
 **Implements**: <code>common\_handler</code>, <code>users</code>, <code>data</code>, <code>collection</code>, <code>query</code>, <code>git</code>, <code>logger</code>, <code>error</code>, <code>config</code>  
 
 * [package_handler](#module_package_handler)
-    * [~GETPackages(req, res)](#module_package_handler..GETPackages)
-    * [~POSTPackages(req, res)](#module_package_handler..POSTPackages)
-    * [~GETPackagesSearch(req, res)](#module_package_handler..GETPackagesSearch)
-    * [~DELETEPackagesName(req, res)](#module_package_handler..DELETEPackagesName)
-    * [~GETPackagesStargazers(req, res)](#module_package_handler..GETPackagesStargazers)
-    * [~POSTPackagesVersion(req, res)](#module_package_handler..POSTPackagesVersion)
-    * [~GETPackagesVersionTarball(req, res)](#module_package_handler..GETPackagesVersionTarball)
-    * [~DELETEPackageVersion(req, res)](#module_package_handler..DELETEPackageVersion)
-    * [~POSTPackagesEventUninstall(req, res)](#module_package_handler..POSTPackagesEventUninstall)
+    * [~getPackages(req, res)](#module_package_handler..getPackages)
+    * [~postPackages(req, res)](#module_package_handler..postPackages)
+    * [~getPackagesSearch(req, res)](#module_package_handler..getPackagesSearch)
+    * [~deletePackagesName(req, res)](#module_package_handler..deletePackagesName)
+    * [~getPackagesStargazers(req, res)](#module_package_handler..getPackagesStargazers)
+    * [~postPackagesVersion(req, res)](#module_package_handler..postPackagesVersion)
+    * [~getPackagesVersionTarball(req, res)](#module_package_handler..getPackagesVersionTarball)
+    * [~deletePackageVersion(req, res)](#module_package_handler..deletePackageVersion)
+    * [~postPackagesEventUninstall(req, res)](#module_package_handler..postPackagesEventUninstall)
 
-<a name="module_package_handler..GETPackages"></a>
+<a name="module_package_handler..getPackages"></a>
 
-### package_handler~GETPackages(req, res)
+### package_handler~getPackages(req, res)
 Endpoint to return all packages to the user. Based on any filtering
 theyved applied via query parameters.
 
@@ -1356,9 +1356,9 @@ theyved applied via query parameters.
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_package_handler..POSTPackages"></a>
+<a name="module_package_handler..postPackages"></a>
 
-### package_handler~POSTPackages(req, res)
+### package_handler~postPackages(req, res)
 This endpoint is used to publish a new package to the backend server.
 Taking the repo, and your authentication for it, determines if it can be published,
 then goes about doing so.
@@ -1370,9 +1370,9 @@ then goes about doing so.
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_package_handler..GETPackagesSearch"></a>
+<a name="module_package_handler..getPackagesSearch"></a>
 
-### package_handler~GETPackagesSearch(req, res)
+### package_handler~getPackagesSearch(req, res)
 Allows user to search through all packages. Using their specified
 query parameter.
 
@@ -1383,9 +1383,9 @@ query parameter.
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_package_handler..DELETEPackagesName"></a>
+<a name="module_package_handler..deletePackagesName"></a>
 
-### package_handler~DELETEPackagesName(req, res)
+### package_handler~deletePackagesName(req, res)
 Allows the user to delete a repo they have ownership of.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
@@ -1395,9 +1395,9 @@ Allows the user to delete a repo they have ownership of.
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_package_handler..GETPackagesStargazers"></a>
+<a name="module_package_handler..getPackagesStargazers"></a>
 
-### package_handler~GETPackagesStargazers(req, res)
+### package_handler~getPackagesStargazers(req, res)
 Endpoint returns the array of `star_gazers` from a specified package.
 Taking only the package wanted, and returning it directly.
 
@@ -1408,9 +1408,9 @@ Taking only the package wanted, and returning it directly.
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_package_handler..POSTPackagesVersion"></a>
+<a name="module_package_handler..postPackagesVersion"></a>
 
-### package_handler~POSTPackagesVersion(req, res)
+### package_handler~postPackagesVersion(req, res)
 Allows a new version of a package to be published. But also can allow
 a user to rename their application during this process.
 
@@ -1421,9 +1421,9 @@ a user to rename their application during this process.
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_package_handler..GETPackagesVersionTarball"></a>
+<a name="module_package_handler..getPackagesVersionTarball"></a>
 
-### package_handler~GETPackagesVersionTarball(req, res)
+### package_handler~getPackagesVersionTarball(req, res)
 Allows the user to get the tarball for a specific package version.
 Which should initiate a download of said tarball on their end.
 
@@ -1434,9 +1434,9 @@ Which should initiate a download of said tarball on their end.
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_package_handler..DELETEPackageVersion"></a>
+<a name="module_package_handler..deletePackageVersion"></a>
 
-### package_handler~DELETEPackageVersion(req, res)
+### package_handler~deletePackageVersion(req, res)
 Allows a user to delete a specific version of their package.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
@@ -1446,9 +1446,9 @@ Allows a user to delete a specific version of their package.
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_package_handler..POSTPackagesEventUninstall"></a>
+<a name="module_package_handler..postPackagesEventUninstall"></a>
 
-### package_handler~POSTPackagesEventUninstall(req, res)
+### package_handler~postPackagesEventUninstall(req, res)
 Used when a package is uninstalled, decreases the download count by 1.
 And saves this data. Originally an undocumented endpoint.
 
@@ -1465,9 +1465,9 @@ And saves this data. Originally an undocumented endpoint.
 Handler for any endpoints whose slug after `/api/` is `star`.
 
 **Implements**: <code>logger</code>, <code>users</code>, <code>data</code>, <code>common\_handler</code>  
-<a name="module_star_handler..GETStars"></a>
+<a name="module_star_handler..getStars"></a>
 
-### star_handler~GETStars(req, res)
+### star_handler~getStars(req, res)
 Endpoint for `GET /api/stars`. Whose endgoal is to return an array of all packages
 the authenticated user has stared.
 
@@ -1485,9 +1485,9 @@ the authenticated user has stared.
 Handler for endpoints whose slug after `/api/` is `user`.
 
 **Implements**: <code>logger</code>, <code>users</code>, <code>data</code>, <code>collection</code>, <code>common\_handler</code>  
-<a name="module_user_handler..GETLoginStars"></a>
+<a name="module_user_handler..getLoginStars"></a>
 
-### user_handler~GETLoginStars(req, res)
+### user_handler~getLoginStars(req, res)
 Endpoint for `GET /api/users/:login/stars`. Whose goal is to return
 An array of Package Object Short's collected from the authenticated user's
 star gazer list.

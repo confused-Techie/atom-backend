@@ -16,7 +16,7 @@ const utils = require("../utils.js");
 
 /**
  * @async
- * @function GETStars
+ * @function getStars
  * @desc Endpoint for `GET /api/stars`. Whose endgoal is to return an array of all packages
  * the authenticated user has stared.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
@@ -27,7 +27,7 @@ const utils = require("../utils.js");
  * @implements {common.ServerError}
  * @implements {common.AuthFail}
  */
-async function GETStars(req, res) {
+async function getStars(req, res) {
   // GET /api/stars
   let params = {
     auth: req.get("Authorization"),
@@ -42,15 +42,15 @@ async function GETStars(req, res) {
     }
 
     let newCol = await collection.deepCopy(packageCollection.content);
-    newCol = await collection.POSPrune(newCol);
+    newCol = await collection.prunePOS(newCol);
 
     res.status(200).json(newCol);
-    logger.HTTPLog(req, res);
+    logger.httpLog(req, res);
   };
 
   await utils.localUserLoggedIn(req, res, params.auth, onLogin);
 }
 
 module.exports = {
-  GETStars,
+  getStars,
 };

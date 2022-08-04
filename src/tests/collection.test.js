@@ -66,7 +66,7 @@ test("POFPrune Removes created", async () => {
     updated: "date",
     star_gazers: "gazing",
   };
-  let res = await collection.POFPrune(data);
+  let res = await collection.prunePOF(data);
   expect(res.created).toBeUndefined();
 });
 
@@ -77,7 +77,7 @@ test("POFPrune Removed updated", async () => {
     updated: "date",
     star_gazers: "gazing",
   };
-  let res = await collection.POFPrune(data);
+  let res = await collection.prunePOF(data);
   expect(res.updated).toBeUndefined();
 });
 
@@ -88,6 +88,6 @@ test("POFPrune Removes star_gazers", async () => {
     updated: "date",
     star_gazers: "gazing",
   };
-  let res = await collection.POFPrune(data);
+  let res = await collection.prunePOF(data);
   expect(res.star_gazers).toBeUndefined();
 });

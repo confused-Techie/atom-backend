@@ -130,7 +130,7 @@ async function direction(packages, method) {
   }
 }
 
-async function POFPrune(packages) {
+async function prunePOF(packages) {
   // This will prune Package Object Full items,
 
   // this will prune the return packages, or all items that shouldn't be included in the return to end users.
@@ -160,7 +160,7 @@ async function POFPrune(packages) {
   }
 }
 
-async function POSPrune(packages) {
+async function prunePOS(packages) {
   // This will prune Package Object Short items,
 
   // this will prune the return packages, or all items that shouldn't be included in the return to end users.
@@ -474,8 +474,8 @@ async function deepCopy(obj) {
 module.exports = {
   sort,
   direction,
-  POFPrune,
-  POSPrune,
+  prunePOF,
+  prunePOS,
   engineFilter,
   searchWithinPackages,
   deepCopy,

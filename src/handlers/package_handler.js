@@ -26,13 +26,13 @@ const database = require("../database.js");
 
 /**
  * @async
- * @function GETPackages
+ * @function getPackages
  * @desc Endpoint to return all packages to the user. Based on any filtering
  * theyved applied via query parameters.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function GETPackages(req, res) {
+async function getPackages(req, res) {
   // GET /api/packages
   let params = {
     page: query.page(req),
@@ -75,7 +75,7 @@ async function GETPackages(req, res) {
     );
     // Start after our paginated items, and remove till the end, as long as we aren't on the last page.
   }
-  packages = await collection.POSPrune(packages); // Use the Package Object Short Prune
+  packages = await collection.prunePOS(packages); // Use the Package Object Short Prune
   // One note of concern with chaining all of these together, is that this will potentially loop
   // through the entire array of packages 3 times, resulting in a
   // linear time complexity of O(3). But testing will have to determine how much that is a factor of concern.
@@ -96,19 +96,19 @@ async function GETPackages(req, res) {
   );
 
   res.status(200).json(packages);
-  logger.HTTPLog(req, res);
+  logger.httpLog(req, res);
 }
 
 /**
  * @async
- * @function POSTPackages
+ * @function postPackages
  * @desc This endpoint is used to publish a new package to the backend server.
  * Taking the repo, and your authentication for it, determines if it can be published,
  * then goes about doing so.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function POSTPackages(req, res) {
+async function postPackages(req, res) {
   // POST /api/packages
   let params = {
     repository: query.repo(req),
@@ -144,7 +144,7 @@ async function POSTPackages(req, res) {
   if (exists.ok) {
     // The package exists.
     error.publishPackageExists(res);
-    logger.HTTPLog(req, res);
+    logger.httpLog(req, res);
     return;
   }
 
@@ -189,11 +189,11 @@ async function POSTPackages(req, res) {
     return;
   }
 
-  new_pack = await collection.POFPrune(new_pack.content); // Package Object Full Prune before return.
+  new_pack = await collection.prunePOF(new_pack.content); // Package Object Full Prune before return.
   res.status(201).json(new_pack);
 }
 
-async function GETPackagesFeatured(req, res) {
+async function getPackagesFeatured(req, res) {
   // GET /api/packages/featured
   // https://github.com/atom/apm/blob/master/src/featured.coffee
   // Returns featured packages, but its unknown how these are determined.
@@ -220,20 +220,20 @@ async function GETPackagesFeatured(req, res) {
   }
 
   let newCol = await collection.deepCopy(col.content);
-  newCol = await collection.POSPrune(newCol);
+  newCol = await collection.prunePOS(newCol);
 
   res.status(200).json(newCol);
 }
 
 /**
  * @async
- * @function GETPackagesSearch
+ * @function getPackagesSearch
  * @desc Allows user to search through all packages. Using their specified
  * query parameter.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function GETPackagesSearch(req, res) {
+async function getPackagesSearch(req, res) {
   // GET /api/packages/search
   let params = {
     sort: query.sort(req, "relevance"),
@@ -269,7 +269,7 @@ async function GETPackagesSearch(req, res) {
     // This will start after our paginated options, and remove till the
     // end of the array, since we aren't on the last page.
   }
-  packages = await collection.POSPrune(packages); // Package Object Short Prune.
+  packages = await collection.prunePOS(packages); // Package Object Short Prune.
 
   // now to get headers.
   res.append(
@@ -290,10 +290,10 @@ async function GETPackagesSearch(req, res) {
   );
 
   res.status(200).json(packages);
-  logger.HTTPLog(req, res);
+  logger.httpLog(req, res);
 }
 
-async function GETPackagesDetails(req, res) {
+async function getPackagesDetails(req, res) {
   // GET /api/packages/:packageName
   let params = {
     engine: query.engine(req),
@@ -308,7 +308,7 @@ async function GETPackagesDetails(req, res) {
 
   // now that we are using a database, and the data is no longer stored in a cache like
   // before, we don't have to worry about deep copy nonsense
-  pack = await collection.POFPrune(pack.content); // Package Object Full Prune
+  pack = await collection.prunePOF(pack.content); // Package Object Full Prune
 
   if (params.engine) {
     // query.engine returns false if no valid query param is found.
@@ -317,17 +317,17 @@ async function GETPackagesDetails(req, res) {
   }
 
   res.status(200).json(pack);
-  logger.HTTPLog(req, res);
+  logger.httpLog(req, res);
 }
 
 /**
  * @async
- * @function DELETEPackagesName
+ * @function deletePackagesName
  * @desc Allows the user to delete a repo they have ownership of.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function DELETEPackagesName(req, res) {
+async function deletePackagesName(req, res) {
   // DELETE /api/packages/:packageName
   let params = {
     auth: req.get("Authorization"),
@@ -358,10 +358,10 @@ async function DELETEPackagesName(req, res) {
 
   // we have successfully removed the package.
   res.status(204).json({ message: "Success" });
-  logger.HTTPLog(req, res);
+  logger.httpLog(req, res);
 }
 
-async function POSTPackagesStar(req, res) {
+async function postPackagesStar(req, res) {
   // POST /api/packages/:packageName/star
   let params = {
     auth: req.get("Authorization"),
@@ -383,7 +383,7 @@ async function POSTPackagesStar(req, res) {
       if (star.ok) {
         // now that we know the star has been added to the users profile, we can return the package, with success
         res.status(200).json(pack.content);
-        logger.HTTPLog(req, res);
+        logger.httpLog(req, res);
       } else {
         // the users star was not applied properly to their profile, and we would likely want to remove their star from the package before returning.
         let unstar = await data.unstarPackageByName(
@@ -397,7 +397,7 @@ async function POSTPackagesStar(req, res) {
         } else {
           // unstarring after a failed staring, failed again. Oh jeez...
           error.serverErrorJSON(res);
-          logger.HTTPLog(req, res);
+          logger.httpLog(req, res);
           logger.errorLog(
             req,
             res,
@@ -416,7 +416,7 @@ async function POSTPackagesStar(req, res) {
   }
 }
 
-async function DELETEPackagesStar(req, res) {
+async function deletePackagesStar(req, res) {
   // DELETE /api/packages/:packageName/star
   let params = {
     auth: req.get("Authorization"),
@@ -457,7 +457,7 @@ async function DELETEPackagesStar(req, res) {
 
       // We failed to restar the package after failing to unstar the user, rough...
       error.serverErrorJSON(res);
-      logger.HTTPLog(req, res);
+      logger.httpLog(req, res);
       logger.errorLog(
         req,
         res,
@@ -477,13 +477,13 @@ async function DELETEPackagesStar(req, res) {
 
 /**
  * @async
- * @function GETPackagesStargazers
+ * @function getPackagesStargazers
  * @desc Endpoint returns the array of `star_gazers` from a specified package.
  * Taking only the package wanted, and returning it directly.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function GETPackagesStargazers(req, res) {
+async function getPackagesStargazers(req, res) {
   // GET /api/packages/:packageName/stargazers
   let params = {
     packageName: decodeURIComponent(req.params.packageName),
@@ -497,18 +497,18 @@ async function GETPackagesStargazers(req, res) {
 
   // then we can just directly return the star_gazers object
   res.status(200).json(pack.content.star_gazers);
-  logger.HTTPLog(req, res);
+  logger.httpLog(req, res);
 }
 
 /**
  * @async
- * @function POSTPackagesVersion
+ * @function postPackagesVersion
  * @desc Allows a new version of a package to be published. But also can allow
  * a user to rename their application during this process.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function POSTPackagesVersion(req, res) {
+async function postPackagesVersion(req, res) {
   // POST /api/packages/:packageName/versions
   let params = {
     tag: query.tag(req),
@@ -532,7 +532,7 @@ async function POSTPackagesVersion(req, res) {
   await utils.localUserLoggedIn(req, res, params.auth, onLogin);
 }
 
-async function GETPackagesVersion(req, res) {
+async function getPackagesVersion(req, res) {
   // GET /api/packages/:packageName/versions/:versionName
   let params = {
     packageName: decodeURIComponent(req.params.packageName),
@@ -562,7 +562,7 @@ async function GETPackagesVersion(req, res) {
 
     // now we can return the modified object.
     res.status(200).json(pack.content.versions[params.versionName]);
-    logger.HTTPLog(req, res);
+    logger.httpLog(req, res);
   } else {
     // the version does not exist, return 404
     await common.notFound(req, res);
@@ -571,13 +571,13 @@ async function GETPackagesVersion(req, res) {
 
 /**
  * @async
- * @function GETPackagesVersionTarball
+ * @function getPackagesVersionTarball
  * @desc Allows the user to get the tarball for a specific package version.
  * Which should initiate a download of said tarball on their end.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function GETPackagesVersionTarball(req, res) {
+async function getPackagesVersionTarball(req, res) {
   // GET /api/packages/:packageName/versions/:versionName/tarball
   let params = {
     packageName: decodeURIComponent(req.params.packageName),
@@ -621,18 +621,18 @@ async function GETPackagesVersionTarball(req, res) {
   // For simplicity, we will redirect the request to gh tarball url, to allow
   // the download to take place from their servers.
   res.redirect(pack.content.versions[params.versionName].tarball_url);
-  logger.HTTPLog(req, res);
+  logger.httpLog(req, res);
   return;
 }
 
 /**
  * @async
- * @function DELETEPackageVersion
+ * @function deletePackageVersion
  * @desc Allows a user to delete a specific version of their package.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function DELETEPackageVersion(req, res) {
+async function deletePackageVersion(req, res) {
   // DELETE /api/packages/:packageName/versions/:versionName
   let params = {
     auth: req.get("Authorization"),
@@ -684,13 +684,13 @@ async function DELETEPackageVersion(req, res) {
 
 /**
  * @async
- * @function POSTPackagesEventUninstall
+ * @function postPackagesEventUninstall
  * @desc Used when a package is uninstalled, decreases the download count by 1.
  * And saves this data. Originally an undocumented endpoint.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function POSTPackagesEventUninstall(req, res) {
+async function postPackagesEventUninstall(req, res) {
   // POST /api/packages/:packageName/versions/:versionName/events/uninstall
   // This was originally an Undocumented endpoint, discovered as the endpoint using during an uninstall by APM.
   // https://github.com/atom/apm/blob/master/src/uninstall.coffee
@@ -723,7 +723,7 @@ async function POSTPackagesEventUninstall(req, res) {
     }
 
     res.status(201).json({ ok: true });
-    logger.HTTPLog(req, res);
+    logger.httpLog(req, res);
     return;
   };
 
@@ -731,18 +731,18 @@ async function POSTPackagesEventUninstall(req, res) {
 }
 
 module.exports = {
-  GETPackages,
-  POSTPackages,
-  GETPackagesFeatured,
-  GETPackagesSearch,
-  GETPackagesDetails,
-  DELETEPackagesName,
-  POSTPackagesStar,
-  DELETEPackagesStar,
-  GETPackagesStargazers,
-  POSTPackagesVersion,
-  GETPackagesVersion,
-  GETPackagesVersionTarball,
-  DELETEPackageVersion,
-  POSTPackagesEventUninstall,
+  getPackages,
+  postPackages,
+  getPackagesFeatured,
+  getPackagesSearch,
+  getPackagesDetails,
+  deletePackagesName,
+  postPackagesStar,
+  deletePackagesStar,
+  getPackagesStargazers,
+  postPackagesVersion,
+  getPackagesVersion,
+  getPackagesVersionTarball,
+  deletePackageVersion,
+  postPackagesEventUninstall,
 };

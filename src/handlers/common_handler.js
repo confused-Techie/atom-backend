@@ -28,11 +28,11 @@ async function authFail(req, res, user) {
     case "Bad Auth":
     case "Auth Fail": // support for being passed a git return.
       error.missingAuthJSON(res);
-      logger.HTTPLog(req, res);
+      logger.httpLog(req, res);
       break;
     default:
       error.serverErrorJSON(res);
-      logger.HTTPLog(req, res);
+      logger.httpLog(req, res);
       logger.errorLog(req, res, user.content);
   }
 }
@@ -50,7 +50,7 @@ async function authFail(req, res, user) {
  */
 async function serverError(req, res, err) {
   error.serverErrorJSON(res);
-  logger.HTTPLog(req, res);
+  logger.httpLog(req, res);
   logger.errorLog(req, res, err);
 }
 
@@ -65,7 +65,7 @@ async function serverError(req, res, err) {
  */
 async function notFound(req, res) {
   error.notFoundJSON(res);
-  logger.HTTPLog(req, res);
+  logger.httpLog(req, res);
 }
 
 /**
@@ -79,7 +79,7 @@ async function notFound(req, res) {
  */
 async function notSupported(req, res) {
   error.unsupportedJSON(res);
-  logger.HTTPLog(req, res);
+  logger.httpLog(req, res);
 }
 
 /**
@@ -93,7 +93,7 @@ async function notSupported(req, res) {
  */
 async function siteWideNotFound(req, res) {
   error.siteWide404(res);
-  logger.HTTPLog(req, res);
+  logger.httpLog(req, res);
 }
 
 /**
@@ -107,7 +107,7 @@ async function siteWideNotFound(req, res) {
  */
 async function badRepoJSON(req, res) {
   error.badRepoJSON(res);
-  logger.HTTPLog(req, res);
+  logger.httpLog(req, res);
 }
 
 /**
@@ -121,7 +121,7 @@ async function badRepoJSON(req, res) {
  */
 async function badPackageJSON(req, res) {
   error.badPackageJSON(res);
-  logger.HTTPLog(req, res);
+  logger.httpLog(req, res);
 }
 
 /**
