@@ -331,5 +331,5 @@ module.exports = {
   read,
   write,
   remove,
-  cacheObject,
+  CacheObject,
 };
