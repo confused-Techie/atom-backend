@@ -39,7 +39,13 @@ async function GETPackages(req, res) {
     sort: query.sort(req),
     direction: query.dir(req),
   };
-
+  // TODO 
+  // now with the data being stored in a db, or original collection methods 
+  // for sorting, while they still will work are iniffeceint.
+  // Instead we could look at sorting the data directly fromt he database 
+  // but this requires a decision on wether or not to have a single intelligent
+  // function that can take all sort parameters, or instead 
+  // have multiple single use functions for all combinations of sorts.
   let all_packages = await data.getAllPackages();
   console.log("retreived all packages");
 
@@ -606,7 +612,7 @@ async function GETPackagesVersionTarball(req, res) {
   pack.content.downloads++;
 
   // then lets save this updated info.
-  let save = await data.setPackageByName(params.packageName, pack.content);
+  let save = await database.setPackageByName(params.packageName, pack.content);
 
   if (!save.ok) {
     logger.warningLog(req, res, save.content);
@@ -647,7 +653,7 @@ async function DELETEPackageVersion(req, res) {
     return;
   }
 
-  let pack = await data.getPackageByName(params.packageName);
+  let pack = await database.getPackageByName(params.packageName);
 
   if (!pack.ok) {
     // getting package returned error.
@@ -665,7 +671,7 @@ async function DELETEPackageVersion(req, res) {
   delete pack.content[params.versionName];
 
   // now to write back the modified data.
-  let write = data.setPackageByName(params.packageName, pack.content);
+  let write = database.setPackageByName(params.packageName, pack.content);
 
   if (!write.ok) {
     await common.handleError(req, res, write);
@@ -697,7 +703,7 @@ async function POSTPackagesEventUninstall(req, res) {
   };
 
   const onLogin = async (user) => {
-    let pack = await data.getPackageByName(params.packageName);
+    let pack = await database.getPackageByName(params.packageName);
 
     if (!pack.ok) {
       await common.handleError(req, res, pack);
@@ -706,7 +712,7 @@ async function POSTPackagesEventUninstall(req, res) {
 
     pack.content.downloads--;
 
-    let write = await data.setPackageByName(params.packageName, pack.content);
+    let write = await database.setPackageByName(params.packageName, pack.content);
 
     if (!write.ok) {
       await common.handleError(req, res, write);
