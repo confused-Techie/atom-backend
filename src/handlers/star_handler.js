@@ -34,21 +34,21 @@ async function GETStars(req, res) {
   };
 
   const onLogin = async (user) => {
-    let packageCollection = await data.GetPackageCollection(user.content.stars);
+    let packageCollection = await data.getPackageCollection(user.content.stars);
 
     if (!packageCollection.ok) {
-      await common.HandleError(req, res, packageCollection);
+      await common.handleError(req, res, packageCollection);
       return;
     }
 
-    let newCol = await collection.DeepCopy(packageCollection.content);
+    let newCol = await collection.deepCopy(packageCollection.content);
     newCol = await collection.POSPrune(newCol);
 
     res.status(200).json(newCol);
     logger.HTTPLog(req, res);
   };
 
-  await utils.LocalUserLoggedIn(req, res, params.auth, onLogin);
+  await utils.localUserLoggedIn(req, res, params.auth, onLogin);
 }
 
 module.exports = {

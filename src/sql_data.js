@@ -1,7 +1,7 @@
 const fs = require("fs");
 const postgres = require("postgres");
 const { DB_HOST, DB_USER, DB_PASS, DB_DB, DB_PORT, DB_SSL_CERT } =
-  require("./config.js").GetConfig();
+  require("./config.js").getConfig();
 
 let sql_storage;
 
@@ -19,14 +19,14 @@ function setupSQL() {
   });
 }
 
-async function GetAllPackagesSQL() {
+async function getAllPackagesSQL() {
   if (sql_storage === undefined) {
     setupSQL();
   }
 
   try {
     const command = await sql_storage`
-      SELECT data FROM packages 
+      SELECT data FROM packages
     `;
 
     let packArray = [];
@@ -40,5 +40,5 @@ async function GetAllPackagesSQL() {
 }
 
 module.exports = {
-  GetAllPackagesSQL,
+  getAllPackagesSQL,
 };

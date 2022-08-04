@@ -33,7 +33,7 @@ const search = async () => {
   for (let i = 0; i < methods.length; i++) {
     for (let u = 0; u < searches.length; u++) {
       let start = process.hrtime.bigint();
-      let res = await collection.SearchWithinPackages(
+      let res = await collection.searchWithinPackages(
         searches[u],
         example_data,
         methods[i]

@@ -1,6 +1,6 @@
 /**
  * @module resources
- * @desc This module provides a way for other functions to read/write/delete data without knowing or
+ * @desc This module provides a way for other functions to read/write/remove data without knowing or
  * thinking about the underlying file structure. Providing abstraction if the data resides on a local
  * filesystem, Google Cloud Storage, or something else entirely.
  * @implements {config}
@@ -20,7 +20,7 @@ const {
   DB_DB,
   DB_PORT,
   DB_SSL_CERT,
-} = require("./config.js").GetConfig();
+} = require("./config.js").getConfig();
 
 let gcs_storage, sql_storage;
 
@@ -49,7 +49,7 @@ class CacheObject {
 
 /**
  * @async
- * @function Read
+ * @function read
  * @desc Exported function to read data from the filesystem, whatever that may be.
  * @param {string} type - The type of data we are reading. Valid Types: "user", "pointer", "package".
  * @param {string} name - The name of the file we are reading. Only needed if type is "package",
@@ -59,7 +59,7 @@ class CacheObject {
  * "package" returns the return from `readFile`. Errors bubble up from `readFile`.
  * @implments {readFile}
  */
-async function Read(type, name) {
+async function read(type, name) {
   switch (type) {
     case "user": {
       let data = await readFile("./data/users.json");
@@ -165,7 +165,7 @@ async function readFile(path) {
             .replace(".json", "");
           console.log(packName);
           const command = await sql_storage`
-            SELECT data FROM packages 
+            SELECT data FROM packages
             WHERE pointer = ${packName};
           `;
           console.log(command);
@@ -198,7 +198,7 @@ async function readFile(path) {
 
 /**
  * @async
- * @function Write
+ * @function write
  * @desc The Exported Write function, to allow writing of data to the filesystem.
  * @param {string} type - The Type of data we are writing. Valid Types: "user", "pointer", "package"
  * @param {object} data - A JavaScript Object that will be `JSON.stringify`ed before writing.
@@ -207,7 +207,7 @@ async function readFile(path) {
  * @return {object} Returns the object returned from `writeFile`. Errors bubble up from `writeFile`.
  * @implements {writeFile}
  */
-async function Write(type, data, name) {
+async function write(type, data, name) {
   switch (type) {
     case "user":
       return writeFile("./data/users.json", JSON.stringify(data, null, 4));
@@ -279,14 +279,14 @@ async function writeFile(path, data) {
 
 /**
  * @async
- * @function Delete
+ * @function remove
  * @descc Exported function to delete data from the filesystem, whatever that may be. But since we know
  * we will only ever be deleting packages, these will only ever attempt to delete a package.
  * @param {string} name - The name of the package we want to delete. <b>MUST</b> include `.json`, as in `UUID.json`.
  * @return {object} A Server Status Object, with `content` non-existant on a successful deletion.
  * Errors returned as "Server Error".
  */
-async function Delete(name) {
+async function remove(name) {
   // since we know the only data we ever want to delete from disk will be packages,
   // a type is not needed here.
   switch (file_store) {
@@ -328,8 +328,8 @@ async function Delete(name) {
 }
 
 module.exports = {
-  Read,
-  Write,
-  Delete,
-  CacheObject,
+  read,
+  write,
+  remove,
+  cacheObject,
 };

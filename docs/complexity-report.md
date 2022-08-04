@@ -1,4 +1,4 @@
-# Complexity report, 8/1/2022
+# Complexity report, 8/3/2022
 
 * Mean per-function logical LOC: 18.733333333333334
 * Mean per-function parameter count: 0.9845679012345678
@@ -18,7 +18,7 @@
 * Cyclomatic complexity density: 53.65853658536586%
 * Maintainability index: 42.987004475579404
 * Dependency count: 2
-* Function: **GetConfig**
+* Function: **getConfig**
     * Line No.: 17
     * Physical LOC: 89
     * Logical LOC: 36
@@ -58,7 +58,7 @@
 * Cyclomatic complexity density: 3.0303030303030303%
 * Maintainability index: 84.01966208734827
 * Dependency count: 0
-* Function: **NotFoundJSON**
+* Function: **notFoundJSON**
     * Line No.: 17
     * Physical LOC: 3
     * Logical LOC: 2
@@ -68,7 +68,7 @@
     * Halstead difficulty: 2.2857142857142856
     * Halstead volume: 48.43204266092217
     * Halstead effort: 110.70181179639353
-* Function: **SiteWide404**
+* Function: **siteWide404**
     * Line No.: 30
     * Physical LOC: 5
     * Logical LOC: 2
@@ -78,7 +78,7 @@
     * Halstead difficulty: 2.2857142857142856
     * Halstead volume: 48.43204266092217
     * Halstead effort: 110.70181179639353
-* Function: **MissingAuthJSON**
+* Function: **missingAuthJSON**
     * Line No.: 44
     * Physical LOC: 6
     * Logical LOC: 2
@@ -88,7 +88,7 @@
     * Halstead difficulty: 2.2857142857142856
     * Halstead volume: 48.43204266092217
     * Halstead effort: 110.70181179639353
-* Function: **ServerErrorJSON**
+* Function: **serverErrorJSON**
     * Line No.: 59
     * Physical LOC: 3
     * Logical LOC: 2
@@ -98,7 +98,7 @@
     * Halstead difficulty: 2.2857142857142856
     * Halstead volume: 48.43204266092217
     * Halstead effort: 110.70181179639353
-* Function: **PublishPackageExists**
+* Function: **publishPackageExists**
     * Line No.: 71
     * Physical LOC: 3
     * Logical LOC: 2
@@ -108,7 +108,7 @@
     * Halstead difficulty: 2.2857142857142856
     * Halstead volume: 48.43204266092217
     * Halstead effort: 110.70181179639353
-* Function: **BadRepoJSON**
+* Function: **badRepoJSON**
     * Line No.: 83
     * Physical LOC: 6
     * Logical LOC: 2
@@ -118,7 +118,7 @@
     * Halstead difficulty: 2.2857142857142856
     * Halstead volume: 48.43204266092217
     * Halstead effort: 110.70181179639353
-* Function: **BadPackageJSON**
+* Function: **badPackageJSON**
     * Line No.: 98
     * Physical LOC: 5
     * Logical LOC: 2
@@ -128,7 +128,7 @@
     * Halstead difficulty: 2.2857142857142856
     * Halstead volume: 48.43204266092217
     * Halstead effort: 110.70181179639353
-* Function: **UnsupportedJSON**
+* Function: **unsupportedJSON**
     * Line No.: 114
     * Physical LOC: 6
     * Logical LOC: 2
@@ -158,7 +158,7 @@
     * Halstead difficulty: 3.666666666666667
     * Halstead volume: 85.95159310338741
     * Halstead effort: 315.1558413790872
-* Function: **ErrorLog**
+* Function: **errorLog**
     * Line No.: 38
     * Physical LOC: 7
     * Logical LOC: 2
@@ -168,7 +168,7 @@
     * Halstead difficulty: 2.7777777777777777
     * Halstead volume: 68.53238859703687
     * Halstead effort: 190.36774610288018
-* Function: **WarningLog**
+* Function: **warningLog**
     * Line No.: 58
     * Physical LOC: 10
     * Logical LOC: 5
@@ -178,7 +178,7 @@
     * Halstead difficulty: 8.181818181818182
     * Halstead volume: 168.55519570060713
     * Halstead effort: 1379.0879648231492
-* Function: **InfoLog**
+* Function: **infoLog**
     * Line No.: 76
     * Physical LOC: 3
     * Logical LOC: 1
@@ -188,7 +188,7 @@
     * Halstead difficulty: 1
     * Halstead volume: 11.60964047443681
     * Halstead effort: 11.60964047443681
-* Function: **DebugLog**
+* Function: **debugLog**
     * Line No.: 88
     * Physical LOC: 5
     * Logical LOC: 2

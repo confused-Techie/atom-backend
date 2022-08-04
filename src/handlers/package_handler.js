@@ -20,7 +20,7 @@ const query = require("../query.js");
 const git = require("../git.js");
 const logger = require("../logger.js");
 const error = require("../error.js");
-const { server_url, paginated_amount } = require("../config.js").GetConfig();
+const { server_url, paginated_amount } = require("../config.js").getConfig();
 const utils = require("../utils.js");
 const database = require("../database.js");
 
@@ -40,11 +40,11 @@ async function GETPackages(req, res) {
     direction: query.dir(req),
   };
 
-  let all_packages = await data.GetAllPackages();
+  let all_packages = await data.getAllPackages();
   console.log("retreived all packages");
 
   if (!all_packages.ok) {
-    await common.HandleError(req, res, all_packages);
+    await common.handleError(req, res, all_packages);
     return;
   }
 
@@ -52,10 +52,10 @@ async function GETPackages(req, res) {
   // we will then need to organize this list, according to our params.
   // additionally remove any fields that are not natively shown to the end user.
   // And finally we would need to modify our headers, to include links for current, next, and last.
-  let packages = await collection.DeepCopy(all_packages.content); // We need to use a deep copy here, to avoid
+  let packages = await collection.deepCopy(all_packages.content); // We need to use a deep copy here, to avoid
   // making changes to the cached package data within data.
-  packages = await collection.Sort(all_packages.content, params.sort);
-  packages = await collection.Direction(packages, params.direction);
+  packages = await collection.sort(all_packages.content, params.sort);
+  packages = await collection.direction(packages, params.direction);
 
   // Now with packages sorted in the right direction, lets prune the results.
   let total_pages = Math.ceil(packages.length / paginated_amount);
@@ -109,18 +109,18 @@ async function POSTPackages(req, res) {
     auth: req.get("Authorization"),
   };
 
-  let user = await users.VerifyAuth(params.auth);
+  let user = await users.verifyAuth(params.auth);
 
   // Check authentication.
   if (!user.ok) {
-    await common.HandleError(req, res, user);
+    await common.handleError(req, res, user);
     return;
   }
 
   // Check repository format validity.
   if (params.repository === "") {
     // The repository format is invalid.
-    await common.BadRepoJSON(req, res);
+    await common.badRepoJSON(req, res);
     return;
   }
 
@@ -131,13 +131,13 @@ async function POSTPackages(req, res) {
   // To see if the package already exists, we will utilize our data.GetPackagePointerByName
   // to hope it returns an error, that the package doesn't exist, and will avoid reading the package file itself.
   // currently though, the repository, is `owner/repo` meanwhile GetPackagePointerByName expects just `repo`
-  let exists = await data.GetPackagePointerByName(
+  let exists = await data.getPackagePointerByName(
     params.repository.split("/")[1]
   );
 
   if (exists.ok) {
     // The package exists.
-    error.PublishPackageExists(res);
+    error.publishPackageExists(res);
     logger.HTTPLog(req, res);
     return;
   }
@@ -145,41 +145,41 @@ async function POSTPackages(req, res) {
   // Even further though we need to check that the error is not found, since errors here can bubble.
   if (exists.short !== "Not Found") {
     // The server failed for some other bubbled reason, and is now encountering an error.
-    await common.HandleError(req, res, exists);
+    await common.handleError(req, res, exists);
     return;
   }
 
   // Now we know the package doesn't exist. And we want to check that the user owns this repo on git.
-  let gitowner = await git.Ownership(user.content, params.repository);
+  let gitowner = await git.ownership(user.content, params.repository);
 
   if (!gitowner.ok) {
-    await common.HandleError(req, res, gitowner);
+    await common.handleError(req, res, gitowner);
     return;
   }
 
   // Now knowing they own the git repo, and it doesn't exist here, lets publish.
-  let pack = await git.CreatePackage(params.repository);
+  let pack = await git.createPackage(params.repository);
 
   if (!pack.ok) {
-    await common.HandleError(req, res, pack);
+    await common.handleError(req, res, pack);
     return;
   }
 
   // Now with valid package data, we can pass it along.
-  let create = await data.NewPackage(pack.content);
+  let create = await data.newPackage(pack.content);
 
   if (!create.ok) {
-    await common.HandleError(req, res, create);
+    await common.handleError(req, res, create);
     return;
   }
 
   // The package has been successfully created.
   // And we want to now do a small test, and grab the new package to return it.
-  let new_pack = await data.GetPackageByName(pack.content.name);
+  let new_pack = await data.getPackageByName(pack.content.name);
 
   if (!new_pack.ok) {
     // We were unable to get the new package, and should return an error.
-    await common.HandleError(req, res, new_pack);
+    await common.handleError(req, res, new_pack);
     return;
   }
 
@@ -206,14 +206,14 @@ async function GETPackagesFeatured(req, res) {
   // were manually choosen by the atom team. While in the future there are plans
   // to have an automatic rating system to determine featured packages,
   // for now we will do the same. If only to reach feature parity quicker.
-  let col = await data.GetFeatured();
+  let col = await data.getFeatured();
 
   if (!col.ok) {
-    await common.HandleError(req, res, col);
+    await common.handleError(req, res, col);
     return;
   }
 
-  let newCol = await collection.DeepCopy(col.content);
+  let newCol = await collection.deepCopy(col.content);
   newCol = await collection.POSPrune(newCol);
 
   res.status(200).json(newCol);
@@ -236,17 +236,17 @@ async function GETPackagesSearch(req, res) {
     query: query.query(req),
   };
 
-  let all_packages = await data.GetAllPackages();
+  let all_packages = await data.getAllPackages();
 
   if (!all_packages.ok) {
-    await common.HandleError(req, res, all_packages);
+    await common.handleError(req, res, all_packages);
     return;
   }
 
-  let packages = await collection.DeepCopy(all_packages.content);
-  packages = await collection.SearchWithinPackages(params.query, packages);
-  packages = await collection.Sort(packages, params.sort);
-  packages = await collection.Direction(packages, params.direction);
+  let packages = await collection.deepCopy(all_packages.content);
+  packages = await collection.searchWithinPackages(params.query, packages);
+  packages = await collection.sort(packages, params.sort);
+  packages = await collection.direction(packages, params.direction);
   // Now that the packages are sorted in the proper direction, we
   // need to exempt results, according to our pagination.
   let total_pages = Math.ceil(packages.length / paginated_amount);
@@ -296,7 +296,7 @@ async function GETPackagesDetails(req, res) {
   let pack = await database.getPackageByName(params.name);
 
   if (!pack.ok) {
-    await common.HandleError(req, res, pack);
+    await common.handleError(req, res, pack);
     return;
   }
 
@@ -306,8 +306,8 @@ async function GETPackagesDetails(req, res) {
 
   if (params.engine) {
     // query.engine returns false if no valid query param is found.
-    // before using EngineFilter we need to check the truthiness of it.
-    pack = await collection.EngineFilter(pack, params.engine);
+    // before using engineFilter we need to check the truthiness of it.
+    pack = await collection.engineFilter(pack, params.engine);
   }
 
   res.status(200).json(pack);
@@ -327,26 +327,26 @@ async function DELETEPackagesName(req, res) {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),
   };
-  let user = await users.VerifyAuth(params.auth);
+  let user = await users.verifyAuth(params.auth);
 
   if (!user.ok) {
-    await common.HandleError(req, res, user);
+    await common.handleError(req, res, user);
     return;
   }
 
-  let gitowner = await git.Ownership(user.content, params.packageName);
+  let gitowner = await git.ownership(user.content, params.packageName);
 
   if (!gitowner.ok) {
-    await common.HandleError(req, res, gitowner);
+    await common.handleError(req, res, gitowner);
     return;
   }
 
   // they are logged in properly, and own the git repo they are referencing via the package name.
   // Now we can delete the package.
-  let rm = await data.RemovePackageByName(params.packageName);
+  let rm = await data.removePackageByName(params.packageName);
 
   if (!rm.ok) {
-    await common.HandleError(req, res, rm);
+    await common.handleError(req, res, rm);
     return;
   }
 
@@ -361,18 +361,18 @@ async function POSTPackagesStar(req, res) {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),
   };
-  let user = await users.VerifyAuth(params.auth);
+  let user = await users.verifyAuth(params.auth);
 
   if (user.ok) {
     // with user.ok we already know the user has valid authentication credentails, and we can allow changes.
-    let pack = await data.StarPackageByName(
+    let pack = await data.starPackageByName(
       params.packageName,
       user.content.name
     );
 
     if (pack.ok) {
       // now with staring the package successfully, we also want to add this package to the user list stars.
-      let star = await users.AddUserStar(params.packageName, user.content.name);
+      let star = await users.addUserStar(params.packageName, user.content.name);
       // this lets us add the star to the users profile.
       if (star.ok) {
         // now that we know the star has been added to the users profile, we can return the package, with success
@@ -380,33 +380,33 @@ async function POSTPackagesStar(req, res) {
         logger.HTTPLog(req, res);
       } else {
         // the users star was not applied properly to their profile, and we would likely want to remove their star from the package before returning.
-        let unstar = await data.UnStarPackageByName(
+        let unstar = await data.unstarPackageByName(
           params.packageName,
           user.content.name
         );
 
         if (unstar.ok) {
           // since it still failed to star as originally intended, return error.
-          await common.ServerError(req, res, star.content);
+          await common.serverError(req, res, star.content);
         } else {
           // unstarring after a failed staring, failed again. Oh jeez...
-          error.ServerErrorJSON(res);
+          error.serverErrorJSON(res);
           logger.HTTPLog(req, res);
-          logger.ErrorLog(
+          logger.errorLog(
             req,
             res,
             "Failed to unstar package after failing to add star to user. Unstar error, followed by User Star error to follow..."
           );
-          logger.ErrorLog(req, res, unstar.content);
-          logger.ErrorLog(req, res, star.content);
+          logger.errorLog(req, res, unstar.content);
+          logger.errorLog(req, res, star.content);
         }
       }
     } else {
       // the users star was not applied properly to the package, and we can return without further action.
-      await common.ServerError(req, res, pack.content);
+      await common.serverError(req, res, pack.content);
     }
   } else {
-    await common.AuthFail(req, res, user);
+    await common.authFail(req, res, user);
   }
 }
 
@@ -419,17 +419,17 @@ async function DELETEPackagesStar(req, res) {
 
   const onLogin = async (user) => {
     // now to unstar the package, by first removing the users star from the package.
-    let pack = await data.UnStarPackageByName(
+    let pack = await data.unstarPackageByName(
       params.packageName,
       user.content.name
     );
 
     if (!pack.ok) {
-      await common.HandleError(req, res, pack);
+      await common.handleError(req, res, pack);
       return;
     }
     // we have removed the star from the package, then remove from the user.
-    let unstar = await users.RemoveUserStar(
+    let unstar = await users.removeUserStar(
       params.packageName,
       user.content.name
     );
@@ -439,26 +439,26 @@ async function DELETEPackagesStar(req, res) {
       // list the user, but the user still lists the package, so we would need to restar the package
       // to allow this whole flow to try again, else it will fail to unstar the package on a second attempt, leaving the user
       // no way to actually remove the star later on.
-      let restar = await data.StarPackageByName(
+      let restar = await data.starPackageByName(
         params.packageName,
         user.content.name
       );
 
       if (restar.ok) {
-        await common.ServerError(req, res, unstar.content);
+        await common.serverError(req, res, unstar.content);
         return;
       }
 
       // We failed to restar the package after failing to unstar the user, rough...
-      error.ServerErrorJSON(res);
+      error.serverErrorJSON(res);
       logger.HTTPLog(req, res);
-      logger.ErrorLog(
+      logger.errorLog(
         req,
         res,
         "Failed to restar the package, after failing to unstar the user. Unstar logs followed by Restar logs..."
       );
-      logger.ErrorLog(req, res, unstar.content);
-      logger.ErrorLog(req, res, restar.content);
+      logger.errorLog(req, res, unstar.content);
+      logger.errorLog(req, res, restar.content);
       return;
     }
 
@@ -466,7 +466,7 @@ async function DELETEPackagesStar(req, res) {
     res.status(201).send();
   };
 
-  await utils.LocalUserLoggedIn(req, res, params.auth, onLogin);
+  await utils.localUserLoggedIn(req, res, params.auth, onLogin);
 }
 
 /**
@@ -485,7 +485,7 @@ async function GETPackagesStargazers(req, res) {
   let pack = await database.getPackageByName(params.packageName);
 
   if (!pack.ok) {
-    await common.HandleError(req, res, pack);
+    await common.handleError(req, res, pack);
     return;
   }
 
@@ -512,18 +512,18 @@ async function POSTPackagesVersion(req, res) {
   };
 
   const onLogin = async (user) => {
-    let gitowner = await git.Ownership(user.content, params.packageName);
+    let gitowner = await git.ownership(user.content, params.packageName);
 
     if (!gitowner.ok) {
-      await common.HandleError(req, res, gitowner);
+      await common.handleError(req, res, gitowner);
       return;
     }
 
     // TODO: Unkown how to handle a rename, so it must be planned before completion.
-    await common.NotSupported(req, res);
+    await common.notSupported(req, res);
   };
 
-  await utils.LocalUserLoggedIn(req, res, params.auth, onLogin);
+  await utils.localUserLoggedIn(req, res, params.auth, onLogin);
 }
 
 async function GETPackagesVersion(req, res) {
@@ -536,14 +536,14 @@ async function GETPackagesVersion(req, res) {
   if (!params.versionName) {
     console.log("returning not found due to invalid semver.");
     // we return a 404 for the version, since its an invalid format
-    await common.NotFound(req, res);
+    await common.notFound(req, res);
     return;
   }
   // Now we know the version is a valid semver.
   let pack = await database.getPackageByName(params.packageName);
 
   if (!pack.ok) {
-    await common.HandleError(req, res, pack);
+    await common.handleError(req, res, pack);
     return;
   }
   // now with the package itself, lets see if that version is a valid key within in the version obj.
@@ -559,7 +559,7 @@ async function GETPackagesVersion(req, res) {
     logger.HTTPLog(req, res);
   } else {
     // the version does not exist, return 404
-    await common.NotFound(req, res);
+    await common.notFound(req, res);
   }
 }
 
@@ -584,7 +584,7 @@ async function GETPackagesVersionTarball(req, res) {
   if (!params.versionName) {
     // since query.engine gives false if invalid, we can just check if its truthy
     // additionally if its false, we know the version will never be found.
-    await common.NotFound(req, res);
+    await common.notFound(req, res);
     return;
   }
 
@@ -592,13 +592,13 @@ async function GETPackagesVersionTarball(req, res) {
   let pack = await database.getPackageByName(params.packageName);
 
   if (!pack.ok) {
-    await common.HandleError(req, res, pack);
+    await common.handleError(req, res, pack);
     return;
   }
 
   if (!pack.content.versions[params.versionName]) {
     // the package doesn't contain the version requested.
-    await common.NotFound(req, res);
+    await common.notFound(req, res);
     return;
   }
 
@@ -606,10 +606,10 @@ async function GETPackagesVersionTarball(req, res) {
   pack.content.downloads++;
 
   // then lets save this updated info.
-  let save = await data.SetPackageByName(params.packageName, pack.content);
+  let save = await data.setPackageByName(params.packageName, pack.content);
 
   if (!save.ok) {
-    logger.WarningLog(req, res, save.content);
+    logger.warningLog(req, res, save.content);
     // we don't want to exit on a failed to update downloads count, but should be logged.
   }
   // For simplicity, we will redirect the request to gh tarball url, to allow
@@ -633,42 +633,42 @@ async function DELETEPackageVersion(req, res) {
     packageName: decodeURIComponent(req.params.packageName),
     versionName: req.params.versionName,
   };
-  let user = await users.VerifyAuth(params.auth);
+  let user = await users.verifyAuth(params.auth);
 
   if (!user.ok) {
-    await common.AuthFail(req, res, user);
+    await common.authFail(req, res, user);
     return;
   }
 
-  let gitowner = await git.Ownership(user.content, params.packageName);
+  let gitowner = await git.ownership(user.content, params.packageName);
 
   if (!gitowner.ok) {
-    await common.HandleError(req, res, gitowner);
+    await common.handleError(req, res, gitowner);
     return;
   }
 
-  let pack = await data.GetPackageByName(params.packageName);
+  let pack = await data.getPackageByName(params.packageName);
 
   if (!pack.ok) {
     // getting package returned error.
-    await common.HandleError(req, res, pack);
+    await common.handleError(req, res, pack);
     return;
   }
 
   if (!pack.content[params.versionName]) {
     // the version does not exist.
     // we will return not found for a non-existant version deletion.
-    await common.NotFound(req, res);
+    await common.notFound(req, res);
   }
 
   // the version exists
   delete pack.content[params.versionName];
 
   // now to write back the modified data.
-  let write = data.SetPackageByName(params.packageName, pack.content);
+  let write = data.setPackageByName(params.packageName, pack.content);
 
   if (!write.ok) {
-    await common.HandleError(req, res, write);
+    await common.handleError(req, res, write);
     return;
   }
 
@@ -697,19 +697,19 @@ async function POSTPackagesEventUninstall(req, res) {
   };
 
   const onLogin = async (user) => {
-    let pack = await data.GetPackageByName(params.packageName);
+    let pack = await data.getPackageByName(params.packageName);
 
     if (!pack.ok) {
-      await common.HandleError(req, res, pack);
+      await common.handleError(req, res, pack);
       return;
     }
 
     pack.content.downloads--;
 
-    let write = await data.SetPackageByName(params.packageName, pack.content);
+    let write = await data.setPackageByName(params.packageName, pack.content);
 
     if (!write.ok) {
-      await common.HandleError(req, res, write);
+      await common.handleError(req, res, write);
       return;
     }
 
@@ -718,7 +718,7 @@ async function POSTPackagesEventUninstall(req, res) {
     return;
   };
 
-  await utils.LocalUserLoggedIn(req, res, params.auth, onLogin);
+  await utils.localUserLoggedIn(req, res, params.auth, onLogin);
 }
 
 module.exports = {

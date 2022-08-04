@@ -39,7 +39,7 @@ all endpoints it listens on. With those endpoints being further documented in <c
 <dd><p>Home to parsing all query parameters from the <code>Request</code> object. Ensuring a valid response.</p>
 </dd>
 <dt><a href="#module_resources">resources</a></dt>
-<dd><p>This module provides a way for other functions to read/write/delete data without knowing or
+<dd><p>This module provides a way for other functions to read/write/remove data without knowing or
 thinking about the underlying file structure. Providing abstraction if the data resides on a local
 filesystem, Google Cloud Storage, or something else entirely.</p>
 </dd>
@@ -86,12 +86,12 @@ collections, to be returned to the user.
 
 
 * [collection](#module_collection)
-    * [~Sort(method, packages)](#module_collection..Sort) ⇒ <code>Array.&lt;object&gt;</code>
-    * [~Direction(packages, method)](#module_collection..Direction) ⇒ <code>Array.&lt;object&gt;</code> \| <code>string</code>
+    * [~sort(method, packages)](#module_collection..sort) ⇒ <code>Array.&lt;object&gt;</code>
+    * [~direction(packages, method)](#module_collection..direction) ⇒ <code>Array.&lt;object&gt;</code> \| <code>string</code>
 
-<a name="module_collection..Sort"></a>
+<a name="module_collection..sort"></a>
 
-### collection~Sort(method, packages) ⇒ <code>Array.&lt;object&gt;</code>
+### collection~sort(method, packages) ⇒ <code>Array.&lt;object&gt;</code>
 Intended for use for a collection of Packages, sort them according to any valid Sorting method.
 Note this should be called before, any Pruning has taken place.
 Prioritizes returning packages so if an invalid method is provided returns the packages
@@ -105,9 +105,9 @@ without modification.
 | method | <code>string</code> | The Method to Sort By |
 | packages | <code>Array.&lt;object&gt;</code> | The Packages in which to sort. |
 
-<a name="module_collection..Direction"></a>
+<a name="module_collection..direction"></a>
 
-### collection~Direction(packages, method) ⇒ <code>Array.&lt;object&gt;</code> \| <code>string</code>
+### collection~direction(packages, method) ⇒ <code>Array.&lt;object&gt;</code> \| <code>string</code>
 Sorts an array of package objects based on the provided method.
 Intended to occur after sorting the package. Prioritizes returning packages,
 so if an invalid method is provided returns the packages with no changes.
@@ -126,17 +126,17 @@ returned if an invalid 'method' is supplied.
 ## config
 Module that access' and returns the server wide configuration.
 
-<a name="module_config..GetConfig"></a>
+<a name="module_config..getConfig"></a>
 
-### config~GetConfig() ⇒ <code>object</code>
+### config~getConfig() ⇒ <code>object</code>
 Used to get Server Config data from the `app.yaml` file at the root of the project.
 Or from environment variables. Prioritizing environment variables.
 
 **Kind**: inner method of [<code>config</code>](#module_config)  
 **Returns**: <code>object</code> - The different available configuration values.  
-**Example** *(Using &#x60;GetConfig()&#x60; during an import for a single value.)*  
+**Example** *(Using &#x60;getConfig()&#x60; during an import for a single value.)*  
 ```js
-const { search_algorithm } = require("./config.js").GetConfig();
+const { search_algorithm } = require("./config.js").getConfig();
 ```
 <a name="module_data"></a>
 
@@ -147,29 +147,29 @@ packages, package_pointer, and additionally handling any modifications of the pa
 
 
 * [data](#module_data)
-    * [~Shutdown()](#module_data..Shutdown)
-    * [~GetFeatured()](#module_data..GetFeatured) ⇒ <code>object</code>
-    * [~GetUsers()](#module_data..GetUsers) ⇒ <code>object</code>
-    * [~GetPackagePointer()](#module_data..GetPackagePointer) ⇒ <code>object</code>
-    * [~GetAllPackages()](#module_data..GetAllPackages) ⇒ <code>object</code>
-    * [~GetPackageByID(id)](#module_data..GetPackageByID) ⇒ <code>object</code>
-    * [~SetUsers(data)](#module_data..SetUsers) ⇒ <code>object</code>
-    * [~SetPackagePointer(data)](#module_data..SetPackagePointer) ⇒ <code>object</code>
-    * [~SetPackageByID(id, data)](#module_data..SetPackageByID) ⇒ <code>object</code>
-    * [~RemovePackageByPointer(pointer)](#module_data..RemovePackageByPointer) ⇒ <code>object</code>
-    * [~RestorePackageByPointer(pointer)](#module_data..RestorePackageByPointer) ⇒ <code>objject</code>
+    * [~shutdown()](#module_data..shutdown)
+    * [~getFeatured()](#module_data..getFeatured) ⇒ <code>object</code>
+    * [~getUsers()](#module_data..getUsers) ⇒ <code>object</code>
+    * [~getPackagePointer()](#module_data..getPackagePointer) ⇒ <code>object</code>
+    * [~getAllPackages()](#module_data..getAllPackages) ⇒ <code>object</code>
+    * [~getPackageByID(id)](#module_data..getPackageByID) ⇒ <code>object</code>
+    * [~setUsers(data)](#module_data..setUsers) ⇒ <code>object</code>
+    * [~setPackagePointer(data)](#module_data..setPackagePointer) ⇒ <code>object</code>
+    * [~setPackageByID(id, data)](#module_data..setPackageByID) ⇒ <code>object</code>
+    * [~removePackageByPointer(pointer)](#module_data..removePackageByPointer) ⇒ <code>object</code>
+    * [~restorePackageByPointer(pointer)](#module_data..restorePackageByPointer) ⇒ <code>objject</code>
 
-<a name="module_data..Shutdown"></a>
+<a name="module_data..shutdown"></a>
 
-### data~Shutdown()
+### data~shutdown()
 The function to be called during the a server stop event. Allowing any cache
 only data to be written to disk. Checking the Cached User Data, Cached Pointer
 Data, as well as checking for any items marked for deletion, and deleting them.
 
 **Kind**: inner method of [<code>data</code>](#module_data)  
-<a name="module_data..GetFeatured"></a>
+<a name="module_data..getFeatured"></a>
 
-### data~GetFeatured() ⇒ <code>object</code>
+### data~getFeatured() ⇒ <code>object</code>
 Gets the featured packages, from the file of `featured_packages.json`.
 While it isn't planned to always use this file, it helps get us to feature parity
 faster, since this is how it was done originally on Atom.io
@@ -178,9 +178,9 @@ Will return the cached object if available, or otherwise will read from disk.
 **Kind**: inner method of [<code>data</code>](#module_data)  
 **Returns**: <code>object</code> - An array of packages, that have manually been decided to be
 featured.  
-<a name="module_data..GetUsers"></a>
+<a name="module_data..getUsers"></a>
 
-### data~GetUsers() ⇒ <code>object</code>
+### data~getUsers() ⇒ <code>object</code>
 Used to get the fully Users File. Or all user data. This function will, if
 possible, cache the data read from the disk into `cached_user` variable to refer to later.
 And if the user data has already been cached, and is not yet expired, or otherwise
@@ -190,9 +190,9 @@ write this cache to disk, then return the new results from disk.
 **Kind**: inner method of [<code>data</code>](#module_data)  
 **Returns**: <code>object</code> - Server Status Object, which on success `content` contains an array of
 user objects.  
-<a name="module_data..GetPackagePointer"></a>
+<a name="module_data..getPackagePointer"></a>
 
-### data~GetPackagePointer() ⇒ <code>object</code>
+### data~getPackagePointer() ⇒ <code>object</code>
 Used to get the full package_pointer file, will cache an uncached file and return
 or will fetch an updated file if the cache has expired, or will write an
 invalidated cache, then return the new data from disk.
@@ -200,9 +200,9 @@ invalidated cache, then return the new data from disk.
 **Kind**: inner method of [<code>data</code>](#module_data)  
 **Returns**: <code>object</code> - A Server Status Object, which on success returns the Package
 Pointer Object within `content`.  
-<a name="module_data..GetAllPackages"></a>
+<a name="module_data..getAllPackages"></a>
 
-### data~GetAllPackages() ⇒ <code>object</code>
+### data~getAllPackages() ⇒ <code>object</code>
 Will attempt to return all available packages in the repository.
 Caching the results, or if results have already been cached, will check the expiry
 and if expired, refresh the cache. `GetAllPackages` differs sigificantly from
@@ -218,9 +218,9 @@ log it, and continue to return data.
 **Implements**: <code>GetPackagePointer</code>, <code>GetPackageByID</code>  
 **Returns**: <code>object</code> - A Server Status Object, which on success `content` contains the full
 array of all package objects, as 'Server Package Objects'.  
-<a name="module_data..GetPackageByID"></a>
+<a name="module_data..getPackageByID"></a>
 
-### data~GetPackageByID(id) ⇒ <code>object</code>
+### data~getPackageByID(id) ⇒ <code>object</code>
 Will get a specific package, using its provided ID of the package.
 
 **Kind**: inner method of [<code>data</code>](#module_data)  
@@ -232,51 +232,51 @@ the package object.
 | --- | --- | --- |
 | id | <code>string</code> | The ID of the package, like `UUIDv4.json`. |
 
-<a name="module_data..SetUsers"></a>
+<a name="module_data..setUsers"></a>
 
-### data~SetUsers(data) ⇒ <code>object</code>
+### data~setUsers(data) ⇒ <code>object</code>
 Will persist user data to the disk. Will first do this by adding to the
 user cache object, if it exists, otherwise will write directly to disk.
 
 **Kind**: inner method of [<code>data</code>](#module_data)  
 **Returns**: <code>object</code> - A Server Status object of success, containing only `ok`.
-Or bubbling from `resources.Write()`.  
+Or bubbling from `resources.write()`.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | data | <code>object</code> | The new full user data to persist. |
 
-<a name="module_data..SetPackagePointer"></a>
+<a name="module_data..setPackagePointer"></a>
 
-### data~SetPackagePointer(data) ⇒ <code>object</code>
+### data~setPackagePointer(data) ⇒ <code>object</code>
 Persists Package Pointer Data to disk. By saving to the cache object if
 available, or otherwise writing directly to disk.
 
 **Kind**: inner method of [<code>data</code>](#module_data)  
 **Returns**: <code>object</code> - A Server Status Object of success with only `ok` if successul,
-or otherwise bubbling from `resources.Write()`.  
+or otherwise bubbling from `resources.write()`.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | data | <code>object</code> | The Package Pointer Object in its entirety. |
 
-<a name="module_data..SetPackageByID"></a>
+<a name="module_data..setPackageByID"></a>
 
-### data~SetPackageByID(id, data) ⇒ <code>object</code>
+### data~setPackageByID(id, data) ⇒ <code>object</code>
 Persists Package Data to disk. Since no cache objects exist for individual
-packages, really is a wrapper around `resources.Write()` with some presets.
+packages, really is a wrapper around `resources.write()` with some presets.
 
 **Kind**: inner method of [<code>data</code>](#module_data)  
-**Returns**: <code>object</code> - A server status object bubbled directly from `resources.Write()`.  
+**Returns**: <code>object</code> - A server status object bubbled directly from `resources.write()`.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | id | <code>string</code> | The name of the package file to persists. In format `package-uuidv4.json`. |
 | data | <code>object</code> | The object data of the package to write. |
 
-<a name="module_data..RemovePackageByPointer"></a>
+<a name="module_data..removePackageByPointer"></a>
 
-### data~RemovePackageByPointer(pointer) ⇒ <code>object</code>
+### data~removePackageByPointer(pointer) ⇒ <code>object</code>
 Marks a package for deletion on server shutdown, using its `package.json`.
 
 **Kind**: inner method of [<code>data</code>](#module_data)  
@@ -286,9 +286,9 @@ Marks a package for deletion on server shutdown, using its `package.json`.
 | --- | --- | --- |
 | pointer | <code>string</code> | The Package Name to mark, in format `package-uuidv4.json`. |
 
-<a name="module_data..RestorePackageByPointer"></a>
+<a name="module_data..restorePackageByPointer"></a>
 
-### data~RestorePackageByPointer(pointer) ⇒ <code>objject</code>
+### data~restorePackageByPointer(pointer) ⇒ <code>objject</code>
 Restores a previously marked package for deletion. Causing it to no
 longer be marked for deletion.
 
@@ -329,18 +329,18 @@ to them from different handlers.
 
 
 * [error](#module_error)
-    * [~NotFoundJSON(res)](#module_error..NotFoundJSON)
-    * [~SiteWide404(res)](#module_error..SiteWide404)
-    * [~MissingAuthJSON(res)](#module_error..MissingAuthJSON)
-    * [~ServerErrorJSON(res)](#module_error..ServerErrorJSON)
-    * [~PublishPackageExists(res)](#module_error..PublishPackageExists)
-    * [~BadRepoJSON(res)](#module_error..BadRepoJSON)
-    * [~BadPackageJSON(res)](#module_error..BadPackageJSON)
-    * [~UnsupportedJSON(res)](#module_error..UnsupportedJSON)
+    * [~notFoundJSON(res)](#module_error..notFoundJSON)
+    * [~siteWide404(res)](#module_error..siteWide404)
+    * [~missingAuthJSON(res)](#module_error..missingAuthJSON)
+    * [~serverErrorJSON(res)](#module_error..serverErrorJSON)
+    * [~publishPackageExists(res)](#module_error..publishPackageExists)
+    * [~badRepoJSON(res)](#module_error..badRepoJSON)
+    * [~badPackageJSON(res)](#module_error..badPackageJSON)
+    * [~unsupportedJSON(res)](#module_error..unsupportedJSON)
 
-<a name="module_error..NotFoundJSON"></a>
+<a name="module_error..notFoundJSON"></a>
 
-### error~NotFoundJSON(res)
+### error~notFoundJSON(res)
 The Standard JSON Handling when an object is not found.
 ###### Setting:
 * Status Code: 404
@@ -352,9 +352,9 @@ The Standard JSON Handling when an object is not found.
 | --- | --- | --- |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_error..SiteWide404"></a>
+<a name="module_error..siteWide404"></a>
 
-### error~SiteWide404(res)
+### error~siteWide404(res)
 The standard Website Page 404 not found handler.
 
 **Kind**: inner method of [<code>error</code>](#module_error)  
@@ -370,9 +370,9 @@ The standard Website Page 404 not found handler.
 | --- | --- | --- |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_error..MissingAuthJSON"></a>
+<a name="module_error..missingAuthJSON"></a>
 
-### error~MissingAuthJSON(res)
+### error~missingAuthJSON(res)
 JSON Handling when authentication fails.
 ###### Setting:
 * Status Code: 401
@@ -384,9 +384,9 @@ JSON Handling when authentication fails.
 | --- | --- | --- |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_error..ServerErrorJSON"></a>
+<a name="module_error..serverErrorJSON"></a>
 
-### error~ServerErrorJSON(res)
+### error~serverErrorJSON(res)
 The Standard Server Error JSON Endpoint.
 ###### Setting:
 * Status Code: 500
@@ -398,9 +398,9 @@ The Standard Server Error JSON Endpoint.
 | --- | --- | --- |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_error..PublishPackageExists"></a>
+<a name="module_error..publishPackageExists"></a>
 
-### error~PublishPackageExists(res)
+### error~publishPackageExists(res)
 JSON Response announcing a package already exists.
 ###### Setting:
 * Status Code: 409
@@ -412,9 +412,9 @@ JSON Response announcing a package already exists.
 | --- | --- | --- |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_error..BadRepoJSON"></a>
+<a name="module_error..badRepoJSON"></a>
 
-### error~BadRepoJSON(res)
+### error~badRepoJSON(res)
 JSON Response announcing that the repo doesn't exist, or is inaccessible.
 ###### Setting:
 * Status Code: 400
@@ -426,9 +426,9 @@ JSON Response announcing that the repo doesn't exist, or is inaccessible.
 | --- | --- | --- |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_error..BadPackageJSON"></a>
+<a name="module_error..badPackageJSON"></a>
 
-### error~BadPackageJSON(res)
+### error~badPackageJSON(res)
 JSON Response annoucning that the package.json of a repo is invalid.
 ###### Setting:
 * Status Code: 400
@@ -440,9 +440,9 @@ JSON Response annoucning that the package.json of a repo is invalid.
 | --- | --- | --- |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_error..UnsupportedJSON"></a>
+<a name="module_error..unsupportedJSON"></a>
 
-### error~UnsupportedJSON(res)
+### error~unsupportedJSON(res)
 This is a standard JSON endpoint to define an endpoint that is currently not supported.
 Used currently to delineate which endpoints have not been fully implemented. Or a specific error endpoint
 that has not been written yet.
@@ -463,17 +463,17 @@ Assists in interactions between the backend and GitHub.
 
 
 * [git](#module_git)
-    * [~Ownership(user, repo)](#module_git..Ownership)
-    * [~CreatePackage(repo)](#module_git..CreatePackage) ⇒ <code>object</code>
+    * [~ownership(user, repo)](#module_git..ownership)
+    * [~createPackage(repo)](#module_git..createPackage) ⇒ <code>object</code>
     * [~doesUserHaveRepo(user, repo, [page])](#module_git..doesUserHaveRepo) ⇒ <code>object</code>
     * [~getRepoExistance(repo)](#module_git..getRepoExistance) ⇒ <code>boolean</code>
     * [~getPackageJSON(repo)](#module_git..getPackageJSON) ⇒ <code>string</code> \| <code>undefined</code>
     * [~getRepoReadMe(repo)](#module_git..getRepoReadMe) ⇒ <code>string</code> \| <code>undefined</code>
     * [~getRepoTags(repo)](#module_git..getRepoTags) ⇒ <code>object</code> \| <code>undefined</code>
 
-<a name="module_git..Ownership"></a>
+<a name="module_git..ownership"></a>
 
-### git~Ownership(user, repo)
+### git~ownership(user, repo)
 Allows the ability to check if a user has permissions to write to a repo.
 <b>MUST</b> Be provided `owner/repo` to successfully function, and expects the
 full `user` object. Returns `ok: true` where content is the repo data from GitHub
@@ -487,9 +487,9 @@ to affect said repo or `short: "Server Error"` if any other error has occured.
 | user | <code>object</code> | The Full User object, including `name`, `github_token`. |
 | repo | <code>string</code> | The `owner/repo` of the repo changes are intended to affect. |
 
-<a name="module_git..CreatePackage"></a>
+<a name="module_git..createPackage"></a>
 
-### git~CreatePackage(repo) ⇒ <code>object</code>
+### git~createPackage(repo) ⇒ <code>object</code>
 Creates a compatible `Server Object Full` object, from only receiving a `repo` as in
 `owner/repo`. With this it contacts GitHub API's and modifies data as needed to
 return back a proper `Server Object Full` object within a `Server Status`.content object.
@@ -583,10 +583,10 @@ logging methods if a log server is ever implemented.
 
 * [logger](#module_logger)
     * [~HTTPLog(req, res)](#module_logger..HTTPLog)
-    * [~ErrorLog(req, res, err)](#module_logger..ErrorLog)
-    * [~WarningLog([req], [res], err)](#module_logger..WarningLog)
-    * [~InfoLog(value)](#module_logger..InfoLog)
-    * [~DebugLog(value)](#module_logger..DebugLog)
+    * [~errorLog(req, res, err)](#module_logger..errorLog)
+    * [~warningLog([req], [res], err)](#module_logger..warningLog)
+    * [~infoLog(value)](#module_logger..infoLog)
+    * [~debugLog(value)](#module_logger..debugLog)
 
 <a name="module_logger..HTTPLog"></a>
 
@@ -604,9 +604,9 @@ The standard logger for HTTP calls. Logging in a modified 'Apache Combined Log F
 ```js
 HTTP:: IP [DATE (as ISO String)] "HTTP_METHOD URL PROTOCOL" STATUS_CODE DURATION_OF_REQUESTms
 ```
-<a name="module_logger..ErrorLog"></a>
+<a name="module_logger..errorLog"></a>
 
-### logger~ErrorLog(req, res, err)
+### logger~errorLog(req, res, err)
 An endpoint to log errors, as well as exactly where they occured. Allowing some insight into what caused
 them, as well as how the server reacted to the end user.
 
@@ -622,9 +622,9 @@ them, as well as how the server reacted to the end user.
 ```js
 ERROR:: IP "HTTP_METHOD URL PROTOCOL" STATUS_CODE DURATION_OF_REQUESTms ! ERROR
 ```
-<a name="module_logger..WarningLog"></a>
+<a name="module_logger..warningLog"></a>
 
-### logger~WarningLog([req], [res], err)
+### logger~warningLog([req], [res], err)
 An endpoint to log warnings. This should be used for when an error recovered, but the server
 did its best to recover from it. Providing no error to the end user.
 
@@ -644,9 +644,9 @@ WARNING:: IP "HTTP_METHOD URL PROTOCOL" STATUS_CODE DURATION_OF_REQUESTms ! ERRO
 ```js
 WARNING:: ERROR
 ```
-<a name="module_logger..InfoLog"></a>
+<a name="module_logger..infoLog"></a>
 
-### logger~InfoLog(value)
+### logger~infoLog(value)
 An endpoint to log information only. Used sparingly, but may be helpful.
 
 **Kind**: inner method of [<code>logger</code>](#module_logger)  
@@ -659,9 +659,9 @@ An endpoint to log information only. Used sparingly, but may be helpful.
 ```js
 INFO:: VALUE
 ```
-<a name="module_logger..DebugLog"></a>
+<a name="module_logger..debugLog"></a>
 
-### logger~DebugLog(value)
+### logger~debugLog(value)
 An endpoint to log debug information only. This log will only show if enabled in the Config file.
 That is if the `app.yaml` file has DEBUG as true.
 
@@ -818,7 +818,7 @@ exists in the data.
 <a name="module_resources"></a>
 
 ## resources
-This module provides a way for other functions to read/write/delete data without knowing or
+This module provides a way for other functions to read/write/remove data without knowing or
 thinking about the underlying file structure. Providing abstraction if the data resides on a local
 filesystem, Google Cloud Storage, or something else entirely.
 
@@ -827,11 +827,11 @@ filesystem, Google Cloud Storage, or something else entirely.
 * [resources](#module_resources)
     * [~CacheObject](#module_resources..CacheObject)
         * [new CacheObject([name], contents)](#new_module_resources..CacheObject_new)
-    * [~Read(type, name)](#module_resources..Read) ⇒ <code>object</code>
+    * [~read(type, name)](#module_resources..read) ⇒ <code>object</code>
     * [~readFile(path)](#module_resources..readFile) ⇒ <code>object</code>
-    * [~Write(type, data, name)](#module_resources..Write) ⇒ <code>object</code>
+    * [~write(type, data, name)](#module_resources..write) ⇒ <code>object</code>
     * [~writeFile(path, data)](#module_resources..writeFile) ⇒ <code>object</code>
-    * [~Delete(name)](#module_resources..Delete) ⇒ <code>object</code>
+    * [~remove(name)](#module_resources..remove) ⇒ <code>object</code>
 
 <a name="module_resources..CacheObject"></a>
 
@@ -848,9 +848,9 @@ Allows simple interfaces to handle caching an object in memory. Used to cache da
 | [name] | <code>string</code> | Optional name to assign to the Cached Object. |
 | contents | <code>object</code> | The contents of this cached object. Intended to be a JavaScript object. But could be anything. |
 
-<a name="module_resources..Read"></a>
+<a name="module_resources..read"></a>
 
-### resources~Read(type, name) ⇒ <code>object</code>
+### resources~read(type, name) ⇒ <code>object</code>
 Exported function to read data from the filesystem, whatever that may be.
 
 **Kind**: inner method of [<code>resources</code>](#module_resources)  
@@ -877,9 +877,9 @@ If error returns "Server Error" or "File Not Found".
 | --- | --- | --- |
 | path | <code>string</code> | The Path to whatever file we want. |
 
-<a name="module_resources..Write"></a>
+<a name="module_resources..write"></a>
 
-### resources~Write(type, data, name) ⇒ <code>object</code>
+### resources~write(type, data, name) ⇒ <code>object</code>
 The Exported Write function, to allow writing of data to the filesystem.
 
 **Kind**: inner method of [<code>resources</code>](#module_resources)  
@@ -906,9 +906,9 @@ Errors returned "Server Error".
 | path | <code>string</code> | The path to the file we are writing. Including the destination file. |
 | data | <code>object</code> | The Data we are writing to the filesystem. Already encoded in a compatible format. |
 
-<a name="module_resources..Delete"></a>
+<a name="module_resources..remove"></a>
 
-### resources~Delete(name) ⇒ <code>object</code>
+### resources~remove(name) ⇒ <code>object</code>
 **Kind**: inner method of [<code>resources</code>](#module_resources)  
 **Returns**: <code>object</code> - A Server Status Object, with `content` non-existant on a successful deletion.
 Errors returned as "Server Error".  
@@ -1036,9 +1036,9 @@ The initializer of `main.js` starting up the Express Server, and setting the por
 to listen on. As well as handling a graceful shutdown of the server.
 
 **Implements**: <code>main</code>, <code>config</code>, <code>logger</code>, <code>data</code>  
-<a name="module_server..Exterminate"></a>
+<a name="module_server..exterminate"></a>
 
-### server~Exterminate(callee)
+### server~exterminate(callee)
 This is called when the server process receives a `SIGINT` or `SIGTERM` signal.
 Which this will then handle closing the server listener, as well as calling `data.Shutdown`.
 
@@ -1057,15 +1057,15 @@ to modify, or compile user data specifically.
 **Implements**: <code>data</code>  
 
 * [users](#module_users)
-    * [~VerifyAuth(token, [callback])](#module_users..VerifyAuth) ⇒ <code>object</code>
-    * [~GetUser(username)](#module_users..GetUser) ⇒ <code>object</code>
-    * [~AddUserStar(packageName, userName)](#module_users..AddUserStar) ⇒ <code>object</code>
-    * [~RemoveUserStar(packageName, userName)](#module_users..RemoveUserStar) ⇒ <code>object</code>
-    * [~Prune(userObj)](#module_users..Prune) ⇒ <code>object</code>
+    * [~verifyAuth(token, [callback])](#module_users..verifyAuth) ⇒ <code>object</code>
+    * [~getUser(username)](#module_users..getUser) ⇒ <code>object</code>
+    * [~addUserStar(packageName, userName)](#module_users..addUserStar) ⇒ <code>object</code>
+    * [~removeUserStar(packageName, userName)](#module_users..removeUserStar) ⇒ <code>object</code>
+    * [~prune(userObj)](#module_users..prune) ⇒ <code>object</code>
 
-<a name="module_users..VerifyAuth"></a>
+<a name="module_users..verifyAuth"></a>
 
-### users~VerifyAuth(token, [callback]) ⇒ <code>object</code>
+### users~verifyAuth(token, [callback]) ⇒ <code>object</code>
 Checks every existing user within the users file, to see if the token provided exists within their valid
 tokens. If it does will return the entire user object. If an optional callback is provided will invoke the
 callback passing the user object, otherwise will just return the user object.
@@ -1080,9 +1080,9 @@ If no valid user is found returns null.
 | token | <code>string</code> | Provided Token to check against all valid users. |
 | [callback] | <code>function</code> | Optional function to invoke passing the matched user. |
 
-<a name="module_users..GetUser"></a>
+<a name="module_users..getUser"></a>
 
-### users~GetUser(username) ⇒ <code>object</code>
+### users~getUser(username) ⇒ <code>object</code>
 Searches for a user within the user file, and if found will return the standard object
 containing the full User Object. Otherwise an error.
 
@@ -1095,9 +1095,9 @@ Object containing full User Object.
 | --- | --- | --- |
 | username | <code>string</code> | The UserName we want to search for. |
 
-<a name="module_users..AddUserStar"></a>
+<a name="module_users..addUserStar"></a>
 
-### users~AddUserStar(packageName, userName) ⇒ <code>object</code>
+### users~addUserStar(packageName, userName) ⇒ <code>object</code>
 Adds the desired Package to the list of packages the User has starred.
 
 **Kind**: inner method of [<code>users</code>](#module_users)  
@@ -1111,9 +1111,9 @@ Error Object Bubbled from SetUsers, Short Object of 'ok' if successful.
 | packageName | <code>string</code> | The Name of the Package we want to add to the users star list. |
 | userName | <code>string</code> | The user we want to make this modification to. |
 
-<a name="module_users..RemoveUserStar"></a>
+<a name="module_users..removeUserStar"></a>
 
-### users~RemoveUserStar(packageName, userName) ⇒ <code>object</code>
+### users~removeUserStar(packageName, userName) ⇒ <code>object</code>
 Removes the specified Package from the Users list of stars.
 
 **Kind**: inner method of [<code>users</code>](#module_users)  
@@ -1126,9 +1126,9 @@ Error Object Bubbled from SetUsers, Error Object of 'Not Found', Short Object of
 | packageName | <code>string</code> | The Name of the package we want to remove from the users star list. |
 | userName | <code>string</code> | The User we want to make these changes to. |
 
-<a name="module_users..Prune"></a>
+<a name="module_users..prune"></a>
 
-### users~Prune(userObj) ⇒ <code>object</code>
+### users~prune(userObj) ⇒ <code>object</code>
 Takes a single User Object, and prunes any server side only data from the object to return to the user.
 This pruned item should never be written back to disk, as removed the data from it removes any pointers to those values.
 
@@ -1145,9 +1145,9 @@ This pruned item should never be written back to disk, as removed the data from 
 A helper for any functions that are agnostic in hanlders.
 
 **Implements**: <code>resources</code>, <code>logger</code>, <code>users</code>, <code>common</code>  
-<a name="module_utils..LocalUserLoggedIn"></a>
+<a name="module_utils..localUserLoggedIn"></a>
 
-### utils~LocalUserLoggedIn(req, res, params_user, callback)
+### utils~localUserLoggedIn(req, res, params_user, callback)
 Used as a less verbose way to check if the current user token, is associated
 with a logged in user. If not handles errors automatically, if so calls the callback
 function passing the Server Status Object, where content is User.
@@ -1171,18 +1171,18 @@ verbosity, and duplication within the codebase.
 **Implements**: <code>error</code>, <code>logger</code>  
 
 * [common_handler](#module_common_handler)
-    * [~AuthFail(req, res, user)](#module_common_handler..AuthFail)
-    * [~ServerError(req, res, err)](#module_common_handler..ServerError)
-    * [~NotFound(req, res)](#module_common_handler..NotFound)
-    * [~NotSupported(req, res)](#module_common_handler..NotSupported)
-    * [~SiteWideNotFound(req, res)](#module_common_handler..SiteWideNotFound)
-    * [~BadRepoJSON(req, res)](#module_common_handler..BadRepoJSON)
-    * [~BadPackageJSON(req, res)](#module_common_handler..BadPackageJSON)
-    * [~HandleError(req, res, obj)](#module_common_handler..HandleError)
+    * [~authFail(req, res, user)](#module_common_handler..authFail)
+    * [~serverError(req, res, err)](#module_common_handler..serverError)
+    * [~notFound(req, res)](#module_common_handler..notFound)
+    * [~notSupported(req, res)](#module_common_handler..notSupported)
+    * [~siteWideNotFound(req, res)](#module_common_handler..siteWideNotFound)
+    * [~badRepoJSON(req, res)](#module_common_handler..badRepoJSON)
+    * [~badPackageJSON(req, res)](#module_common_handler..badPackageJSON)
+    * [~handleError(req, res, obj)](#module_common_handler..handleError)
 
-<a name="module_common_handler..AuthFail"></a>
+<a name="module_common_handler..authFail"></a>
 
-### common_handler~AuthFail(req, res, user)
+### common_handler~authFail(req, res, user)
 Will take the <b>failed</b> user object from VerifyAuth, and respond for the endpoint as
 either a "Server Error" or a "Bad Auth", whichever is correct based on the Error bubbled from VerifyAuth.
 
@@ -1195,9 +1195,9 @@ either a "Server Error" or a "Bad Auth", whichever is correct based on the Error
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 | user | <code>object</code> | The Raw Status Object of the User, expected to return from `VerifyAuth`. |
 
-<a name="module_common_handler..ServerError"></a>
+<a name="module_common_handler..serverError"></a>
 
-### common_handler~ServerError(req, res, err)
+### common_handler~serverError(req, res, err)
 Returns a standard Server Error to the user as JSON. Logging the detailed error message to the server.
 
 **Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
@@ -1209,9 +1209,9 @@ Returns a standard Server Error to the user as JSON. Logging the detailed error 
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 | err | <code>string</code> | The detailed error message to log server side. |
 
-<a name="module_common_handler..NotFound"></a>
+<a name="module_common_handler..notFound"></a>
 
-### common_handler~NotFound(req, res)
+### common_handler~notFound(req, res)
 Standard endpoint to return the JSON Not Found error to the user.
 
 **Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
@@ -1222,9 +1222,9 @@ Standard endpoint to return the JSON Not Found error to the user.
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_common_handler..NotSupported"></a>
+<a name="module_common_handler..notSupported"></a>
 
-### common_handler~NotSupported(req, res)
+### common_handler~notSupported(req, res)
 Returns a Not Supported message to the user.
 
 **Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
@@ -1235,9 +1235,9 @@ Returns a Not Supported message to the user.
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_common_handler..SiteWideNotFound"></a>
+<a name="module_common_handler..siteWideNotFound"></a>
 
-### common_handler~SiteWideNotFound(req, res)
+### common_handler~siteWideNotFound(req, res)
 Returns the SiteWide 404 page to the end user.
 
 **Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
@@ -1248,9 +1248,9 @@ Returns the SiteWide 404 page to the end user.
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_common_handler..BadRepoJSON"></a>
+<a name="module_common_handler..badRepoJSON"></a>
 
-### common_handler~BadRepoJSON(req, res)
+### common_handler~badRepoJSON(req, res)
 Returns the BadRepoJSON message to the user.
 
 **Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
@@ -1261,9 +1261,9 @@ Returns the BadRepoJSON message to the user.
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_common_handler..BadPackageJSON"></a>
+<a name="module_common_handler..badPackageJSON"></a>
 
-### common_handler~BadPackageJSON(req, res)
+### common_handler~badPackageJSON(req, res)
 Returns the BadPackageJSON message to the user.
 
 **Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
@@ -1274,9 +1274,9 @@ Returns the BadPackageJSON message to the user.
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_common_handler..HandleError"></a>
+<a name="module_common_handler..handleError"></a>
 
-### common_handler~HandleError(req, res, obj)
+### common_handler~handleError(req, res, obj)
 Generic error handler mostly used to reduce the duplication of error handling in other modules.
 It checks the short error string and calls the relative endpoint.
 Note that it's designed to be called as the last async function before the return.

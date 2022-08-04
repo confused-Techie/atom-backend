@@ -14,7 +14,7 @@ async function GETThemeFeatured(req, res) {
   // Returns a 200 response if everything goes well.
   // Sort by package name, in alphabetical order is implemented client side. Wether this means we want to implement it
   // or leave it to the client is hard to say.
-  await common.NotSupported(req, res);
+  await common.notSupported(req, res);
 }
 
 module.exports = {

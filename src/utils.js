@@ -11,12 +11,12 @@ const logger = require("./logger.js");
 const users = require("./users.js");
 const common = require("./handlers/common_handler.js");
 
-async function IsPackageNameBanned(name) {
-  let names = await resources.Read("name_ban_list");
+async function isPackageNameBanned(name) {
+  let names = await resources.read("name_ban_list");
 
   if (!names.ok) {
     // we failed to find the ban list. For now we will just return ok.
-    logger.WarningLog(null, null, "Unable to locate Name Ban List");
+    logger.warningLog(null, null, "Unable to locate Name Ban List");
     return { ok: true };
   }
 
@@ -33,7 +33,7 @@ async function IsPackageNameBanned(name) {
 
 /**
  * @async
- * @function LocalUserLoggedIn
+ * @function localUserLoggedIn
  * @desc Used as a less verbose way to check if the current user token, is associated
  * with a logged in user. If not handles errors automatically, if so calls the callback
  * function passing the Server Status Object, where content is User.
@@ -43,11 +43,11 @@ async function IsPackageNameBanned(name) {
  * token within the header field.
  * @param {function} callback - The callback to invoke only if the user is properly authenticated.
  */
-async function LocalUserLoggedIn(req, res, params_user, callback) {
-  let user = await users.VerifyAuth(params_user);
+async function localUserLoggedIn(req, res, params_user, callback) {
+  let user = await users.verifyAuth(params_user);
 
   if (!user.ok) {
-    await common.AuthFail(req, res, user);
+    await common.authFail(req, res, user);
     return;
   }
 
@@ -55,6 +55,6 @@ async function LocalUserLoggedIn(req, res, params_user, callback) {
 }
 
 module.exports = {
-  IsPackageNameBanned,
-  LocalUserLoggedIn,
+  isPackageNameBanned,
+  localUserLoggedIn,
 };

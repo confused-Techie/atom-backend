@@ -6,7 +6,7 @@
 
 const search_func = require("./search.js");
 const logger = require("./logger.js");
-const { search_algorithm } = require("./config.js").GetConfig();
+const { search_algorithm } = require("./config.js").getConfig();
 
 /**
  * @desc Intended for use for a collection of Packages, sort them according to any valid Sorting method.
@@ -14,12 +14,12 @@ const { search_algorithm } = require("./config.js").GetConfig();
  * Prioritizes returning packages so if an invalid method is provided returns the packages
  * without modification.
  * @async
- * @function Sort
+ * @function sort
  * @param {string} method - The Method to Sort By
  * @param {object[]} packages - The Packages in which to sort.
  * @return {object[]} The provided packages now sorted accordingly.
  */
-async function Sort(packages, method) {
+async function sort(packages, method) {
   // Note Sort, should be called before ANY pruning action has taken place.
   // Additional note, this implementation will sort EVERY single package no matter what.
   // TODO: Feature Request: Provide the page requested during sort, or the last item needed to sort,
@@ -87,7 +87,7 @@ async function Sort(packages, method) {
       break;
 
     default:
-      logger.WarningLog(
+      logger.warningLog(
         null,
         null,
         `Unrecognized Sorting Method Provided: ${method}`
@@ -99,7 +99,7 @@ async function Sort(packages, method) {
 }
 
 /**
- * @function Direction
+ * @function direction
  * @desc Sorts an array of package objects based on the provided method.
  * Intended to occur after sorting the package. Prioritizes returning packages,
  * so if an invalid method is provided returns the packages with no changes.
@@ -110,7 +110,7 @@ async function Sort(packages, method) {
  * returned if an invalid 'method' is supplied.
  * @async
  */
-async function Direction(packages, method) {
+async function direction(packages, method) {
   // While previously
   if (method === "desc") {
     // since we wrote the sort, we know it will return results, sorted by the default of desc, and we can return.
@@ -121,7 +121,7 @@ async function Direction(packages, method) {
     // the collection functions, to measure what the performance is like.
     return packages.reverse();
   } else {
-    logger.WarningLog(
+    logger.warningLog(
       null,
       null,
       `Unrecognized Direction Method Used: ${method}`
@@ -198,7 +198,7 @@ async function POSPrune(packages) {
   }
 }
 
-async function SearchWithinPackages(
+async function searchWithinPackages(
   search,
   packages,
   searchAlgorithm = search_algorithm
@@ -247,7 +247,7 @@ async function SearchWithinPackages(
   return packages;
 }
 
-async function EngineFilter(pack, engine) {
+async function engineFilter(pack, engine) {
   // Comparison utils:
   // These ones expect to get valid strings as parameters, which should be convertible to numbers.
   // Providing other types may lead to unexpected behaviors.
@@ -446,7 +446,7 @@ async function EngineFilter(pack, engine) {
   return pack;
 }
 
-async function DeepCopy(obj) {
+async function deepCopy(obj) {
   // this resolves github.com/confused-Techie/atom-community-server-backend-JS issue 13, and countless others.
   // When the object is passed to these sort functions, they work off a shallow copy. Meaning their changes
   // affect the original read data, meaning the cached data. Meaning subsequent queries may fail or error out.
@@ -465,18 +465,18 @@ async function DeepCopy(obj) {
   for (key in obj) {
     value = obj[key];
 
-    outObject[key] = await DeepCopy(value);
+    outObject[key] = await deepCopy(value);
   }
 
   return outObject;
 }
 
 module.exports = {
-  Sort,
-  Direction,
+  sort,
+  direction,
   POFPrune,
   POSPrune,
-  EngineFilter,
-  SearchWithinPackages,
-  DeepCopy,
+  engineFilter,
+  searchWithinPackages,
+  deepCopy,
 };

@@ -8,7 +8,7 @@
 const { v4: uuidv4 } = require("uuid");
 const logger = require("./logger.js");
 const resources = require("./resources.js");
-const { file_store } = require("./config.js").GetConfig();
+const { file_store } = require("./config.js").getConfig();
 const sql_data = require("./sql_data.js");
 
 // Collection of data global variables. Used for caching read data.
@@ -16,53 +16,53 @@ let cached_user, cached_pointer, cached_packages, cached_packages_featured;
 let deletion_flags = [];
 
 /**
- * @function Shutdown
+ * @function shutdown
  * @async
  * @desc The function to be called during the a server stop event. Allowing any cache
  * only data to be written to disk. Checking the Cached User Data, Cached Pointer
  * Data, as well as checking for any items marked for deletion, and deleting them.
  */
-async function Shutdown() {
-  logger.DebugLog("data.Shutdown called...");
+async function shutdown() {
+  logger.debugLog("data.Shutdown called...");
   // This function will serve as a callee for any shutdown signals we receive, and to save the data right away.
   if (cached_user !== undefined) {
     if (cached_user.invalidated) {
-      logger.DebugLog("Saving invalidated User Cache.");
+      logger.debugLog("Saving invalidated User Cache.");
       // this will tell us if we called for its data to be saved previously.
       // Now we will write it.
-      let write = resources.Write("user", cached_user.data);
-      logger.DebugLog(
+      let write = resources.write("user", cached_user.data);
+      logger.debugLog(
         `${write.ok ? "Successfully" : "Unsuccessfully"} Saved User Cache.`
       );
     } else {
-      logger.DebugLog("No need to save valid User Cache.");
+      logger.debugLog("No need to save valid User Cache.");
     }
   }
   if (cached_pointer !== undefined) {
     if (cached_pointer.invalidated) {
-      logger.DebugLog("Saving invalidated Pointer Cache.");
-      let write = resources.Write("pointer", cached_pointer.data);
-      logger.DebugLog(
+      logger.debugLog("Saving invalidated Pointer Cache.");
+      let write = resources.write("pointer", cached_pointer.data);
+      logger.debugLog(
         `${write.ok ? "Successfully" : "Unsuccessfully"} Saved Pointer Cache.`
       );
     } else {
-      logger.DebugLog("No need to save valid Pointer Cache.");
+      logger.debugLog("No need to save valid Pointer Cache.");
     }
   }
   if (deletion_flags.length > 0) {
-    logger.DebugLog("Active Deletion Flags Stored. Moving to Delete.");
+    logger.debugLog("Active Deletion Flags Stored. Moving to Delete.");
     for (let i = 0; i < deletion_flags.length; i++) {
       if (deletion_flags[i].type === "package") {
-        let rm = await resources.Delete(deletion_flags[i].file);
+        let rm = await resources.remove(deletion_flags[i].file);
         if (rm.ok) {
-          logger.DebugLog(`Deleted Successfully: ${deletion_flags[i].file}`);
+          logger.debugLog(`Deleted Successfully: ${deletion_flags[i].file}`);
         } else {
-          logger.DebugLog(
+          logger.debugLog(
             `FAILED to Delete: ${deletion_flags[i].file}; ${rm.short} - ${rm.content}`
           );
         }
       } else {
-        logger.DebugLog(
+        logger.debugLog(
           `Unrecognized Type within Deletion Array: ${deletion_flags[i].type}, ${deletion_flags[i].file} not deleted.`
         );
       }
@@ -72,7 +72,7 @@ async function Shutdown() {
 
 /**
  * @async
- * @function GetFeatured
+ * @function getFeatured
  * @desc Gets the featured packages, from the file of `featured_packages.json`.
  * While it isn't planned to always use this file, it helps get us to feature parity
  * faster, since this is how it was done originally on Atom.io
@@ -80,14 +80,14 @@ async function Shutdown() {
  * @returns {object} An array of packages, that have manually been decided to be
  * featured.
  */
-async function GetFeatured() {
+async function getFeatured() {
   const getNew = async function () {
-    let packs = await resources.Read("featured_packages");
+    let packs = await resources.read("featured_packages");
     if (!packs.ok) {
       return packs;
     }
     // now with an array of packages to have featured, lets get the full form of them.
-    let col = await GetPackageCollection(packs.content);
+    let col = await getPackageCollection(packs.content);
     if (!col.ok) {
       return col;
     }
@@ -98,18 +98,18 @@ async function GetFeatured() {
   };
 
   if (cached_packages_featured === undefined) {
-    logger.DebugLog("Creating Featured Packages Cache.");
+    logger.debugLog("Creating Featured Packages Cache.");
     return getNew();
   }
 
   // use object is cached
   if (!cached_packages_featured.Expired) {
-    logger.DebugLog("Featured Packages data IS NOT expired.");
+    logger.debugLog("Featured Packages data IS NOT expired.");
     return { ok: true, content: cached_packages_featured.data };
   }
 
-  logger.DebugLog("Featured Packages data IS expired, getting new.");
-  let save = resources.Write(
+  logger.debugLog("Featured Packages data IS expired, getting new.");
+  let save = resources.write(
     "featured_packages",
     cached_packages_featured.data
   );
@@ -121,7 +121,7 @@ async function GetFeatured() {
 }
 
 /**
- * @function GetUsers
+ * @function getUsers
  * @async
  * @desc Used to get the fully Users File. Or all user data. This function will, if
  * possible, cache the data read from the disk into `cached_user` variable to refer to later.
@@ -131,9 +131,9 @@ async function GetFeatured() {
  * @returns {object} Server Status Object, which on success `content` contains an array of
  * user objects.
  */
-async function GetUsers() {
+async function getUsers() {
   const getNew = async function () {
-    let tmpcache = await resources.Read("user");
+    let tmpcache = await resources.read("user");
     if (tmpcache.ok) {
       cached_user = tmpcache.content;
       return { ok: true, content: cached_user.data };
@@ -143,7 +143,7 @@ async function GetUsers() {
   };
 
   if (cached_user === undefined) {
-    logger.DebugLog("Creating User Cache.");
+    logger.debugLog("Creating User Cache.");
     // user object is not cached.
     return getNew();
   }
@@ -151,21 +151,21 @@ async function GetUsers() {
   // The user object is cached.
   // With the object cached we can check that its still valid.
   if (!cached_user.Expired) {
-    logger.DebugLog("User data IS NOT expired.");
+    logger.debugLog("User data IS NOT expired.");
     // object is not expired, lets return it.
     return { ok: true, content: cached_user.data };
   }
 
   // Object is now expired, we will want to get an updated copy after ensuring thers no data to write.
-  logger.DebugLog("User data IS expired, getting new.");
+  logger.debugLog("User data IS expired, getting new.");
   // But before we do, lets make sure there aren't any unsaved changes.
   if (!cached_user.invalidated) {
     // no changes to save. Lets get new data.
     return getNew();
   }
 
-  logger.DebugLog("Saving Invalidated, Expired User Cache.");
-  let save = resources.Write("user", cached_user.data);
+  logger.debugLog("Saving Invalidated, Expired User Cache.");
+  let save = resources.write("user", cached_user.data);
   if (save.ok) {
     // now with the data saved, lets get it agian, and refresh the cache.
     return getNew();
@@ -176,7 +176,7 @@ async function GetUsers() {
 }
 
 /**
- * @function GetPackagePointer
+ * @function getPackagePointer
  * @async
  * @desc Used to get the full package_pointer file, will cache an uncached file and return
  * or will fetch an updated file if the cache has expired, or will write an
@@ -184,9 +184,9 @@ async function GetUsers() {
  * @returns {object} A Server Status Object, which on success returns the Package
  * Pointer Object within `content`.
  */
-async function GetPackagePointer() {
+async function getPackagePointer() {
   const getNew = async function () {
-    let tmpcache = await resources.Read("pointer");
+    let tmpcache = await resources.read("pointer");
     if (tmpcache.ok) {
       cached_pointer = tmpcache.content;
       return { ok: true, content: cached_pointer.data };
@@ -197,22 +197,22 @@ async function GetPackagePointer() {
 
   if (cached_pointer === undefined) {
     // pointer object is not cached.
-    logger.DebugLog("Creating Pointer Cache.");
+    logger.debugLog("Creating Pointer Cache.");
     return getNew();
   } else {
     // the pointer object is cached.
     if (cached_pointer.Expired) {
-      logger.DebugLog("Pointer data IS expired, getting new.");
+      logger.debugLog("Pointer data IS expired, getting new.");
       return getNew();
     } else {
-      logger.DebugLog("Pointer data IS NOT expired.");
+      logger.debugLog("Pointer data IS NOT expired.");
       return { ok: true, content: cached_pointer.data };
     }
   }
 }
 
 /**
- * @function GetAllPackages
+ * @function getAllPackages
  * @async
  * @desc Will attempt to return all available packages in the repository.
  * Caching the results, or if results have already been cached, will check the expiry
@@ -229,11 +229,11 @@ async function GetPackagePointer() {
  * @implements {GetPackagePointer}
  * @implements {GetPackageByID}
  */
-async function GetAllPackages() {
+async function getAllPackages() {
   if (file_store === "sql") {
     if (cached_packages === undefined) {
-      logger.DebugLog("Creating Full Package Cache from SQL");
-      let packArray = await sql_data.GetAllPackagesSQL();
+      logger.debugLog("Creating Full Package Cache from SQL");
+      let packArray = await sql_data.getAllPackagesSQL();
       if (!packArray.ok) {
         console.log("FAILED TO CACHE PACKAGES!");
       }
@@ -245,7 +245,7 @@ async function GetAllPackages() {
     }
   } else {
     const getNew = async function () {
-      const pointers = await GetPackagePointer();
+      const pointers = await getPackagePointer();
       if (!pointers.ok) {
         return pointers;
       }
@@ -253,7 +253,7 @@ async function GetAllPackages() {
 
       let package_collection = [];
       for (const pointer in pointers.content) {
-        let pack = await GetPackageByID(pointers.content[pointer]);
+        let pack = await getPackageByID(pointers.content[pointer]);
         console.log(`Got Package ${pack.content.name}`);
         if (pack.ok) {
           package_collection.push(pack.content);
@@ -263,7 +263,7 @@ async function GetAllPackages() {
           if (pack.short !== "Not Found") {
             return pack;
           } else {
-            logger.WarningLog(
+            logger.warningLog(
               undefined,
               undefined,
               `Missing Package during GetAllPackages: ${pointers.content[pointer]}`
@@ -276,7 +276,7 @@ async function GetAllPackages() {
     };
 
     if (cached_packages === undefined) {
-      logger.DebugLog("Creating Full Package Cache.");
+      logger.debugLog("Creating Full Package Cache.");
       let tmpcache = await getNew();
       if (!tmpcache.ok) {
         return tmpcache;
@@ -289,11 +289,11 @@ async function GetAllPackages() {
 
     // Packages are cached
     if (!cached_packages.Expired) {
-      logger.DebugLog("Full Package data IS NOT expired.");
+      logger.debugLog("Full Package data IS NOT expired.");
       return { ok: true, content: cached_packages.data };
     }
 
-    logger.DebugLog("Full Package data IS expired.");
+    logger.debugLog("Full Package data IS expired.");
     let tmpcache = await getNew();
     if (!tmpcache.ok) {
       return tmpcache;
@@ -306,7 +306,7 @@ async function GetAllPackages() {
 }
 
 /**
- * @function GetPackageByID
+ * @function getPackageByID
  * @async
  * @desc Will get a specific package, using its provided ID of the package.
  * @param {string} id - The ID of the package, like `UUIDv4.json`.
@@ -314,8 +314,8 @@ async function GetAllPackages() {
  * the package object.
  * @implements {resources.Read}
  */
-async function GetPackageByID(id) {
-  let pack = await resources.Read("package", id);
+async function getPackageByID(id) {
+  let pack = await resources.read("package", id);
   if (pack.ok) {
     return { ok: true, content: pack.content };
   } else {
@@ -324,20 +324,20 @@ async function GetPackageByID(id) {
 }
 
 /**
- * @function SetUsers
+ * @function setUsers
  * @desc Will persist user data to the disk. Will first do this by adding to the
  * user cache object, if it exists, otherwise will write directly to disk.
  * @param {object} data - The new full user data to persist.
  * @returns {object} A Server Status object of success, containing only `ok`.
- * Or bubbling from `resources.Write()`.
+ * Or bubbling from `resources.write()`.
  */
-function SetUsers(data) {
+function setUsers(data) {
   // Instead of actually writing to disk, this will just update its cached data.
   if (cached_user === undefined) {
     // for whatever reason our cache data doesn't exist. Which would mean we haven't read it yet,
     // but then how are we updating the data we dont have?? But thats not for this low level function to worry about.
     // Lets write that data to disk, to ensure we keep it updated.
-    return resources.Write("user", data);
+    return resources.write("user", data);
   } else {
     // We have a cached data of users, lets update our cache.
     cached_user.data = data;
@@ -347,17 +347,17 @@ function SetUsers(data) {
 }
 
 /**
- * @function SetPackagePointer
+ * @function setPackagePointer
  * @desc Persists Package Pointer Data to disk. By saving to the cache object if
  * available, or otherwise writing directly to disk.
  * @param {object} data - The Package Pointer Object in its entirety.
  * @returns {object} A Server Status Object of success with only `ok` if successul,
- * or otherwise bubbling from `resources.Write()`.
+ * or otherwise bubbling from `resources.write()`.
  */
-function SetPackagePointer(data) {
+function setPackagePointer(data) {
   if (cached_pointer === undefined) {
     // well our cache doesn't exist. Ignoring the implecation we are writing data we didn't grab lets save just in case.
-    return resources.Write("pointer", data);
+    return resources.write("pointer", data);
   } else {
     cached_pointer.data = data;
     cached_pointer.invalidate();
@@ -367,26 +367,26 @@ function SetPackagePointer(data) {
 
 /**
  * @async
- * @function SetPackageByID
+ * @function setPackageByID
  * @desc Persists Package Data to disk. Since no cache objects exist for individual
- * packages, really is a wrapper around `resources.Write()` with some presets.
+ * packages, really is a wrapper around `resources.write()` with some presets.
  * @param {string} id - The name of the package file to persists. In format
  * `package-uuidv4.json`.
  * @param {object} data - The object data of the package to write.
- * @returns {object} A server status object bubbled directly from `resources.Write()`.
+ * @returns {object} A server status object bubbled directly from `resources.write()`.
  */
-async function SetPackageByID(id, data) {
-  return resources.Write("package", data, id);
+async function setPackageByID(id, data) {
+  return resources.write("package", data, id);
 }
 
 /**
  * @async
- * @function RemovePackageByPointer
+ * @function removePackageByPointer
  * @desc Marks a package for deletion on server shutdown, using its `package.json`.
  * @param {string} pointer - The Package Name to mark, in format `package-uuidv4.json`.
  * @returns {object} A Server Status Object, where if success only has `ok`.
  */
-async function RemovePackageByPointer(pointer) {
+async function removePackageByPointer(pointer) {
   try {
     deletion_flags.push({
       type: "package",
@@ -401,13 +401,13 @@ async function RemovePackageByPointer(pointer) {
 
 /**
  * @async
- * @function RestorePackageByPointer
+ * @function restorePackageByPointer
  * @desc Restores a previously marked package for deletion. Causing it to no
  * longer be marked for deletion.
  * @param {string} pointer - The Package Name to mark, in format `package-uuidv4.json`.
  * @returns {objject} A Server Status Object, where on success only contains `ok`.
  */
-async function RestorePackageByPointer(pointer) {
+async function restorePackageByPointer(pointer) {
   let idx = -1;
   for (let i = 0; i < deletion_flags.length; i++) {
     if (deletion_flags[i].file === pointer) {
@@ -427,8 +427,8 @@ async function RestorePackageByPointer(pointer) {
   }
 }
 
-async function RemovePackageByName(name) {
-  let pointers = await GetPackagePointer();
+async function removePackageByName(name) {
+  let pointers = await getPackagePointer();
 
   if (!pointers.ok) {
     return pointers;
@@ -443,7 +443,7 @@ async function RemovePackageByName(name) {
 
   delete new_pointer[name];
 
-  let rm = await RemovePackageByPointer(pack_pointer);
+  let rm = await removePackageByPointer(pack_pointer);
 
   if (!rm.ok) {
     // if this first part fails we can return the standard error, knowing that nothing permentant has been done.
@@ -451,7 +451,7 @@ async function RemovePackageByName(name) {
   }
 
   // We can write the new packages, since we don't want to do that then have this fail.
-  let rewrite = await SetPackagePointer(new_pointer);
+  let rewrite = await setPackagePointer(new_pointer);
 
   if (rewrite.ok) {
     return { ok: true, content: rewrite.content };
@@ -459,7 +459,7 @@ async function RemovePackageByName(name) {
 
   // Since the RemovePackageByPointer only marks the file for deletion, if this fails, we can then go back,
   // and call for it to be resotred.
-  let rs = await RestorePackageByPointer(pack_pointer);
+  let rs = await restorePackageByPointer(pack_pointer);
 
   if (rs.ok) {
     // This still did fail to remove the file. But we recovered and will return an error.
@@ -479,8 +479,8 @@ async function RemovePackageByName(name) {
   }
 }
 
-async function GetPackageByName(name) {
-  const pointers = await GetPackagePointer();
+async function getPackageByName(name) {
+  const pointers = await getPackagePointer();
 
   if (!pointers.ok) {
     return pointers;
@@ -488,7 +488,7 @@ async function GetPackageByName(name) {
     // now that we have the name we are after we can just check if it exists in the object.
     if (pointers.content[name]) {
       // we know we have a valid object now and can grab the data.
-      const pack = await GetPackageByID(pointers.content[name]);
+      const pack = await getPackageByID(pointers.content[name]);
       if (pack.ok) {
         return { ok: true, content: pack.content };
       } else {
@@ -500,8 +500,8 @@ async function GetPackageByName(name) {
   }
 }
 
-async function GetPackagePointerByName(name) {
-  const pointers = await GetPackagePointer();
+async function getPackagePointerByName(name) {
+  const pointers = await getPackagePointer();
 
   if (!pointers.ok) {
     return pointers;
@@ -515,11 +515,11 @@ async function GetPackagePointerByName(name) {
   }
 }
 
-async function GetPackageCollection(packages) {
+async function getPackageCollection(packages) {
   let packageCollection = [];
 
   for (let i = 0; i < packages.length; i++) {
-    const pack = await GetPackageByName(packages[i]);
+    const pack = await getPackageByName(packages[i]);
     if (pack.ok) {
       packageCollection.push(pack.content);
     } else {
@@ -529,7 +529,7 @@ async function GetPackageCollection(packages) {
         // this will only return an error if the error is not "Not Found", meaning that otherwise it will just continue on.
         return pack;
       } else {
-        logger.WarningLog(
+        logger.warningLog(
           undefined,
           undefined,
           `Missing Package During GetPackageCollection: ${packages[i]}`
@@ -540,18 +540,18 @@ async function GetPackageCollection(packages) {
   return { ok: true, content: packageCollection };
 }
 
-async function StarPackageByName(packageName, userName) {
+async function starPackageByName(packageName, userName) {
   // we need the package pointer to later write the file, and we need the package file to modify,
   // which after modification we want to write the data, and return the package itself.
 
-  let point = await GetPackagePointerByName(packageName);
+  let point = await getPackagePointerByName(packageName);
 
   if (!point.ok) {
     return point;
   }
 
   // Now with the pointer, we can get the package
-  let pack = await GetPackageByID(point.content);
+  let pack = await getPackageByID(point.content);
 
   if (!pack.ok) {
     return pack;
@@ -560,7 +560,7 @@ async function StarPackageByName(packageName, userName) {
   // Now we have the package
   pack.content.star_gazers.push({ login: userName });
 
-  const write = await SetPackageByID(point.content, pack.content);
+  const write = await setPackageByID(point.content, pack.content);
 
   if (write.ok) {
     // on successful completion we want to return the package.
@@ -571,14 +571,14 @@ async function StarPackageByName(packageName, userName) {
   }
 }
 
-async function UnStarPackageByName(packageName, userName) {
-  const point = await GetPackagePointerByName(packageName);
+async function unstarPackageByName(packageName, userName) {
+  const point = await getPackagePointerByName(packageName);
 
   if (!point.ok) {
     return point;
   }
 
-  const pack = await GetPackageByID(point.content);
+  const pack = await getPackageByID(point.content);
 
   if (!pack.ok) {
     return pack;
@@ -604,7 +604,7 @@ async function UnStarPackageByName(packageName, userName) {
   pack.content.star_gazers.splice(usrIdx, 1);
 
   // now to write the content.
-  const write = await SetPackageByID(point.content, pack.content);
+  const write = await setPackageByID(point.content, pack.content);
 
   if (write.ok) {
     // and we will return the new content.
@@ -615,15 +615,15 @@ async function UnStarPackageByName(packageName, userName) {
   }
 }
 
-async function SetPackageByName(name, data) {
-  const pointers = await GetPackagePointer();
+async function setPackageByName(name, data) {
+  const pointers = await getPackagePointer();
 
   if (!pointers.ok) {
     return pointers;
   }
 
   if (pointers.content[name]) {
-    let write = await SetPackageByID(pointers.content[name], data);
+    let write = await setPackageByID(pointers.content[name], data);
 
     return write.ok ? { ok: true } : write;
   } else {
@@ -635,7 +635,7 @@ async function SetPackageByName(name, data) {
   }
 }
 
-async function NewPackage(data) {
+async function newPackage(data) {
   // Used to create a new package file.
   // this expects to be handed fully constructed proper package data. All handling of adding star_gazers, created
   // needs to be handled elsewhere.
@@ -643,21 +643,21 @@ async function NewPackage(data) {
   // so lets get our new unique ID.
   let id = uuidv4();
   // then the pointers.
-  let pointers = await GetPackagePointer();
+  let pointers = await getPackagePointer();
 
   if (!pointers.ok) {
     return pointers;
   }
 
   pointers.content[data.name] = `${id}.json`;
-  let write_pointer = await SetPackagePointer(pointers.content);
+  let write_pointer = await setPackagePointer(pointers.content);
 
   if (!write_pointer.ok) {
     return write_pointer;
   }
 
   // now with the pointers updated, lets write the package itself.
-  let write_pack = await SetPackageByID(`${id}.json`, data);
+  let write_pack = await setPackageByID(`${id}.json`, data);
 
   if (write_pack.ok) {
     return { ok: true };
@@ -666,7 +666,7 @@ async function NewPackage(data) {
   // Writing the package was unsuccessful. We will remove the new pointer, and write that to disk.
   // Then return.
   delete pointers.content[data.name];
-  let rewrite_pointer = await SetPackagePointer(pointers.content);
+  let rewrite_pointer = await setPackagePointer(pointers.content);
 
   if (rewrite_pointer.ok) {
     return {
@@ -684,22 +684,22 @@ async function NewPackage(data) {
 }
 
 module.exports = {
-  GetFeatured,
-  GetUsers,
-  SetUsers,
-  GetPackagePointer,
-  SetPackagePointer,
-  GetPackageByID,
-  GetPackageByName,
-  GetAllPackages,
-  GetPackageCollection,
-  SetPackageByID,
-  SetPackageByName,
-  NewPackage,
-  StarPackageByName,
-  UnStarPackageByName,
-  GetPackagePointerByName,
-  RemovePackageByPointer,
-  RemovePackageByName,
-  Shutdown,
+  getFeatured,
+  getUsers,
+  setUsers,
+  getPackagePointer,
+  setPackagePointer,
+  getPackageByID,
+  getPackageByName,
+  getAllPackages,
+  getPackageCollection,
+  setPackageByID,
+  setPackageByName,
+  newPackage,
+  starPackageByName,
+  unStarPackageByName,
+  getPackagePointerByName,
+  removePackageByPointer,
+  removePackageByName,
+  shutdown,
 };

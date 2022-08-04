@@ -39,7 +39,7 @@ describe("GET /api/packages/:packageName", () => {
 
 describe("DELETE /api/packages/:packageName", () => {
   test("No Auth, fails", async () => {
-    const res = await request(app).delete("/api/packages/what-a-package");
+    const res = await request(app).remove("/api/packages/what-a-package");
     expect(res.statusCode).toBe(401); // Otherwise the no auth http status code.
   });
 });

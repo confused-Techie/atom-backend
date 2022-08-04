@@ -1,7 +1,7 @@
 const fs = require("fs");
 const postgres = require("postgres");
 const { DB_HOST, DB_USER, DB_PASS, DB_DB, DB_PORT, DB_SSL_CERT } =
-  require("./config.js").GetConfig();
+  require("./config.js").getConfig();
 
 let sql_storage; // sql object, to interact with the DB,
 // should be set after first call.

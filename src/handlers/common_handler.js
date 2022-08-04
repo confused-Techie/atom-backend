@@ -12,7 +12,7 @@ const logger = require("../logger.js");
 
 /**
  * @async
- * @function AuthFail
+ * @function authFail
  * @desc Will take the <b>failed</b> user object from VerifyAuth, and respond for the endpoint as
  * either a "Server Error" or a "Bad Auth", whichever is correct based on the Error bubbled from VerifyAuth.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
@@ -23,23 +23,23 @@ const logger = require("../logger.js");
  * @implements {logger.HTTPLog}
  * @implements {logger.ErrorLog}
  */
-async function AuthFail(req, res, user) {
+async function authFail(req, res, user) {
   switch (user.short) {
     case "Bad Auth":
     case "Auth Fail": // support for being passed a git return.
-      error.MissingAuthJSON(res);
+      error.missingAuthJSON(res);
       logger.HTTPLog(req, res);
       break;
     default:
-      error.ServerErrorJSON(res);
+      error.serverErrorJSON(res);
       logger.HTTPLog(req, res);
-      logger.ErrorLog(req, res, user.content);
+      logger.errorLog(req, res, user.content);
   }
 }
 
 /**
  * @async
- * @function ServerError
+ * @function serverError
  * @desc Returns a standard Server Error to the user as JSON. Logging the detailed error message to the server.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
@@ -48,85 +48,85 @@ async function AuthFail(req, res, user) {
  * @implements {logger.HTTPLog}
  * @implements {logger.ErrorLog}
  */
-async function ServerError(req, res, err) {
-  error.ServerErrorJSON(res);
+async function serverError(req, res, err) {
+  error.serverErrorJSON(res);
   logger.HTTPLog(req, res);
-  logger.ErrorLog(req, res, err);
+  logger.errorLog(req, res, err);
 }
 
 /**
  * @async
- * @function NotFound
+ * @function notFound
  * @desc Standard endpoint to return the JSON Not Found error to the user.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @implements {error.NotFoundJSON}
  * @implements {logger.HTTPLog}
  */
-async function NotFound(req, res) {
-  error.NotFoundJSON(res);
+async function notFound(req, res) {
+  error.notFoundJSON(res);
   logger.HTTPLog(req, res);
 }
 
 /**
  * @async
- * @function NotSupported
+ * @function notSupported
  * @desc Returns a Not Supported message to the user.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @implements {error.UnsupportedJSON}
  * @implements {logger.HTTPLog}
  */
-async function NotSupported(req, res) {
-  error.UnsupportedJSON(res);
+async function notSupported(req, res) {
+  error.unsupportedJSON(res);
   logger.HTTPLog(req, res);
 }
 
 /**
  * @async
- * @function SiteWideNotFound
+ * @function siteWideNotFound
  * @desc Returns the SiteWide 404 page to the end user.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @implements {error.SiteWide404}
  * @implements {logger.HTTPLog}
  */
-async function SiteWideNotFound(req, res) {
-  error.SiteWide404(res);
+async function siteWideNotFound(req, res) {
+  error.siteWide404(res);
   logger.HTTPLog(req, res);
 }
 
 /**
  * @async
- * @function BadRepoJSON
+ * @function badRepoJSON
  * @desc Returns the BadRepoJSON message to the user.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @implements {error.BadRepoJSON}
  * @implements {logger.HTTPLog}
  */
-async function BadRepoJSON(req, res) {
-  error.BadRepoJSON(res);
+async function badRepoJSON(req, res) {
+  error.badRepoJSON(res);
   logger.HTTPLog(req, res);
 }
 
 /**
  * @async
- * @function BadPackageJSON
+ * @function badPackageJSON
  * @desc Returns the BadPackageJSON message to the user.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @implements {error.BadPackageJSON}
  * @implements {logger.HTTPLog}
  */
-async function BadPackageJSON(req, res) {
-  error.BadPackageJSON(res);
+async function badPackageJSON(req, res) {
+  error.badPackageJSON(res);
   logger.HTTPLog(req, res);
 }
 
 /**
  * @async
- * @function HandleError
+ * @function handleError
  * @desc Generic error handler mostly used to reduce the duplication of error handling in other modules.
  * It checks the short error string and calls the relative endpoint.
  * Note that it's designed to be called as the last async function before the return.
@@ -134,40 +134,40 @@ async function BadPackageJSON(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @param {object} obj - the Raw Status Object of the User, expected to return from `VerifyAuth`.
  */
-async function HandleError(req, res, obj) {
+async function handleError(req, res, obj) {
   switch (obj.short) {
     case "Not Found":
-      await NotFound(req, res);
+      await notFound(req, res);
       break;
 
     case "Bad Repo":
-      await BadRepoJSON(req, res);
+      await badRepoJSON(req, res);
       break;
 
     case "Bad Package":
-      await BadPackageJSON(req, res);
+      await badPackageJSON(req, res);
       break;
 
     case "No Repo Access":
     case "Bad Auth":
-      await AuthFail(req, res, obj);
+      await authFail(req, res, obj);
       break;
 
     case "File Not Found":
     case "Server Error":
     default:
-      await ServerError(req, res, obj.content);
+      await serverError(req, res, obj.content);
       break;
   }
 }
 
 module.exports = {
-  AuthFail,
-  ServerError,
-  NotFound,
-  SiteWideNotFound,
-  NotSupported,
-  BadRepoJSON,
-  BadPackageJSON,
-  HandleError,
+  authFail,
+  serverError,
+  notFound,
+  siteWideNotFound,
+  notSupported,
+  badRepoJSON,
+  badPackageJSON,
+  handleError,
 };

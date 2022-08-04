@@ -19,26 +19,26 @@ class NewRes {
 
 test("NotFoundJSON modifies response status to 404.", async () => {
   let res = new NewRes();
-  await error.NotFoundJSON(res);
+  await error.notFoundJSON(res);
   expect(res.statusCode).toBe(404);
 });
 
 test("NotFoundJSON modifies body to 'Not Found'", async () => {
   let res = new NewRes();
-  await error.NotFoundJSON(res);
+  await error.notFoundJSON(res);
   expect(res.JSONObj).toStrictEqual({ message: "Not Found" });
 });
 
 test("SiteWide404 modifies the status to 404", async () => {
   let res = new NewRes();
-  await error.SiteWide404(res);
+  await error.siteWide404(res);
   expect(res.statusCode).toBe(404);
 });
 
 test("SiteWide404 modifies the body to proper temporary message.", async () => {
   // TODO, the return here will have to be retested after the siteWide404 is setup.
   let res = new NewRes();
-  await error.SiteWide404(res);
+  await error.siteWide404(res);
   expect(res.JSONObj).toStrictEqual({
     message: "This is a standin for the proper site wide 404 page.",
   });
@@ -46,13 +46,13 @@ test("SiteWide404 modifies the body to proper temporary message.", async () => {
 
 test("MissingAuthJSON Status", async () => {
   let res = new NewRes();
-  await error.MissingAuthJSON(res);
+  await error.missingAuthJSON(res);
   expect(res.statusCode).toBe(401);
 });
 
 test("MissingAuthJSON Body", async () => {
   let res = new NewRes();
-  await error.MissingAuthJSON(res);
+  await error.missingAuthJSON(res);
   expect(res.JSONObj).toStrictEqual({
     message:
       "Requires authentication. Please update your token if you haven't done so recently.",
@@ -61,25 +61,25 @@ test("MissingAuthJSON Body", async () => {
 
 test("ServerErrorJSON Status", async () => {
   let res = new NewRes();
-  await error.ServerErrorJSON(res);
+  await error.serverErrorJSON(res);
   expect(res.statusCode).toBe(500);
 });
 
 test("ServerErrorJSON Body", async () => {
   let res = new NewRes();
-  await error.ServerErrorJSON(res);
+  await error.serverErrorJSON(res);
   expect(res.JSONObj).toStrictEqual({ message: "Application Error" });
 });
 
 test("PublishPackageExists Status", async () => {
   let res = new NewRes();
-  await error.PublishPackageExists(res);
+  await error.publishPackageExists(res);
   expect(res.statusCode).toBe(409);
 });
 
 test("PublishPackageExists Body", async () => {
   let res = new NewRes();
-  await error.PublishPackageExists(res);
+  await error.publishPackageExists(res);
   expect(res.JSONObj).toStrictEqual({
     message: "A Package by that name already exists.",
   });
@@ -87,13 +87,13 @@ test("PublishPackageExists Body", async () => {
 
 test("UnsupportedJSON Status", async () => {
   let res = new NewRes();
-  await error.UnsupportedJSON(res);
+  await error.unsupportedJSON(res);
   expect(res.statusCode).toBe(501);
 });
 
 test("UnsupportedJSON Body", async () => {
   let res = new NewRes();
-  await error.UnsupportedJSON(res);
+  await error.unsupportedJSON(res);
   expect(res.JSONObj).toStrictEqual({
     message: "While under development this feature is not supported.",
   });
