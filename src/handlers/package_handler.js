@@ -39,12 +39,12 @@ async function GETPackages(req, res) {
     sort: query.sort(req),
     direction: query.dir(req),
   };
-  // TODO 
-  // now with the data being stored in a db, or original collection methods 
+  // TODO
+  // now with the data being stored in a db, or original collection methods
   // for sorting, while they still will work are iniffeceint.
-  // Instead we could look at sorting the data directly fromt he database 
+  // Instead we could look at sorting the data directly fromt he database
   // but this requires a decision on wether or not to have a single intelligent
-  // function that can take all sort parameters, or instead 
+  // function that can take all sort parameters, or instead
   // have multiple single use functions for all combinations of sorts.
   let all_packages = await data.getAllPackages();
   console.log("retreived all packages");
@@ -712,7 +712,10 @@ async function POSTPackagesEventUninstall(req, res) {
 
     pack.content.downloads--;
 
-    let write = await database.setPackageByName(params.packageName, pack.content);
+    let write = await database.setPackageByName(
+      params.packageName,
+      pack.content
+    );
 
     if (!write.ok) {
       await common.handleError(req, res, write);

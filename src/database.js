@@ -103,7 +103,7 @@ async function getPackageCollection(packArray) {
   try {
     // Could look at generating a query using UNION, but theres likely a better way.
     // TODO
-    // this should use packArray to create the query, pack array will be an array 
+    // this should use packArray to create the query, pack array will be an array
     // of package names to retreive.
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
@@ -112,27 +112,27 @@ async function getPackageCollection(packArray) {
 
 async function setPackageByID(id, data) {
   checkSQLSetup();
-  
+
   try {
-    // TODO 
+    // TODO
     // should contain a command that can edit an existing package with this new data.
     // using the id as the uuid of the item.
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
 
 async function setPackageByName(name, data) {
   checkSQLSetup();
-  
+
   const pointer = await getPackageByName(name);
-  
+
   if (!pointer.ok) {
     return pointer;
   }
-  
+
   const write = await setPackageByID(pointer.content, data);
-  
+
   if (!write.ok) {
     return write;
   }
@@ -140,14 +140,14 @@ async function setPackageByName(name, data) {
 }
 
 async function removePackageByName(name) {
-  // TODO 
-  // Should remove the specified package from the db. 
+  // TODO
+  // Should remove the specified package from the db.
   // If possible with a flag to indicate that it should be deleted.
   // then if so, a companion function that can restore that deleted package.
-} 
+}
 
 async function removePackageByID(id) {
-  // TODO 
+  // TODO
   // should use removePackageByName to remove a package.
 }
 
