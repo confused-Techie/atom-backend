@@ -16,7 +16,7 @@ const common = require("./common_handler.js");
 
 /**
  * @async
- * @function GETLoginStars
+ * @function getLoginStars
  * @desc Endpoint for `GET /api/users/:login/stars`. Whose goal is to return
  * An array of Package Object Short's collected from the authenticated user's
  * star gazer list.
@@ -29,7 +29,7 @@ const common = require("./common_handler.js");
  * @implements {common.ServerError}
  * @implements {common.NotFound}
  */
-async function GETLoginStars(req, res) {
+async function getLoginStars(req, res) {
   // GET /api/users/:login/stars
   let params = {
     login: req.params.login,
@@ -49,12 +49,12 @@ async function GETLoginStars(req, res) {
     return;
   }
   let cpPackages = await collection.deepCopy(packages.content);
-  cpPackages = await collection.POSPrune(cpPackages.content); // package object short prune
+  cpPackages = await collection.prunePOS(cpPackages.content); // package object short prune
 
   res.status(200).json(cpPackages);
-  logger.HTTPLog(req, res);
+  logger.httpLog(req, res);
 }
 
 module.exports = {
-  GETLoginStars,
+  getLoginStars,
 };

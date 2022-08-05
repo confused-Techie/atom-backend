@@ -10,13 +10,13 @@ const common = require("./common_handler.js");
 
 /**
  * @async
- * @function GETLogin
+ * @function getLogin
  * @desc Endpoint used to direct users to login, directing the user to the
  * proper GitHub OAuth Page based on the backends client id.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function GETLogin(req, res) {
+async function getLogin(req, res) {
   // GET /api/oauth
 
   // the first point of contact to log into the app.
@@ -33,16 +33,16 @@ async function GETLogin(req, res) {
 
 /**
  * @async
- * @function GETOauth
+ * @function getOauth
  * @desc Endpoint intended to use as the actual return from GitHub to login.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function GETOauth(req, res) {
+async function getOauth(req, res) {
   await common.notSupported(req, res);
 }
 
 module.exports = {
-  GETLogin,
-  GETOauth,
+  getLogin,
+  getOauth,
 };

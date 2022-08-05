@@ -8,14 +8,14 @@
 const { debug } = require("./config.js").getConfig();
 
 /**
- * @function HTTPLog
+ * @function httpLog
  * @desc The standard logger for HTTP calls. Logging in a modified 'Apache Combined Log Format'.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @example <caption>Logging Output Format</caption>
  * HTTP:: IP [DATE (as ISO String)] "HTTP_METHOD URL PROTOCOL" STATUS_CODE DURATION_OF_REQUESTms
  */
-function HTTPLog(req, res) {
+function httpLog(req, res) {
   let date = new Date();
   let duration = Date.now() - req.start;
   console.log(
@@ -92,7 +92,7 @@ function debugLog(value) {
 }
 
 module.exports = {
-  HTTPLog,
+  httpLog,
   errorLog,
   warningLog,
   infoLog,

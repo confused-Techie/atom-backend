@@ -697,7 +697,7 @@ module.exports = {
   setPackageByName,
   newPackage,
   starPackageByName,
-  unStarPackageByName,
+  unstarPackageByName,
   getPackagePointerByName,
   removePackageByPointer,
   removePackageByName,

@@ -148,7 +148,7 @@
 * Cyclomatic complexity density: 24%
 * Maintainability index: 78.94734382015348
 * Dependency count: 1
-* Function: **HTTPLog**
+* Function: **httpLog**
     * Line No.: 18
     * Physical LOC: 9
     * Logical LOC: 3
