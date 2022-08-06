@@ -333,5 +333,5 @@ async function remove(name) {
 //  remove,
 //  CacheObject,
 //};
-// Since everything within is being depreciated, keeping commented on the 
+// Since everything within is being depreciated, keeping commented on the
 // exports allows easier identification of its uses in the codebase.
