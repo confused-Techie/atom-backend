@@ -33,6 +33,24 @@ const database = require("../database.js");
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
 async function getPackages(req, res) {
+  // GET /api/packages 
+  let params = {
+    page: query.page(req),
+    sort: query.sort(req),
+    direction: query.dir(req),
+  };
+  let packages = await database.getSortedPackages(params.page, params.direction, params.sort);
+  
+  if (!packages.ok) {
+    await common.handleError(req, res, packages);
+    return;
+  }
+  
+  res.status(200).json(packages.content);
+  logger.httpLog(req, res);
+}
+
+async function getPackagesOLD(req, res) {
   // GET /api/packages
   let params = {
     page: query.page(req),

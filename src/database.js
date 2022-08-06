@@ -1,6 +1,7 @@
 const fs = require("fs");
 const postgres = require("postgres");
-const { DB_HOST, DB_USER, DB_PASS, DB_DB, DB_PORT, DB_SSL_CERT } =
+const storage = require("./storage.js");
+const { DB_HOST, DB_USER, DB_PASS, DB_DB, DB_PORT, DB_SSL_CERT, paginated_amount } =
   require("./config.js").getConfig();
 
 let sql_storage; // sql object, to interact with the DB,
@@ -151,6 +152,119 @@ async function removePackageByID(id) {
   // should use removePackageByName to remove a package.
 }
 
+async function getFeaturedPackages() {
+  checkSQLSetup();
+  
+  let featuredArray = await storage.getFeaturedPackages();
+  
+  if (!featuredArray.ok) {
+    return featuredArray;
+  }
+  
+  let allFeatured = await getPackageCollection(featuredArray.content);
+  
+  if (!allFeatured.ok) {
+    return allFeatured;
+  }
+  
+  return { ok: true, content: allFeatured.content };
+}
+
+async function getTotalPackageEstimate() {
+  checkSQLSetup();
+  
+  try {
+    const command = await sql_storage`
+      SELECT reltuples AS estimate FROM pg_class WHERE relname='packages';
+    `;
+
+    if (command.length === 0) {
+      return {
+        ok: false,
+        content: `Unable to query total row count estimate.`,
+        short: "Server Error",
+      };
+    }
+
+    return { ok: true, content: command[0].estimate };
+    
+  } catch(err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+async function getSortedPackages(page, dir, method) {
+  // Here will be a monolithic function for returning sortable packages arrays.
+  // We must keep in mind that all the endpoint handler knows is the 
+  // page, sort method, and direction. We must figure out the rest here.
+  // only knowing we have a valid sort method provided.
+  
+  checkSQLSetup();
+
+  let total = await getTotalPackageEstimate();
+  if (!total.ok) {
+    return total;
+  }
+  
+  let offset = 0;
+  let limit = paginated_amount;
+  let total_pages = Math.ceil(total.content / paginated_amount);
+  
+  if (page !== 1) {
+    offset = page * paginated_amount;
+  }
+  
+  try {
+    let command;
+    
+    switch(method) {
+      case "downloads":
+        //console.log(`SELECT data FROM packages ORDER BY data->'downloads' ${dir.toUpperCase()} LIMIT ${limit} OFFSET ${offset}`);
+        command = await sql_storage`
+          SELECT ARRAY
+            (SELECT data FROM packages ORDER BY data->'downloads' ${ (dir === "desc") ? sql_storage`DESC` : sql_storage`ASC`}
+              LIMIT ${limit}
+              OFFSET ${offset});
+        `;
+        break;
+      case "created_at":
+        command = await sql_storage`
+          SELECT ARRAY 
+            (SELECT data FROM packages ORDER BY data->'created' ${ (dir === "desc") ? sql_storage`DESC` : sql_storage`ASC`}
+              LIMIT ${limit}
+              OFFSET ${offset});
+        `;
+        break;
+      case "updated_at":
+        command = await sql_storage`
+          SELECT ARRAY 
+            (SELECT data FROM packages ORDER BY data->'updated' ${ (dir === "desc") ? sql_storage`DESC` : sql_storage`ASC`}
+              LIMIT ${limit}
+              OFFSET ${offset});
+        `;
+        break;
+      case "stars":
+        command = await sql_storage`
+          SELECT ARRAY 
+            (SELECT data FROM packages ORDER BY data->'stargazers_count' ${ (dir === "desc") ? sql_storage`DESC` : sql_storage`ASC`}
+              LIMIT ${limit}
+              OFFSET ${offset});
+        `;
+        break;
+      default:
+        logger.warningLog(null, null, `Unrecognized Sorting Method Provided: ${method}`);
+        return { ok: false, content: `Unrecognized Sorting Method Provided: ${method}`, short: "Server Error" };
+        break;
+    }
+    
+    return { ok: true, content: command[0].array };
+    
+  } catch(err) {
+    console.log(err);
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
 module.exports = {
   checkSQLSetup,
   shutdownSQL,
@@ -162,4 +276,7 @@ module.exports = {
   setPackageByName,
   removePackageByName,
   removePackageByID,
+  getFeaturedPackages,
+  getTotalPackageEstimate,
+  getSortedPackages,
 };

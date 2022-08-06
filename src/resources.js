@@ -327,9 +327,11 @@ async function remove(name) {
   }
 }
 
-module.exports = {
-  read,
-  write,
-  remove,
-  CacheObject,
-};
+//module.exports = {
+//  read,
+//  write,
+//  remove,
+//  CacheObject,
+//};
+// Since everything within is being depreciated, keeping commented on the 
+// exports allows easier identification of its uses in the codebase.

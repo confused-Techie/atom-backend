@@ -34,6 +34,7 @@ async function authFail(req, res, user) {
       error.serverErrorJSON(res);
       logger.httpLog(req, res);
       logger.errorLog(req, res, user.content);
+      break;
   }
 }
 
