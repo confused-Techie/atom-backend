@@ -52,6 +52,11 @@ execute a search function.</p>
 <dd><p>The initializer of <code>main.js</code> starting up the Express Server, and setting the port
 to listen on. As well as handling a graceful shutdown of the server.</p>
 </dd>
+<dt><a href="#module_storage">storage</a></dt>
+<dd><p>This module is the second generation of data storage methodology,
+in which this provides static access to files stored within regular cloud
+file storage.</p>
+</dd>
 <dt><a href="#module_users">users</a></dt>
 <dd><p>Focused on interacting with User Data only. Provides functions required
 to modify, or compile user data specifically.</p>
@@ -1048,6 +1053,13 @@ Which this will then handle closing the server listener, as well as calling `dat
 | --- | --- | --- |
 | callee | <code>string</code> | Simply a way to better log what called the server to shutdown. |
 
+<a name="module_storage"></a>
+
+## storage
+This module is the second generation of data storage methodology,
+in which this provides static access to files stored within regular cloud
+file storage.
+
 <a name="module_users"></a>
 
 ## users
@@ -1144,7 +1156,28 @@ This pruned item should never be written back to disk, as removed the data from 
 ## utils
 A helper for any functions that are agnostic in hanlders.
 
-**Implements**: <code>resources</code>, <code>logger</code>, <code>users</code>, <code>common</code>  
+**Implements**: <code>resources</code>, <code>logger</code>, <code>users</code>, <code>common</code>, <code>config</code>  
+
+* [utils](#module_utils)
+    * [~CacheObject](#module_utils..CacheObject)
+        * [new CacheObject([name], contents)](#new_module_utils..CacheObject_new)
+    * [~localUserLoggedIn(req, res, params_user, callback)](#module_utils..localUserLoggedIn)
+
+<a name="module_utils..CacheObject"></a>
+
+### utils~CacheObject
+**Kind**: inner class of [<code>utils</code>](#module_utils)  
+<a name="new_module_utils..CacheObject_new"></a>
+
+#### new CacheObject([name], contents)
+Allows simple interfaces to handle caching an object in memory. Used to cache data read from the filesystem.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [name] | <code>string</code> | Optional name to assign to the Cached Object. |
+| contents | <code>object</code> | The contents of this cached object. Intended to be a JavaScript object. But could be anything. |
+
 <a name="module_utils..localUserLoggedIn"></a>
 
 ### utils~localUserLoggedIn(req, res, params_user, callback)
