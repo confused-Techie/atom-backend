@@ -59,28 +59,14 @@ async function getPackageByID(id) {
 }
 
 async function getPackageByName(name) {
-  checkSQLSetup();
-  // It may be smart to have this use getPackagePointer, then direct
-  // to getPackageByID, instead of reimplementing this command here.
-  try {
-    const command = await sql_storage`
-      SELECT pointer FROM pointers
-      WHERE name=${name};
-    `;
 
-    // the above should give us the UUID of the package name,
-    // now we can rely on getPackageByID
-    if (command.length === 0) {
-      return {
-        ok: false,
-        content: `${name} was not found within pointer db.`,
-        short: "Not Found",
-      };
-    }
-    return await getPackageByID(command[0].pointer);
-  } catch (err) {
-    return { ok: false, content: err, short: "Server Error" };
+  let pointer = await getPackagePointerByName(name);
+  
+  if (!pointer.ok) {
+    return pointer;
   }
+  
+  return await getPackageByID(pointer.content);
 }
 
 async function getPackagePointerByName(name) {
@@ -105,15 +91,50 @@ async function getPackagePointerByName(name) {
   }
 }
 
-async function getPackageCollection(packArray) {
-  checkSQLSetup();
+async function getPackageCollectionByName(packArray) {
 
   try {
-    // Could look at generating a query using UNION, but theres likely a better way.
-    // TODO
-    // this should use packArray to create the query, pack array will be an array
-    // of package names to retreive.
+    // Until a proper method is found to query all items natively, 
+    // for now we will find each packages individually
+    
+    let pack_gen;
+    
+    for (let i = 0; i < packArray.length; i++) {
+      let pack = await getPackageByName(packArray[i]);
+      if (!pack.ok) {
+        logger.warningLog(null, null, 
+          `Missing Package During getPackageCollectionByName: ${packArray[i]}`);
+      }
+      pack_gen.push(pack.content);
+    }
+    
+    return { ok: true, content: pack_gen };
+    
   } catch (err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+async function getPointerTable() {
+  checkSQLSetup();
+  
+  try {
+    
+    const command = await sql_storage`
+      SELECT ARRAY (SELECT * FROM pointers);
+    `;
+
+    if (command.length === 0) {
+      return {
+        ok: false,
+        content: 'Unable to get all Package Pointers.',
+        short: "Server Error",
+      };
+    }
+
+    return { ok: true, content: command[0].array };
+    
+  } catch(err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
@@ -168,7 +189,7 @@ async function getFeaturedPackages() {
     return featuredArray;
   }
 
-  let allFeatured = await getPackageCollection(featuredArray.content);
+  let allFeatured = await getPackageCollectionByName(featuredArray.content);
 
   if (!allFeatured.ok) {
     return allFeatured;
@@ -292,7 +313,7 @@ module.exports = {
   getPackageByID,
   getPackagePointerByName,
   getPackageByName,
-  getPackageCollection,
+  getPackageCollectionByName,
   setPackageByID,
   setPackageByName,
   removePackageByName,

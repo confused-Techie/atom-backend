@@ -50,6 +50,7 @@ class CacheObject {
 /**
  * @async
  * @function read
+ * @depreciated Since migration to DB.
  * @desc Exported function to read data from the filesystem, whatever that may be.
  * @param {string} type - The type of data we are reading. Valid Types: "user", "pointer", "package".
  * @param {string} name - The name of the file we are reading. Only needed if type is "package",
@@ -60,6 +61,7 @@ class CacheObject {
  * @implments {readFile}
  */
 async function read(type, name) {
+  console.warn(`resources.read is Depreciated! ${read.caller}`);
   switch (type) {
     case "user": {
       let data = await readFile("./data/users.json");

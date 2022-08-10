@@ -2,7 +2,7 @@
  * @module storage
  * @desc This module is the second generation of data storage methodology,
  * in which this provides static access to files stored within regular cloud
- * file storage.
+ * file storage. Specifically intended for use with Google Cloud Storage.
  */
 
 const fs = require("fs");

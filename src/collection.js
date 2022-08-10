@@ -15,11 +15,13 @@ const { search_algorithm } = require("./config.js").getConfig();
  * without modification.
  * @async
  * @function sort
+ * @depreciated Since migrating to DB
  * @param {string} method - The Method to Sort By
  * @param {object[]} packages - The Packages in which to sort.
  * @return {object[]} The provided packages now sorted accordingly.
  */
 async function sort(packages, method) {
+  console.warn(`collection.sort is depreciated! ${sort.caller}`);
   // Note Sort, should be called before ANY pruning action has taken place.
   // Additional note, this implementation will sort EVERY single package no matter what.
   // TODO: Feature Request: Provide the page requested during sort, or the last item needed to sort,
@@ -100,6 +102,7 @@ async function sort(packages, method) {
 
 /**
  * @function direction
+ * @depreciated Since migration to DB
  * @desc Sorts an array of package objects based on the provided method.
  * Intended to occur after sorting the package. Prioritizes returning packages,
  * so if an invalid method is provided returns the packages with no changes.
@@ -111,6 +114,7 @@ async function sort(packages, method) {
  * @async
  */
 async function direction(packages, method) {
+  console.warn(`collection.direction is depreciated! ${direction.caller}`);
   // While previously
   if (method === "desc") {
     // since we wrote the sort, we know it will return results, sorted by the default of desc, and we can return.
@@ -131,6 +135,7 @@ async function direction(packages, method) {
 }
 
 async function prunePOF(packages) {
+  console.warn(`collection.prunePOF is Depreciated! ${prunePOF.caller}`);
   // This will prune Package Object Full items,
 
   // this will prune the return packages, or all items that shouldn't be included in the return to end users.
@@ -161,6 +166,7 @@ async function prunePOF(packages) {
 }
 
 async function prunePOS(packages) {
+  console.warn(`collection.prunePOS is Depreciated! ${prunePOS.caller}`);
   // This will prune Package Object Short items,
 
   // this will prune the return packages, or all items that shouldn't be included in the return to end users.
@@ -196,6 +202,49 @@ async function prunePOS(packages) {
 
     return packages;
   }
+}
+
+async function pruneShort(packages) {
+  let actionablePrune = function(pack) {
+    delete pack.created;
+    delete pack.updated;
+    delete pack.star_gazers;
+    delete pack.versions;
+    delete pack.creation_method;
+    
+    return pack;
+  };
+  
+  if (Array.isArray(packages)) {
+    for (let i = 0; i < packages.length; i++) {
+      packages[i] = actionablePrune(packages[i]);
+    }
+  } else {
+    // single package prune 
+    packages = actionablePrune(packages);
+  }
+  return packages;
+}
+
+async function pruneDetail(packages) {
+  let actionablePrune = function(pack) {
+    delete pack.created;
+    delete pack.updated;
+    delete pack.creation_method;
+    delete pack.star_gazers;
+    
+    return pack;
+  };
+  
+  if (Array.isArray(packages)) {
+    for (let i = 0; i < packages.length; i++) {
+      packages[i] = actionablePrune(packages[i]);
+    }
+  } else {
+    // single package prune 
+    packages = actionablePrune(packages);
+  }
+  return packages;
 }
 
 async function searchWithinPackages(
@@ -446,7 +495,18 @@ async function engineFilter(pack, engine) {
   return pack;
 }
 
+/**
+* @async 
+* @function deepCopy
+* @depreciated Since migration to DB, and not having to worry about in memory objects.
+* @desc Originally was a method to create a deep copy of shallow copied complex objects.
+* Which allowed modifications on the object without worry of changing the values
+* of the original object, or realistically cached objects.
+* @param {object} obj - The Object to Deep Copy.
+* @return {object} A Deep Copy of the original object, that should share zero references to the original.
+*/
 async function deepCopy(obj) {
+  console.warn(`collection.deepCopy is depreciated! ${deepCopy.caller}`);
   // this resolves github.com/confused-Techie/atom-community-server-backend-JS issue 13, and countless others.
   // When the object is passed to these sort functions, they work off a shallow copy. Meaning their changes
   // affect the original read data, meaning the cached data. Meaning subsequent queries may fail or error out.
@@ -479,4 +539,6 @@ module.exports = {
   engineFilter,
   searchWithinPackages,
   deepCopy,
+  pruneDetail,
+  pruneShort,
 };
