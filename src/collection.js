@@ -205,43 +205,43 @@ async function prunePOS(packages) {
 }
 
 async function pruneShort(packages) {
-  let actionablePrune = function(pack) {
+  let actionablePrune = function (pack) {
     delete pack.created;
     delete pack.updated;
     delete pack.star_gazers;
     delete pack.versions;
     delete pack.creation_method;
-    
+
     return pack;
   };
-  
+
   if (Array.isArray(packages)) {
     for (let i = 0; i < packages.length; i++) {
       packages[i] = actionablePrune(packages[i]);
     }
   } else {
-    // single package prune 
+    // single package prune
     packages = actionablePrune(packages);
   }
   return packages;
 }
 
 async function pruneDetail(packages) {
-  let actionablePrune = function(pack) {
+  let actionablePrune = function (pack) {
     delete pack.created;
     delete pack.updated;
     delete pack.creation_method;
     delete pack.star_gazers;
-    
+
     return pack;
   };
-  
+
   if (Array.isArray(packages)) {
     for (let i = 0; i < packages.length; i++) {
       packages[i] = actionablePrune(packages[i]);
     }
   } else {
-    // single package prune 
+    // single package prune
     packages = actionablePrune(packages);
   }
   return packages;
@@ -496,15 +496,15 @@ async function engineFilter(pack, engine) {
 }
 
 /**
-* @async 
-* @function deepCopy
-* @depreciated Since migration to DB, and not having to worry about in memory objects.
-* @desc Originally was a method to create a deep copy of shallow copied complex objects.
-* Which allowed modifications on the object without worry of changing the values
-* of the original object, or realistically cached objects.
-* @param {object} obj - The Object to Deep Copy.
-* @return {object} A Deep Copy of the original object, that should share zero references to the original.
-*/
+ * @async
+ * @function deepCopy
+ * @depreciated Since migration to DB, and not having to worry about in memory objects.
+ * @desc Originally was a method to create a deep copy of shallow copied complex objects.
+ * Which allowed modifications on the object without worry of changing the values
+ * of the original object, or realistically cached objects.
+ * @param {object} obj - The Object to Deep Copy.
+ * @return {object} A Deep Copy of the original object, that should share zero references to the original.
+ */
 async function deepCopy(obj) {
   console.warn(`collection.deepCopy is depreciated! ${deepCopy.caller}`);
   // this resolves github.com/confused-Techie/atom-community-server-backend-JS issue 13, and countless others.

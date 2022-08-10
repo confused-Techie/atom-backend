@@ -49,16 +49,16 @@ async function getPackages(req, res) {
     await common.handleError(req, res, packages);
     return;
   }
-  
+
   let pruned = await collection.PruneShort(packages.content);
-  
+
   let total_pages = await database.getTotalPackageEstimate();
-  
+
   if (!total_pages.ok) {
     await common.handleError(req, res, total_pages);
     return;
   }
-  
+
   res.append(
     "Link",
     `<${server_url}/api/packages?page=${params.page}&sort=${

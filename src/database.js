@@ -59,13 +59,12 @@ async function getPackageByID(id) {
 }
 
 async function getPackageByName(name) {
-
   let pointer = await getPackagePointerByName(name);
-  
+
   if (!pointer.ok) {
     return pointer;
   }
-  
+
   return await getPackageByID(pointer.content);
 }
 
@@ -92,24 +91,25 @@ async function getPackagePointerByName(name) {
 }
 
 async function getPackageCollectionByName(packArray) {
-
   try {
-    // Until a proper method is found to query all items natively, 
+    // Until a proper method is found to query all items natively,
     // for now we will find each packages individually
-    
+
     let pack_gen;
-    
+
     for (let i = 0; i < packArray.length; i++) {
       let pack = await getPackageByName(packArray[i]);
       if (!pack.ok) {
-        logger.warningLog(null, null, 
-          `Missing Package During getPackageCollectionByName: ${packArray[i]}`);
+        logger.warningLog(
+          null,
+          null,
+          `Missing Package During getPackageCollectionByName: ${packArray[i]}`
+        );
       }
       pack_gen.push(pack.content);
     }
-    
+
     return { ok: true, content: pack_gen };
-    
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -117,9 +117,8 @@ async function getPackageCollectionByName(packArray) {
 
 async function getPointerTable() {
   checkSQLSetup();
-  
+
   try {
-    
     const command = await sql_storage`
       SELECT ARRAY (SELECT * FROM pointers);
     `;
@@ -127,14 +126,13 @@ async function getPointerTable() {
     if (command.length === 0) {
       return {
         ok: false,
-        content: 'Unable to get all Package Pointers.',
+        content: "Unable to get all Package Pointers.",
         short: "Server Error",
       };
     }
 
     return { ok: true, content: command[0].array };
-    
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
