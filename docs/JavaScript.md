@@ -55,7 +55,7 @@ to listen on. As well as handling a graceful shutdown of the server.</p>
 <dt><a href="#module_storage">storage</a></dt>
 <dd><p>This module is the second generation of data storage methodology,
 in which this provides static access to files stored within regular cloud
-file storage.</p>
+file storage. Specifically intended for use with Google Cloud Storage.</p>
 </dd>
 <dt><a href="#module_users">users</a></dt>
 <dd><p>Focused on interacting with User Data only. Provides functions required
@@ -93,6 +93,7 @@ collections, to be returned to the user.
 * [collection](#module_collection)
     * [~sort(method, packages)](#module_collection..sort) ⇒ <code>Array.&lt;object&gt;</code>
     * [~direction(packages, method)](#module_collection..direction) ⇒ <code>Array.&lt;object&gt;</code> \| <code>string</code>
+    * [~deepCopy(obj)](#module_collection..deepCopy) ⇒ <code>object</code>
 
 <a name="module_collection..sort"></a>
 
@@ -104,6 +105,7 @@ without modification.
 
 **Kind**: inner method of [<code>collection</code>](#module_collection)  
 **Returns**: <code>Array.&lt;object&gt;</code> - The provided packages now sorted accordingly.  
+**Depreciated**: Since migrating to DB  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -120,11 +122,27 @@ so if an invalid method is provided returns the packages with no changes.
 **Kind**: inner method of [<code>collection</code>](#module_collection)  
 **Returns**: <code>Array.&lt;object&gt;</code> \| <code>string</code> - The array of object packages, now organized, or directly
 returned if an invalid 'method' is supplied.  
+**Depreciated**: Since migration to DB  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | packages | <code>Array.&lt;object&gt;</code> | The array of package objects to work on. |
 | method | <code>string</code> | The method of which they should be organized. Either "desc" = Descending, or "asc" = Ascending. |
+
+<a name="module_collection..deepCopy"></a>
+
+### collection~deepCopy(obj) ⇒ <code>object</code>
+Originally was a method to create a deep copy of shallow copied complex objects.
+Which allowed modifications on the object without worry of changing the values
+of the original object, or realistically cached objects.
+
+**Kind**: inner method of [<code>collection</code>](#module_collection)  
+**Returns**: <code>object</code> - A Deep Copy of the original object, that should share zero references to the original.  
+**Depreciated**: Since migration to DB, and not having to worry about in memory objects.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| obj | <code>object</code> | The Object to Deep Copy. |
 
 <a name="module_config"></a>
 
@@ -862,6 +880,7 @@ Exported function to read data from the filesystem, whatever that may be.
 **Returns**: <code>object</code> - If type is "package" or "pointer" returns a Server Status Object, with `content`
 being a `CacheObject` class, already initialized and ready for consumption. Otherwise if type is
 "package" returns the return from `readFile`. Errors bubble up from `readFile`.  
+**Depreciated**: Since migration to DB.  
 **Implments**: <code>readFile</code>  
 
 | Param | Type | Description |
@@ -1058,7 +1077,7 @@ Which this will then handle closing the server listener, as well as calling `dat
 ## storage
 This module is the second generation of data storage methodology,
 in which this provides static access to files stored within regular cloud
-file storage.
+file storage. Specifically intended for use with Google Cloud Storage.
 
 <a name="module_users"></a>
 
