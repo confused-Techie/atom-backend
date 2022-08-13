@@ -1,8 +1,8 @@
 /**
-* @module database 
-* @desc Provides an interface of a large collection of functions to interact 
-* with and retreive data from the cloud hosted database instance.
-*/
+ * @module database
+ * @desc Provides an interface of a large collection of functions to interact
+ * with and retreive data from the cloud hosted database instance.
+ */
 
 const fs = require("fs");
 const postgres = require("postgres");
