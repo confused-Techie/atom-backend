@@ -5,7 +5,6 @@
  * file storage. Specifically intended for use with Google Cloud Storage.
  */
 
-const fs = require("fs");
 const { Storage } = require("@google-cloud/storage");
 const logger = require("./logger.js");
 const { CacheObject } = require("./utils.js");

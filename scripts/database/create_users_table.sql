@@ -1,18 +1,22 @@
--- Table: users
--- Including data in case we start to track created packages which is not in scope at the current time.
+-- Table: public.users
 
-CREATE TABLE IF NOT EXISTS public.users (
-    id BIGSERIAL PRIMARY KEY,
-    pulsarToken VARCHAR(256) NOT NULL,
-    githubToken VARCHAR(256) NOT NULL,
-    created_at BIGINT NOT NULL,
-    data JSONB
+-- DROP TABLE IF EXISTS public.users;
+
+CREATE TABLE IF NOT EXISTS public.users
+(
+    id bigint NOT NULL DEFAULT nextval('users_id_seq'::regclass),
+    pulsartoken character varying(256) COLLATE pg_catalog."default" NOT NULL,
+    githubtoken character varying(256) COLLATE pg_catalog."default" NOT NULL,
+    created_at bigint NOT NULL,
+    data jsonb,
+    username character varying(256) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT users_pkey PRIMARY KEY (id)
 )
 
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.users
     OWNER to doadmin;
-    
+
 COMMENT ON TABLE public.users
     IS 'Container for all Users data.';

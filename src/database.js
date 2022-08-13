@@ -1,6 +1,7 @@
 const fs = require("fs");
 const postgres = require("postgres");
 const storage = require("./storage.js");
+const logger = require("./logger.js");
 const {
   DB_HOST,
   DB_USER,
@@ -218,6 +219,158 @@ async function getTotalPackageEstimate() {
   }
 }
 
+async function getUserByName(username) {
+  checkSQLSetup();
+  
+  try {
+    const command = await sql_storage`
+      SELECT * FROM users WHERE username=${username};
+    `;
+    
+    if (command.length === 0) {
+      return { ok: false, content: `Unable to query for user: ${username}`, short: "Server Error" };
+    }
+    
+    // now to create a JSON object of this user. 
+    let obj_return = {
+      user_name: command[0].username,
+      pulsar_token: command[0].pulsartoken,
+      github_token: command[0].githubtoken,
+      created_at: command[0].created_at,
+      meta: command[0].data,
+      id: command[0].id
+    };
+    
+    return { ok: true, content: obj_return };
+    
+  } catch(err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+async function getUserByID(id) {
+  checkSQLSetup();
+  
+  try {
+    const command = await sql_storage`
+      SELECT * FROM users WHERE id=${id};
+    `;
+    
+    if (command.length === 0) {
+      return { ok: false, content: `Unable to get User By ID: ${id}`, short: "Server Error" };
+    }
+    
+    let obj_return = {
+      user_name: command[0].username,
+      pulsar_token: command[0].pulsartoken,
+      github_token: command[0].githubtoken,
+      created_at: command[0].created_at,
+      meta: command[0].data,
+      id: command[0].id
+    };
+    
+    return { ok: true, content: obj_return };
+    
+  } catch(err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+async function verifyAuth(token) {
+  checkSQLSetup();
+  
+  try {
+    const command = await sql_storage`
+      SELECT * FROM users WHERE pulsartoken=${token};
+    `;
+    
+    if (command.length === 0) {
+      return { ok: false, content: `Unable to Verify Auth for Token: ${token}`, short: "Server Error" };
+    }
+    
+    // create the object of this user.
+    let obj_return = {
+      user_name: command[0].username,
+      pulsar_token: command[0].pulsartoken,
+      github_token: command[0].githubtoken,
+      created_at: command[0].created_at,
+      meta: command[0].data,
+      id: command[0].id 
+    };
+    
+    return { ok: true, content: obj_return };
+    
+  } catch(err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+async function getStarredPointersByUser(username) {
+  checkSQLSetup();
+  
+  let user = await getUserByName(username);
+  
+  if (!user.ok) {
+    return user;
+  }
+  
+  let userid = user.id;
+  
+  try {
+    const command = await sql_storage`
+      SELECT ARRAY (
+        SELECT packagepointer FROM stars WHERE userid=${userid}
+      );
+    `;
+    
+    if (command.length === 0) {
+      return { ok: false, content: `Unable to Get Starred Pointers for ${username}`, short: "Server Error" };
+    }
+    
+    return { ok: true, content: command[0].array };
+    
+  } catch(err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+async function getStarringUsersByPointer(pointer) {
+  checkSQLSetup();
+  
+  try {
+    const command = await sql_storage`
+      SELECT ARRAY (
+        SELECT userid FROM stars WHERE packagepointer=${pointer}
+      );
+    `;
+    
+    if (command.length === 0) {
+      return { ok: false, content: `Unable to Get Starring Users for ${pointer}`, short: "Server Error" };
+    }
+    
+    return { ok: true, content: command[0].array };
+    
+  } catch(err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+async function getUserCollectionById(ids) {
+  let user_array = [];
+  
+  for (let i = 0; i < ids.length; i++) {
+    let user = await getUserByID(ids[i]);
+    
+    if (!user.ok) {
+      // TODO: Determine Error Handling for not found user. But should be a skip & log.
+    }
+    
+    user_array.push( { login: user.user_name } );
+  }
+  
+  return { ok: true, content: user_array };
+}
+
 async function getSortedPackages(page, dir, method) {
   // Here will be a monolithic function for returning sortable packages arrays.
   // We must keep in mind that all the endpoint handler knows is the
@@ -226,14 +379,8 @@ async function getSortedPackages(page, dir, method) {
 
   checkSQLSetup();
 
-  let total = await getTotalPackageEstimate();
-  if (!total.ok) {
-    return total;
-  }
-
   let offset = 0;
   let limit = paginated_amount;
-  let total_pages = Math.ceil(total.content / paginated_amount);
 
   if (page !== 1) {
     offset = page * paginated_amount;
@@ -244,7 +391,6 @@ async function getSortedPackages(page, dir, method) {
 
     switch (method) {
       case "downloads":
-        //console.log(`SELECT data FROM packages ORDER BY data->'downloads' ${dir.toUpperCase()} LIMIT ${limit} OFFSET ${offset}`);
         command = await sql_storage`
           SELECT ARRAY
             (SELECT data FROM packages ORDER BY data->'downloads' ${
@@ -295,12 +441,10 @@ async function getSortedPackages(page, dir, method) {
           content: `Unrecognized Sorting Method Provided: ${method}`,
           short: "Server Error",
         };
-        break;
     }
 
     return { ok: true, content: command[0].array };
   } catch (err) {
-    console.log(err);
     return { ok: false, content: err, short: "Server Error" };
   }
 }
@@ -319,4 +463,9 @@ module.exports = {
   getFeaturedPackages,
   getTotalPackageEstimate,
   getSortedPackages,
+  getUserByName,
+  getUserByID,
+  verifyAuth,
+  getStarredPointersByUser,
+  getStarringUsersByPointer,
 };
