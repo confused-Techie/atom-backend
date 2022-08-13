@@ -13,6 +13,10 @@ collections, to be returned to the user.</p>
 for data in general. Containing the <code>Shutdown</code> function, as well as gathering the users,
 packages, package_pointer, and additionally handling any modifications of the packages.</p>
 </dd>
+<dt><a href="#module_database">database</a></dt>
+<dd><p>Provides an interface of a large collection of functions to interact
+with and retreive data from the cloud hosted database instance.</p>
+</dd>
 <dt><a href="#module_debug_util">debug_util</a></dt>
 <dd><p>A collection of simple functions to help devs debug the application during runtime,
 to better assist in tracking down bugs. Since many sets of data cannot be reliably output to the console
@@ -321,6 +325,12 @@ longer be marked for deletion.
 | Param | Type | Description |
 | --- | --- | --- |
 | pointer | <code>string</code> | The Package Name to mark, in format `package-uuidv4.json`. |
+
+<a name="module_database"></a>
+
+## database
+Provides an interface of a large collection of functions to interact
+with and retreive data from the cloud hosted database instance.
 
 <a name="module_debug_util"></a>
 
