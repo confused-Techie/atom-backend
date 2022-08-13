@@ -1,10 +1,10 @@
 /**
-* @module cache 
-* @desc Provides an interface for helpful caching mechanisms.
-* Originally created after some circular dependency issues arouse during 
-* rapid redevelopment of the entire storage system.
-* But this does provide an opportunity to allow multiple caching systems.
-*/
+ * @module cache
+ * @desc Provides an interface for helpful caching mechanisms.
+ * Originally created after some circular dependency issues arouse during
+ * rapid redevelopment of the entire storage system.
+ * But this does provide an opportunity to allow multiple caching systems.
+ */
 
 const { cache_time } = require("./config.js").getConfig();
 
@@ -32,5 +32,5 @@ class CacheObject {
 }
 
 module.exports = {
-  CacheObject
+  CacheObject,
 };

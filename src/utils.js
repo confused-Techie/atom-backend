@@ -52,5 +52,5 @@ async function localUserLoggedIn(req, res, params_user, callback) {
 
 module.exports = {
   isPackageNameBanned,
-  localUserLoggedIn
+  localUserLoggedIn,
 };

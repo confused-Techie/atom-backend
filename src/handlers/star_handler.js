@@ -29,6 +29,9 @@ async function getStars(req, res) {
   };
 
   const onLogin = async (user) => {
+    let pointerCollection = await database.getStarredPointersByUser(
+      user.content.user_name
+    );
 
     let pointerCollection = await database.getStarredPointersByUserID(user.content.id);
     
@@ -36,16 +39,18 @@ async function getStars(req, res) {
       await common.handleError(req, res, pointerCollection);
       return;
     }
-    
-    let packageCollection = await database.getPackageCollectionByID(pointerCollection.content);
-    
+
+    let packageCollection = await database.getPackageCollectionByID(
+      pointerCollection.content
+    );
+
     if (!packageCollection.ok) {
       await common.handleError(req, res, packageCollection);
       return;
     }
-    
+
     packageCollection = await collection.pruneShort(packageCollection.content);
-    
+
     res.status(200).json(packageCollection);
     logger.httpLog(req, res);
   };

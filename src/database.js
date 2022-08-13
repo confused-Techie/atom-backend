@@ -155,20 +155,23 @@ async function getPackageCollectionByName(packArray) {
 async function getPackageCollectionByID(packArray) {
   try {
     // messy way to do this until better method to query multiple items is found.
-    
+
     let pack_gen = [];
-    
+
     for (let i = 0; i < packArray.length; i++) {
       let pack = await getPackageByID(packArray[i]);
       if (!pack.ok) {
-        logger.warningLog(null, null, `Missing Package During getPackageCollectionByID: ${packArray[i]}`);
+        logger.warningLog(
+          null,
+          null,
+          `Missing Package During getPackageCollectionByID: ${packArray[i]}`
+        );
       }
       pack_gen.push(pack.content);
     }
-    
+
     return { ok: true, content: pack_gen };
-    
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
@@ -334,7 +337,7 @@ async function verifyAuth(token) {
     `;
 
     if (command.length === 0) {
-      // If the return is zero rows, that means the request was successful 
+      // If the return is zero rows, that means the request was successful
       // but nothing matched the query, which in this case is for the token.
       // so this should return bad auth.
       return {
@@ -400,9 +403,13 @@ async function getStarringUsersByPointer(pointer) {
 
     if (command.length === 0) {
       // It is likely safe to assume that if nothing matches the packagepointer,
-      // then the package pointer has no stars. So instead of server error 
+      // then the package pointer has no stars. So instead of server error
       // here we will non-traditionally return an empty array.
-      logger.warningLog(null, null, `No Stars for ${pointer} found, assuming 0 star value.`);
+      logger.warningLog(
+        null,
+        null,
+        `No Stars for ${pointer} found, assuming 0 star value.`
+      );
       return { ok: true, content: [] };
     }
 
@@ -507,12 +514,12 @@ async function getSortedPackages(page, dir, method) {
 }
 
 /**
-* @function convertToUserFromDB
-* @desc Takes the standard Database Query column array of a single user 
-* query and turns it into a JSON object.
-* @param {obj} raw - The Database Query Column array return of a single user query.
-* @returns {obj} A JavaScript/JSON Object of the user data.
-*/ 
+ * @function convertToUserFromDB
+ * @desc Takes the standard Database Query column array of a single user
+ * query and turns it into a JSON object.
+ * @param {obj} raw - The Database Query Column array return of a single user query.
+ * @returns {obj} A JavaScript/JSON Object of the user data.
+ */
 function convertToUserFromDB(raw) {
   return {
     user_name: raw[0].username,
