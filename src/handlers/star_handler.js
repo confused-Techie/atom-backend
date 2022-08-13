@@ -16,11 +16,6 @@ const utils = require("../utils.js");
  * the authenticated user has stared.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
- * @implements {users.VerifyAuth}
- * @implements {data.GetPackageCollection}
- * @implements {logger.HTTPLog}
- * @implements {common.ServerError}
- * @implements {common.AuthFail}
  */
 async function getStars(req, res) {
   // GET /api/stars
@@ -29,11 +24,7 @@ async function getStars(req, res) {
   };
 
   const onLogin = async (user) => {
-    let pointerCollection = await database.getStarredPointersByUser(
-      user.content.user_name
-    );
-
-    pointerCollection = await database.getStarredPointersByUserID(
+    let pointerCollection = await database.getStarredPointersByUserID(
       user.content.id
     );
 
