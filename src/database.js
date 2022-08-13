@@ -221,73 +221,83 @@ async function getTotalPackageEstimate() {
 
 async function getUserByName(username) {
   checkSQLSetup();
-  
+
   try {
     const command = await sql_storage`
       SELECT * FROM users WHERE username=${username};
     `;
-    
+
     if (command.length === 0) {
-      return { ok: false, content: `Unable to query for user: ${username}`, short: "Server Error" };
+      return {
+        ok: false,
+        content: `Unable to query for user: ${username}`,
+        short: "Server Error",
+      };
     }
-    
-    // now to create a JSON object of this user. 
+
+    // now to create a JSON object of this user.
     let obj_return = {
       user_name: command[0].username,
       pulsar_token: command[0].pulsartoken,
       github_token: command[0].githubtoken,
       created_at: command[0].created_at,
       meta: command[0].data,
-      id: command[0].id
+      id: command[0].id,
     };
-    
+
     return { ok: true, content: obj_return };
-    
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
 
 async function getUserByID(id) {
   checkSQLSetup();
-  
+
   try {
     const command = await sql_storage`
       SELECT * FROM users WHERE id=${id};
     `;
-    
+
     if (command.length === 0) {
-      return { ok: false, content: `Unable to get User By ID: ${id}`, short: "Server Error" };
+      return {
+        ok: false,
+        content: `Unable to get User By ID: ${id}`,
+        short: "Server Error",
+      };
     }
-    
+
     let obj_return = {
       user_name: command[0].username,
       pulsar_token: command[0].pulsartoken,
       github_token: command[0].githubtoken,
       created_at: command[0].created_at,
       meta: command[0].data,
-      id: command[0].id
+      id: command[0].id,
     };
-    
+
     return { ok: true, content: obj_return };
-    
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
 
 async function verifyAuth(token) {
   checkSQLSetup();
-  
+
   try {
     const command = await sql_storage`
       SELECT * FROM users WHERE pulsartoken=${token};
     `;
-    
+
     if (command.length === 0) {
-      return { ok: false, content: `Unable to Verify Auth for Token: ${token}`, short: "Server Error" };
+      return {
+        ok: false,
+        content: `Unable to Verify Auth for Token: ${token}`,
+        short: "Server Error",
+      };
     }
-    
+
     // create the object of this user.
     let obj_return = {
       user_name: command[0].username,
@@ -295,79 +305,84 @@ async function verifyAuth(token) {
       github_token: command[0].githubtoken,
       created_at: command[0].created_at,
       meta: command[0].data,
-      id: command[0].id 
+      id: command[0].id,
     };
-    
+
     return { ok: true, content: obj_return };
-    
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
 
 async function getStarredPointersByUser(username) {
   checkSQLSetup();
-  
+
   let user = await getUserByName(username);
-  
+
   if (!user.ok) {
     return user;
   }
-  
+
   let userid = user.id;
-  
+
   try {
     const command = await sql_storage`
       SELECT ARRAY (
         SELECT packagepointer FROM stars WHERE userid=${userid}
       );
     `;
-    
+
     if (command.length === 0) {
-      return { ok: false, content: `Unable to Get Starred Pointers for ${username}`, short: "Server Error" };
+      return {
+        ok: false,
+        content: `Unable to Get Starred Pointers for ${username}`,
+        short: "Server Error",
+      };
     }
-    
+
     return { ok: true, content: command[0].array };
-    
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
 
 async function getStarringUsersByPointer(pointer) {
   checkSQLSetup();
-  
+
   try {
     const command = await sql_storage`
       SELECT ARRAY (
         SELECT userid FROM stars WHERE packagepointer=${pointer}
       );
     `;
-    
+
     if (command.length === 0) {
-      return { ok: false, content: `Unable to Get Starring Users for ${pointer}`, short: "Server Error" };
+      return {
+        ok: false,
+        content: `Unable to Get Starring Users for ${pointer}`,
+        short: "Server Error",
+      };
     }
-    
+
     return { ok: true, content: command[0].array };
-    
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
 
 async function getUserCollectionById(ids) {
   let user_array = [];
-  
+
   for (let i = 0; i < ids.length; i++) {
     let user = await getUserByID(ids[i]);
-    
+
     if (!user.ok) {
       // TODO: Determine Error Handling for not found user. But should be a skip & log.
     }
-    
-    user_array.push( { login: user.user_name } );
+
+    user_array.push({ login: user.user_name });
   }
-  
+
   return { ok: true, content: user_array };
 }
 
