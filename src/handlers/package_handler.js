@@ -470,26 +470,26 @@ async function getPackagesStargazers(req, res) {
   };
   let pack = await database.getPackageByName(params.packageName);
   let pointer = await database.getPackagePointerByName(params.packageName);
-  
+
   if (!pointer.ok) {
     await common.handleError(req, res, pointer);
     return;
   }
-  
+
   let stars = await database.getStarringUsersByPointer(pointer.content);
-  
+
   if (!stars.ok) {
     await common.handleError(req, res, stars);
     return;
   }
-  
+
   let gazers = await database.getUserCollectionById(stars.content);
-  
+
   if (!gazers.ok) {
     await common.handleError(req, res, gazers);
     return;
   }
-  
+
   res.status(200).json(gazers.content);
   logger.httpLog(req, res);
 }
