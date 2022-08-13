@@ -7,9 +7,8 @@
 
 const { v4: uuidv4 } = require("uuid");
 const logger = require("./logger.js");
-const resources = require("./resources.js");
+//const resources = require("./resources.js");
 const { file_store } = require("./config.js").getConfig();
-const sql_data = require("./sql_data.js");
 
 // Collection of data global variables. Used for caching read data.
 let cached_user, cached_pointer, cached_packages, cached_packages_featured;
@@ -30,7 +29,9 @@ async function shutdown() {
       logger.debugLog("Saving invalidated User Cache.");
       // this will tell us if we called for its data to be saved previously.
       // Now we will write it.
-      let write = resources.write("user", cached_user.data);
+      //let write = resources.write("user", cached_user.data);
+      let write = { ok: false, short: "Severe Server Error", content: "Deprecaited" };
+      console.log("data.shutdown use of resources.write is removed!");
       logger.debugLog(
         `${write.ok ? "Successfully" : "Unsuccessfully"} Saved User Cache.`
       );
@@ -233,13 +234,9 @@ async function getAllPackages() {
   if (file_store === "sql") {
     if (cached_packages === undefined) {
       logger.debugLog("Creating Full Package Cache from SQL");
-      let packArray = await sql_data.getAllPackagesSQL();
-      if (!packArray.ok) {
-        console.log("FAILED TO CACHE PACKAGES!");
-      }
-      cached_packages = new resources.CacheObject(packArray.content);
-      cached_packages.last_validate = Date.now();
-      return { ok: true, content: cached_packages.data };
+
+      console.log('SQL_DATA Is removed, data.getAllPackages Non-Functional.');
+      return { ok: false, content: cached_packages.data, short: "Severe Server Error"};
     } else {
       return { ok: true, content: cached_packages.data };
     }

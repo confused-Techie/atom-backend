@@ -202,6 +202,7 @@ async function getPackagesFeatured(req, res) {
   let newCol = await collection.pruneShort(col.content);
 
   res.status(200).json(newCol);
+  logger.httpLog(req, res);
 }
 
 /**
@@ -468,14 +469,28 @@ async function getPackagesStargazers(req, res) {
     packageName: decodeURIComponent(req.params.packageName),
   };
   let pack = await database.getPackageByName(params.packageName);
-
-  if (!pack.ok) {
-    await common.handleError(req, res, pack);
+  let pointer = await database.getPackagePointerByName(params.packageName);
+  
+  if (!pointer.ok) {
+    await common.handleError(req, res, pointer);
     return;
   }
-
-  // then we can just directly return the star_gazers object
-  res.status(200).json(pack.content.star_gazers);
+  
+  let stars = await database.getStarringUsersByPointer(pointer.content);
+  
+  if (!stars.ok) {
+    await common.handleError(req, res, stars);
+    return;
+  }
+  
+  let gazers = await database.getUserCollectionById(stars.content);
+  
+  if (!gazers.ok) {
+    await common.handleError(req, res, gazers);
+    return;
+  }
+  
+  res.status(200).json(gazers.content);
   logger.httpLog(req, res);
 }
 

@@ -33,7 +33,7 @@ async function getStars(req, res) {
       user.content.user_name
     );
 
-    let pointerCollection = await database.getStarredPointersByUserID(
+    pointerCollection = await database.getStarredPointersByUserID(
       user.content.id
     );
 

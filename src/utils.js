@@ -2,13 +2,13 @@
  * @module utils
  * @desc A helper for any functions that are agnostic in hanlders.
  */
-const resources = require("./resources.js");
 const logger = require("./logger.js");
 const common = require("./handlers/common_handler.js");
 const database = require("./database.js");
+const storage = require("./storage.js");
 
 async function isPackageNameBanned(name) {
-  let names = await resources.read("name_ban_list");
+  let names = await storage.getBanList();
 
   if (!names.ok) {
     // we failed to find the ban list. For now we will just return ok.

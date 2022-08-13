@@ -366,7 +366,7 @@ async function getStarredPointersByUserID(userid) {
     if (command.length === 0) {
       return {
         ok: false,
-        content: `Unable to Get Starred Pointers for ${username}`,
+        content: `Unable to Get Starred Pointers for ${userid}`,
         short: "Server Error",
       };
     }
@@ -426,7 +426,9 @@ async function getUserCollectionById(ids) {
     let user = await getUserByID(ids[i]);
 
     if (!user.ok) {
-      // TODO: Determine Error Handling for not found user. But should be a skip & log.
+      logger.warningLog(null, null, `Unable to find user id: ${ids[i]}, skipping...`);
+      logger.warningLog(null, null, `Details on Not Found User: ${user.short} - ${user.content}`);
+      continue;
     }
 
     user_array.push({ login: user.user_name });
