@@ -1,6 +1,12 @@
 ## Modules
 
 <dl>
+<dt><a href="#module_cache">cache</a></dt>
+<dd><p>Provides an interface for helpful caching mechanisms.
+Originally created after some circular dependency issues arouse during
+rapid redevelopment of the entire storage system.
+But this does provide an opportunity to allow multiple caching systems.</p>
+</dd>
 <dt><a href="#module_collection">collection</a></dt>
 <dd><p>Endpoint of all features related to sorting, organizing, or pruning package
 collections, to be returned to the user.</p>
@@ -86,6 +92,34 @@ verbosity, and duplication within the codebase.</p>
 <dd><p>Handler for endpoints whose slug after <code>/api/</code> is <code>user</code>.</p>
 </dd>
 </dl>
+
+<a name="module_cache"></a>
+
+## cache
+Provides an interface for helpful caching mechanisms.
+Originally created after some circular dependency issues arouse during
+rapid redevelopment of the entire storage system.
+But this does provide an opportunity to allow multiple caching systems.
+
+
+* [cache](#module_cache)
+    * [~CacheObject](#module_cache..CacheObject)
+        * [new CacheObject([name], contents)](#new_module_cache..CacheObject_new)
+
+<a name="module_cache..CacheObject"></a>
+
+### cache~CacheObject
+**Kind**: inner class of [<code>cache</code>](#module_cache)  
+<a name="new_module_cache..CacheObject_new"></a>
+
+#### new CacheObject([name], contents)
+Allows simple interfaces to handle caching an object in memory. Used to cache data read from the filesystem.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [name] | <code>string</code> | Optional name to assign to the Cached Object. |
+| contents | <code>object</code> | The contents of this cached object. Intended to be a JavaScript object. But could be anything. |
 
 <a name="module_collection"></a>
 
@@ -331,6 +365,82 @@ longer be marked for deletion.
 ## database
 Provides an interface of a large collection of functions to interact
 with and retreive data from the cloud hosted database instance.
+
+
+* [database](#module_database)
+    * [~checkSQLSetup()](#module_database..checkSQLSetup)
+    * [~shutdownSQL()](#module_database..shutdownSQL)
+    * [~getPackageByID()](#module_database..getPackageByID)
+    * [~getPackageByName()](#module_database..getPackageByName)
+    * [~getPackagePointerByName()](#module_database..getPackagePointerByName)
+    * [~getPackageCollectionByName()](#module_database..getPackageCollectionByName)
+    * [~getPackageCollectionByID()](#module_database..getPackageCollectionByID)
+    * [~getPointerTable()](#module_database..getPointerTable)
+    * [~convertToUserFromDB(raw)](#module_database..convertToUserFromDB) ⇒ <code>obj</code>
+
+<a name="module_database..checkSQLSetup"></a>
+
+### database~checkSQLSetup()
+Ensures that the SQL Object is properly initialized.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..shutdownSQL"></a>
+
+### database~shutdownSQL()
+Ensures any Database connection is properly, and safely closed before exiting.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..getPackageByID"></a>
+
+### database~getPackageByID()
+Takes a package pointer UUID, and returns the package object within
+a Server Status Object.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..getPackageByName"></a>
+
+### database~getPackageByName()
+Takes a package name, and returns the package object within a Server Status
+Object. Leverages database.getPackageByID to do so.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..getPackagePointerByName"></a>
+
+### database~getPackagePointerByName()
+Returns the package pointer UUID, when provided a package name.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..getPackageCollectionByName"></a>
+
+### database~getPackageCollectionByName()
+Takes a package name array, and returns an array of the package objects.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..getPackageCollectionByID"></a>
+
+### database~getPackageCollectionByID()
+Takes a package pointer array, and returns an array of the package objects.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..getPointerTable"></a>
+
+### database~getPointerTable()
+Returns a full package pointer table, allowing the full reference of package names
+to package pointer UUIDs.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..convertToUserFromDB"></a>
+
+### database~convertToUserFromDB(raw) ⇒ <code>obj</code>
+Takes the standard Database Query column array of a single user
+query and turns it into a JSON object.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>obj</code> - A JavaScript/JSON Object of the user data.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| raw | <code>obj</code> | The Database Query Column array return of a single user query. |
 
 <a name="module_debug_util"></a>
 
@@ -1185,28 +1295,6 @@ This pruned item should never be written back to disk, as removed the data from 
 ## utils
 A helper for any functions that are agnostic in hanlders.
 
-**Implements**: <code>resources</code>, <code>logger</code>, <code>users</code>, <code>common</code>, <code>config</code>  
-
-* [utils](#module_utils)
-    * [~CacheObject](#module_utils..CacheObject)
-        * [new CacheObject([name], contents)](#new_module_utils..CacheObject_new)
-    * [~localUserLoggedIn(req, res, params_user, callback)](#module_utils..localUserLoggedIn)
-
-<a name="module_utils..CacheObject"></a>
-
-### utils~CacheObject
-**Kind**: inner class of [<code>utils</code>](#module_utils)  
-<a name="new_module_utils..CacheObject_new"></a>
-
-#### new CacheObject([name], contents)
-Allows simple interfaces to handle caching an object in memory. Used to cache data read from the filesystem.
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [name] | <code>string</code> | Optional name to assign to the Cached Object. |
-| contents | <code>object</code> | The contents of this cached object. Intended to be a JavaScript object. But could be anything. |
-
 <a name="module_utils..localUserLoggedIn"></a>
 
 ### utils~localUserLoggedIn(req, res, params_user, callback)
@@ -1526,7 +1614,6 @@ And saves this data. Originally an undocumented endpoint.
 ## star\_handler
 Handler for any endpoints whose slug after `/api/` is `star`.
 
-**Implements**: <code>logger</code>, <code>users</code>, <code>data</code>, <code>common\_handler</code>  
 <a name="module_star_handler..getStars"></a>
 
 ### star_handler~getStars(req, res)
@@ -1534,7 +1621,6 @@ Endpoint for `GET /api/stars`. Whose endgoal is to return an array of all packag
 the authenticated user has stared.
 
 **Kind**: inner method of [<code>star\_handler</code>](#module_star_handler)  
-**Implements**: <code>users.VerifyAuth</code>, <code>data.GetPackageCollection</code>, <code>logger.HTTPLog</code>, <code>common.ServerError</code>, <code>common.AuthFail</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -1546,7 +1632,6 @@ the authenticated user has stared.
 ## user\_handler
 Handler for endpoints whose slug after `/api/` is `user`.
 
-**Implements**: <code>logger</code>, <code>users</code>, <code>data</code>, <code>collection</code>, <code>common\_handler</code>  
 <a name="module_user_handler..getLoginStars"></a>
 
 ### user_handler~getLoginStars(req, res)
@@ -1555,10 +1640,9 @@ An array of Package Object Short's collected from the authenticated user's
 star gazer list.
 
 **Kind**: inner method of [<code>user\_handler</code>](#module_user_handler)  
-**Implements**: <code>users.GetUser</code>, <code>data.GetPackageCollection</code>, <code>collection.POSPrune</code>, <code>logger.HTTPLog</code>, <code>common.ServerError</code>, <code>common.NotFound</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| req | <code>object</code> | - |
-| res | <code>object</code> | - |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 

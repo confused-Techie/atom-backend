@@ -1,13 +1,23 @@
 # Complexity report, 8/13/2022
 
-* Mean per-function logical LOC: 18.733333333333334
-* Mean per-function parameter count: 0.9845679012345678
-* Mean per-function cyclomatic complexity: 4.561728395061729
-* Mean per-function Halstead effort: 15739.945606032645
-* Mean per-module maintainability index: 62.508661643829555
-* First-order density: 3.7037037037037033%
-* Change cost: 16.049382716049383%
+* Mean per-function logical LOC: 17.16
+* Mean per-function parameter count: 0.8861111111111111
+* Mean per-function cyclomatic complexity: 4.205555555555556
+* Mean per-function Halstead effort: 14187.519322643686
+* Mean per-module maintainability index: 64.14224315404634
+* First-order density: 4%
+* Change cost: 15%
 * Core size: 100%
+
+## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/cache.js
+
+* Physical LOC: 28
+* Logical LOC: 3
+* Mean parameter count: 0
+* Cyclomatic complexity: 1
+* Cyclomatic complexity density: 33.33333333333333%
+* Maintainability index: 78.8444767459975
+* Dependency count: 1
 
 ## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/config.js
 
