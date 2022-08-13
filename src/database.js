@@ -426,8 +426,16 @@ async function getUserCollectionById(ids) {
     let user = await getUserByID(ids[i]);
 
     if (!user.ok) {
-      logger.warningLog(null, null, `Unable to find user id: ${ids[i]}, skipping...`);
-      logger.warningLog(null, null, `Details on Not Found User: ${user.short} - ${user.content}`);
+      logger.warningLog(
+        null,
+        null,
+        `Unable to find user id: ${ids[i]}, skipping...`
+      );
+      logger.warningLog(
+        null,
+        null,
+        `Details on Not Found User: ${user.short} - ${user.content}`
+      );
       continue;
     }
 

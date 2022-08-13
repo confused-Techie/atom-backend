@@ -30,7 +30,11 @@ async function shutdown() {
       // this will tell us if we called for its data to be saved previously.
       // Now we will write it.
       //let write = resources.write("user", cached_user.data);
-      let write = { ok: false, short: "Severe Server Error", content: "Deprecaited" };
+      let write = {
+        ok: false,
+        short: "Severe Server Error",
+        content: "Deprecaited",
+      };
       console.log("data.shutdown use of resources.write is removed!");
       logger.debugLog(
         `${write.ok ? "Successfully" : "Unsuccessfully"} Saved User Cache.`
@@ -235,8 +239,12 @@ async function getAllPackages() {
     if (cached_packages === undefined) {
       logger.debugLog("Creating Full Package Cache from SQL");
 
-      console.log('SQL_DATA Is removed, data.getAllPackages Non-Functional.');
-      return { ok: false, content: cached_packages.data, short: "Severe Server Error"};
+      console.log("SQL_DATA Is removed, data.getAllPackages Non-Functional.");
+      return {
+        ok: false,
+        content: cached_packages.data,
+        short: "Severe Server Error",
+      };
     } else {
       return { ok: true, content: cached_packages.data };
     }
