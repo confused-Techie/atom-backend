@@ -7,7 +7,7 @@
 
 const { Storage } = require("@google-cloud/storage");
 const logger = require("./logger.js");
-const { CacheObject } = require("./utils.js");
+const { CacheObject } = require("./cache.js");
 const { GCLOUD_STORAGE_BUCKET, GOOGLE_APPLICATION_CREDENTIALS } =
   require("./config.js").getConfig();
 

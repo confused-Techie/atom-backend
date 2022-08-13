@@ -1,17 +1,11 @@
 /**
  * @module utils
  * @desc A helper for any functions that are agnostic in hanlders.
- * @implements {resources}
- * @implements {logger}
- * @implements {users}
- * @implements {common}
- * @implements {config}
  */
 const resources = require("./resources.js");
 const logger = require("./logger.js");
-const users = require("./users.js");
 const common = require("./handlers/common_handler.js");
-const { cache_time } = require("./config.js").getConfig();
+const database = require("./database.js");
 
 async function isPackageNameBanned(name) {
   let names = await resources.read("name_ban_list");
@@ -46,7 +40,7 @@ async function isPackageNameBanned(name) {
  * @param {function} callback - The callback to invoke only if the user is properly authenticated.
  */
 async function localUserLoggedIn(req, res, params_user, callback) {
-  let user = await users.verifyAuth(params_user);
+  let user = await database.verifyAuth(params_user);
 
   if (!user.ok) {
     await common.authFail(req, res, user);
@@ -56,31 +50,7 @@ async function localUserLoggedIn(req, res, params_user, callback) {
   callback(user);
 }
 
-/**
- * @class
- * @desc Allows simple interfaces to handle caching an object in memory. Used to cache data read from the filesystem.
- * @param {string} [name] - Optional name to assign to the Cached Object.
- * @param {object} contents - The contents of this cached object. Intended to be a JavaScript object. But could be anything.
- */
-class CacheObject {
-  constructor(contents, name) {
-    this.birth = Date.now();
-    this.data = contents;
-    this.invalidated = false;
-    this.last_validate = 0;
-    this.cache_time = cache_time;
-    this.name = name;
-  }
-  get Expired() {
-    return Date.now() - this.birth > this.cache_time;
-  }
-  invalidate() {
-    this.invalidated = true;
-  }
-}
-
 module.exports = {
   isPackageNameBanned,
-  localUserLoggedIn,
-  CacheObject,
+  localUserLoggedIn
 };

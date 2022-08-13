@@ -102,7 +102,7 @@ async function getPackageCollectionByName(packArray) {
     // Until a proper method is found to query all items natively,
     // for now we will find each packages individually
 
-    let pack_gen;
+    let pack_gen = [];
 
     for (let i = 0; i < packArray.length; i++) {
       let pack = await getPackageByName(packArray[i]);
@@ -118,6 +118,27 @@ async function getPackageCollectionByName(packArray) {
 
     return { ok: true, content: pack_gen };
   } catch (err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+async function getPackageCollectionByID(packArray) {
+  try {
+    // messy way to do this until better method to query multiple items is found.
+    
+    let pack_gen = [];
+    
+    for (let i = 0; i < packArray.length; i++) {
+      let pack = await getPackageByID(packArray[i]);
+      if (!pack.ok) {
+        logger.warningLog(null, null, `Missing Package During getPackageCollectionByID: ${packArray[i]}`);
+      }
+      pack_gen.push(pack.content);
+    }
+    
+    return { ok: true, content: pack_gen };
+    
+  } catch(err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
@@ -241,17 +262,7 @@ async function getUserByName(username) {
       };
     }
 
-    // now to create a JSON object of this user.
-    let obj_return = {
-      user_name: command[0].username,
-      pulsar_token: command[0].pulsartoken,
-      github_token: command[0].githubtoken,
-      created_at: command[0].created_at,
-      meta: command[0].data,
-      id: command[0].id,
-    };
-
-    return { ok: true, content: obj_return };
+    return { ok: true, content: convertToUserFromDB(command) };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -273,16 +284,7 @@ async function getUserByID(id) {
       };
     }
 
-    let obj_return = {
-      user_name: command[0].username,
-      pulsar_token: command[0].pulsartoken,
-      github_token: command[0].githubtoken,
-      created_at: command[0].created_at,
-      meta: command[0].data,
-      id: command[0].id,
-    };
-
-    return { ok: true, content: obj_return };
+    return { ok: true, content: convertToUserFromDB(command) };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -297,24 +299,17 @@ async function verifyAuth(token) {
     `;
 
     if (command.length === 0) {
+      // If the return is zero rows, that means the request was successful 
+      // but nothing matched the query, which in this case is for the token.
+      // so this should return bad auth.
       return {
         ok: false,
         content: `Unable to Verify Auth for Token: ${token}`,
-        short: "Server Error",
+        short: "Bad Auth",
       };
     }
 
-    // create the object of this user.
-    let obj_return = {
-      user_name: command[0].username,
-      pulsar_token: command[0].pulsartoken,
-      github_token: command[0].githubtoken,
-      created_at: command[0].created_at,
-      meta: command[0].data,
-      id: command[0].id,
-    };
-
-    return { ok: true, content: obj_return };
+    return { ok: true, content: convertToUserFromDB(command) };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -329,7 +324,7 @@ async function getStarredPointersByUser(username) {
     return user;
   }
 
-  let userid = user.id;
+  let userid = user.content.id;
 
   try {
     const command = await sql_storage`
@@ -363,11 +358,11 @@ async function getStarringUsersByPointer(pointer) {
     `;
 
     if (command.length === 0) {
-      return {
-        ok: false,
-        content: `Unable to Get Starring Users for ${pointer}`,
-        short: "Server Error",
-      };
+      // It is likely safe to assume that if nothing matches the packagepointer,
+      // then the package pointer has no stars. So instead of server error 
+      // here we will non-traditionally return an empty array.
+      logger.warningLog(null, null, `No Stars for ${pointer} found, assuming 0 star value.`);
+      return { ok: true, content: [] };
     }
 
     return { ok: true, content: command[0].array };
@@ -470,6 +465,24 @@ async function getSortedPackages(page, dir, method) {
   }
 }
 
+/**
+* @function convertToUserFromDB
+* @desc Takes the standard Database Query column array of a single user 
+* query and turns it into a JSON object.
+* @param {obj} raw - The Database Query Column array return of a single user query.
+* @returns {obj} A JavaScript/JSON Object of the user data.
+*/ 
+function convertToUserFromDB(raw) {
+  return {
+    user_name: raw[0].username,
+    pulsar_token: raw[0].pulsartoken,
+    github_token: raw[0].githubtoken,
+    created_at: raw[0].created_at,
+    meta: raw[0].data,
+    id: raw[0].id,
+  };
+}
+
 module.exports = {
   checkSQLSetup,
   shutdownSQL,
@@ -477,6 +490,7 @@ module.exports = {
   getPackagePointerByName,
   getPackageByName,
   getPackageCollectionByName,
+  getPackageCollectionByID,
   setPackageByID,
   setPackageByName,
   removePackageByName,
@@ -489,4 +503,6 @@ module.exports = {
   verifyAuth,
   getStarredPointersByUser,
   getStarringUsersByPointer,
+  getPointerTable,
+  getUserCollectionById,
 };

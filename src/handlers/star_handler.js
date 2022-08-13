@@ -1,15 +1,10 @@
 /**
  * @module star_handler
  * @desc Handler for any endpoints whose slug after `/api/` is `star`.
- * @implements {logger}
- * @implements {users}
- * @implements {data}
- * @implements {common_handler}
  */
 
 const logger = require("../logger.js");
-const users = require("../users.js");
-const data = require("../data.js");
+const database = require("../database.js");
 const common = require("./common_handler.js");
 const collection = require("../collection.js");
 const utils = require("../utils.js");
@@ -34,17 +29,24 @@ async function getStars(req, res) {
   };
 
   const onLogin = async (user) => {
-    let packageCollection = await data.getPackageCollection(user.content.stars);
 
+    let pointerCollection = await database.getStarredPointersByUser(user.content.user_name);
+    
+    if (!pointerCollection.ok) {
+      await common.handleError(req, res, pointerCollection);
+      return;
+    }
+    
+    let packageCollection = await database.getPackageCollectionByID(pointerCollection.content);
+    
     if (!packageCollection.ok) {
       await common.handleError(req, res, packageCollection);
       return;
     }
-
-    let newCol = await collection.deepCopy(packageCollection.content);
-    newCol = await collection.prunePOS(newCol);
-
-    res.status(200).json(newCol);
+    
+    packageCollection = await collection.pruneShort(packageCollection.content);
+    
+    res.status(200).json(packageCollection);
     logger.httpLog(req, res);
   };
 
