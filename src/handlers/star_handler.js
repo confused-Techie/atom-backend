@@ -30,7 +30,7 @@ async function getStars(req, res) {
 
   const onLogin = async (user) => {
 
-    let pointerCollection = await database.getStarredPointersByUser(user.content.user_name);
+    let pointerCollection = await database.getStarredPointersByUserID(user.content.id);
     
     if (!pointerCollection.ok) {
       await common.handleError(req, res, pointerCollection);

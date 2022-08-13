@@ -21,6 +21,10 @@ const {
 let sql_storage; // sql object, to interact with the DB,
 // should be set after first call.
 
+/**
+* @function checkSQLSetup
+* @desc Ensures that the SQL Object is properly initialized.
+*/
 function checkSQLSetup() {
   if (sql_storage === undefined) {
     sql_storage = postgres({
@@ -37,12 +41,21 @@ function checkSQLSetup() {
   }
 }
 
+/**
+* @function shutdownSQL
+* @desc Ensures any Database connection is properly, and safely closed before exiting.
+*/
 function shutdownSQL() {
   if (sql_storage !== undefined) {
     sql_storage.end();
   }
 }
 
+/**
+* @function getPackageByID 
+* @desc Takes a package pointer UUID, and returns the package object within 
+* a Server Status Object.
+*/
 async function getPackageByID(id) {
   checkSQLSetup();
 
@@ -65,6 +78,11 @@ async function getPackageByID(id) {
   }
 }
 
+/**
+* @function getPackageByName 
+* @desc Takes a package name, and returns the package object within a Server Status 
+* Object. Leverages database.getPackageByID to do so.
+*/
 async function getPackageByName(name) {
   let pointer = await getPackagePointerByName(name);
 
@@ -75,6 +93,10 @@ async function getPackageByName(name) {
   return await getPackageByID(pointer.content);
 }
 
+/**
+* @function getPackagePointerByName 
+* @desc Returns the package pointer UUID, when provided a package name.
+*/
 async function getPackagePointerByName(name) {
   checkSQLSetup();
 
@@ -97,6 +119,10 @@ async function getPackagePointerByName(name) {
   }
 }
 
+/**
+* @function getPackageCollectionByName 
+* @desc Takes a package name array, and returns an array of the package objects.
+*/
 async function getPackageCollectionByName(packArray) {
   try {
     // Until a proper method is found to query all items natively,
@@ -122,6 +148,10 @@ async function getPackageCollectionByName(packArray) {
   }
 }
 
+/**
+* @function getPackageCollectionByID
+* @desc Takes a package pointer array, and returns an array of the package objects.
+*/
 async function getPackageCollectionByID(packArray) {
   try {
     // messy way to do this until better method to query multiple items is found.
@@ -143,6 +173,11 @@ async function getPackageCollectionByID(packArray) {
   }
 }
 
+/**
+* @function getPointerTable
+* @desc Returns a full package pointer table, allowing the full reference of package names 
+* to package pointer UUIDs.
+*/
 async function getPointerTable() {
   checkSQLSetup();
 
@@ -315,16 +350,8 @@ async function verifyAuth(token) {
   }
 }
 
-async function getStarredPointersByUser(username) {
+async function getStarredPointersByUserID(userid) {
   checkSQLSetup();
-
-  let user = await getUserByName(username);
-
-  if (!user.ok) {
-    return user;
-  }
-
-  let userid = user.content.id;
 
   try {
     const command = await sql_storage`
@@ -345,6 +372,20 @@ async function getStarredPointersByUser(username) {
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
+}
+
+async function getStarredPointersByUserName(username) {
+  let user = await getUserByName(username);
+  
+  if (!user.ok) {
+    return user;
+  }
+  
+  let userid = user.content.id;
+  
+  let starred = await getStarredPointersByUserID(userid);
+  
+  return starred;
 }
 
 async function getStarringUsersByPointer(pointer) {
@@ -501,7 +542,8 @@ module.exports = {
   getUserByName,
   getUserByID,
   verifyAuth,
-  getStarredPointersByUser,
+  getStarredPointersByUserID,
+  getStarredPointersByUserName,
   getStarringUsersByPointer,
   getPointerTable,
   getUserCollectionById,

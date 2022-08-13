@@ -1,18 +1,12 @@
 /**
  * @module user_handler
  * @desc Handler for endpoints whose slug after `/api/` is `user`.
- * @implements {logger}
- * @implements {users}
- * @implements {data}
- * @implements {collection}
- * @implements {common_handler}
  */
 
 const logger = require("../logger.js");
-const users = require("../users.js");
-const data = require("../data.js");
 const collection = require("../collection.js");
 const common = require("./common_handler.js");
+const database = require("../database.js");
 
 /**
  * @async
@@ -20,38 +14,39 @@ const common = require("./common_handler.js");
  * @desc Endpoint for `GET /api/users/:login/stars`. Whose goal is to return
  * An array of Package Object Short's collected from the authenticated user's
  * star gazer list.
- * @param {object} req -
- * @param {object} res -
- * @implements {users.GetUser}
- * @implements {data.GetPackageCollection}
- * @implements {collection.POSPrune}
- * @implements {logger.HTTPLog}
- * @implements {common.ServerError}
- * @implements {common.NotFound}
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
 async function getLoginStars(req, res) {
-  // GET /api/users/:login/stars
+  // GET /api/users/:login/stars 
   let params = {
     login: req.params.login,
   };
-
-  let user = await users.getUser(params.login);
-
+  
+  let user = await database.getUserByName(params.login);
+  
   if (!user.ok) {
     await common.handleError(req, res, user);
     return;
   }
-
-  let packages = await data.getPackageCollection(user.content.stars);
-
-  if (!packages.ok) {
-    await common.handleError(req, res, packages);
+  
+  let pointerCollection = await database.getStarredPointersByUserID(user.content.id);
+  
+  if (!pointerCollection.ok) {
+    await common.handleError(req, res, pointerCollection);
     return;
   }
-  let cpPackages = await collection.deepCopy(packages.content);
-  cpPackages = await collection.prunePOS(cpPackages.content); // package object short prune
-
-  res.status(200).json(cpPackages);
+  
+  let packageCollection = await database.getPackageCollectionByID(pointerCollection.content);
+  
+  if (!packageCollection.ok) {
+    await common.handleError(req, res, packageCollection);
+    return;
+  }
+  
+  packageCollection = await collection.pruneShort(packageCollection.content);
+  
+  res.status(200).json(packageCollection);
   logger.httpLog(req, res);
 }
 
