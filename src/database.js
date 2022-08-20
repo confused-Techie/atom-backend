@@ -222,7 +222,7 @@ async function setPackageByName(name, data) {
 
   const write = await setPackageByID(pointer.content, data);
 
-  return (write.ok) ? { ok: true, content: data } : write;
+  return write.ok ? { ok: true, content: data } : write;
 }
 
 async function removePackageByName(name) {
@@ -246,7 +246,9 @@ async function getFeaturedPackages() {
 
   let allFeatured = await getPackageCollectionByName(featuredArray.content);
 
-  return (allFeatured.ok) ? { ok: true, content: allFeatured.content } : allFeatured;
+  return allFeatured.ok
+    ? { ok: true, content: allFeatured.content }
+    : allFeatured;
 }
 
 async function getTotalPackageEstimate() {
