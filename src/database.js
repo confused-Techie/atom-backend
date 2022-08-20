@@ -22,23 +22,21 @@ let sql_storage; // sql object, to interact with the DB,
 // should be set after first call.
 
 /**
- * @function checkSQLSetup
+ * @function setupSQL
  * @desc Ensures that the SQL Object is properly initialized.
  */
-function checkSQLSetup() {
-  if (sql_storage === undefined) {
-    sql_storage = postgres({
-      host: DB_HOST,
-      username: DB_USER,
-      password: DB_PASS,
-      database: DB_DB,
-      port: DB_PORT,
-      ssl: {
-        rejectUnauthorized: true,
-        ca: fs.readFileSync(DB_SSL_CERT).toString(),
-      },
-    });
-  }
+function setupSQL() {
+  sql_storage = postgres({
+    host: DB_HOST,
+    username: DB_USER,
+    password: DB_PASS,
+    database: DB_DB,
+    port: DB_PORT,
+    ssl: {
+      rejectUnauthorized: true,
+      ca: fs.readFileSync(DB_SSL_CERT).toString(),
+    },
+  });
 }
 
 /**
@@ -57,11 +55,11 @@ function shutdownSQL() {
  * a Server Status Object.
  */
 async function getPackageByID(id) {
-  checkSQLSetup();
-
   try {
+    sql_storage ?? setupSQL();
+
     const command = await sql_storage`
-      SELECT data FROM packages 
+      SELECT data FROM packages
       WHERE pointer=${id};
     `;
 
@@ -98,11 +96,11 @@ async function getPackageByName(name) {
  * @desc Returns the package pointer UUID, when provided a package name.
  */
 async function getPackagePointerByName(name) {
-  checkSQLSetup();
-
   try {
+    sql_storage ?? setupSQL();
+
     const command = await sql_storage`
-      SELECT pointer FROM pointers 
+      SELECT pointer FROM pointers
       WHERE name=${name};
     `;
 
@@ -182,9 +180,9 @@ async function getPackageCollectionByID(packArray) {
  * to package pointer UUIDs.
  */
 async function getPointerTable() {
-  checkSQLSetup();
-
   try {
+    sql_storage ?? setupSQL();
+
     const command = await sql_storage`
       SELECT ARRAY (SELECT * FROM pointers);
     `;
@@ -204,9 +202,9 @@ async function getPointerTable() {
 }
 
 async function setPackageByID(id, data) {
-  checkSQLSetup();
-
   try {
+    sql_storage ?? setupSQL();
+
     // TODO
     // should contain a command that can edit an existing package with this new data.
     // using the id as the uuid of the item.
@@ -216,8 +214,6 @@ async function setPackageByID(id, data) {
 }
 
 async function setPackageByName(name, data) {
-  checkSQLSetup();
-
   const pointer = await getPackageByName(name);
 
   if (!pointer.ok) {
@@ -226,10 +222,7 @@ async function setPackageByName(name, data) {
 
   const write = await setPackageByID(pointer.content, data);
 
-  if (!write.ok) {
-    return write;
-  }
-  return { ok: true, content: data };
+  return (write.ok) ? { ok: true, content: data } : write;
 }
 
 async function removePackageByName(name) {
@@ -245,8 +238,6 @@ async function removePackageByID(id) {
 }
 
 async function getFeaturedPackages() {
-  checkSQLSetup();
-
   let featuredArray = await storage.getFeaturedPackages();
 
   if (!featuredArray.ok) {
@@ -255,17 +246,13 @@ async function getFeaturedPackages() {
 
   let allFeatured = await getPackageCollectionByName(featuredArray.content);
 
-  if (!allFeatured.ok) {
-    return allFeatured;
-  }
-
-  return { ok: true, content: allFeatured.content };
+  return (allFeatured.ok) ? { ok: true, content: allFeatured.content } : allFeatured;
 }
 
 async function getTotalPackageEstimate() {
-  checkSQLSetup();
-
   try {
+    sql_storage ?? setupSQL();
+
     const command = await sql_storage`
       SELECT reltuples AS estimate FROM pg_class WHERE relname='packages';
     `;
@@ -285,9 +272,9 @@ async function getTotalPackageEstimate() {
 }
 
 async function getUserByName(username) {
-  checkSQLSetup();
-
   try {
+    sql_storage ?? setupSQL();
+
     const command = await sql_storage`
       SELECT * FROM users WHERE username=${username};
     `;
@@ -307,9 +294,9 @@ async function getUserByName(username) {
 }
 
 async function getUserByID(id) {
-  checkSQLSetup();
-
   try {
+    sql_storage ?? setupSQL();
+
     const command = await sql_storage`
       SELECT * FROM users WHERE id=${id};
     `;
@@ -329,9 +316,9 @@ async function getUserByID(id) {
 }
 
 async function verifyAuth(token) {
-  checkSQLSetup();
-
   try {
+    sql_storage ?? setupSQL();
+
     const command = await sql_storage`
       SELECT * FROM users WHERE pulsartoken=${token};
     `;
@@ -354,9 +341,9 @@ async function verifyAuth(token) {
 }
 
 async function getStarredPointersByUserID(userid) {
-  checkSQLSetup();
-
   try {
+    sql_storage ?? setupSQL();
+
     const command = await sql_storage`
       SELECT ARRAY (
         SELECT packagepointer FROM stars WHERE userid=${userid}
@@ -392,9 +379,9 @@ async function getStarredPointersByUserName(username) {
 }
 
 async function getStarringUsersByPointer(pointer) {
-  checkSQLSetup();
-
   try {
+    sql_storage ?? setupSQL();
+
     const command = await sql_storage`
       SELECT ARRAY (
         SELECT userid FROM stars WHERE packagepointer=${pointer}
@@ -451,8 +438,6 @@ async function getSortedPackages(page, dir, method) {
   // page, sort method, and direction. We must figure out the rest here.
   // only knowing we have a valid sort method provided.
 
-  checkSQLSetup();
-
   let offset = 0;
   let limit = paginated_amount;
 
@@ -461,6 +446,8 @@ async function getSortedPackages(page, dir, method) {
   }
 
   try {
+    sql_storage ?? setupSQL();
+
     let command;
 
     switch (method) {
@@ -476,7 +463,7 @@ async function getSortedPackages(page, dir, method) {
         break;
       case "created_at":
         command = await sql_storage`
-          SELECT ARRAY 
+          SELECT ARRAY
             (SELECT data FROM packages ORDER BY data->'created' ${
               dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`
             }
@@ -486,7 +473,7 @@ async function getSortedPackages(page, dir, method) {
         break;
       case "updated_at":
         command = await sql_storage`
-          SELECT ARRAY 
+          SELECT ARRAY
             (SELECT data FROM packages ORDER BY data->'updated' ${
               dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`
             }
@@ -496,7 +483,7 @@ async function getSortedPackages(page, dir, method) {
         break;
       case "stars":
         command = await sql_storage`
-          SELECT ARRAY 
+          SELECT ARRAY
             (SELECT data FROM packages ORDER BY data->'stargazers_count' ${
               dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`
             }
@@ -542,7 +529,6 @@ function convertToUserFromDB(raw) {
 }
 
 module.exports = {
-  checkSQLSetup,
   shutdownSQL,
   getPackageByID,
   getPackagePointerByName,
