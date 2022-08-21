@@ -60,17 +60,12 @@ async function getPackageByID(id) {
 
     const command = await sql_storage`
       SELECT data FROM packages
-      WHERE pointer=${id};
+      WHERE pointer = ${id};
     `;
 
-    if (command.length === 0) {
-      return {
-        ok: false,
-        content: `${id} was not found within packages db.`,
-        short: "Not Found",
-      };
-    }
-    return { ok: true, content: command[0].data };
+    return command.length !== 0
+      ? { ok: true, content: command[0].data }
+      : { ok: false, content: `package ${id} does not exist.`, short: "Not Found"};
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -78,40 +73,23 @@ async function getPackageByID(id) {
 
 /**
  * @function getPackageByName
- * @desc Takes a package name, and returns the package object within a Server Status
- * Object. Leverages database.getPackageByID to do so.
+ * @desc Takes a package name, and returns the package object within a Server Status Object.
  */
 async function getPackageByName(name) {
-  let pointer = await getPackagePointerByName(name);
-
-  if (!pointer.ok) {
-    return pointer;
-  }
-
-  return await getPackageByID(pointer.content);
-}
-
-/**
- * @function getPackagePointerByName
- * @desc Returns the package pointer UUID, when provided a package name.
- */
-async function getPackagePointerByName(name) {
   try {
     sql_storage ?? setupSQL();
 
     const command = await sql_storage`
-      SELECT pointer FROM pointers
-      WHERE name=${name};
+      SELECT data FROM packages
+      WHERE pointer IN (
+        SELECT pointer FROM names
+        WHERE name = ${name}
+      );
     `;
 
-    if (command.length === 0) {
-      return {
-        ok: false,
-        content: `${name} was not found within pointer db.`,
-        short: "Not Found",
-      };
-    }
-    return { ok: true, content: command[0].pointer };
+    return command.length !== 0
+      ? { ok: true, content: command[0].pointer }
+      : { ok: false, content: `package ${name} not found.`, short: "Not Found"};
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -123,24 +101,21 @@ async function getPackagePointerByName(name) {
  */
 async function getPackageCollectionByName(packArray) {
   try {
-    // Until a proper method is found to query all items natively,
-    // for now we will find each packages individually
+    sql_storage ?? setupSQL();
 
-    let pack_gen = [];
+    const packages = packArray.join(", ");
 
-    for (let i = 0; i < packArray.length; i++) {
-      let pack = await getPackageByName(packArray[i]);
-      if (!pack.ok) {
-        logger.warningLog(
-          null,
-          null,
-          `Missing Package During getPackageCollectionByName: ${packArray[i]}`
-        );
-      }
-      pack_gen.push(pack.content);
-    }
+    const command = await sql_storage`
+      SELECT data FROM packages
+      WHERE pointer IN (
+        SELECT pointer FROM names
+        WHERE name IN (${packages})
+      );
+    `;
 
-    return { ok: true, content: pack_gen };
+    return command.length !== 0
+      ? { ok: true, content: command }
+      : { ok: false, content: `No packages found.`, short: "Not Found"};
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -152,23 +127,18 @@ async function getPackageCollectionByName(packArray) {
  */
 async function getPackageCollectionByID(packArray) {
   try {
-    // messy way to do this until better method to query multiple items is found.
+    sql_storage ?? setupSQL();
 
-    let pack_gen = [];
+    const pointers = packArray.join(", ");
 
-    for (let i = 0; i < packArray.length; i++) {
-      let pack = await getPackageByID(packArray[i]);
-      if (!pack.ok) {
-        logger.warningLog(
-          null,
-          null,
-          `Missing Package During getPackageCollectionByID: ${packArray[i]}`
-        );
-      }
-      pack_gen.push(pack.content);
-    }
+    const command = await sql_storage`
+      SELECT data FROM packages
+      WHERE pointer IN (${pointers});
+    `;
 
-    return { ok: true, content: pack_gen };
+    return command.length !== 0
+      ? { ok: true, content: command }
+      : { ok: false, content: `No packages found.`, short: "Not Found"};
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -184,45 +154,60 @@ async function getPointerTable() {
     sql_storage ?? setupSQL();
 
     const command = await sql_storage`
-      SELECT ARRAY (SELECT * FROM pointers);
+      SELECT * FROM names;
     `;
 
-    if (command.length === 0) {
-      return {
-        ok: false,
-        content: "Unable to get all Package Pointers.",
-        short: "Server Error",
-      };
-    }
-
-    return { ok: true, content: command[0].array };
+    return command.length !== 0
+      ? { ok: true, content: command }
+      : { ok: false, content: "Unable to get Package Pointers.", short: "Server Error" };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
 
-async function setPackageByID(id, data) {
+async function updatePackageByID(id, data) {
   try {
     sql_storage ?? setupSQL();
 
-    // TODO
-    // should contain a command that can edit an existing package with this new data.
-    // using the id as the uuid of the item.
+    const jsonData = JSON.stringify(data);
+
+    const command = await sql_storage`
+      UPDATE packages
+      SET data = ${jsonData}, updated = CURRENT_TIMESTAMP
+      WHERE pointer = ${id}
+      RETURNING updated;
+    `;
+
+    return command[0].updated !== undefined
+      ? { ok: true, content: command[0].updated }
+      : { ok: false, content: `Unable to update the ${id} package.`, short: "Server Error" };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
 
-async function setPackageByName(name, data) {
-  const pointer = await getPackageByName(name);
+async function updatePackageByName(name, data) {
+  try {
+    sql_storage ?? setupSQL();
 
-  if (!pointer.ok) {
-    return pointer;
+    const jsonData = JSON.stringify(data);
+
+    const command = await sql_storage`
+      UPDATE packages
+      SET data = ${jsonData}, updated = CURRENT_TIMESTAMP
+      WHERE pointer IN (
+        SELECT pointer FROM names
+        WHERE name = ${name}
+      )
+      RETURNING updated;
+    `;
+
+    return command[0].updated !== undefined
+      ? { ok: true, content: command[0].updated }
+      : { ok: false, content: `Unable to update the ${id} package.`, short: "Server Error" };
+  } catch (err) {
+    return { ok: false, content: err, short: "Server Error" };
   }
-
-  const write = await setPackageByID(pointer.content, data);
-
-  return write.ok ? { ok: true, content: data } : write;
 }
 
 async function removePackageByName(name) {
@@ -533,12 +518,11 @@ function convertToUserFromDB(raw) {
 module.exports = {
   shutdownSQL,
   getPackageByID,
-  getPackagePointerByName,
   getPackageByName,
   getPackageCollectionByName,
   getPackageCollectionByID,
-  setPackageByID,
-  setPackageByName,
+  updatePackageByID,
+  updatePackageByName,
   removePackageByName,
   removePackageByID,
   getFeaturedPackages,
