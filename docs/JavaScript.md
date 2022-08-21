@@ -372,7 +372,6 @@ with and retreive data from the cloud hosted database instance.
     * [~shutdownSQL()](#module_database..shutdownSQL)
     * [~getPackageByID()](#module_database..getPackageByID)
     * [~getPackageByName()](#module_database..getPackageByName)
-    * [~getPackagePointerByName()](#module_database..getPackagePointerByName)
     * [~getPackageCollectionByName()](#module_database..getPackageCollectionByName)
     * [~getPackageCollectionByID()](#module_database..getPackageCollectionByID)
     * [~getPointerTable()](#module_database..getPointerTable)
@@ -400,14 +399,7 @@ a Server Status Object.
 <a name="module_database..getPackageByName"></a>
 
 ### database~getPackageByName()
-Takes a package name, and returns the package object within a Server Status
-Object. Leverages database.getPackageByID to do so.
-
-**Kind**: inner method of [<code>database</code>](#module_database)  
-<a name="module_database..getPackagePointerByName"></a>
-
-### database~getPackagePointerByName()
-Returns the package pointer UUID, when provided a package name.
+Takes a package name, and returns the package object within a Server Status Object.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
 <a name="module_database..getPackageCollectionByName"></a>
