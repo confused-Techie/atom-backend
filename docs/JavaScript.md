@@ -368,7 +368,7 @@ with and retreive data from the cloud hosted database instance.
 
 
 * [database](#module_database)
-    * [~checkSQLSetup()](#module_database..checkSQLSetup)
+    * [~setupSQL()](#module_database..setupSQL)
     * [~shutdownSQL()](#module_database..shutdownSQL)
     * [~getPackageByID()](#module_database..getPackageByID)
     * [~getPackageByName()](#module_database..getPackageByName)
@@ -378,9 +378,9 @@ with and retreive data from the cloud hosted database instance.
     * [~getPointerTable()](#module_database..getPointerTable)
     * [~convertToUserFromDB(raw)](#module_database..convertToUserFromDB) ⇒ <code>obj</code>
 
-<a name="module_database..checkSQLSetup"></a>
+<a name="module_database..setupSQL"></a>
 
-### database~checkSQLSetup()
+### database~setupSQL()
 Ensures that the SQL Object is properly initialized.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
