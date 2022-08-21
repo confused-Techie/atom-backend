@@ -222,7 +222,7 @@ async function updatePackageByName(name, data) {
       ? { ok: true, content: command[0].updated }
       : {
           ok: false,
-          content: `Unable to update the ${id} package.`,
+          content: `Unable to update the ${name} package.`,
           short: "Server Error",
         };
   } catch (err) {
