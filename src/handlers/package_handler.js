@@ -606,7 +606,10 @@ async function getPackagesVersionTarball(req, res) {
   pack.content.downloads++;
 
   // then lets save this updated info.
-  let save = await database.updatePackageByName(params.packageName, pack.content);
+  let save = await database.updatePackageByName(
+    params.packageName,
+    pack.content
+  );
 
   if (!save.ok) {
     logger.warningLog(req, res, save.content);

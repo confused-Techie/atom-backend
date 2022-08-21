@@ -65,7 +65,11 @@ async function getPackageByID(id) {
 
     return command.length !== 0
       ? { ok: true, content: command[0].data }
-      : { ok: false, content: `package ${id} does not exist.`, short: "Not Found"};
+      : {
+          ok: false,
+          content: `package ${id} does not exist.`,
+          short: "Not Found",
+        };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -89,7 +93,11 @@ async function getPackageByName(name) {
 
     return command.length !== 0
       ? { ok: true, content: command[0].pointer }
-      : { ok: false, content: `package ${name} not found.`, short: "Not Found"};
+      : {
+          ok: false,
+          content: `package ${name} not found.`,
+          short: "Not Found",
+        };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -115,7 +123,7 @@ async function getPackageCollectionByName(packArray) {
 
     return command.length !== 0
       ? { ok: true, content: command }
-      : { ok: false, content: `No packages found.`, short: "Not Found"};
+      : { ok: false, content: `No packages found.`, short: "Not Found" };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -138,7 +146,7 @@ async function getPackageCollectionByID(packArray) {
 
     return command.length !== 0
       ? { ok: true, content: command }
-      : { ok: false, content: `No packages found.`, short: "Not Found"};
+      : { ok: false, content: `No packages found.`, short: "Not Found" };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -159,7 +167,11 @@ async function getPointerTable() {
 
     return command.length !== 0
       ? { ok: true, content: command }
-      : { ok: false, content: "Unable to get Package Pointers.", short: "Server Error" };
+      : {
+          ok: false,
+          content: "Unable to get Package Pointers.",
+          short: "Server Error",
+        };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -180,7 +192,11 @@ async function updatePackageByID(id, data) {
 
     return command[0].updated !== undefined
       ? { ok: true, content: command[0].updated }
-      : { ok: false, content: `Unable to update the ${id} package.`, short: "Server Error" };
+      : {
+          ok: false,
+          content: `Unable to update the ${id} package.`,
+          short: "Server Error",
+        };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -204,7 +220,11 @@ async function updatePackageByName(name, data) {
 
     return command[0].updated !== undefined
       ? { ok: true, content: command[0].updated }
-      : { ok: false, content: `Unable to update the ${id} package.`, short: "Server Error" };
+      : {
+          ok: false,
+          content: `Unable to update the ${id} package.`,
+          short: "Server Error",
+        };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
