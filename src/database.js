@@ -68,7 +68,7 @@ async function getPackageByID(id) {
       WHERE pointer = ${id};
     `;
 
-    return command.length !== 0
+    return command.count !== 0
       ? { ok: true, content: command[0].data }
       : {
           ok: false,
@@ -96,7 +96,7 @@ async function getPackageByName(name) {
       );
     `;
 
-    return command.length !== 0
+    return command.count !== 0
       ? { ok: true, content: command[0].pointer }
       : {
           ok: false,
@@ -126,7 +126,7 @@ async function getPackageCollectionByName(packArray) {
       );
     `;
 
-    return command.length !== 0
+    return command.count !== 0
       ? { ok: true, content: command }
       : { ok: false, content: `No packages found.`, short: "Not Found" };
   } catch (err) {
@@ -149,7 +149,7 @@ async function getPackageCollectionByID(packArray) {
       WHERE pointer IN (${pointers});
     `;
 
-    return command.length !== 0
+    return command.count !== 0
       ? { ok: true, content: command }
       : { ok: false, content: `No packages found.`, short: "Not Found" };
   } catch (err) {
@@ -170,7 +170,7 @@ async function getPointerTable() {
       SELECT * FROM names;
     `;
 
-    return command.length !== 0
+    return command.count !== 0
       ? { ok: true, content: command }
       : {
           ok: false,
@@ -269,7 +269,7 @@ async function getTotalPackageEstimate() {
       SELECT reltuples AS estimate FROM pg_class WHERE relname='packages';
     `;
 
-    if (command.length === 0) {
+    if (command.count === 0) {
       return {
         ok: false,
         content: `Unable to query total row count estimate.`,
@@ -292,7 +292,7 @@ async function getUserByName(username) {
       WHERE username = ${username};
     `;
 
-    return command.length !== 0
+    return command.count !== 0
       ? { ok: true, content: convertToUserFromDB(command) }
       : { ok: false, content: `Unable to query for user: ${username}`, short: "Server Error" };
   } catch (err) {
@@ -309,7 +309,7 @@ async function getUserByID(id) {
       WHERE uuid = ${id};
     `;
 
-    if (command.length === 0) {
+    if (command.count === 0) {
       return {
         ok: false,
         content: `Unable to get User By ID: ${id}`,
@@ -317,7 +317,7 @@ async function getUserByID(id) {
       };
     }
 
-    return command.length !== 0
+    return command.count !== 0
       ? { ok: true, content: convertToUserFromDB(command) }
       : { ok: false, content: `Unable to get User By ID: ${id}`, short: "Server Error" } ;
   } catch (err) {
@@ -334,7 +334,7 @@ async function verifyAuth(token) {
       WHERE auth = ${token};
     `;
 
-    if (command.length === 0) {
+    if (command.count === 0) {
       // If the return is zero rows, that means the request was successful
       // but nothing matched the query, which in this case is for the token.
       // so this should return bad auth.
@@ -361,7 +361,7 @@ async function getStarredPointersByUserID(userid) {
       );
     `;
 
-    if (command.length === 0) {
+    if (command.count === 0) {
       return {
         ok: false,
         content: `Unable to Get Starred Pointers for ${userid}`,
@@ -399,7 +399,7 @@ async function getStarringUsersByPointer(pointer) {
       );
     `;
 
-    if (command.length === 0) {
+    if (command.count === 0) {
       // It is likely safe to assume that if nothing matches the packagepointer,
       // then the package pointer has no stars. So instead of server error
       // here we will non-traditionally return an empty array.
