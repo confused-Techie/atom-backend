@@ -288,18 +288,13 @@ async function getUserByName(username) {
     sql_storage ??= setupSQL();
 
     const command = await sql_storage`
-      SELECT * FROM users WHERE username=${username};
+      SELECT * FROM users
+      WHERE username = ${username};
     `;
 
-    if (command.length === 0) {
-      return {
-        ok: false,
-        content: `Unable to query for user: ${username}`,
-        short: "Server Error",
-      };
-    }
-
-    return { ok: true, content: convertToUserFromDB(command) };
+    return command.length !== 0
+      ? { ok: true, content: convertToUserFromDB(command) }
+      : { ok: false, content: `Unable to query for user: ${username}`, short: "Server Error" };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -310,7 +305,8 @@ async function getUserByID(id) {
     sql_storage ??= setupSQL();
 
     const command = await sql_storage`
-      SELECT * FROM users WHERE id=${id};
+      SELECT * FROM users
+      WHERE uuid = ${id};
     `;
 
     if (command.length === 0) {
@@ -321,7 +317,9 @@ async function getUserByID(id) {
       };
     }
 
-    return { ok: true, content: convertToUserFromDB(command) };
+    return command.length !== 0
+      ? { ok: true, content: convertToUserFromDB(command) }
+      : { ok: false, content: `Unable to get User By ID: ${id}`, short: "Server Error" } ;
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -332,7 +330,8 @@ async function verifyAuth(token) {
     sql_storage ??= setupSQL();
 
     const command = await sql_storage`
-      SELECT * FROM users WHERE pulsartoken=${token};
+      SELECT * FROM users
+      WHERE auth = ${token};
     `;
 
     if (command.length === 0) {
