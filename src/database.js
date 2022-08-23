@@ -325,27 +325,21 @@ async function getUserByID(id) {
   }
 }
 
-async function verifyAuth(token) {
+async function verifyAuth(name, token) {
   try {
     sql_storage ??= setupSQL();
 
     const command = await sql_storage`
-      SELECT * FROM users
-      WHERE auth = ${token};
+      SELECT 1 FROM users
+      WHERE auth = ${token} AND username = ${name};
     `;
 
-    if (command.count === 0) {
-      // If the return is zero rows, that means the request was successful
-      // but nothing matched the query, which in this case is for the token.
-      // so this should return bad auth.
-      return {
-        ok: false,
-        content: `Unable to Verify Auth for Token: ${token}`,
-        short: "Bad Auth",
-      };
-    }
-
-    return { ok: true, content: convertToUserFromDB(command) };
+    // If the return is zero rows, that means the request was successful
+    // but nothing matched the query, which in this case is for the token.
+    // so this should return bad auth.
+    return command.count !== 0
+      ? { ok: true, content: "Auth verified" }
+      : { ok: false, content: `Unable to Verify Auth for Token: ${token}`, short: "Bad Auth" };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
