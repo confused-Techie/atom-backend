@@ -18,15 +18,20 @@ const {
   paginated_amount,
 } = require("./config.js").getConfig();
 
-let sql_storage; // sql object, to interact with the DB,
-// should be set after first call.
+let sql_storage; // SQL object, to interact with the DB.
+// It is set after the first call with logical nullish assignment
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_nullish_assignment
 
 /**
  * @function setupSQL
- * @desc Ensures that the SQL Object is properly initialized.
+ * @desc Initialize the connection to the PostgreSQL database.
+ * In order to avoid the initialization multiple times,
+ * the logical nullish assignment (??=) can be used in the caller.
+ * Exceptions thrown here should be caught and handled in the caller.
+ * @returns {object} PostgreSQL connection object.
  */
 function setupSQL() {
-  sql_storage = postgres({
+  return postgres({
     host: DB_HOST,
     username: DB_USER,
     password: DB_PASS,
@@ -56,7 +61,7 @@ function shutdownSQL() {
  */
 async function getPackageByID(id) {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const command = await sql_storage`
       SELECT data FROM packages
@@ -81,7 +86,7 @@ async function getPackageByID(id) {
  */
 async function getPackageByName(name) {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const command = await sql_storage`
       SELECT data FROM packages
@@ -109,7 +114,7 @@ async function getPackageByName(name) {
  */
 async function getPackageCollectionByName(packArray) {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const packages = packArray.join(", ");
 
@@ -135,7 +140,7 @@ async function getPackageCollectionByName(packArray) {
  */
 async function getPackageCollectionByID(packArray) {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const pointers = packArray.join(", ");
 
@@ -159,7 +164,7 @@ async function getPackageCollectionByID(packArray) {
  */
 async function getPointerTable() {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const command = await sql_storage`
       SELECT * FROM names;
@@ -179,7 +184,7 @@ async function getPointerTable() {
 
 async function updatePackageByID(id, data) {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const jsonData = JSON.stringify(data);
 
@@ -204,7 +209,7 @@ async function updatePackageByID(id, data) {
 
 async function updatePackageByName(name, data) {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const jsonData = JSON.stringify(data);
 
@@ -258,7 +263,7 @@ async function getFeaturedPackages() {
 
 async function getTotalPackageEstimate() {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const command = await sql_storage`
       SELECT reltuples AS estimate FROM pg_class WHERE relname='packages';
@@ -280,7 +285,7 @@ async function getTotalPackageEstimate() {
 
 async function getUserByName(username) {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const command = await sql_storage`
       SELECT * FROM users WHERE username=${username};
@@ -302,7 +307,7 @@ async function getUserByName(username) {
 
 async function getUserByID(id) {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const command = await sql_storage`
       SELECT * FROM users WHERE id=${id};
@@ -324,7 +329,7 @@ async function getUserByID(id) {
 
 async function verifyAuth(token) {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const command = await sql_storage`
       SELECT * FROM users WHERE pulsartoken=${token};
@@ -349,7 +354,7 @@ async function verifyAuth(token) {
 
 async function getStarredPointersByUserID(userid) {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const command = await sql_storage`
       SELECT ARRAY (
@@ -387,7 +392,7 @@ async function getStarredPointersByUserName(username) {
 
 async function getStarringUsersByPointer(pointer) {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const command = await sql_storage`
       SELECT ARRAY (
@@ -453,7 +458,7 @@ async function getSortedPackages(page, dir, method) {
   }
 
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     let command;
 
