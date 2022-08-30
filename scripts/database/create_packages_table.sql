@@ -1,17 +1,16 @@
 -- Table: public.packages
+-- Drafted: https://github.com/confused-Techie/atom-community-server-backend-JS/issues/39
+-- Credit: @Digitalone1
 
--- DROP TABLE IF EXISTS public.packages;
+CREATE EXTENSION pgcrypto;
 
-CREATE TABLE IF NOT EXISTS public.packages
-(
-    pointer uuid NOT NULL,
-    data jsonb
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public.packages
-    OWNER to doadmin;
-
-COMMENT ON TABLE public.packages
-    IS 'Container for all package data.';
+CREATE TABLE packages (
+    pointer UUID DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    creation_method VARCHAR(256),
+    downloads BIGINT NOT NULL DEFAULT 0,
+    stargazers_count BIGINT NOT NULL DEFAULT 0,
+    data JSONB
+);

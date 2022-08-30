@@ -1,14 +1,8 @@
 -- Table: public.pointers
+-- Drafted: https://github.com/confused-Techie/atom-community-server-backend-JS/issues/39
+-- Credit: @Digitalone1
 
--- DROP TABLE IF EXISTS public.pointers;
-
-CREATE TABLE IF NOT EXISTS public.pointers
-(
-    name text COLLATE pg_catalog."default" NOT NULL,
-    pointer uuid NOT NULL
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public.pointers
-    OWNER to doadmin;
+CREATE TABLE names (
+    name VARCHAR(50) NOT NULL PRIMARY KEY,
+    pointer UUID NOT NULL REFERENCES packages(pointer)
+);
