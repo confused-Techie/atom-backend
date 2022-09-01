@@ -329,7 +329,11 @@ async function getUserByName(username) {
 
     return command.count !== 0
       ? { ok: true, content: command[0] }
-      : { ok: false, content: `Unable to query for user: ${username}`, short: "Server Error" };
+      : {
+          ok: false,
+          content: `Unable to query for user: ${username}`,
+          short: "Server Error",
+        };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -354,7 +358,11 @@ async function getUserByID(id) {
 
     return command.count !== 0
       ? { ok: true, content: command[0] }
-      : { ok: false, content: `Unable to get User By ID: ${id}`, short: "Server Error" } ;
+      : {
+          ok: false,
+          content: `Unable to get User By ID: ${id}`,
+          short: "Server Error",
+        };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -374,7 +382,11 @@ async function verifyAuth(token) {
     // so this should return bad auth.
     return command.count !== 0
       ? { ok: true, content: "Auth verified" }
-      : { ok: false, content: `Unable to Verify Auth for Token: ${token}`, short: "Bad Auth" };
+      : {
+          ok: false,
+          content: `Unable to Verify Auth for Token: ${token}`,
+          short: "Bad Auth",
+        };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
