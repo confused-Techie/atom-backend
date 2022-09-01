@@ -97,7 +97,7 @@ async function getPackageByName(name) {
     `;
 
     return command.count !== 0
-      ? { ok: true, content: command[0].pointer }
+      ? { ok: true, content: command[0].data }
       : {
           ok: false,
           content: `package ${name} not found.`,
@@ -293,7 +293,7 @@ async function getUserByName(username) {
     `;
 
     return command.count !== 0
-      ? { ok: true, content: convertToUserFromDB(command) }
+      ? { ok: true, content: command[0] }
       : { ok: false, content: `Unable to query for user: ${username}`, short: "Server Error" };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
@@ -306,7 +306,7 @@ async function getUserByID(id) {
 
     const command = await sql_storage`
       SELECT * FROM users
-      WHERE uuid = ${id};
+      WHERE id = ${id};
     `;
 
     if (command.count === 0) {
@@ -318,7 +318,7 @@ async function getUserByID(id) {
     }
 
     return command.count !== 0
-      ? { ok: true, content: convertToUserFromDB(command) }
+      ? { ok: true, content: command[0] }
       : { ok: false, content: `Unable to get User By ID: ${id}`, short: "Server Error" } ;
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
@@ -513,24 +513,6 @@ async function getSortedPackages(page, dir, method) {
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
-}
-
-/**
- * @function convertToUserFromDB
- * @desc Takes the standard Database Query column array of a single user
- * query and turns it into a JSON object.
- * @param {obj} raw - The Database Query Column array return of a single user query.
- * @returns {obj} A JavaScript/JSON Object of the user data.
- */
-function convertToUserFromDB(raw) {
-  return {
-    user_name: raw[0].username,
-    pulsar_token: raw[0].pulsartoken,
-    github_token: raw[0].githubtoken,
-    created_at: raw[0].created_at,
-    meta: raw[0].data,
-    id: raw[0].id,
-  };
 }
 
 module.exports = {
