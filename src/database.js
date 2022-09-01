@@ -325,13 +325,13 @@ async function getUserByID(id) {
   }
 }
 
-async function verifyAuth(name, token) {
+async function verifyAuth(token) {
   try {
     sql_storage ??= setupSQL();
 
     const command = await sql_storage`
       SELECT 1 FROM users
-      WHERE auth = ${token} AND username = ${name};
+      WHERE token = ${token};
     `;
 
     // If the return is zero rows, that means the request was successful
