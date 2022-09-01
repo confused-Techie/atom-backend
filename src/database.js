@@ -236,15 +236,50 @@ async function updatePackageByName(name, data) {
 }
 
 async function removePackageByName(name) {
-  // TODO
-  // Should remove the specified package from the db.
-  // If possible with a flag to indicate that it should be deleted.
-  // then if so, a companion function that can restore that deleted package.
+  try {
+    sql_storage ??= setupSQL();
+
+    const command = await sql_storage`
+      UPDATE versions
+      SET status = "removed"
+      WHERE package IN (
+        SELECT pointer FROM names
+        WHERE name = ${name}
+      )
+    `;
+
+    return command.count !== 0
+      ? { ok: true, content: `${id} package successfully removed.` }
+      : {
+          ok: false,
+          content: `Unable remove the ${id} package.`,
+          short: "Server Error",
+        };
+  } catch (err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
 }
 
 async function removePackageByID(id) {
-  // TODO
-  // should use removePackageByName to remove a package.
+  try {
+    sql_storage ??= setupSQL();
+
+    const command = await sql_storage`
+      UPDATE versions
+      SET status = "removed"
+      WHERE package = id
+    `;
+
+    return command.count !== 0
+      ? { ok: true, content: `${id} package successfully removed.` }
+      : {
+          ok: false,
+          content: `Unable remove the ${id} package.`,
+          short: "Server Error",
+        };
+  } catch (err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
 }
 
 async function getFeaturedPackages() {
