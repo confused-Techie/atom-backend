@@ -368,22 +368,24 @@ with and retreive data from the cloud hosted database instance.
 
 
 * [database](#module_database)
-    * [~setupSQL()](#module_database..setupSQL)
+    * [~setupSQL()](#module_database..setupSQL) ⇒ <code>object</code>
     * [~shutdownSQL()](#module_database..shutdownSQL)
     * [~getPackageByID()](#module_database..getPackageByID)
     * [~getPackageByName()](#module_database..getPackageByName)
-    * [~getPackagePointerByName()](#module_database..getPackagePointerByName)
     * [~getPackageCollectionByName()](#module_database..getPackageCollectionByName)
     * [~getPackageCollectionByID()](#module_database..getPackageCollectionByID)
     * [~getPointerTable()](#module_database..getPointerTable)
-    * [~convertToUserFromDB(raw)](#module_database..convertToUserFromDB) ⇒ <code>obj</code>
 
 <a name="module_database..setupSQL"></a>
 
-### database~setupSQL()
-Ensures that the SQL Object is properly initialized.
+### database~setupSQL() ⇒ <code>object</code>
+Initialize the connection to the PostgreSQL database.
+In order to avoid the initialization multiple times,
+the logical nullish assignment (??=) can be used in the caller.
+Exceptions thrown here should be caught and handled in the caller.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - PostgreSQL connection object.  
 <a name="module_database..shutdownSQL"></a>
 
 ### database~shutdownSQL()
@@ -400,14 +402,7 @@ a Server Status Object.
 <a name="module_database..getPackageByName"></a>
 
 ### database~getPackageByName()
-Takes a package name, and returns the package object within a Server Status
-Object. Leverages database.getPackageByID to do so.
-
-**Kind**: inner method of [<code>database</code>](#module_database)  
-<a name="module_database..getPackagePointerByName"></a>
-
-### database~getPackagePointerByName()
-Returns the package pointer UUID, when provided a package name.
+Takes a package name, and returns the package object within a Server Status Object.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
 <a name="module_database..getPackageCollectionByName"></a>
@@ -429,19 +424,6 @@ Returns a full package pointer table, allowing the full reference of package nam
 to package pointer UUIDs.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
-<a name="module_database..convertToUserFromDB"></a>
-
-### database~convertToUserFromDB(raw) ⇒ <code>obj</code>
-Takes the standard Database Query column array of a single user
-query and turns it into a JSON object.
-
-**Kind**: inner method of [<code>database</code>](#module_database)  
-**Returns**: <code>obj</code> - A JavaScript/JSON Object of the user data.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| raw | <code>obj</code> | The Database Query Column array return of a single user query. |
-
 <a name="module_debug_util"></a>
 
 ## debug\_util

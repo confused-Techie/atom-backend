@@ -18,15 +18,20 @@ const {
   paginated_amount,
 } = require("./config.js").getConfig();
 
-let sql_storage; // sql object, to interact with the DB,
-// should be set after first call.
+let sql_storage; // SQL object, to interact with the DB.
+// It is set after the first call with logical nullish assignment
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_nullish_assignment
 
 /**
  * @function setupSQL
- * @desc Ensures that the SQL Object is properly initialized.
+ * @desc Initialize the connection to the PostgreSQL database.
+ * In order to avoid the initialization multiple times,
+ * the logical nullish assignment (??=) can be used in the caller.
+ * Exceptions thrown here should be caught and handled in the caller.
+ * @returns {object} PostgreSQL connection object.
  */
 function setupSQL() {
-  sql_storage = postgres({
+  return postgres({
     host: DB_HOST,
     username: DB_USER,
     password: DB_PASS,
@@ -56,21 +61,20 @@ function shutdownSQL() {
  */
 async function getPackageByID(id) {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const command = await sql_storage`
       SELECT data FROM packages
-      WHERE pointer=${id};
+      WHERE pointer = ${id};
     `;
 
-    if (command.length === 0) {
-      return {
-        ok: false,
-        content: `${id} was not found within packages db.`,
-        short: "Not Found",
-      };
-    }
-    return { ok: true, content: command[0].data };
+    return command.count !== 0
+      ? { ok: true, content: command[0].data }
+      : {
+          ok: false,
+          content: `package ${id} does not exist.`,
+          short: "Not Found",
+        };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -78,40 +82,27 @@ async function getPackageByID(id) {
 
 /**
  * @function getPackageByName
- * @desc Takes a package name, and returns the package object within a Server Status
- * Object. Leverages database.getPackageByID to do so.
+ * @desc Takes a package name, and returns the package object within a Server Status Object.
  */
 async function getPackageByName(name) {
-  let pointer = await getPackagePointerByName(name);
-
-  if (!pointer.ok) {
-    return pointer;
-  }
-
-  return await getPackageByID(pointer.content);
-}
-
-/**
- * @function getPackagePointerByName
- * @desc Returns the package pointer UUID, when provided a package name.
- */
-async function getPackagePointerByName(name) {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const command = await sql_storage`
-      SELECT pointer FROM pointers
-      WHERE name=${name};
+      SELECT data FROM packages
+      WHERE pointer IN (
+        SELECT pointer FROM names
+        WHERE name = ${name}
+      );
     `;
 
-    if (command.length === 0) {
-      return {
-        ok: false,
-        content: `${name} was not found within pointer db.`,
-        short: "Not Found",
-      };
-    }
-    return { ok: true, content: command[0].pointer };
+    return command.count !== 0
+      ? { ok: true, content: command[0].data }
+      : {
+          ok: false,
+          content: `package ${name} not found.`,
+          short: "Not Found",
+        };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -123,24 +114,21 @@ async function getPackagePointerByName(name) {
  */
 async function getPackageCollectionByName(packArray) {
   try {
-    // Until a proper method is found to query all items natively,
-    // for now we will find each packages individually
+    sql_storage ??= setupSQL();
 
-    let pack_gen = [];
+    const packages = packArray.join(", ");
 
-    for (let i = 0; i < packArray.length; i++) {
-      let pack = await getPackageByName(packArray[i]);
-      if (!pack.ok) {
-        logger.warningLog(
-          null,
-          null,
-          `Missing Package During getPackageCollectionByName: ${packArray[i]}`
-        );
-      }
-      pack_gen.push(pack.content);
-    }
+    const command = await sql_storage`
+      SELECT data FROM packages
+      WHERE pointer IN (
+        SELECT pointer FROM names
+        WHERE name IN (${packages})
+      );
+    `;
 
-    return { ok: true, content: pack_gen };
+    return command.count !== 0
+      ? { ok: true, content: command }
+      : { ok: false, content: `No packages found.`, short: "Not Found" };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -152,23 +140,18 @@ async function getPackageCollectionByName(packArray) {
  */
 async function getPackageCollectionByID(packArray) {
   try {
-    // messy way to do this until better method to query multiple items is found.
+    sql_storage ??= setupSQL();
 
-    let pack_gen = [];
+    const pointers = packArray.join(", ");
 
-    for (let i = 0; i < packArray.length; i++) {
-      let pack = await getPackageByID(packArray[i]);
-      if (!pack.ok) {
-        logger.warningLog(
-          null,
-          null,
-          `Missing Package During getPackageCollectionByID: ${packArray[i]}`
-        );
-      }
-      pack_gen.push(pack.content);
-    }
+    const command = await sql_storage`
+      SELECT data FROM packages
+      WHERE pointer IN (${pointers});
+    `;
 
-    return { ok: true, content: pack_gen };
+    return command.count !== 0
+      ? { ok: true, content: command }
+      : { ok: false, content: `No packages found.`, short: "Not Found" };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -181,60 +164,122 @@ async function getPackageCollectionByID(packArray) {
  */
 async function getPointerTable() {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const command = await sql_storage`
-      SELECT ARRAY (SELECT * FROM pointers);
+      SELECT * FROM names;
     `;
 
-    if (command.length === 0) {
-      return {
-        ok: false,
-        content: "Unable to get all Package Pointers.",
-        short: "Server Error",
-      };
-    }
-
-    return { ok: true, content: command[0].array };
+    return command.count !== 0
+      ? { ok: true, content: command }
+      : {
+          ok: false,
+          content: "Unable to get Package Pointers.",
+          short: "Server Error",
+        };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
 
-async function setPackageByID(id, data) {
+async function updatePackageByID(id, data) {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
-    // TODO
-    // should contain a command that can edit an existing package with this new data.
-    // using the id as the uuid of the item.
+    const jsonData = JSON.stringify(data);
+
+    const command = await sql_storage`
+      UPDATE packages
+      SET data = ${jsonData}, updated = CURRENT_TIMESTAMP
+      WHERE pointer = ${id}
+      RETURNING updated;
+    `;
+
+    return command[0].updated !== undefined
+      ? { ok: true, content: command[0].updated }
+      : {
+          ok: false,
+          content: `Unable to update the ${id} package.`,
+          short: "Server Error",
+        };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
 
-async function setPackageByName(name, data) {
-  const pointer = await getPackageByName(name);
+async function updatePackageByName(name, data) {
+  try {
+    sql_storage ??= setupSQL();
 
-  if (!pointer.ok) {
-    return pointer;
+    const jsonData = JSON.stringify(data);
+
+    const command = await sql_storage`
+      UPDATE packages
+      SET data = ${jsonData}, updated = CURRENT_TIMESTAMP
+      WHERE pointer IN (
+        SELECT pointer FROM names
+        WHERE name = ${name}
+      )
+      RETURNING updated;
+    `;
+
+    return command[0].updated !== undefined
+      ? { ok: true, content: command[0].updated }
+      : {
+          ok: false,
+          content: `Unable to update the ${name} package.`,
+          short: "Server Error",
+        };
+  } catch (err) {
+    return { ok: false, content: err, short: "Server Error" };
   }
-
-  const write = await setPackageByID(pointer.content, data);
-
-  return write.ok ? { ok: true, content: data } : write;
 }
 
 async function removePackageByName(name) {
-  // TODO
-  // Should remove the specified package from the db.
-  // If possible with a flag to indicate that it should be deleted.
-  // then if so, a companion function that can restore that deleted package.
+  try {
+    sql_storage ??= setupSQL();
+
+    const command = await sql_storage`
+      UPDATE versions
+      SET status = "removed"
+      WHERE package IN (
+        SELECT pointer FROM names
+        WHERE name = ${name}
+      )
+    `;
+
+    return command.count !== 0
+      ? { ok: true, content: `${id} package successfully removed.` }
+      : {
+          ok: false,
+          content: `Unable remove the ${id} package.`,
+          short: "Server Error",
+        };
+  } catch (err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
 }
 
 async function removePackageByID(id) {
-  // TODO
-  // should use removePackageByName to remove a package.
+  try {
+    sql_storage ??= setupSQL();
+
+    const command = await sql_storage`
+      UPDATE versions
+      SET status = "removed"
+      WHERE package = id
+    `;
+
+    return command.count !== 0
+      ? { ok: true, content: `${id} package successfully removed.` }
+      : {
+          ok: false,
+          content: `Unable remove the ${id} package.`,
+          short: "Server Error",
+        };
+  } catch (err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
 }
 
 async function getFeaturedPackages() {
@@ -253,13 +298,13 @@ async function getFeaturedPackages() {
 
 async function getTotalPackageEstimate() {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const command = await sql_storage`
       SELECT reltuples AS estimate FROM pg_class WHERE relname='packages';
     `;
 
-    if (command.length === 0) {
+    if (command.count === 0) {
       return {
         ok: false,
         content: `Unable to query total row count estimate.`,
@@ -275,21 +320,20 @@ async function getTotalPackageEstimate() {
 
 async function getUserByName(username) {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const command = await sql_storage`
-      SELECT * FROM users WHERE username=${username};
+      SELECT * FROM users
+      WHERE username = ${username};
     `;
 
-    if (command.length === 0) {
-      return {
-        ok: false,
-        content: `Unable to query for user: ${username}`,
-        short: "Server Error",
-      };
-    }
-
-    return { ok: true, content: convertToUserFromDB(command) };
+    return command.count !== 0
+      ? { ok: true, content: command[0] }
+      : {
+          ok: false,
+          content: `Unable to query for user: ${username}`,
+          short: "Server Error",
+        };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -297,13 +341,14 @@ async function getUserByName(username) {
 
 async function getUserByID(id) {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const command = await sql_storage`
-      SELECT * FROM users WHERE id=${id};
+      SELECT * FROM users
+      WHERE id = ${id};
     `;
 
-    if (command.length === 0) {
+    if (command.count === 0) {
       return {
         ok: false,
         content: `Unable to get User By ID: ${id}`,
@@ -311,7 +356,13 @@ async function getUserByID(id) {
       };
     }
 
-    return { ok: true, content: convertToUserFromDB(command) };
+    return command.count !== 0
+      ? { ok: true, content: command[0] }
+      : {
+          ok: false,
+          content: `Unable to get User By ID: ${id}`,
+          short: "Server Error",
+        };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -319,24 +370,23 @@ async function getUserByID(id) {
 
 async function verifyAuth(token) {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const command = await sql_storage`
-      SELECT * FROM users WHERE pulsartoken=${token};
+      SELECT 1 FROM users
+      WHERE token = ${token};
     `;
 
-    if (command.length === 0) {
-      // If the return is zero rows, that means the request was successful
-      // but nothing matched the query, which in this case is for the token.
-      // so this should return bad auth.
-      return {
-        ok: false,
-        content: `Unable to Verify Auth for Token: ${token}`,
-        short: "Bad Auth",
-      };
-    }
-
-    return { ok: true, content: convertToUserFromDB(command) };
+    // If the return is zero rows, that means the request was successful
+    // but nothing matched the query, which in this case is for the token.
+    // so this should return bad auth.
+    return command.count !== 0
+      ? { ok: true, content: "Auth verified" }
+      : {
+          ok: false,
+          content: `Unable to Verify Auth for Token: ${token}`,
+          short: "Bad Auth",
+        };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -344,7 +394,7 @@ async function verifyAuth(token) {
 
 async function getStarredPointersByUserID(userid) {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const command = await sql_storage`
       SELECT ARRAY (
@@ -352,7 +402,7 @@ async function getStarredPointersByUserID(userid) {
       );
     `;
 
-    if (command.length === 0) {
+    if (command.count === 0) {
       return {
         ok: false,
         content: `Unable to Get Starred Pointers for ${userid}`,
@@ -382,7 +432,7 @@ async function getStarredPointersByUserName(username) {
 
 async function getStarringUsersByPointer(pointer) {
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     const command = await sql_storage`
       SELECT ARRAY (
@@ -390,7 +440,7 @@ async function getStarringUsersByPointer(pointer) {
       );
     `;
 
-    if (command.length === 0) {
+    if (command.count === 0) {
       // It is likely safe to assume that if nothing matches the packagepointer,
       // then the package pointer has no stars. So instead of server error
       // here we will non-traditionally return an empty array.
@@ -448,7 +498,7 @@ async function getSortedPackages(page, dir, method) {
   }
 
   try {
-    sql_storage ?? setupSQL();
+    sql_storage ??= setupSQL();
 
     let command;
 
@@ -512,33 +562,14 @@ async function getSortedPackages(page, dir, method) {
   }
 }
 
-/**
- * @function convertToUserFromDB
- * @desc Takes the standard Database Query column array of a single user
- * query and turns it into a JSON object.
- * @param {obj} raw - The Database Query Column array return of a single user query.
- * @returns {obj} A JavaScript/JSON Object of the user data.
- */
-function convertToUserFromDB(raw) {
-  return {
-    user_name: raw[0].username,
-    pulsar_token: raw[0].pulsartoken,
-    github_token: raw[0].githubtoken,
-    created_at: raw[0].created_at,
-    meta: raw[0].data,
-    id: raw[0].id,
-  };
-}
-
 module.exports = {
   shutdownSQL,
   getPackageByID,
-  getPackagePointerByName,
   getPackageByName,
   getPackageCollectionByName,
   getPackageCollectionByID,
-  setPackageByID,
-  setPackageByName,
+  updatePackageByID,
+  updatePackageByName,
   removePackageByName,
   removePackageByID,
   getFeaturedPackages,

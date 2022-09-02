@@ -606,7 +606,10 @@ async function getPackagesVersionTarball(req, res) {
   pack.content.downloads++;
 
   // then lets save this updated info.
-  let save = await database.setPackageByName(params.packageName, pack.content);
+  let save = await database.updatePackageByName(
+    params.packageName,
+    pack.content
+  );
 
   if (!save.ok) {
     logger.warningLog(req, res, save.content);
@@ -665,7 +668,7 @@ async function deletePackageVersion(req, res) {
   delete pack.content[params.versionName];
 
   // now to write back the modified data.
-  let write = database.setPackageByName(params.packageName, pack.content);
+  let write = database.updatePackageByName(params.packageName, pack.content);
 
   if (!write.ok) {
     await common.handleError(req, res, write);
@@ -706,7 +709,7 @@ async function postPackagesEventUninstall(req, res) {
 
     pack.content.downloads--;
 
-    let write = await database.setPackageByName(
+    let write = await database.updatePackageByName(
       params.packageName,
       pack.content
     );
