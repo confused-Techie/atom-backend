@@ -3,6 +3,6 @@
 -- Credit: @Digitalone1
 
 CREATE TABLE names (
-    name VARCHAR(50) NOT NULL PRIMARY KEY,
+    name VARCHAR(128) NOT NULL PRIMARY KEY,
     pointer UUID NOT NULL REFERENCES packages(pointer)
 );

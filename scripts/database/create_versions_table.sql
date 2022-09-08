@@ -9,7 +9,7 @@ CREATE TABLE versions (
     package UUID NOT NULL REFERENCES packages(pointer),
     status versionStatus NOT NULL,
     semver VARCHAR(256) NOT NULL,
-    license VARCHAR(256) NOT NULL,
+    license VARCHAR(128) NOT NULL,
     engine JSONB NOT NULL,
     meta JSONB
 );
