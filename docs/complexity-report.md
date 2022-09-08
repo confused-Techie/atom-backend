@@ -379,7 +379,7 @@
     * Halstead volume: 380.3296723500879
     * Halstead effort: 12318.455498894515
 
-## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/tests/genBadges.js
+## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/scripts/tools/genBadges.js
 
 * Physical LOC: 90
 * Logical LOC: 50
