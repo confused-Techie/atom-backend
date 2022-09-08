@@ -13,7 +13,7 @@ const config = {
 function run() {
   try {
     let coverageRAW = fs.readFileSync(
-      "./coverage/coverage-summary.json",
+      "../coverage/coverage-summary.json",
       "utf8"
     );
     let coverage = JSON.parse(coverageRAW);
@@ -84,8 +84,8 @@ function makeBadge(textDeclare, textValue, color) {
 
 function writeBadge(data) {
   try {
-    fs.writeFileSync("./coverage/badge.svg", data);
-    console.log("Wrote new badge at: './coverage/badge.svg'");
+    fs.writeFileSync("../coverage/badge.svg", data);
+    console.log("Wrote new badge at: '../coverage/badge.svg'");
   } catch (err) {
     console.log(err);
     process.exit(1);

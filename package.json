@@ -9,13 +9,13 @@
   "scripts": {
     "start": "node ./src/server.js",
     "test": "set NODE_ENV=test&& jest",
-    "gen-badge": "echo 'This is no longer needed, after Coveralls Integration. Running anyway...' && node ./src/tests/genBadges.js",
+    "gen-badge": "echo 'This is no longer needed, after Coveralls Integration. Running anyway...' && node ./scripts/tools/genBadges.js",
     "api-docs": "quick-webserver-docs -i ./src/main.js -o ./docs/api.md",
     "lint": "prettier --check -u -w .",
     "complex": "cr --newmi --config .complexrc .",
     "js-docs": "jsdoc2md ./src/*.js ./src/handlers/*.js > ./docs/JavaScript.md",
     "contributors:add": "all-contributors add",
-    "test_search": "node ./src/tests/search.js",
+    "test_search": "node ./scripts/tools/search.js",
     "db_migrate": "echo 'When data.js, resources.js, sql_data.js, users.js is orphaned.' && madge ./src/ && madge --orphans ./src/"
   },
   "author": "confused-Techie",

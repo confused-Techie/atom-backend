@@ -1,4 +1,4 @@
-const collection = require("../collection.js");
+const collection = require("../../src/collection.js");
 
 // This will be something allowing us to test the basic functionality of searching, and nothing else.
 
