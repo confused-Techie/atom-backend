@@ -14,6 +14,10 @@ const { GCLOUD_STORAGE_BUCKET, GOOGLE_APPLICATION_CREDENTIALS } =
 let gcs_storage;
 let cached_banlist, cached_featuredlist;
 
+/**
+ * @function checkGCS
+ * @desc Sets up the Google Cloud Storage Class, to ensure its ready to use.
+ */
 function checkGCS() {
   if (gcs_storage === undefined) {
     gcs_storage = new Storage({
@@ -22,6 +26,14 @@ function checkGCS() {
   }
 }
 
+/**
+ * @async 
+ * @function getBanList 
+ * @desc Reads the ban list from the Google Cloud Storage Space.
+ * Returning the cached parsed JSON object.
+ * If it has been read before during this instance of hosting just the cached 
+ * version is returned.
+ */
 async function getBanList() {
   checkGCS();
 
@@ -53,6 +65,12 @@ async function getBanList() {
   return getNew();
 }
 
+/**
+ * @async 
+ * @function getFeaturedPackages
+ * @desc Returns the hardcoded featured packages file from Google Cloud Storage.
+ * Caching the object once read for this instance of the server run.
+ */
 async function getFeaturedPackages() {
   checkGCS();
 

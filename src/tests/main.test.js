@@ -28,8 +28,8 @@ describe("GET /api/packages/search", () => {
 
 describe("GET /api/packages/:packageName", () => {
   test("Valid package, gives correct object", async () => {
-    const res = await request(app).get("/api/packages/what-a-package");
-    expect(res.body.name).toBe("what-a-package");
+    const res = await request(app).get("/api/packages/language-css");
+    expect(res.body.name).toBe("language-css");
   });
   test("Invalid Package, gives 'Not Found'", async () => {
     const res = await request(app).get("/api/packages/invalid-package");
@@ -38,7 +38,9 @@ describe("GET /api/packages/:packageName", () => {
 });
 
 describe("DELETE /api/packages/:packageName", () => {
-  test("No Auth, fails", async () => {
+  // Since this attempts to delete a package, lets skip until we ensure 
+  // not to comprimise SQL data.
+  test.skip("No Auth, fails", async () => {
     const res = await request(app).remove("/api/packages/what-a-package");
     expect(res.statusCode).toBe(401); // Otherwise the no auth http status code.
   });

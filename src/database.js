@@ -82,22 +82,35 @@ async function getPackageByID(id) {
 
 /**
  * @function getPackageByName
- * @desc Takes a package name, and returns the package object within a Server Status Object.
+ * @desc Takes a package name, and returns the raw SQL package data within a Server Status Object.
  */
 async function getPackageByName(name) {
   try {
     sql_storage ??= setupSQL();
-
+    
+    // While this query acheives the same as the one below it, there is about .1ms saved.
+    //const command = await sql_storage`
+    //  SELECT p.*, JSON_AGG(v.*)
+    //  FROM packages p 
+    //  JOIN versions v ON p.pointer = v.package 
+    //  WHERE pointer IN (
+    //    SELECT pointer 
+    //    FROM names 
+    //    WHERE name = ${name}
+    //  )
+    //  GROUP BY p.pointer, v.package;
+    //`;
     const command = await sql_storage`
-      SELECT data FROM packages
-      WHERE pointer IN (
-        SELECT pointer FROM names
-        WHERE name = ${name}
-      );
+      SELECT p.*, JSON_AGG(v.*)
+      FROM packages p 
+      JOIN versions v ON p.pointer = v.package 
+      JOIN names n ON n.pointer = p.pointer 
+      WHERE n.name = ${name}
+      GROUP BY p.pointer, v.package;
     `;
 
     return command.count !== 0
-      ? { ok: true, content: command[0].data }
+      ? { ok: true, content: command[0] }
       : {
           ok: false,
           content: `package ${name} not found.`,
@@ -111,18 +124,24 @@ async function getPackageByName(name) {
 /**
  * @function getPackageCollectionByName
  * @desc Takes a package name array, and returns an array of the package objects.
+ * You must ensure that the packArray passed is compatible. This function does not coerce compatibility.
  */
 async function getPackageCollectionByName(packArray) {
   try {
     sql_storage ??= setupSQL();
-
-    const packages = packArray.join(", ");
-
+    
+    //let packs = "'" + packArray.join("','") + "'";
+    //let packs = `'${packArray.join("','")}'`;
+    for (let i = 0; i < packArray.length; i++) {
+      packArray[i].replace('"', "'");
+    }
+    // TODO: the packArray passed here is unable to collect featured packages.
+    
     const command = await sql_storage`
-      SELECT data FROM packages
+      SELECT data FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
       WHERE pointer IN (
         SELECT pointer FROM names
-        WHERE name IN (${packages})
+        WHERE name IN (${packArray})
       );
     `;
 
@@ -282,6 +301,13 @@ async function removePackageByID(id) {
   }
 }
 
+/** 
+ * @async 
+ * @function getFeaturedPackages
+ * @desc Collects the hardcoded featured packages array from the storage.js
+ * module. Then uses this.getPackageCollectionByName to retreive details of the 
+ * package.
+ */
 async function getFeaturedPackages() {
   let featuredArray = await storage.getFeaturedPackages();
 
@@ -296,6 +322,12 @@ async function getFeaturedPackages() {
     : allFeatured;
 }
 
+/** 
+ * @async 
+ * @function getTotalPackageEstimate
+ * @desc Returns an estimate of how many rows are included in the packages SQL table.
+ * Used to aid in trunication and page generation of Link headers for large requests.
+ */
 async function getTotalPackageEstimate() {
   try {
     sql_storage ??= setupSQL();
@@ -484,6 +516,14 @@ async function getUserCollectionById(ids) {
   return { ok: true, content: user_array };
 }
 
+/** 
+ * @async 
+ * @function getSortedPackages
+ * @desc Takes the page, direction, and sort method returning the raw sql package 
+ * data for each. This monolithic function handles trunication of the packages,
+ * and sorting, aiming to provide back the raw data, and allow later functions to 
+ * then reconstruct the JSON as needed.
+ */
 async function getSortedPackages(page, dir, method) {
   // Here will be a monolithic function for returning sortable packages arrays.
   // We must keep in mind that all the endpoint handler knows is the
@@ -505,42 +545,38 @@ async function getSortedPackages(page, dir, method) {
     switch (method) {
       case "downloads":
         command = await sql_storage`
-          SELECT ARRAY
-            (SELECT data FROM packages ORDER BY data->'downloads' ${
-              dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`
-            }
-              LIMIT ${limit}
-              OFFSET ${offset});
+          SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
+          ORDER BY downloads 
+          ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC` }
+          LIMIT ${limit}
+          OFFSET ${offset}
         `;
         break;
       case "created_at":
         command = await sql_storage`
-          SELECT ARRAY
-            (SELECT data FROM packages ORDER BY data->'created' ${
-              dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`
-            }
-              LIMIT ${limit}
-              OFFSET ${offset});
+          SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
+          ORDER BY created 
+          ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
+          LIMIT ${limit}
+          OFFSET ${offset}
         `;
         break;
       case "updated_at":
         command = await sql_storage`
-          SELECT ARRAY
-            (SELECT data FROM packages ORDER BY data->'updated' ${
-              dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`
-            }
-              LIMIT ${limit}
-              OFFSET ${offset});
+          SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
+          ORDER BY updated 
+          ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
+          LIMIT ${limit}
+          OFFSET ${offset}
         `;
         break;
       case "stars":
         command = await sql_storage`
-          SELECT ARRAY
-            (SELECT data FROM packages ORDER BY data->'stargazers_count' ${
-              dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`
-            }
-              LIMIT ${limit}
-              OFFSET ${offset});
+          SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
+          ORDER BY stargazers_count 
+          ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
+          LIMIT ${limit}
+          OFFSET ${offset}
         `;
         break;
       default:
@@ -555,8 +591,8 @@ async function getSortedPackages(page, dir, method) {
           short: "Server Error",
         };
     }
-
-    return { ok: true, content: command[0].array };
+    
+    return { ok: true, content: command };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }

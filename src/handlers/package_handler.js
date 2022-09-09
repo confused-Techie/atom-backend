@@ -49,8 +49,8 @@ async function getPackages(req, res) {
     await common.handleError(req, res, packages);
     return;
   }
-
-  let pruned = await collection.PruneShort(packages.content);
+  
+  packages = await utils.constructPackageObjectShort(packages.content);
 
   let total_pages = await database.getTotalPackageEstimate();
 
@@ -74,7 +74,7 @@ async function getPackages(req, res) {
     }&order=${params.direction}>; rel="next"`
   );
 
-  res.status(200).json(pruned);
+  res.status(200).json(packages);
   logger.httpLog(req, res);
 }
 
@@ -173,6 +173,13 @@ async function postPackages(req, res) {
   res.status(201).json(new_pack);
 }
 
+/**
+ * @async
+ * @function getPackagesFeatured
+ * @desc Allows the user to retreive the featured packages, as package object shorts.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 async function getPackagesFeatured(req, res) {
   // GET /api/packages/featured
   // https://github.com/atom/apm/blob/master/src/featured.coffee
@@ -199,7 +206,7 @@ async function getPackagesFeatured(req, res) {
     return;
   }
 
-  let newCol = await collection.pruneShort(col.content);
+  let newCol = await utils.constructPackageObjectShort(col.content);
 
   res.status(200).json(newCol);
   logger.httpLog(req, res);
@@ -273,8 +280,16 @@ async function getPackagesSearch(req, res) {
   logger.httpLog(req, res);
 }
 
+/**
+ * @async
+ * @function getPackagesDetails
+ * @desc Allows the user to request a single package object full, depending 
+ * on the package included in the path parameter.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ */
 async function getPackagesDetails(req, res) {
-  // GET /api/packages/:packageName
+  // GET /api/packages/:packageName  
   let params = {
     engine: query.engine(req),
     name: decodeURIComponent(req.params.packageName),
@@ -286,9 +301,7 @@ async function getPackagesDetails(req, res) {
     return;
   }
 
-  // now that we are using a database, and the data is no longer stored in a cache like
-  // before, we don't have to worry about deep copy nonsense
-  pack = await collection.pruneDetail(pack.content); // Package Object Full Prune
+  pack = await utils.constructPackageObjectFull(pack.content);
 
   if (params.engine) {
     // query.engine returns false if no valid query param is found.
