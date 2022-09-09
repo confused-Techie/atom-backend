@@ -49,7 +49,7 @@ async function getPackages(req, res) {
     await common.handleError(req, res, packages);
     return;
   }
-  
+
   packages = await utils.constructPackageObjectShort(packages.content);
 
   let total_pages = await database.getTotalPackageEstimate();
@@ -283,13 +283,13 @@ async function getPackagesSearch(req, res) {
 /**
  * @async
  * @function getPackagesDetails
- * @desc Allows the user to request a single package object full, depending 
+ * @desc Allows the user to request a single package object full, depending
  * on the package included in the path parameter.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
 async function getPackagesDetails(req, res) {
-  // GET /api/packages/:packageName  
+  // GET /api/packages/:packageName
   let params = {
     engine: query.engine(req),
     name: decodeURIComponent(req.params.packageName),

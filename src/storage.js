@@ -27,11 +27,11 @@ function checkGCS() {
 }
 
 /**
- * @async 
- * @function getBanList 
+ * @async
+ * @function getBanList
  * @desc Reads the ban list from the Google Cloud Storage Space.
  * Returning the cached parsed JSON object.
- * If it has been read before during this instance of hosting just the cached 
+ * If it has been read before during this instance of hosting just the cached
  * version is returned.
  */
 async function getBanList() {
@@ -66,7 +66,7 @@ async function getBanList() {
 }
 
 /**
- * @async 
+ * @async
  * @function getFeaturedPackages
  * @desc Returns the hardcoded featured packages file from Google Cloud Storage.
  * Caching the object once read for this instance of the server run.

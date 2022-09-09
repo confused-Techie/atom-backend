@@ -52,75 +52,74 @@ async function localUserLoggedIn(req, res, params_user, callback) {
 }
 
 /**
- * @async 
+ * @async
  * @function constructPackageObjectFull
- * @desc Takes the raw return of a full row from the packages table, 
+ * @desc Takes the raw return of a full row from the packages table,
  * constructs a standardized package object full from it.
  */
 async function constructPackageObjectFull(pack) {
-  
-  const parseVersions = function(vers) {
+  const parseVersions = function (vers) {
     let retVer = {};
-    
+
     for (let i = 0; i < vers.length; i++) {
       retVer[vers[i].semver] = vers[i].meta;
       retVer[vers[i].semver].license = vers[i].license;
       retVer[vers[i].semver].engine = vers[i].engine;
       retVer[vers[i].semver].dist = {
-        tarball: `${server_url}/api/packages/${pack.name}/versions/${vers[i].semver}/tarball`
+        tarball: `${server_url}/api/packages/${pack.name}/versions/${vers[i].semver}/tarball`,
       };
     }
     return retVer;
   };
-  
-  const findLatestVersion = function(vers) {
+
+  const findLatestVersion = function (vers) {
     for (let i = 0; i < vers.length; i++) {
       if (vers[i].status === "latest") {
         return vers[i].semver;
       }
     }
   };
-  
+
   let newPack = pack.data;
   newPack.downloads = pack.downloads;
   newPack.stargazers_count = pack.stargazers_count;
   newPack.versions = parseVersions(pack.json_agg);
   newPack.releases = {
-    latest: findLatestVersion(pack.json_agg)
+    latest: findLatestVersion(pack.json_agg),
   };
-  
+
   return newPack;
 }
 
 /**
- * @async 
+ * @async
  * @function constructPackageObjectShort
- * @desc Takes a single or array of rows from the db, and returns a JSON 
- * construction of package object shorts 
+ * @desc Takes a single or array of rows from the db, and returns a JSON
+ * construction of package object shorts
  */
 async function constructPackageObjectShort(pack) {
   if (Array.isArray(pack)) {
     let retPacks = [];
-    
+
     for (let i = 0; i < pack.length; i++) {
       let newPack = pack[i].data;
       newPack.downloads = pack[i].downloads;
       newPack.stargazers_count = pack[i].stargazers_count;
       newPack.releases = {
-        latest: pack[i].semver
+        latest: pack[i].semver,
       };
       retPacks.push(newPack);
     }
     return retPacks;
   } else {
-    // not an array 
+    // not an array
     let newPack = pack.data;
     newPack.downloads = pack.downloads;
     newPack.stargazers_count = pack.stargazers_count;
     newPack.releases = {
-      latest: pack.semver
+      latest: pack.semver,
     };
-    
+
     return newPack;
   }
 }
@@ -129,5 +128,5 @@ module.exports = {
   isPackageNameBanned,
   localUserLoggedIn,
   constructPackageObjectFull,
-  constructPackageObjectShort
+  constructPackageObjectShort,
 };

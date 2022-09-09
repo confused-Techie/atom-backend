@@ -38,7 +38,7 @@ describe("GET /api/packages/:packageName", () => {
 });
 
 describe("DELETE /api/packages/:packageName", () => {
-  // Since this attempts to delete a package, lets skip until we ensure 
+  // Since this attempts to delete a package, lets skip until we ensure
   // not to comprimise SQL data.
   test.skip("No Auth, fails", async () => {
     const res = await request(app).remove("/api/packages/what-a-package");

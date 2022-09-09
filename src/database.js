@@ -87,15 +87,15 @@ async function getPackageByID(id) {
 async function getPackageByName(name) {
   try {
     sql_storage ??= setupSQL();
-    
+
     // While this query acheives the same as the one below it, there is about .1ms saved.
     //const command = await sql_storage`
     //  SELECT p.*, JSON_AGG(v.*)
-    //  FROM packages p 
-    //  JOIN versions v ON p.pointer = v.package 
+    //  FROM packages p
+    //  JOIN versions v ON p.pointer = v.package
     //  WHERE pointer IN (
-    //    SELECT pointer 
-    //    FROM names 
+    //    SELECT pointer
+    //    FROM names
     //    WHERE name = ${name}
     //  )
     //  GROUP BY p.pointer, v.package;
@@ -129,14 +129,14 @@ async function getPackageByName(name) {
 async function getPackageCollectionByName(packArray) {
   try {
     sql_storage ??= setupSQL();
-    
+
     //let packs = "'" + packArray.join("','") + "'";
     //let packs = `'${packArray.join("','")}'`;
     for (let i = 0; i < packArray.length; i++) {
       packArray[i].replace('"', "'");
     }
     // TODO: the packArray passed here is unable to collect featured packages.
-    
+
     const command = await sql_storage`
       SELECT data FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
       WHERE pointer IN (
@@ -301,11 +301,11 @@ async function removePackageByID(id) {
   }
 }
 
-/** 
- * @async 
+/**
+ * @async
  * @function getFeaturedPackages
  * @desc Collects the hardcoded featured packages array from the storage.js
- * module. Then uses this.getPackageCollectionByName to retreive details of the 
+ * module. Then uses this.getPackageCollectionByName to retreive details of the
  * package.
  */
 async function getFeaturedPackages() {
@@ -322,8 +322,8 @@ async function getFeaturedPackages() {
     : allFeatured;
 }
 
-/** 
- * @async 
+/**
+ * @async
  * @function getTotalPackageEstimate
  * @desc Returns an estimate of how many rows are included in the packages SQL table.
  * Used to aid in trunication and page generation of Link headers for large requests.
@@ -516,12 +516,12 @@ async function getUserCollectionById(ids) {
   return { ok: true, content: user_array };
 }
 
-/** 
- * @async 
+/**
+ * @async
  * @function getSortedPackages
- * @desc Takes the page, direction, and sort method returning the raw sql package 
+ * @desc Takes the page, direction, and sort method returning the raw sql package
  * data for each. This monolithic function handles trunication of the packages,
- * and sorting, aiming to provide back the raw data, and allow later functions to 
+ * and sorting, aiming to provide back the raw data, and allow later functions to
  * then reconstruct the JSON as needed.
  */
 async function getSortedPackages(page, dir, method) {
@@ -547,7 +547,7 @@ async function getSortedPackages(page, dir, method) {
         command = await sql_storage`
           SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
           ORDER BY downloads 
-          ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC` }
+          ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
           LIMIT ${limit}
           OFFSET ${offset}
         `;
@@ -591,7 +591,7 @@ async function getSortedPackages(page, dir, method) {
           short: "Server Error",
         };
     }
-    
+
     return { ok: true, content: command };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
