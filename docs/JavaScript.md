@@ -375,6 +375,9 @@ with and retreive data from the cloud hosted database instance.
     * [~getPackageCollectionByName()](#module_database..getPackageCollectionByName)
     * [~getPackageCollectionByID()](#module_database..getPackageCollectionByID)
     * [~getPointerTable()](#module_database..getPointerTable)
+    * [~getFeaturedPackages()](#module_database..getFeaturedPackages)
+    * [~getTotalPackageEstimate()](#module_database..getTotalPackageEstimate)
+    * [~getSortedPackages()](#module_database..getSortedPackages)
 
 <a name="module_database..setupSQL"></a>
 
@@ -402,13 +405,14 @@ a Server Status Object.
 <a name="module_database..getPackageByName"></a>
 
 ### database~getPackageByName()
-Takes a package name, and returns the package object within a Server Status Object.
+Takes a package name, and returns the raw SQL package data within a Server Status Object.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
 <a name="module_database..getPackageCollectionByName"></a>
 
 ### database~getPackageCollectionByName()
 Takes a package name array, and returns an array of the package objects.
+You must ensure that the packArray passed is compatible. This function does not coerce compatibility.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
 <a name="module_database..getPackageCollectionByID"></a>
@@ -422,6 +426,30 @@ Takes a package pointer array, and returns an array of the package objects.
 ### database~getPointerTable()
 Returns a full package pointer table, allowing the full reference of package names
 to package pointer UUIDs.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..getFeaturedPackages"></a>
+
+### database~getFeaturedPackages()
+Collects the hardcoded featured packages array from the storage.js
+module. Then uses this.getPackageCollectionByName to retreive details of the
+package.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..getTotalPackageEstimate"></a>
+
+### database~getTotalPackageEstimate()
+Returns an estimate of how many rows are included in the packages SQL table.
+Used to aid in trunication and page generation of Link headers for large requests.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..getSortedPackages"></a>
+
+### database~getSortedPackages()
+Takes the page, direction, and sort method returning the raw sql package
+data for each. This monolithic function handles trunication of the packages,
+and sorting, aiming to provide back the raw data, and allow later functions to
+then reconstruct the JSON as needed.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
 <a name="module_debug_util"></a>
@@ -1181,6 +1209,34 @@ This module is the second generation of data storage methodology,
 in which this provides static access to files stored within regular cloud
 file storage. Specifically intended for use with Google Cloud Storage.
 
+
+* [storage](#module_storage)
+    * [~checkGCS()](#module_storage..checkGCS)
+    * [~getBanList()](#module_storage..getBanList)
+    * [~getFeaturedPackages()](#module_storage..getFeaturedPackages)
+
+<a name="module_storage..checkGCS"></a>
+
+### storage~checkGCS()
+Sets up the Google Cloud Storage Class, to ensure its ready to use.
+
+**Kind**: inner method of [<code>storage</code>](#module_storage)  
+<a name="module_storage..getBanList"></a>
+
+### storage~getBanList()
+Reads the ban list from the Google Cloud Storage Space.
+Returning the cached parsed JSON object.
+If it has been read before during this instance of hosting just the cached
+version is returned.
+
+**Kind**: inner method of [<code>storage</code>](#module_storage)  
+<a name="module_storage..getFeaturedPackages"></a>
+
+### storage~getFeaturedPackages()
+Returns the hardcoded featured packages file from Google Cloud Storage.
+Caching the object once read for this instance of the server run.
+
+**Kind**: inner method of [<code>storage</code>](#module_storage)  
 <a name="module_users"></a>
 
 ## users
@@ -1277,6 +1333,12 @@ This pruned item should never be written back to disk, as removed the data from 
 ## utils
 A helper for any functions that are agnostic in hanlders.
 
+
+* [utils](#module_utils)
+    * [~localUserLoggedIn(req, res, params_user, callback)](#module_utils..localUserLoggedIn)
+    * [~constructPackageObjectFull()](#module_utils..constructPackageObjectFull)
+    * [~constructPackageObjectShort()](#module_utils..constructPackageObjectShort)
+
 <a name="module_utils..localUserLoggedIn"></a>
 
 ### utils~localUserLoggedIn(req, res, params_user, callback)
@@ -1293,6 +1355,20 @@ function passing the Server Status Object, where content is User.
 | params_user | <code>string</code> | Usually `params.auth` or otherwise the authorization token within the header field. |
 | callback | <code>function</code> | The callback to invoke only if the user is properly authenticated. |
 
+<a name="module_utils..constructPackageObjectFull"></a>
+
+### utils~constructPackageObjectFull()
+Takes the raw return of a full row from the packages table,
+constructs a standardized package object full from it.
+
+**Kind**: inner method of [<code>utils</code>](#module_utils)  
+<a name="module_utils..constructPackageObjectShort"></a>
+
+### utils~constructPackageObjectShort()
+Takes a single or array of rows from the db, and returns a JSON
+construction of package object shorts
+
+**Kind**: inner method of [<code>utils</code>](#module_utils)  
 <a name="module_common_handler"></a>
 
 ## common\_handler
@@ -1467,7 +1543,9 @@ Endpoint Handlers in all relating to the packages themselves.
 * [package_handler](#module_package_handler)
     * [~getPackages(req, res)](#module_package_handler..getPackages)
     * [~postPackages(req, res)](#module_package_handler..postPackages)
+    * [~getPackagesFeatured(req, res)](#module_package_handler..getPackagesFeatured)
     * [~getPackagesSearch(req, res)](#module_package_handler..getPackagesSearch)
+    * [~getPackagesDetails(req, res)](#module_package_handler..getPackagesDetails)
     * [~deletePackagesName(req, res)](#module_package_handler..deletePackagesName)
     * [~getPackagesStargazers(req, res)](#module_package_handler..getPackagesStargazers)
     * [~postPackagesVersion(req, res)](#module_package_handler..postPackagesVersion)
@@ -1502,11 +1580,36 @@ then goes about doing so.
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
+<a name="module_package_handler..getPackagesFeatured"></a>
+
+### package_handler~getPackagesFeatured(req, res)
+Allows the user to retreive the featured packages, as package object shorts.
+
+**Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
 <a name="module_package_handler..getPackagesSearch"></a>
 
 ### package_handler~getPackagesSearch(req, res)
 Allows user to search through all packages. Using their specified
 query parameter.
+
+**Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_package_handler..getPackagesDetails"></a>
+
+### package_handler~getPackagesDetails(req, res)
+Allows the user to request a single package object full, depending
+on the package included in the path parameter.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
 
