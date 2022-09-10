@@ -31,8 +31,8 @@ const database = require("../database.js");
  * theyved applied via query parameters.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
- * @property {http_method} - GET 
- * @property {http_endpoint} - /api/packages 
+ * @property {http_method} - GET
+ * @property {http_endpoint} - /api/packages
  */
 async function getPackages(req, res) {
   let params = {
@@ -40,7 +40,7 @@ async function getPackages(req, res) {
     sort: query.sort(req),
     direction: query.dir(req),
   };
-  
+
   let packages = await database.getSortedPackages(
     params.page,
     params.direction,
@@ -88,8 +88,8 @@ async function getPackages(req, res) {
  * then goes about doing so.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
- * @property {http_method} - POST 
- * @property {http_endpoint} - /api/packages 
+ * @property {http_method} - POST
+ * @property {http_endpoint} - /api/packages
  * @todo Migrate to new Database Schema.
  */
 async function postPackages(req, res) {
@@ -181,14 +181,14 @@ async function postPackages(req, res) {
  * @function getPackagesFeatured
  * @desc Allows the user to retreive the featured packages, as package object shorts.
  * This endpoint was originally undocumented. The decision to return 200 is based off similar endpoints.
- * Additionally for the time being this list is created manually, the same method used 
+ * Additionally for the time being this list is created manually, the same method used
  * on Atom.io for now. Although there are plans to have this become automatic later on.
  * @see {@link https://github.com/atom/apm/blob/master/src/featured.coffee|Source Code}
  * @see {@link https://github.com/confused-Techie/atom-community-server-backend-JS/issues/23|Discussion}
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
- * @property {http_method} - GET 
- * @property {http_endpoint} - /api/packages/featured 
+ * @property {http_method} - GET
+ * @property {http_endpoint} - /api/packages/featured
  */
 async function getPackagesFeatured(req, res) {
   // Returns Package Object Short array.
@@ -213,9 +213,9 @@ async function getPackagesFeatured(req, res) {
  * query parameter.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
- * @property {http_method} - GET 
- * @property {http_endpoint} - /api/packages/search 
- * @todo Migrate to new Database Schema, additionally determine how to integrate custom 
+ * @property {http_method} - GET
+ * @property {http_endpoint} - /api/packages/search
+ * @todo Migrate to new Database Schema, additionally determine how to integrate custom
  * searching method into SQL Database.
  */
 async function getPackagesSearch(req, res) {
@@ -284,8 +284,8 @@ async function getPackagesSearch(req, res) {
  * on the package included in the path parameter.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
- * @property {http_method} - GET 
- * @property {http_endpoint} - /api/packages/:packageName 
+ * @property {http_method} - GET
+ * @property {http_endpoint} - /api/packages/:packageName
  */
 async function getPackagesDetails(req, res) {
   let params = {
@@ -317,8 +317,8 @@ async function getPackagesDetails(req, res) {
  * @desc Allows the user to delete a repo they have ownership of.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
- * @property {http_method} - DELETE 
- * @property {http_endpoint} - /api/packages/:packageName 
+ * @property {http_method} - DELETE
+ * @property {http_endpoint} - /api/packages/:packageName
  * @todo Migrate to new Database Schema.
  */
 async function deletePackagesName(req, res) {
@@ -355,13 +355,13 @@ async function deletePackagesName(req, res) {
 }
 
 /**
- * @async 
- * @function postPackagesStar 
+ * @async
+ * @function postPackagesStar
  * @desc Used to submit a new star to a package from the authenticated user.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
- * @property {http_method} - POST 
- * @property {http_endpoint} - /api/packages/:packageName/star 
+ * @property {http_method} - POST
+ * @property {http_endpoint} - /api/packages/:packageName/star
  * @todo Migrate to new Database Schema.
  */
 async function postPackagesStar(req, res) {
@@ -419,13 +419,13 @@ async function postPackagesStar(req, res) {
 }
 
 /**
- * @async 
- * @function deletePackageStar 
+ * @async
+ * @function deletePackageStar
  * @desc Used to remove a star from a specific package for the authenticated usesr.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
- * @property {http_method} - DELETE 
- * @property {http_endpoint} - /api/packages/:packageName/star 
+ * @property {http_method} - DELETE
+ * @property {http_endpoint} - /api/packages/:packageName/star
  * @todo Migrate to new Database Schema.
  */
 async function deletePackagesStar(req, res) {
@@ -493,8 +493,8 @@ async function deletePackagesStar(req, res) {
  * Taking only the package wanted, and returning it directly.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
- * @property {http_method} - GET 
- * @property {http_endpoint} - /api/packages/:packageName/stargazers 
+ * @property {http_method} - GET
+ * @property {http_endpoint} - /api/packages/:packageName/stargazers
  * @todo Migrate to new Database Schema.
  */
 async function getPackagesStargazers(req, res) {
@@ -534,8 +534,8 @@ async function getPackagesStargazers(req, res) {
  * a user to rename their application during this process.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
- * @property {http_method} - POST 
- * @property {http_endpoint} - /api/packages/:packageName/versions 
+ * @property {http_method} - POST
+ * @property {http_endpoint} - /api/packages/:packageName/versions
  * @todo Migrate to new Database Schema, and find methodology of handling rename.
  */
 async function postPackagesVersion(req, res) {
@@ -561,15 +561,15 @@ async function postPackagesVersion(req, res) {
   await utils.localUserLoggedIn(req, res, params.auth, onLogin);
 }
 
-/** 
- * @async 
- * @function getPackagesVersion 
+/**
+ * @async
+ * @function getPackagesVersion
  * @desc Used to retreive a specific version from a package.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
- * @property {http_method} - GET 
- * @property {http_endpoint} - /api/packages/:packageName/versions/:versionName 
- * @todo Migrate to new Database Schema 
+ * @property {http_method} - GET
+ * @property {http_endpoint} - /api/packages/:packageName/versions/:versionName
+ * @todo Migrate to new Database Schema
  */
 async function getPackagesVersion(req, res) {
   let params = {
@@ -614,7 +614,7 @@ async function getPackagesVersion(req, res) {
  * Which should initiate a download of said tarball on their end.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
- * @property {http_method} - GET 
+ * @property {http_method} - GET
  * @property {http_endpoint} - /api/packages/:packageName/versions/:versionName/tarball
  */
 async function getPackagesVersionTarball(req, res) {
@@ -664,9 +664,9 @@ async function getPackagesVersionTarball(req, res) {
  * @desc Allows a user to delete a specific version of their package.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
- * @property {http_method} - DELETE 
- * @property {http_endpoint} - /api/packages/:packageName/versions/:versionName 
- * @todo Migrate to new Database Schema 
+ * @property {http_method} - DELETE
+ * @property {http_endpoint} - /api/packages/:packageName/versions/:versionName
+ * @todo Migrate to new Database Schema
  */
 async function deletePackageVersion(req, res) {
   let params = {
@@ -727,7 +727,7 @@ async function deletePackageVersion(req, res) {
  * @see {@link https://github.com/atom/apm/blob/master/src/uninstall.coffee}
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
- * @property {http_method} - POST 
+ * @property {http_method} - POST
  * @property {http_endpoint} - /api/packages/:packageName/versions/:versionName/events/uninstall
  */
 async function postPackagesEventUninstall(req, res) {
