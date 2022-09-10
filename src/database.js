@@ -342,10 +342,10 @@ async function removePackageByName(name) {
     `;
 
     return command.count !== 0
-      ? { ok: true, content: `${id} package successfully removed.` }
+      ? { ok: true, content: `${name} package successfully removed.` }
       : {
           ok: false,
-          content: `Unable remove the ${id} package.`,
+          content: `Unable remove the ${name} package.`,
           short: "Server Error",
         };
   } catch (err) {
