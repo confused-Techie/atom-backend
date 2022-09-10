@@ -30,14 +30,14 @@ async function getThemeFeatured(req, res) {
   // Returns Package Object Short Array
   // Supports engine query parameter.
   let col = await database.getFeaturedThemes();
-  
+
   if (!col.ok) {
     await common.handleError(req, res, col);
     return;
   }
-  
+
   let newCol = await utils.constructPackageObjectShort(col.content);
-  
+
   res.status(200).json(newCol);
   logger.httpLog(req, res);
 }

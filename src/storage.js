@@ -104,8 +104,8 @@ async function getFeaturedPackages() {
 
 async function getFeaturedThemes() {
   checkGCS();
-  
-  const getNew = async function() {
+
+  const getNew = async function () {
     try {
       let contents = await gcs_storage
         .bucket(GCLOUD_STORAGE_BUCKET)
@@ -114,21 +114,21 @@ async function getFeaturedThemes() {
       cached_themelist = new CacheObject(JSON.parse(contents));
       cached_themelist.last_validate = Date.now();
       return { ok: true, content: cached_themelist.data };
-    } catch(err) {
+    } catch (err) {
       return { ok: false, content: err, short: "Server Error" };
     }
   };
-  
+
   if (cached_themelist === undefined) {
     logger.debugLog("Creating Theme List Cache");
     return getNew();
   }
-  
+
   if (!cached_themelist.Expired) {
     logger.debugLog("Theme List Cache NOT Expired.");
     return { ok: true, content: cached_themelist.data };
   }
-  
+
   logger.debugLog("Theme List Cache IS Expired.");
   return getNew();
 }
