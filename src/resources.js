@@ -335,5 +335,5 @@ async function remove(name) {
 //  remove,
 //  CacheObject,
 //};
-// Since everything within is being depreciated, keeping commented on the
-// exports allows easier identification of its uses in the codebase.
+// The only consumer of these exported functions is within data.js
+// which itself is also being removed. 

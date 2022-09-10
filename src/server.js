@@ -35,7 +35,6 @@ process.on("SIGINT", async () => {
  */
 async function exterminate(callee) {
   console.log(`${callee} signal received: closing HTTP server.`);
-  await data.shutdown();
   await database.shutdownSQL();
   console.log("Exiting...");
   serve.close(() => {

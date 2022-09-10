@@ -103,7 +103,6 @@ async function getFeaturedPackages() {
 }
 
 module.exports = {
-  checkGCS,
   getBanList,
   getFeaturedPackages,
 };
