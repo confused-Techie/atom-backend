@@ -118,7 +118,6 @@ async function getPackageByName(name) {
           content: `package ${name} not found.`,
           short: "Not Found",
         };
-    
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -127,7 +126,7 @@ async function getPackageByName(name) {
 async function getPackageVersionByNameAndVersion(name, version) {
   try {
     sql_storage ??= setupSQL();
-    
+
     const command = await sql_storage`
       SELECT *
       FROM versions 
@@ -138,15 +137,15 @@ async function getPackageVersionByNameAndVersion(name, version) {
       )
       AND semver = ${version}
     `;
-    
+
     return command.count !== 0
       ? { ok: true, content: command[0] }
       : {
-        ok: false, 
-        content: `Package ${name} and Version ${version} not found.`,
-        short: "Not Found"
-      };
-  } catch(err) {
+          ok: false,
+          content: `Package ${name} and Version ${version} not found.`,
+          short: "Not Found",
+        };
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
@@ -234,7 +233,7 @@ async function getPointerTable() {
 async function updatePackageDownloadByName(name) {
   try {
     sql_storage ??= setupSQL();
-    
+
     const command = await sql_storage`
       UPDATE packages 
       SET downloads = downloads + 1
@@ -244,15 +243,15 @@ async function updatePackageDownloadByName(name) {
         WHERE name = ${name}
       )
     `;
-    
+
     return command.count !== 0
       ? { ok: true, content: command }
       : {
-        ok: false, 
-        content: "Unable to Update Package Download",
-        short: "Server Error"
-      };
-  } catch(err) {
+          ok: false,
+          content: "Unable to Update Package Download",
+          short: "Server Error",
+        };
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
@@ -260,7 +259,7 @@ async function updatePackageDownloadByName(name) {
 async function updatePackageDecrementDownloadByName(name) {
   try {
     sql_storage ??= setupSQL();
-    
+
     const command = await sql_storage`
       UPDATE packages 
       SET downloads = downloads - 1
@@ -270,15 +269,15 @@ async function updatePackageDecrementDownloadByName(name) {
         WHERE name = ${name}
       )
     `;
-    
-    return command.count !== 0 
+
+    return command.count !== 0
       ? { ok: true, content: command }
       : {
-        ok: false, 
-        content: "Unable to decrement Package Download Count",
-        short: "Server Error"
-      };
-  } catch(err) {
+          ok: false,
+          content: "Unable to decrement Package Download Count",
+          short: "Server Error",
+        };
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
@@ -673,7 +672,7 @@ async function getSortedPackages(page, dir, method) {
           short: "Server Error",
         };
     }
-    
+
     return { ok: true, content: command };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };

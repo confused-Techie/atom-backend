@@ -32,7 +32,8 @@ const database = require("../database.js");
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function getPackages(req, res) { // migrated
+async function getPackages(req, res) {
+  // migrated
   // GET /api/packages
   let params = {
     page: query.page(req),
@@ -180,7 +181,8 @@ async function postPackages(req, res) {
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function getPackagesFeatured(req, res) { //migrated
+async function getPackagesFeatured(req, res) {
+  //migrated
   // GET /api/packages/featured
   // https://github.com/atom/apm/blob/master/src/featured.coffee
   // Returns featured packages, but its unknown how these are determined.
@@ -288,7 +290,8 @@ async function getPackagesSearch(req, res) {
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function getPackagesDetails(req, res) { // migrated
+async function getPackagesDetails(req, res) {
+  // migrated
   // GET /api/packages/:packageName
   let params = {
     engine: query.engine(req),
@@ -584,7 +587,8 @@ async function getPackagesVersion(req, res) {
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function getPackagesVersionTarball(req, res) { // migrated
+async function getPackagesVersionTarball(req, res) {
+  // migrated
   // GET /api/packages/:packageName/versions/:versionName/tarball
   let params = {
     packageName: decodeURIComponent(req.params.packageName),
@@ -602,15 +606,18 @@ async function getPackagesVersionTarball(req, res) { // migrated
   }
 
   // first lets get the package
-  let pack = await database.getPackageVersionByNameAndVersion(params.packageName, params.versionName);
+  let pack = await database.getPackageVersionByNameAndVersion(
+    params.packageName,
+    params.versionName
+  );
 
   if (!pack.ok) {
     await common.handleError(req, res, pack);
     return;
   }
-  
+
   let save = await database.updatePackageDownloadByName(params.packageName);
-  
+
   if (!save.ok) {
     logger.warningLog(req, res, save.content);
     // we don't want to exit on a failed to update downloads count, but should be logged.
@@ -688,7 +695,8 @@ async function deletePackageVersion(req, res) {
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function postPackagesEventUninstall(req, res) { // db migrated
+async function postPackagesEventUninstall(req, res) {
+  // db migrated
   // POST /api/packages/:packageName/versions/:versionName/events/uninstall
   // This was originally an Undocumented endpoint, discovered as the endpoint using during an uninstall by APM.
   // https://github.com/atom/apm/blob/master/src/uninstall.coffee
@@ -701,14 +709,15 @@ async function postPackagesEventUninstall(req, res) { // db migrated
   };
 
   const onLogin = async (user) => {
-    
-    let write = await database.updatePackageDecrementDownloadByName(params.packageName);
-    
+    let write = await database.updatePackageDecrementDownloadByName(
+      params.packageName
+    );
+
     if (!write.ok) {
       await common.handleError(req, res, write);
       return;
     }
-    
+
     res.status(201).json({ ok: true });
     logger.httpLog(req, res);
     return;
