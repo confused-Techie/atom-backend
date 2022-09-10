@@ -104,8 +104,8 @@ async function getFeaturedPackages() {
   return getNew();
 }
 
-/** 
- * @async 
+/**
+ * @async
  * @function getFeaturedThemes
  * @desc Used to retreive Google Cloud Storage Object for featured themes.
  * @returns {Array} JSON Parsed Array of Featured Theme Names.
