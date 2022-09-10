@@ -1553,7 +1553,6 @@ Endpoint Handlers in all relating to the packages themselves.
     * [~postPackagesVersion(req, res)](#module_package_handler..postPackagesVersion)
     * [~getPackagesVersionTarball(req, res)](#module_package_handler..getPackagesVersionTarball)
     * [~deletePackageVersion(req, res)](#module_package_handler..deletePackageVersion)
-    * [~postPackagesEventUninstall(req, res)](#module_package_handler..postPackagesEventUninstall)
 
 <a name="module_package_handler..getPackages"></a>
 
@@ -1675,19 +1674,6 @@ Which should initiate a download of said tarball on their end.
 
 ### package_handler~deletePackageVersion(req, res)
 Allows a user to delete a specific version of their package.
-
-**Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
-| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
-
-<a name="module_package_handler..postPackagesEventUninstall"></a>
-
-### package_handler~postPackagesEventUninstall(req, res)
-Used when a package is uninstalled, decreases the download count by 1.
-And saves this data. Originally an undocumented endpoint.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
 
