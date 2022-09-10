@@ -163,7 +163,7 @@ async function getPackageCollectionByName(packArray) {
       SELECT data FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
       WHERE pointer IN (
         SELECT pointer FROM names
-        WHERE name IN ${ sql_storage(packArray) }
+        WHERE name IN ${sql_storage(packArray)}
       );
     `;
 
