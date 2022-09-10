@@ -33,6 +33,7 @@ function checkGCS() {
  * Returning the cached parsed JSON object.
  * If it has been read before during this instance of hosting just the cached
  * version is returned.
+ * @returns {Array} Parsed JSON Array of all Banned Packages.
  */
 async function getBanList() {
   checkGCS();
@@ -70,6 +71,7 @@ async function getBanList() {
  * @function getFeaturedPackages
  * @desc Returns the hardcoded featured packages file from Google Cloud Storage.
  * Caching the object once read for this instance of the server run.
+ * @returns {Array} Parsed JSON Array of all Featured Packages.
  */
 async function getFeaturedPackages() {
   checkGCS();
@@ -102,6 +104,12 @@ async function getFeaturedPackages() {
   return getNew();
 }
 
+/** 
+ * @async 
+ * @function getFeaturedThemes
+ * @desc Used to retreive Google Cloud Storage Object for featured themes.
+ * @returns {Array} JSON Parsed Array of Featured Theme Names.
+ */
 async function getFeaturedThemes() {
   checkGCS();
 

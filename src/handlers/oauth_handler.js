@@ -15,6 +15,9 @@ const common = require("./common_handler.js");
  * proper GitHub OAuth Page based on the backends client id.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
+ * @property {http_method} - GET 
+ * @property {http_endpoint} - /api/oauth 
+ * @todo Finish Implementation.
  */
 async function getLogin(req, res) {
   // GET /api/oauth
@@ -37,6 +40,9 @@ async function getLogin(req, res) {
  * @desc Endpoint intended to use as the actual return from GitHub to login.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
+ * @property {http_method} - GET 
+ * @property {http_endpoint} - ?
+ * @todo Just about everything here.
  */
 async function getOauth(req, res) {
   await common.notSupported(req, res);

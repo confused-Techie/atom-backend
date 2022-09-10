@@ -16,9 +16,11 @@ const utils = require("../utils.js");
  * the authenticated user has stared.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
+ * @property {http_method} - GET 
+ * @property {http_endpoint} - /api/stars 
+ * @todo Migrate to new Database Schema.
  */
 async function getStars(req, res) {
-  // GET /api/stars
   let params = {
     auth: req.get("Authorization"),
   };

@@ -16,9 +16,11 @@ const database = require("../database.js");
  * star gazer list.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
+ * @property {http_method} - GET 
+ * @property {http_endpoint} - /api/users/:login/stars 
+ * @todo Migrate to new Database Schema.
  */
 async function getLoginStars(req, res) {
-  // GET /api/users/:login/stars
   let params = {
     login: req.params.login,
   };
