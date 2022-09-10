@@ -88,6 +88,12 @@ verbosity, and duplication within the codebase.</p>
 <dt><a href="#module_star_handler">star_handler</a></dt>
 <dd><p>Handler for any endpoints whose slug after <code>/api/</code> is <code>star</code>.</p>
 </dd>
+<dt><a href="#module_theme_handler">theme_handler</a></dt>
+<dd><p>Endpoint Handlers relating to themes only.</p>
+</dd>
+<dt><a href="#module_update_handler">update_handler</a></dt>
+<dd><p>Endpoint Handlers relating to updating the editor.</p>
+</dd>
 <dt><a href="#module_user_handler">user_handler</a></dt>
 <dd><p>Handler for endpoints whose slug after <code>/api/</code> is <code>user</code>.</p>
 </dd>
@@ -1898,6 +1904,73 @@ the authenticated user has stared.
 | --- | --- | --- |
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_theme_handler"></a>
+
+## theme\_handler
+Endpoint Handlers relating to themes only.
+
+**Implements**: <code>command\_handler</code>  
+<a name="module_theme_handler..getThemeFeatured"></a>
+
+### theme_handler~getThemeFeatured(req, res)
+Used to retreive all Featured Packages that are Themes. Originally an undocumented
+endpoint. Returns a 200 response based on other similar responses.
+Additionally for the time being this list is created manually, the same method used
+on Atom.ioi for now. Although there are plans to have this become automatic later on.
+
+**Kind**: inner method of [<code>theme\_handler</code>](#module_theme_handler)  
+**See**
+
+- [Source Code](https://github.com/atom/apm/blob/master/src/featured.coffee)
+- [Discussion](https://github.com/confused-Techie/atom-community-server-backend-JS/issues/23)
+
+**Todo**
+
+- [ ] This function has never been implemented on this system.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+**Properties**
+
+| Type | Description |
+| --- | --- |
+| <code>http\_method</code> | GET |
+| <code>http\_endpoint</code> | /api/themes/featured |
+
+<a name="module_update_handler"></a>
+
+## update\_handler
+Endpoint Handlers relating to updating the editor.
+
+**Implments**: <code>command\_handler</code>  
+<a name="module_update_handler..getUpdates"></a>
+
+### update_handler~getUpdates(req, res)
+Used to retreive new editor update information.
+
+**Kind**: inner method of [<code>update\_handler</code>](#module_update_handler)  
+**Todo**
+
+- [ ] This function has never been implemented on this system. Since there is currently no
+update methodology.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+**Properties**
+
+| Type | Description |
+| --- | --- |
+| <code>http\_method</code> | GET |
+| <code>http\_endpoint</code> | /api/updates |
 
 <a name="module_user_handler"></a>
 
