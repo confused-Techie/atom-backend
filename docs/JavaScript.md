@@ -1229,8 +1229,9 @@ file storage. Specifically intended for use with Google Cloud Storage.
 
 * [storage](#module_storage)
     * [~checkGCS()](#module_storage..checkGCS)
-    * [~getBanList()](#module_storage..getBanList)
-    * [~getFeaturedPackages()](#module_storage..getFeaturedPackages)
+    * [~getBanList()](#module_storage..getBanList) ⇒ <code>Array</code>
+    * [~getFeaturedPackages()](#module_storage..getFeaturedPackages) ⇒ <code>Array</code>
+    * [~getFeaturedThemes()](#module_storage..getFeaturedThemes) ⇒ <code>Array</code>
 
 <a name="module_storage..checkGCS"></a>
 
@@ -1240,20 +1241,29 @@ Sets up the Google Cloud Storage Class, to ensure its ready to use.
 **Kind**: inner method of [<code>storage</code>](#module_storage)  
 <a name="module_storage..getBanList"></a>
 
-### storage~getBanList()
+### storage~getBanList() ⇒ <code>Array</code>
 Reads the ban list from the Google Cloud Storage Space.
 Returning the cached parsed JSON object.
 If it has been read before during this instance of hosting just the cached
 version is returned.
 
 **Kind**: inner method of [<code>storage</code>](#module_storage)  
+**Returns**: <code>Array</code> - Parsed JSON Array of all Banned Packages.  
 <a name="module_storage..getFeaturedPackages"></a>
 
-### storage~getFeaturedPackages()
+### storage~getFeaturedPackages() ⇒ <code>Array</code>
 Returns the hardcoded featured packages file from Google Cloud Storage.
 Caching the object once read for this instance of the server run.
 
 **Kind**: inner method of [<code>storage</code>](#module_storage)  
+**Returns**: <code>Array</code> - Parsed JSON Array of all Featured Packages.  
+<a name="module_storage..getFeaturedThemes"></a>
+
+### storage~getFeaturedThemes() ⇒ <code>Array</code>
+Used to retreive Google Cloud Storage Object for featured themes.
+
+**Kind**: inner method of [<code>storage</code>](#module_storage)  
+**Returns**: <code>Array</code> - JSON Parsed Array of Featured Theme Names.  
 <a name="module_users"></a>
 
 ## users
@@ -1532,11 +1542,22 @@ Endpoint used to direct users to login, directing the user to the
 proper GitHub OAuth Page based on the backends client id.
 
 **Kind**: inner method of [<code>oauth\_handler</code>](#module_oauth_handler)  
+**Todo**
+
+- [ ] Finish Implementation.
+
 
 | Param | Type | Description |
 | --- | --- | --- |
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+**Properties**
+
+| Type | Description |
+| --- | --- |
+| <code>http\_method</code> | GET |
+| <code>http\_endpoint</code> | /api/oauth |
 
 <a name="module_oauth_handler..getOauth"></a>
 
@@ -1544,11 +1565,22 @@ proper GitHub OAuth Page based on the backends client id.
 Endpoint intended to use as the actual return from GitHub to login.
 
 **Kind**: inner method of [<code>oauth\_handler</code>](#module_oauth_handler)  
+**Todo**
+
+- [ ] Just about everything here.
+
 
 | Param | Type | Description |
 | --- | --- | --- |
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+**Properties**
+
+| Type | Description |
+| --- | --- |
+| <code>http\_method</code> | GET |
+| <code>http\_endpoint</code> | ? |
 
 <a name="module_package_handler"></a>
 
@@ -1908,11 +1940,22 @@ Endpoint for `GET /api/stars`. Whose endgoal is to return an array of all packag
 the authenticated user has stared.
 
 **Kind**: inner method of [<code>star\_handler</code>](#module_star_handler)  
+**Todo**
+
+- [ ] Migrate to new Database Schema.
+
 
 | Param | Type | Description |
 | --- | --- | --- |
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+**Properties**
+
+| Type | Description |
+| --- | --- |
+| <code>http\_method</code> | GET |
+| <code>http\_endpoint</code> | /api/stars |
 
 <a name="module_theme_handler"></a>
 
@@ -1990,9 +2033,20 @@ An array of Package Object Short's collected from the authenticated user's
 star gazer list.
 
 **Kind**: inner method of [<code>user\_handler</code>](#module_user_handler)  
+**Todo**
+
+- [ ] Migrate to new Database Schema.
+
 
 | Param | Type | Description |
 | --- | --- | --- |
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+**Properties**
+
+| Type | Description |
+| --- | --- |
+| <code>http\_method</code> | GET |
+| <code>http\_endpoint</code> | /api/users/:login/stars |
 
