@@ -1191,7 +1191,7 @@ Subsequence.
 The initializer of `main.js` starting up the Express Server, and setting the port
 to listen on. As well as handling a graceful shutdown of the server.
 
-**Implements**: <code>main</code>, <code>config</code>, <code>logger</code>, <code>data</code>  
+**Implements**: <code>main</code>, <code>config</code>, <code>logger</code>  
 <a name="module_server..exterminate"></a>
 
 ### server~exterminate(callee)
