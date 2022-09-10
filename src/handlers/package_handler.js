@@ -33,7 +33,6 @@ const database = require("../database.js");
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
 async function getPackages(req, res) {
-  // migrated
   // GET /api/packages
   let params = {
     page: query.page(req),
@@ -182,7 +181,6 @@ async function postPackages(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
 async function getPackagesFeatured(req, res) {
-  //migrated
   // GET /api/packages/featured
   // https://github.com/atom/apm/blob/master/src/featured.coffee
   // Returns featured packages, but its unknown how these are determined.
@@ -223,6 +221,7 @@ async function getPackagesFeatured(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
 async function getPackagesSearch(req, res) {
+  // TODO
   // GET /api/packages/search
   let params = {
     sort: query.sort(req, "relevance"),
@@ -291,7 +290,6 @@ async function getPackagesSearch(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
 async function getPackagesDetails(req, res) {
-  // migrated
   // GET /api/packages/:packageName
   let params = {
     engine: query.engine(req),
@@ -324,6 +322,7 @@ async function getPackagesDetails(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
 async function deletePackagesName(req, res) {
+  // TODO 
   // DELETE /api/packages/:packageName
   let params = {
     auth: req.get("Authorization"),
@@ -358,6 +357,7 @@ async function deletePackagesName(req, res) {
 }
 
 async function postPackagesStar(req, res) {
+  // TODO 
   // POST /api/packages/:packageName/star
   let params = {
     auth: req.get("Authorization"),
@@ -413,6 +413,7 @@ async function postPackagesStar(req, res) {
 }
 
 async function deletePackagesStar(req, res) {
+  // TODO 
   // DELETE /api/packages/:packageName/star
   let params = {
     auth: req.get("Authorization"),
@@ -480,6 +481,7 @@ async function deletePackagesStar(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
 async function getPackagesStargazers(req, res) {
+  // TODO 
   // GET /api/packages/:packageName/stargazers
   let params = {
     packageName: decodeURIComponent(req.params.packageName),
@@ -519,6 +521,7 @@ async function getPackagesStargazers(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
 async function postPackagesVersion(req, res) {
+  // TODO 
   // POST /api/packages/:packageName/versions
   let params = {
     tag: query.tag(req),
@@ -543,6 +546,7 @@ async function postPackagesVersion(req, res) {
 }
 
 async function getPackagesVersion(req, res) {
+  // TODO 
   // GET /api/packages/:packageName/versions/:versionName
   let params = {
     packageName: decodeURIComponent(req.params.packageName),
@@ -588,7 +592,6 @@ async function getPackagesVersion(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
 async function getPackagesVersionTarball(req, res) {
-  // migrated
   // GET /api/packages/:packageName/versions/:versionName/tarball
   let params = {
     packageName: decodeURIComponent(req.params.packageName),
@@ -638,6 +641,7 @@ async function getPackagesVersionTarball(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
 async function deletePackageVersion(req, res) {
+  // TODO 
   // DELETE /api/packages/:packageName/versions/:versionName
   let params = {
     auth: req.get("Authorization"),
@@ -696,7 +700,6 @@ async function deletePackageVersion(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
 async function postPackagesEventUninstall(req, res) {
-  // db migrated
   // POST /api/packages/:packageName/versions/:versionName/events/uninstall
   // This was originally an Undocumented endpoint, discovered as the endpoint using during an uninstall by APM.
   // https://github.com/atom/apm/blob/master/src/uninstall.coffee
