@@ -12,7 +12,7 @@ const { GCLOUD_STORAGE_BUCKET, GOOGLE_APPLICATION_CREDENTIALS } =
   require("./config.js").getConfig();
 
 let gcs_storage;
-let cached_banlist, cached_featuredlist;
+let cached_banlist, cached_featuredlist, cached_themelist;
 
 /**
  * @function checkGCS
@@ -102,7 +102,39 @@ async function getFeaturedPackages() {
   return getNew();
 }
 
+async function getFeaturedThemes() {
+  checkGCS();
+  
+  const getNew = async function() {
+    try {
+      let contents = await gcs_storage
+        .bucket(GCLOUD_STORAGE_BUCKET)
+        .file("featured_themes.json")
+        .download();
+      cached_themelist = new CacheObject(JSON.parse(contents));
+      cached_themelist.last_validate = Date.now();
+      return { ok: true, content: cached_themelist.data };
+    } catch(err) {
+      return { ok: false, content: err, short: "Server Error" };
+    }
+  };
+  
+  if (cached_themelist === undefined) {
+    logger.debugLog("Creating Theme List Cache");
+    return getNew();
+  }
+  
+  if (!cached_themelist.Expired) {
+    logger.debugLog("Theme List Cache NOT Expired.");
+    return { ok: true, content: cached_themelist.data };
+  }
+  
+  logger.debugLog("Theme List Cache IS Expired.");
+  return getNew();
+}
+
 module.exports = {
   getBanList,
   getFeaturedPackages,
+  getFeaturedThemes,
 };

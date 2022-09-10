@@ -396,6 +396,27 @@ async function getFeaturedPackages() {
     : allFeatured;
 }
 
+/** 
+ * @async 
+ * @function getFeaturedThemes 
+ * @desc Collects the hardcoded featured themes array from the sotrage.js 
+ * module. Then uses this.getPackageCollectionByName to retreive details of the 
+ * package.
+ */
+async function getFeaturedThemes() {
+  let featuredThemeArray = await storage.getFeaturedThemes();
+  
+  if (!featuredThemeArray.ok) {
+    return featuredThemeArray;
+  }
+  
+  let allFeatured = await getPackageCollectionByName(featuredThemeArray.content);
+  
+  return allFeatured.ok
+    ? { ok: true, content: allFeatured.content }
+    : allFeatured;
+}
+
 /**
  * @async
  * @function getTotalPackageEstimate
@@ -696,4 +717,5 @@ module.exports = {
   getPackageVersionByNameAndVersion,
   updatePackageDownloadByName,
   updatePackageDecrementDownloadByName,
+  getFeaturedThemes
 };

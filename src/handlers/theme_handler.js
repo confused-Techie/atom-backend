@@ -2,9 +2,15 @@
  * @module theme_handler
  * @desc Endpoint Handlers relating to themes only.
  * @implements {command_handler}
+ * @implements {database}
+ * @implements {utils}
+ * @implements {logger}
  */
 
 const common = require("./common_handler.js");
+const database = require("../database.js");
+const utils = require("../utils.js");
+const logger = require("../logger.js");
 
 /**
  * @async
@@ -19,12 +25,21 @@ const common = require("./common_handler.js");
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @property {http_method} - GET
  * @property {http_endpoint} - /api/themes/featured
- * @todo This function has never been implemented on this system.
  */
 async function getThemeFeatured(req, res) {
   // Returns Package Object Short Array
   // Supports engine query parameter.
-  await common.notSupported(req, res);
+  let col = await database.getFeaturedThemes();
+  
+  if (!col.ok) {
+    await common.handleError(req, res, col);
+    return;
+  }
+  
+  let newCol = await utils.constructPackageObjectShort(col.content);
+  
+  res.status(200).json(newCol);
+  logger.httpLog(req, res);
 }
 
 module.exports = {
