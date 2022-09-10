@@ -159,18 +159,11 @@ async function getPackageCollectionByName(packArray) {
   try {
     sql_storage ??= setupSQL();
 
-    //let packs = "'" + packArray.join("','") + "'";
-    //let packs = `'${packArray.join("','")}'`;
-    for (let i = 0; i < packArray.length; i++) {
-      packArray[i].replace('"', "'");
-    }
-    // TODO: the packArray passed here is unable to collect featured packages.
-
     const command = await sql_storage`
       SELECT data FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
       WHERE pointer IN (
         SELECT pointer FROM names
-        WHERE name IN (${packArray})
+        WHERE name IN ${ sql_storage(packArray) }
       );
     `;
 

@@ -5,13 +5,11 @@
  * @implements {main}
  * @implements {config}
  * @implements {logger}
- * @implements {data}
  */
 
 const app = require("./main.js");
 const { port } = require("./config.js").getConfig();
 const logger = require("./logger.js");
-const data = require("./data.js");
 const database = require("./database.js");
 
 const serve = app.listen(port, () => {
