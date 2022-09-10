@@ -32,7 +32,7 @@ const database = require("../database.js");
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function getPackages(req, res) {
+async function getPackages(req, res) { // migrated
   // GET /api/packages
   let params = {
     page: query.page(req),
@@ -180,7 +180,7 @@ async function postPackages(req, res) {
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function getPackagesFeatured(req, res) {
+async function getPackagesFeatured(req, res) { //migrated
   // GET /api/packages/featured
   // https://github.com/atom/apm/blob/master/src/featured.coffee
   // Returns featured packages, but its unknown how these are determined.
@@ -288,7 +288,7 @@ async function getPackagesSearch(req, res) {
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function getPackagesDetails(req, res) {
+async function getPackagesDetails(req, res) { // migrated
   // GET /api/packages/:packageName
   let params = {
     engine: query.engine(req),
@@ -584,7 +584,7 @@ async function getPackagesVersion(req, res) {
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function getPackagesVersionTarball(req, res) {
+async function getPackagesVersionTarball(req, res) { // migrated
   // GET /api/packages/:packageName/versions/:versionName/tarball
   let params = {
     packageName: decodeURIComponent(req.params.packageName),
@@ -602,35 +602,23 @@ async function getPackagesVersionTarball(req, res) {
   }
 
   // first lets get the package
-  let pack = await database.getPackageByName(params.packageName);
+  let pack = await database.getPackageVersionByNameAndVersion(params.packageName, params.versionName);
 
   if (!pack.ok) {
     await common.handleError(req, res, pack);
     return;
   }
-
-  if (!pack.content.versions[params.versionName]) {
-    // the package doesn't contain the version requested.
-    await common.notFound(req, res);
-    return;
-  }
-
-  // lets add the download to the package.
-  pack.content.downloads++;
-
-  // then lets save this updated info.
-  let save = await database.updatePackageByName(
-    params.packageName,
-    pack.content
-  );
-
+  
+  let save = await database.updatePackageDownloadByName(params.packageName);
+  
   if (!save.ok) {
     logger.warningLog(req, res, save.content);
     // we don't want to exit on a failed to update downloads count, but should be logged.
   }
+
   // For simplicity, we will redirect the request to gh tarball url, to allow
   // the download to take place from their servers.
-  res.redirect(pack.content.versions[params.versionName].tarball_url);
+  res.redirect(pack.content.meta.tarball_url);
   logger.httpLog(req, res);
   return;
 }
@@ -700,7 +688,7 @@ async function deletePackageVersion(req, res) {
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
-async function postPackagesEventUninstall(req, res) {
+async function postPackagesEventUninstall(req, res) { // db migrated
   // POST /api/packages/:packageName/versions/:versionName/events/uninstall
   // This was originally an Undocumented endpoint, discovered as the endpoint using during an uninstall by APM.
   // https://github.com/atom/apm/blob/master/src/uninstall.coffee
@@ -713,25 +701,14 @@ async function postPackagesEventUninstall(req, res) {
   };
 
   const onLogin = async (user) => {
-    let pack = await database.getPackageByName(params.packageName);
-
-    if (!pack.ok) {
-      await common.handleError(req, res, pack);
-      return;
-    }
-
-    pack.content.downloads--;
-
-    let write = await database.updatePackageByName(
-      params.packageName,
-      pack.content
-    );
-
+    
+    let write = await database.updatePackageDecrementDownloadByName(params.packageName);
+    
     if (!write.ok) {
       await common.handleError(req, res, write);
       return;
     }
-
+    
     res.status(201).json({ ok: true });
     logger.httpLog(req, res);
     return;

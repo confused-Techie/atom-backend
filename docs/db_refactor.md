@@ -52,7 +52,7 @@ git.js - Collected data from GitHub to create new packages.
 query.js - Parsed and checked query parameters.
 search.js - Handled search algorithms against passed JSON data.
 
-# Handling Parsing and retrival of data 
+# Handling Parsing and retrieval of data 
 
 data.js - The major endpoint to any raw data handling, and more than raw data handling.
 users.js - The major endpoint to any raw data handling for users.
@@ -68,7 +68,7 @@ The new plan:
 
 Realistically, there will be many features that can have better performance via direct interaction with the database.
 
-Preliminarly what may be the best architecture:
+Preliminarily what may be the best architecture:
 
 sever.js -> main.js =>>
             common_handler.js
