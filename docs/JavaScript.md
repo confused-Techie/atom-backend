@@ -1387,7 +1387,6 @@ Endpoint Handlers in all relating to the packages themselves.
     * [~postPackagesVersion(req, res)](#module_package_handler..postPackagesVersion)
     * [~getPackagesVersionTarball(req, res)](#module_package_handler..getPackagesVersionTarball)
     * [~deletePackageVersion(req, res)](#module_package_handler..deletePackageVersion)
-    * [~postPackagesEventUninstall(req, res)](#module_package_handler..postPackagesEventUninstall)
 
 <a name="module_package_handler..getPackages"></a>
 
@@ -1509,26 +1508,6 @@ Allows a user to delete a specific version of their package.
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
-<a name="module_package_handler..postPackagesEventUninstall"></a>
-
-### package_handler~postPackagesEventUninstall(req, res)
-Used when a package is uninstalled, decreases the download count by 1.And saves this data. Originally an undocumented endpoint.The decision to return a '201' was based on how other POST endpoints return,during a successful event.
-
-**Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
-**See**: [https://github.com/atom/apm/blob/master/src/uninstall.coffee](https://github.com/atom/apm/blob/master/src/uninstall.coffee)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
-| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
-
-**Properties**
-
-| Type | Description |
-| --- | --- |
-| <code>http\_method</code> | POST |
-| <code>http\_endpoint</code> | /api/packages/:packageName/versions/:versionName/events/uninstall |
-
 <a name="module_star_handler"></a>
 
 ## star\_handler
@@ -1562,4 +1541,3 @@ Endpoint for `GET /api/users/:login/stars`. Whose goal is to returnAn array of 
 | --- | --- | --- |
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
-
