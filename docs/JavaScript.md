@@ -96,10 +96,7 @@ verbosity, and duplication within the codebase.</p>
 <a name="module_cache"></a>
 
 ## cache
-Provides an interface for helpful caching mechanisms.
-Originally created after some circular dependency issues arouse during
-rapid redevelopment of the entire storage system.
-But this does provide an opportunity to allow multiple caching systems.
+Provides an interface for helpful caching mechanisms.Originally created after some circular dependency issues arouse duringrapid redevelopment of the entire storage system.But this does provide an opportunity to allow multiple caching systems.
 
 
 * [cache](#module_cache)
@@ -124,8 +121,7 @@ Allows simple interfaces to handle caching an object in memory. Used to cache da
 <a name="module_collection"></a>
 
 ## collection
-Endpoint of all features related to sorting, organizing, or pruning package
-collections, to be returned to the user.
+Endpoint of all features related to sorting, organizing, or pruning packagecollections, to be returned to the user.
 
 
 * [collection](#module_collection)
@@ -136,10 +132,7 @@ collections, to be returned to the user.
 <a name="module_collection..sort"></a>
 
 ### collection~sort(method, packages) ⇒ <code>Array.&lt;object&gt;</code>
-Intended for use for a collection of Packages, sort them according to any valid Sorting method.
-Note this should be called before, any Pruning has taken place.
-Prioritizes returning packages so if an invalid method is provided returns the packages
-without modification.
+Intended for use for a collection of Packages, sort them according to any valid Sorting method.Note this should be called before, any Pruning has taken place.Prioritizes returning packages so if an invalid method is provided returns the packageswithout modification.
 
 **Kind**: inner method of [<code>collection</code>](#module_collection)  
 **Returns**: <code>Array.&lt;object&gt;</code> - The provided packages now sorted accordingly.  
@@ -153,13 +146,10 @@ without modification.
 <a name="module_collection..direction"></a>
 
 ### collection~direction(packages, method) ⇒ <code>Array.&lt;object&gt;</code> \| <code>string</code>
-Sorts an array of package objects based on the provided method.
-Intended to occur after sorting the package. Prioritizes returning packages,
-so if an invalid method is provided returns the packages with no changes.
+Sorts an array of package objects based on the provided method.Intended to occur after sorting the package. Prioritizes returning packages,so if an invalid method is provided returns the packages with no changes.
 
 **Kind**: inner method of [<code>collection</code>](#module_collection)  
-**Returns**: <code>Array.&lt;object&gt;</code> \| <code>string</code> - The array of object packages, now organized, or directly
-returned if an invalid 'method' is supplied.  
+**Returns**: <code>Array.&lt;object&gt;</code> \| <code>string</code> - The array of object packages, now organized, or directlyreturned if an invalid 'method' is supplied.  
 **Depreciated**: Since migration to DB  
 
 | Param | Type | Description |
@@ -170,9 +160,7 @@ returned if an invalid 'method' is supplied.
 <a name="module_collection..deepCopy"></a>
 
 ### collection~deepCopy(obj) ⇒ <code>object</code>
-Originally was a method to create a deep copy of shallow copied complex objects.
-Which allowed modifications on the object without worry of changing the values
-of the original object, or realistically cached objects.
+Originally was a method to create a deep copy of shallow copied complex objects.Which allowed modifications on the object without worry of changing the valuesof the original object, or realistically cached objects.
 
 **Kind**: inner method of [<code>collection</code>](#module_collection)  
 **Returns**: <code>object</code> - A Deep Copy of the original object, that should share zero references to the original.  
@@ -190,8 +178,7 @@ Module that access' and returns the server wide configuration.
 <a name="module_config..getConfig"></a>
 
 ### config~getConfig() ⇒ <code>object</code>
-Used to get Server Config data from the `app.yaml` file at the root of the project.
-Or from environment variables. Prioritizing environment variables.
+Used to get Server Config data from the `app.yaml` file at the root of the project.Or from environment variables. Prioritizing environment variables.
 
 **Kind**: inner method of [<code>config</code>](#module_config)  
 **Returns**: <code>object</code> - The different available configuration values.  
@@ -202,9 +189,7 @@ const { search_algorithm } = require("./config.js").getConfig();
 <a name="module_data"></a>
 
 ## data
-This is likely the most major module within the codebase. Being the handler
-for data in general. Containing the `Shutdown` function, as well as gathering the users,
-packages, package_pointer, and additionally handling any modifications of the packages.
+This is likely the most major module within the codebase. Being the handlerfor data in general. Containing the `Shutdown` function, as well as gathering the users,packages, package_pointer, and additionally handling any modifications of the packages.
 
 
 * [data](#module_data)
@@ -223,62 +208,38 @@ packages, package_pointer, and additionally handling any modifications of the pa
 <a name="module_data..shutdown"></a>
 
 ### data~shutdown()
-The function to be called during the a server stop event. Allowing any cache
-only data to be written to disk. Checking the Cached User Data, Cached Pointer
-Data, as well as checking for any items marked for deletion, and deleting them.
+The function to be called during the a server stop event. Allowing any cacheonly data to be written to disk. Checking the Cached User Data, Cached PointerData, as well as checking for any items marked for deletion, and deleting them.
 
 **Kind**: inner method of [<code>data</code>](#module_data)  
 <a name="module_data..getFeatured"></a>
 
 ### data~getFeatured() ⇒ <code>object</code>
-Gets the featured packages, from the file of `featured_packages.json`.
-While it isn't planned to always use this file, it helps get us to feature parity
-faster, since this is how it was done originally on Atom.io
-Will return the cached object if available, or otherwise will read from disk.
+Gets the featured packages, from the file of `featured_packages.json`.While it isn't planned to always use this file, it helps get us to feature parityfaster, since this is how it was done originally on Atom.ioWill return the cached object if available, or otherwise will read from disk.
 
 **Kind**: inner method of [<code>data</code>](#module_data)  
-**Returns**: <code>object</code> - An array of packages, that have manually been decided to be
-featured.  
+**Returns**: <code>object</code> - An array of packages, that have manually been decided to befeatured.  
 <a name="module_data..getUsers"></a>
 
 ### data~getUsers() ⇒ <code>object</code>
-Used to get the fully Users File. Or all user data. This function will, if
-possible, cache the data read from the disk into `cached_user` variable to refer to later.
-And if the user data has already been cached, and is not yet expired, or otherwise
-invalidated, it will return this data. If it finds an invalidated cache, it will
-write this cache to disk, then return the new results from disk.
+Used to get the fully Users File. Or all user data. This function will, ifpossible, cache the data read from the disk into `cached_user` variable to refer to later.And if the user data has already been cached, and is not yet expired, or otherwiseinvalidated, it will return this data. If it finds an invalidated cache, it willwrite this cache to disk, then return the new results from disk.
 
 **Kind**: inner method of [<code>data</code>](#module_data)  
-**Returns**: <code>object</code> - Server Status Object, which on success `content` contains an array of
-user objects.  
+**Returns**: <code>object</code> - Server Status Object, which on success `content` contains an array ofuser objects.  
 <a name="module_data..getPackagePointer"></a>
 
 ### data~getPackagePointer() ⇒ <code>object</code>
-Used to get the full package_pointer file, will cache an uncached file and return
-or will fetch an updated file if the cache has expired, or will write an
-invalidated cache, then return the new data from disk.
+Used to get the full package_pointer file, will cache an uncached file and returnor will fetch an updated file if the cache has expired, or will write aninvalidated cache, then return the new data from disk.
 
 **Kind**: inner method of [<code>data</code>](#module_data)  
-**Returns**: <code>object</code> - A Server Status Object, which on success returns the Package
-Pointer Object within `content`.  
+**Returns**: <code>object</code> - A Server Status Object, which on success returns the PackagePointer Object within `content`.  
 <a name="module_data..getAllPackages"></a>
 
 ### data~getAllPackages() ⇒ <code>object</code>
-Will attempt to return all available packages in the repository.
-Caching the results, or if results have already been cached, will check the expiry
-and if expired, refresh the cache. `GetAllPackages` differs sigificantly from
-`GetPackagePointer` and `GetUsers` in that it will make no attempt to save invalidated data.
-Since it is expected that any modifications that occur to the Packages, never
-happens on the full collection, and instead is handled on an individual basis.
-Thus expecting them to be saved during those individual changes. Additionally
-While collected the full list of packages, if a package's data doesn't exist
-as a full file and only within the package_pointer, it will ignore the file,
-log it, and continue to return data.
+Will attempt to return all available packages in the repository.Caching the results, or if results have already been cached, will check the expiryand if expired, refresh the cache. `GetAllPackages` differs sigificantly from`GetPackagePointer` and `GetUsers` in that it will make no attempt to save invalidated data.Since it is expected that any modifications that occur to the Packages, neverhappens on the full collection, and instead is handled on an individual basis.Thus expecting them to be saved during those individual changes. AdditionallyWhile collected the full list of packages, if a package's data doesn't existas a full file and only within the package_pointer, it will ignore the file,log it, and continue to return data.
 
 **Kind**: inner method of [<code>data</code>](#module_data)  
 **Implements**: <code>GetPackagePointer</code>, <code>GetPackageByID</code>  
-**Returns**: <code>object</code> - A Server Status Object, which on success `content` contains the full
-array of all package objects, as 'Server Package Objects'.  
+**Returns**: <code>object</code> - A Server Status Object, which on success `content` contains the fullarray of all package objects, as 'Server Package Objects'.  
 <a name="module_data..getPackageByID"></a>
 
 ### data~getPackageByID(id) ⇒ <code>object</code>
@@ -286,8 +247,7 @@ Will get a specific package, using its provided ID of the package.
 
 **Kind**: inner method of [<code>data</code>](#module_data)  
 **Implements**: <code>resources.Read</code>  
-**Returns**: <code>object</code> - A Server Status Object, which on success the `content` contains
-the package object.  
+**Returns**: <code>object</code> - A Server Status Object, which on success the `content` containsthe package object.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -296,12 +256,10 @@ the package object.
 <a name="module_data..setUsers"></a>
 
 ### data~setUsers(data) ⇒ <code>object</code>
-Will persist user data to the disk. Will first do this by adding to the
-user cache object, if it exists, otherwise will write directly to disk.
+Will persist user data to the disk. Will first do this by adding to theuser cache object, if it exists, otherwise will write directly to disk.
 
 **Kind**: inner method of [<code>data</code>](#module_data)  
-**Returns**: <code>object</code> - A Server Status object of success, containing only `ok`.
-Or bubbling from `resources.write()`.  
+**Returns**: <code>object</code> - A Server Status object of success, containing only `ok`.Or bubbling from `resources.write()`.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -310,12 +268,10 @@ Or bubbling from `resources.write()`.
 <a name="module_data..setPackagePointer"></a>
 
 ### data~setPackagePointer(data) ⇒ <code>object</code>
-Persists Package Pointer Data to disk. By saving to the cache object if
-available, or otherwise writing directly to disk.
+Persists Package Pointer Data to disk. By saving to the cache object ifavailable, or otherwise writing directly to disk.
 
 **Kind**: inner method of [<code>data</code>](#module_data)  
-**Returns**: <code>object</code> - A Server Status Object of success with only `ok` if successul,
-or otherwise bubbling from `resources.write()`.  
+**Returns**: <code>object</code> - A Server Status Object of success with only `ok` if successul,or otherwise bubbling from `resources.write()`.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -324,8 +280,7 @@ or otherwise bubbling from `resources.write()`.
 <a name="module_data..setPackageByID"></a>
 
 ### data~setPackageByID(id, data) ⇒ <code>object</code>
-Persists Package Data to disk. Since no cache objects exist for individual
-packages, really is a wrapper around `resources.write()` with some presets.
+Persists Package Data to disk. Since no cache objects exist for individualpackages, really is a wrapper around `resources.write()` with some presets.
 
 **Kind**: inner method of [<code>data</code>](#module_data)  
 **Returns**: <code>object</code> - A server status object bubbled directly from `resources.write()`.  
@@ -350,8 +305,7 @@ Marks a package for deletion on server shutdown, using its `package.json`.
 <a name="module_data..restorePackageByPointer"></a>
 
 ### data~restorePackageByPointer(pointer) ⇒ <code>objject</code>
-Restores a previously marked package for deletion. Causing it to no
-longer be marked for deletion.
+Restores a previously marked package for deletion. Causing it to nolonger be marked for deletion.
 
 **Kind**: inner method of [<code>data</code>](#module_data)  
 **Returns**: <code>objject</code> - A Server Status Object, where on success only contains `ok`.  
@@ -363,8 +317,7 @@ longer be marked for deletion.
 <a name="module_database"></a>
 
 ## database
-Provides an interface of a large collection of functions to interact
-with and retreive data from the cloud hosted database instance.
+Provides an interface of a large collection of functions to interactwith and retreive data from the cloud hosted database instance.
 
 
 * [database](#module_database)
@@ -382,10 +335,7 @@ with and retreive data from the cloud hosted database instance.
 <a name="module_database..setupSQL"></a>
 
 ### database~setupSQL() ⇒ <code>object</code>
-Initialize the connection to the PostgreSQL database.
-In order to avoid the initialization multiple times,
-the logical nullish assignment (??=) can be used in the caller.
-Exceptions thrown here should be caught and handled in the caller.
+Initialize the connection to the PostgreSQL database.In order to avoid the initialization multiple times,the logical nullish assignment (??=) can be used in the caller.Exceptions thrown here should be caught and handled in the caller.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
 **Returns**: <code>object</code> - PostgreSQL connection object.  
@@ -398,23 +348,19 @@ Ensures any Database connection is properly, and safely closed before exiting.
 <a name="module_database..getPackageByID"></a>
 
 ### database~getPackageByID()
-Takes a package pointer UUID, and returns the package object within
-a Server Status Object.
+Takes a package pointer UUID, and returns the package object withina Server Status Object.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
 <a name="module_database..getPackageByName"></a>
 
 ### database~getPackageByName()
-Takes a package name, and returns the raw SQL package data within a Server Status Object.
-The second parameter details boolean, indicates the type of package object to return.
-Either a short, or full.
+Takes a package name, and returns the raw SQL package data within a Server Status Object.The second parameter details boolean, indicates the type of package object to return.Either a short, or full.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
 <a name="module_database..getPackageCollectionByName"></a>
 
 ### database~getPackageCollectionByName()
-Takes a package name array, and returns an array of the package objects.
-You must ensure that the packArray passed is compatible. This function does not coerce compatibility.
+Takes a package name array, and returns an array of the package objects.You must ensure that the packArray passed is compatible. This function does not coerce compatibility.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
 <a name="module_database..getPackageCollectionByID"></a>
@@ -426,46 +372,36 @@ Takes a package pointer array, and returns an array of the package objects.
 <a name="module_database..getPointerTable"></a>
 
 ### database~getPointerTable()
-Returns a full package pointer table, allowing the full reference of package names
-to package pointer UUIDs.
+Returns a full package pointer table, allowing the full reference of package namesto package pointer UUIDs.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
 <a name="module_database..getFeaturedPackages"></a>
 
 ### database~getFeaturedPackages()
-Collects the hardcoded featured packages array from the storage.js
-module. Then uses this.getPackageCollectionByName to retreive details of the
-package.
+Collects the hardcoded featured packages array from the storage.jsmodule. Then uses this.getPackageCollectionByName to retreive details of thepackage.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
 <a name="module_database..getTotalPackageEstimate"></a>
 
 ### database~getTotalPackageEstimate()
-Returns an estimate of how many rows are included in the packages SQL table.
-Used to aid in trunication and page generation of Link headers for large requests.
+Returns an estimate of how many rows are included in the packages SQL table.Used to aid in trunication and page generation of Link headers for large requests.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
 <a name="module_database..getSortedPackages"></a>
 
 ### database~getSortedPackages()
-Takes the page, direction, and sort method returning the raw sql package
-data for each. This monolithic function handles trunication of the packages,
-and sorting, aiming to provide back the raw data, and allow later functions to
-then reconstruct the JSON as needed.
+Takes the page, direction, and sort method returning the raw sql packagedata for each. This monolithic function handles trunication of the packages,and sorting, aiming to provide back the raw data, and allow later functions tothen reconstruct the JSON as needed.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
 <a name="module_debug_util"></a>
 
 ## debug\_util
-A collection of simple functions to help devs debug the application during runtime,
-to better assist in tracking down bugs. Since many sets of data cannot be reliably output to the console
-this can help to view the transmutations of data as its handled.
+A collection of simple functions to help devs debug the application during runtime,to better assist in tracking down bugs. Since many sets of data cannot be reliably output to the consolethis can help to view the transmutations of data as its handled.
 
 <a name="module_debug_util..roughSizeOfObject"></a>
 
 ### debug_util~roughSizeOfObject(obj) ⇒ <code>integer</code>
-Returns the rough size of the object in memory, in Bytes. Can be used
-to help determine how an object changes over time.
+Returns the rough size of the object in memory, in Bytes. Can be usedto help determine how an object changes over time.
 
 **Kind**: inner method of [<code>debug\_util</code>](#module_debug_util)  
 **Returns**: <code>integer</code> - Returns the integer value of the object in Bytes.  
@@ -477,10 +413,7 @@ to help determine how an object changes over time.
 <a name="module_error"></a>
 
 ## error
-Contains different error messages that can be returned, adding them and their
-respective HTTP Status Codes to the `Response` object provided to them.
-Letting them all be defined in one place for ease of modification, and easily route
-to them from different handlers.
+Contains different error messages that can be returned, adding them and theirrespective HTTP Status Codes to the `Response` object provided to them.Letting them all be defined in one place for ease of modification, and easily routeto them from different handlers.
 
 
 * [error](#module_error)
@@ -496,10 +429,7 @@ to them from different handlers.
 <a name="module_error..notFoundJSON"></a>
 
 ### error~notFoundJSON(res)
-The Standard JSON Handling when an object is not found.
-###### Setting:
-* Status Code: 404
-* JSON Respone Body: message: "Not Found"
+The Standard JSON Handling when an object is not found.###### Setting:* Status Code: 404* JSON Respone Body: message: "Not Found"
 
 **Kind**: inner method of [<code>error</code>](#module_error)  
 
@@ -515,10 +445,7 @@ The standard Website Page 404 not found handler.
 **Kind**: inner method of [<code>error</code>](#module_error)  
 **Todo**
 
-- [ ] Currently this returns a JSON object, but in the future should return an HTML Not Found page.
-###### Setting Currently:
-* Status Code: 404
-* JSON Response Body: message: "This is a standin for the proper site wide 404 page."
+- [ ] Currently this returns a JSON object, but in the future should return an HTML Not Found page.###### Setting Currently:* Status Code: 404* JSON Response Body: message: "This is a standin for the proper site wide 404 page."
 
 
 | Param | Type | Description |
@@ -528,10 +455,7 @@ The standard Website Page 404 not found handler.
 <a name="module_error..missingAuthJSON"></a>
 
 ### error~missingAuthJSON(res)
-JSON Handling when authentication fails.
-###### Setting:
-* Status Code: 401
-* JSON Response Body: message: "Requires authentication. Please update your token if you haven't done so recently."
+JSON Handling when authentication fails.###### Setting:* Status Code: 401* JSON Response Body: message: "Requires authentication. Please update your token if you haven't done so recently."
 
 **Kind**: inner method of [<code>error</code>](#module_error)  
 
@@ -542,10 +466,7 @@ JSON Handling when authentication fails.
 <a name="module_error..serverErrorJSON"></a>
 
 ### error~serverErrorJSON(res)
-The Standard Server Error JSON Endpoint.
-###### Setting:
-* Status Code: 500
-* JSON Response Body: message: "Application Error"
+The Standard Server Error JSON Endpoint.###### Setting:* Status Code: 500* JSON Response Body: message: "Application Error"
 
 **Kind**: inner method of [<code>error</code>](#module_error)  
 
@@ -556,10 +477,7 @@ The Standard Server Error JSON Endpoint.
 <a name="module_error..publishPackageExists"></a>
 
 ### error~publishPackageExists(res)
-JSON Response announcing a package already exists.
-###### Setting:
-* Status Code: 409
-* JSON Response Body: message: "A Package by that name already exists."
+JSON Response announcing a package already exists.###### Setting:* Status Code: 409* JSON Response Body: message: "A Package by that name already exists."
 
 **Kind**: inner method of [<code>error</code>](#module_error)  
 
@@ -570,10 +488,7 @@ JSON Response announcing a package already exists.
 <a name="module_error..badRepoJSON"></a>
 
 ### error~badRepoJSON(res)
-JSON Response announcing that the repo doesn't exist, or is inaccessible.
-###### Setting:
-* Status Code: 400
-* JSON Response Body: message: That repo does not exist, isn't an atom package, or atombot does not have access.
+JSON Response announcing that the repo doesn't exist, or is inaccessible.###### Setting:* Status Code: 400* JSON Response Body: message: That repo does not exist, isn't an atom package, or atombot does not have access.
 
 **Kind**: inner method of [<code>error</code>](#module_error)  
 
@@ -584,10 +499,7 @@ JSON Response announcing that the repo doesn't exist, or is inaccessible.
 <a name="module_error..badPackageJSON"></a>
 
 ### error~badPackageJSON(res)
-JSON Response annoucning that the package.json of a repo is invalid.
-###### Setting:
-* Status Code: 400
-* JSON Response Body: message: The package.json at owner/repo isn't valid.
+JSON Response annoucning that the package.json of a repo is invalid.###### Setting:* Status Code: 400* JSON Response Body: message: The package.json at owner/repo isn't valid.
 
 **Kind**: inner method of [<code>error</code>](#module_error)  
 
@@ -598,12 +510,7 @@ JSON Response annoucning that the package.json of a repo is invalid.
 <a name="module_error..unsupportedJSON"></a>
 
 ### error~unsupportedJSON(res)
-This is a standard JSON endpoint to define an endpoint that is currently not supported.
-Used currently to delineate which endpoints have not been fully implemented. Or a specific error endpoint
-that has not been written yet.
-###### Setting:
-* Status Code: 501
-* JSON Response Body: message: "While under development this feature is not supported."
+This is a standard JSON endpoint to define an endpoint that is currently not supported.Used currently to delineate which endpoints have not been fully implemented. Or a specific error endpointthat has not been written yet.###### Setting:* Status Code: 501* JSON Response Body: message: "While under development this feature is not supported."
 
 **Kind**: inner method of [<code>error</code>](#module_error)  
 
@@ -629,11 +536,7 @@ Assists in interactions between the backend and GitHub.
 <a name="module_git..ownership"></a>
 
 ### git~ownership(user, repo)
-Allows the ability to check if a user has permissions to write to a repo.
-<b>MUST</b> Be provided `owner/repo` to successfully function, and expects the
-full `user` object. Returns `ok: true` where content is the repo data from GitHub
-on success, returns `short: "No Repo Access"` if they do not have permisison
-to affect said repo or `short: "Server Error"` if any other error has occured.
+Allows the ability to check if a user has permissions to write to a repo.<b>MUST</b> Be provided `owner/repo` to successfully function, and expects thefull `user` object. Returns `ok: true` where content is the repo data from GitHubon success, returns `short: "No Repo Access"` if they do not have permisisonto affect said repo or `short: "Server Error"` if any other error has occured.
 
 **Kind**: inner method of [<code>git</code>](#module_git)  
 
@@ -645,9 +548,7 @@ to affect said repo or `short: "Server Error"` if any other error has occured.
 <a name="module_git..createPackage"></a>
 
 ### git~createPackage(repo) ⇒ <code>object</code>
-Creates a compatible `Server Object Full` object, from only receiving a `repo` as in
-`owner/repo`. With this it contacts GitHub API's and modifies data as needed to
-return back a proper `Server Object Full` object within a `Server Status`.content object.
+Creates a compatible `Server Object Full` object, from only receiving a `repo` as in`owner/repo`. With this it contacts GitHub API's and modifies data as needed toreturn back a proper `Server Object Full` object within a `Server Status`.content object.
 
 **Kind**: inner method of [<code>git</code>](#module_git)  
 **Returns**: <code>object</code> - A `Server Status` Object where `content` is the `Server Package Full` object.  
@@ -659,13 +560,10 @@ return back a proper `Server Object Full` object within a `Server Status`.conten
 <a name="module_git..doesUserHaveRepo"></a>
 
 ### git~doesUserHaveRepo(user, repo, [page]) ⇒ <code>object</code>
-Unexported function, that determines if the specified user has access
-to the specified repository. Will loop itself through all valid pages
-of users repo list, until it finds a match, otherwise returning accordingly.
+Unexported function, that determines if the specified user has accessto the specified repository. Will loop itself through all valid pagesof users repo list, until it finds a match, otherwise returning accordingly.
 
 **Kind**: inner method of [<code>git</code>](#module_git)  
-**Returns**: <code>object</code> - A server status object of true if they do have access.
-And returns false in all other situations.  
+**Returns**: <code>object</code> - A server status object of true if they do have access.And returns false in all other situations.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -676,8 +574,7 @@ And returns false in all other situations.
 <a name="module_git..getRepoExistance"></a>
 
 ### git~getRepoExistance(repo) ⇒ <code>boolean</code>
-Intends to determine if a repo exists, or at least is accessible and public
-on GitHub.
+Intends to determine if a repo exists, or at least is accessible and publicon GitHub.
 
 **Kind**: inner method of [<code>git</code>](#module_git)  
 **Returns**: <code>boolean</code> - A true if the repo exists, false otherwise. Including an error.  
@@ -692,8 +589,7 @@ on GitHub.
 Intends to retreive the raw text of the GitHub repo package.
 
 **Kind**: inner method of [<code>git</code>](#module_git)  
-**Returns**: <code>string</code> \| <code>undefined</code> - Returns a proper string of the readme if successful.
-And returns `undefined` otherwise.  
+**Returns**: <code>string</code> \| <code>undefined</code> - Returns a proper string of the readme if successful.And returns `undefined` otherwise.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -702,12 +598,10 @@ And returns `undefined` otherwise.
 <a name="module_git..getRepoReadMe"></a>
 
 ### git~getRepoReadMe(repo) ⇒ <code>string</code> \| <code>undefined</code>
-Intends to retreive the GitHub repo readme file. Will look for both
-`readme.md` and `README.md` just in case.
+Intends to retreive the GitHub repo readme file. Will look for both`readme.md` and `README.md` just in case.
 
 **Kind**: inner method of [<code>git</code>](#module_git)  
-**Returns**: <code>string</code> \| <code>undefined</code> - Returns the raw string of the readme if available,
-otherwise returns undefined.  
+**Returns**: <code>string</code> \| <code>undefined</code> - Returns the raw string of the readme if available,otherwise returns undefined.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -716,12 +610,10 @@ otherwise returns undefined.
 <a name="module_git..getRepoTags"></a>
 
 ### git~getRepoTags(repo) ⇒ <code>object</code> \| <code>undefined</code>
-Intends to get all tags associated with a repo. Since this is how APM
-natively publishes new package versions on GitHub.
+Intends to get all tags associated with a repo. Since this is how APMnatively publishes new package versions on GitHub.
 
 **Kind**: inner method of [<code>git</code>](#module_git)  
-**Returns**: <code>object</code> \| <code>undefined</code> - Returns the JSON parsed object of all tags if successful,
-and returns undefined otherwise.  
+**Returns**: <code>object</code> \| <code>undefined</code> - Returns the JSON parsed object of all tags if successful,and returns undefined otherwise.  
 **See**: https://docs.github.com/en/rest/repos/repos#list-repository-tags  
 
 | Param | Type | Description |
@@ -731,8 +623,7 @@ and returns undefined otherwise.
 <a name="module_logger"></a>
 
 ## logger
-Allows easy logging of the server. Allowing it to become simple to add additional
-logging methods if a log server is ever implemented.
+Allows easy logging of the server. Allowing it to become simple to add additionallogging methods if a log server is ever implemented.
 
 **Implements**: <code>config</code>  
 
@@ -762,8 +653,7 @@ HTTP:: IP [DATE (as ISO String)] "HTTP_METHOD URL PROTOCOL" STATUS_CODE DURATION
 <a name="module_logger..errorLog"></a>
 
 ### logger~errorLog(req, res, err)
-An endpoint to log errors, as well as exactly where they occured. Allowing some insight into what caused
-them, as well as how the server reacted to the end user.
+An endpoint to log errors, as well as exactly where they occured. Allowing some insight into what causedthem, as well as how the server reacted to the end user.
 
 **Kind**: inner method of [<code>logger</code>](#module_logger)  
 
@@ -780,8 +670,7 @@ ERROR:: IP "HTTP_METHOD URL PROTOCOL" STATUS_CODE DURATION_OF_REQUESTms ! ERROR
 <a name="module_logger..warningLog"></a>
 
 ### logger~warningLog([req], [res], err)
-An endpoint to log warnings. This should be used for when an error recovered, but the server
-did its best to recover from it. Providing no error to the end user.
+An endpoint to log warnings. This should be used for when an error recovered, but the serverdid its best to recover from it. Providing no error to the end user.
 
 **Kind**: inner method of [<code>logger</code>](#module_logger)  
 
@@ -817,8 +706,7 @@ INFO:: VALUE
 <a name="module_logger..debugLog"></a>
 
 ### logger~debugLog(value)
-An endpoint to log debug information only. This log will only show if enabled in the Config file.
-That is if the `app.yaml` file has DEBUG as true.
+An endpoint to log debug information only. This log will only show if enabled in the Config file.That is if the `app.yaml` file has DEBUG as true.
 
 **Kind**: inner method of [<code>logger</code>](#module_logger)  
 
@@ -833,8 +721,7 @@ DEBUG:: VALUE
 <a name="module_main"></a>
 
 ## main
-The Main functionality for the entire server. Sets up the Express server, providing
-all endpoints it listens on. With those endpoints being further documented in `api.md`.
+The Main functionality for the entire server. Sets up the Express server, providingall endpoints it listens on. With those endpoints being further documented in `api.md`.
 
 **Implements**: <code>update\_handler</code>, <code>star\_handler</code>, <code>user\_handler</code>, <code>theme\_handler</code>, <code>package\_handler</code>, <code>common\_handler</code>  
 <a name="module_query"></a>
@@ -882,12 +769,10 @@ Parser for the 'sort' query parameter. Defaulting usually to downloads.
 <a name="module_query..dir"></a>
 
 ### query~dir(req) ⇒ <code>string</code>
-Parser for either 'direction' or 'order' query parameter, prioritizing
-'direction'.
+Parser for either 'direction' or 'order' query parameter, prioritizing'direction'.
 
 **Kind**: inner method of [<code>query</code>](#module_query)  
-**Returns**: <code>string</code> - The valid direction value from the 'direction' or 'order'
-query parameter.  
+**Returns**: <code>string</code> - The valid direction value from the 'direction' or 'order'query parameter.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -896,8 +781,7 @@ query parameter.
 <a name="module_query..query"></a>
 
 ### query~query(req) ⇒ <code>string</code>
-Checks the 'q' query parameter, trunicating it at 50 characters, and checking simplisticly that
-it is not a malicious request.
+Checks the 'q' query parameter, trunicating it at 50 characters, and checking simplisticly thatit is not a malicious request.
 
 **Kind**: inner method of [<code>query</code>](#module_query)  
 **Implements**: <code>pathTraversalAttempt</code>  
@@ -946,8 +830,7 @@ Parses the 'tag' query parameter, returning it if valid, otherwise returning ''.
 <a name="module_query..rename"></a>
 
 ### query~rename(req) ⇒ <code>boolean</code>
-Since this is intended to be returning a boolean value, returns false
-if invalid, otherwise returns true. Checking for mixed captilization.
+Since this is intended to be returning a boolean value, returns falseif invalid, otherwise returns true. Checking for mixed captilization.
 
 **Kind**: inner method of [<code>query</code>](#module_query)  
 **Returns**: <code>boolean</code> - Returns false if invalid, or otherwise returns the boolean value of the string.  
@@ -959,9 +842,7 @@ if invalid, otherwise returns true. Checking for mixed captilization.
 <a name="module_query..pathTraversalAttempt"></a>
 
 ### query~pathTraversalAttempt(data) ⇒ <code>boolean</code>
-Completes some short checks to determine if the data contains a malicious
-path traversal attempt. Returning a boolean indicating if a path traversal attempt
-exists in the data.
+Completes some short checks to determine if the data contains a maliciouspath traversal attempt. Returning a boolean indicating if a path traversal attemptexists in the data.
 
 **Kind**: inner method of [<code>query</code>](#module_query)  
 **Returns**: <code>boolean</code> - True indicates a path traversal attempt was found. False otherwise.  
@@ -973,9 +854,7 @@ exists in the data.
 <a name="module_resources"></a>
 
 ## resources
-This module provides a way for other functions to read/write/remove data without knowing or
-thinking about the underlying file structure. Providing abstraction if the data resides on a local
-filesystem, Google Cloud Storage, or something else entirely.
+This module provides a way for other functions to read/write/remove data without knowing orthinking about the underlying file structure. Providing abstraction if the data resides on a localfilesystem, Google Cloud Storage, or something else entirely.
 
 **Implements**: <code>config</code>  
 
@@ -1009,9 +888,7 @@ Allows simple interfaces to handle caching an object in memory. Used to cache da
 Exported function to read data from the filesystem, whatever that may be.
 
 **Kind**: inner method of [<code>resources</code>](#module_resources)  
-**Returns**: <code>object</code> - If type is "package" or "pointer" returns a Server Status Object, with `content`
-being a `CacheObject` class, already initialized and ready for consumption. Otherwise if type is
-"package" returns the return from `readFile`. Errors bubble up from `readFile`.  
+**Returns**: <code>object</code> - If type is "package" or "pointer" returns a Server Status Object, with `content`being a `CacheObject` class, already initialized and ready for consumption. Otherwise if type is"package" returns the return from `readFile`. Errors bubble up from `readFile`.  
 **Depreciated**: Since migration to DB.  
 **Implments**: <code>readFile</code>  
 
@@ -1026,8 +903,7 @@ being a `CacheObject` class, already initialized and ready for consumption. Othe
 Non-Exported function to read data from the filesystem. Whatever that may be.
 
 **Kind**: inner method of [<code>resources</code>](#module_resources)  
-**Returns**: <code>object</code> - A Server Status Object, with `content` being the read file parsed from JSON.
-If error returns "Server Error" or "File Not Found".  
+**Returns**: <code>object</code> - A Server Status Object, with `content` being the read file parsed from JSON.If error returns "Server Error" or "File Not Found".  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -1054,8 +930,7 @@ The Exported Write function, to allow writing of data to the filesystem.
 Non-Exported write function. Used to directly write data to the filesystem. Whatever that may be.
 
 **Kind**: inner method of [<code>resources</code>](#module_resources)  
-**Returns**: <code>object</code> - A Server Status Object, with `content` only on an error.
-Errors returned "Server Error".  
+**Returns**: <code>object</code> - A Server Status Object, with `content` only on an error.Errors returned "Server Error".  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -1066,10 +941,8 @@ Errors returned "Server Error".
 
 ### resources~remove(name) ⇒ <code>object</code>
 **Kind**: inner method of [<code>resources</code>](#module_resources)  
-**Returns**: <code>object</code> - A Server Status Object, with `content` non-existant on a successful deletion.
-Errors returned as "Server Error".  
-**Descc**: Exported function to delete data from the filesystem, whatever that may be. But since we know
-we will only ever be deleting packages, these will only ever attempt to delete a package.  
+**Returns**: <code>object</code> - A Server Status Object, with `content` non-existant on a successful deletion.Errors returned as "Server Error".  
+**Descc**: Exported function to delete data from the filesystem, whatever that may be. But since we knowwe will only ever be deleting packages, these will only ever attempt to delete a package.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -1078,9 +951,7 @@ we will only ever be deleting packages, these will only ever attempt to delete a
 <a name="module_search"></a>
 
 ## search
-This module is focused on implementing different search algorithms.
-Elsewhere in the code the choice is made of which functions to call, to actual
-execute a search function.
+This module is focused on implementing different search algorithms.Elsewhere in the code the choice is made of which functions to call, to actualexecute a search function.
 
 
 * [search](#module_search)
@@ -1094,9 +965,7 @@ execute a search function.
 <a name="module_search..levenshtein"></a>
 
 ### search~levenshtein(s1, s2) ⇒ <code>function</code>
-The top level exported function to call, to preform a search based on
-the Levenshtein Distance. Sibling functions denotated as vlFUNC, for its creator
-Vladimir Levenshtein.
+The top level exported function to call, to preform a search based onthe Levenshtein Distance. Sibling functions denotated as vlFUNC, for its creatorVladimir Levenshtein.
 
 **Kind**: inner method of [<code>search</code>](#module_search)  
 **Implements**: <code>vlSimilarity</code>  
@@ -1124,8 +993,7 @@ The un-exported function called by `levenshtein`. Used to preform the actual sea
 <a name="module_search..vlEditDistance"></a>
 
 ### search~vlEditDistance(s1, s2) ⇒ <code>float</code>
-The un-exported function called by `vlSimilarity` to actually compute the Edit Distance
-between two strings.
+The un-exported function called by `vlSimilarity` to actually compute the Edit Distancebetween two strings.
 
 **Kind**: inner method of [<code>search</code>](#module_search)  
 **Returns**: <code>float</code> - A numerical Edit Distance, 1.0 being the highest and closest match, down to 0.0  
@@ -1138,9 +1006,7 @@ between two strings.
 <a name="module_search..levenshteinWSDM"></a>
 
 ### search~levenshteinWSDM(s1, s2) ⇒ <code>float</code>
-A custom implementation of Levenshtein's Edit Distance, intended to be
-better suited for sentences. Named: 'Levenshtein Distance w/ Word Seperators - Double Mean'.
-Still relies on base levenshtein functions to reduce duplication.
+A custom implementation of Levenshtein's Edit Distance, intended to bebetter suited for sentences. Named: 'Levenshtein Distance w/ Word Seperators - Double Mean'.Still relies on base levenshtein functions to reduce duplication.
 
 **Kind**: inner method of [<code>search</code>](#module_search)  
 **Implements**: <code>vlSimilarity</code>  
@@ -1154,15 +1020,11 @@ Still relies on base levenshtein functions to reduce duplication.
 <a name="module_search..lcs"></a>
 
 ### search~lcs(s1, s2) ⇒ <code>float</code>
-An exported translation of Longest Common Subsequence Algorithm in JavaScript.
-With a custom twist, where instead of reporting the string of the LCS, reports
-a numerical float value of the similarity two its search string.
-With sibling functions denotated by lcsFUNC.
+An exported translation of Longest Common Subsequence Algorithm in JavaScript.With a custom twist, where instead of reporting the string of the LCS, reportsa numerical float value of the similarity two its search string.With sibling functions denotated by lcsFUNC.
 
 **Kind**: inner method of [<code>search</code>](#module_search)  
 **Implements**: <code>lcsTraceBack</code>  
-**Returns**: <code>float</code> - A numerical float similarity index. For example if the string is
-5 characters long, and the LCS is 4 characters, it will return 0.8 for it's similarity score.  
+**Returns**: <code>float</code> - A numerical float similarity index. For example if the string is5 characters long, and the LCS is 4 characters, it will return 0.8 for it's similarity score.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -1172,8 +1034,7 @@ With sibling functions denotated by lcsFUNC.
 <a name="module_search..lcsTraceBack"></a>
 
 ### search~lcsTraceBack(matrix, s1, s2, height, width)
-The non-exported recursive traceback function determining the actual Longest Common
-Subsequence.
+The non-exported recursive traceback function determining the actual Longest CommonSubsequence.
 
 **Kind**: inner method of [<code>search</code>](#module_search)  
 
@@ -1188,15 +1049,13 @@ Subsequence.
 <a name="module_server"></a>
 
 ## server
-The initializer of `main.js` starting up the Express Server, and setting the port
-to listen on. As well as handling a graceful shutdown of the server.
+The initializer of `main.js` starting up the Express Server, and setting the portto listen on. As well as handling a graceful shutdown of the server.
 
 **Implements**: <code>main</code>, <code>config</code>, <code>logger</code>  
 <a name="module_server..exterminate"></a>
 
 ### server~exterminate(callee)
-This is called when the server process receives a `SIGINT` or `SIGTERM` signal.
-Which this will then handle closing the server listener, as well as calling `data.Shutdown`.
+This is called when the server process receives a `SIGINT` or `SIGTERM` signal.Which this will then handle closing the server listener, as well as calling `data.Shutdown`.
 
 **Kind**: inner method of [<code>server</code>](#module_server)  
 
@@ -1207,9 +1066,7 @@ Which this will then handle closing the server listener, as well as calling `dat
 <a name="module_storage"></a>
 
 ## storage
-This module is the second generation of data storage methodology,
-in which this provides static access to files stored within regular cloud
-file storage. Specifically intended for use with Google Cloud Storage.
+This module is the second generation of data storage methodology,in which this provides static access to files stored within regular cloudfile storage. Specifically intended for use with Google Cloud Storage.
 
 
 * [storage](#module_storage)
@@ -1226,24 +1083,19 @@ Sets up the Google Cloud Storage Class, to ensure its ready to use.
 <a name="module_storage..getBanList"></a>
 
 ### storage~getBanList()
-Reads the ban list from the Google Cloud Storage Space.
-Returning the cached parsed JSON object.
-If it has been read before during this instance of hosting just the cached
-version is returned.
+Reads the ban list from the Google Cloud Storage Space.Returning the cached parsed JSON object.If it has been read before during this instance of hosting just the cachedversion is returned.
 
 **Kind**: inner method of [<code>storage</code>](#module_storage)  
 <a name="module_storage..getFeaturedPackages"></a>
 
 ### storage~getFeaturedPackages()
-Returns the hardcoded featured packages file from Google Cloud Storage.
-Caching the object once read for this instance of the server run.
+Returns the hardcoded featured packages file from Google Cloud Storage.Caching the object once read for this instance of the server run.
 
 **Kind**: inner method of [<code>storage</code>](#module_storage)  
 <a name="module_users"></a>
 
 ## users
-Focused on interacting with User Data only. Provides functions required
-to modify, or compile user data specifically.
+Focused on interacting with User Data only. Provides functions requiredto modify, or compile user data specifically.
 
 **Implements**: <code>data</code>  
 
@@ -1257,10 +1109,7 @@ to modify, or compile user data specifically.
 <a name="module_users..verifyAuth"></a>
 
 ### users~verifyAuth(token, [callback]) ⇒ <code>object</code>
-Checks every existing user within the users file, to see if the token provided exists within their valid
-tokens. If it does will return the entire user object. If an optional callback is provided will invoke the
-callback passing the user object, otherwise will just return the user object.
-If no valid user is found returns null.
+Checks every existing user within the users file, to see if the token provided exists within their validtokens. If it does will return the entire user object. If an optional callback is provided will invoke thecallback passing the user object, otherwise will just return the user object.If no valid user is found returns null.
 
 **Kind**: inner method of [<code>users</code>](#module_users)  
 **Implements**: <code>GetUsers</code>  
@@ -1274,13 +1123,11 @@ If no valid user is found returns null.
 <a name="module_users..getUser"></a>
 
 ### users~getUser(username) ⇒ <code>object</code>
-Searches for a user within the user file, and if found will return the standard object
-containing the full User Object. Otherwise an error.
+Searches for a user within the user file, and if found will return the standard objectcontaining the full User Object. Otherwise an error.
 
 **Kind**: inner method of [<code>users</code>](#module_users)  
 **Implements**: <code>GetUsers</code>  
-**Returns**: <code>object</code> - An error object bubbled up from GetUsers, Error Object of 'Not Found',
-Object containing full User Object.  
+**Returns**: <code>object</code> - An error object bubbled up from GetUsers, Error Object of 'Not Found',Object containing full User Object.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -1293,8 +1140,7 @@ Adds the desired Package to the list of packages the User has starred.
 
 **Kind**: inner method of [<code>users</code>](#module_users)  
 **Implements**: <code>GetUser</code>, <code>GetUsers</code>  
-**Returns**: <code>object</code> - Error Object Bubbled from GetUser, Error Object Bubbled from GetUsers,
-Error Object Bubbled from SetUsers, Short Object of 'ok' if successful.  
+**Returns**: <code>object</code> - Error Object Bubbled from GetUser, Error Object Bubbled from GetUsers,Error Object Bubbled from SetUsers, Short Object of 'ok' if successful.  
 **Impmplements**: <code>SetUsers</code>  
 
 | Param | Type | Description |
@@ -1309,8 +1155,7 @@ Removes the specified Package from the Users list of stars.
 
 **Kind**: inner method of [<code>users</code>](#module_users)  
 **Implements**: <code>GetUser</code>, <code>GetUsers</code>, <code>SetUsers</code>  
-**Returns**: <code>object</code> - Error Object Bubbled from GetUser, ErrorObject Bubbled from GetUsers,
-Error Object Bubbled from SetUsers, Error Object of 'Not Found', Short Object of successful write ok.  
+**Returns**: <code>object</code> - Error Object Bubbled from GetUser, ErrorObject Bubbled from GetUsers,Error Object Bubbled from SetUsers, Error Object of 'Not Found', Short Object of successful write ok.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -1320,8 +1165,7 @@ Error Object Bubbled from SetUsers, Error Object of 'Not Found', Short Object of
 <a name="module_users..prune"></a>
 
 ### users~prune(userObj) ⇒ <code>object</code>
-Takes a single User Object, and prunes any server side only data from the object to return to the user.
-This pruned item should never be written back to disk, as removed the data from it removes any pointers to those values.
+Takes a single User Object, and prunes any server side only data from the object to return to the user.This pruned item should never be written back to disk, as removed the data from it removes any pointers to those values.
 
 **Kind**: inner method of [<code>users</code>](#module_users)  
 **Returns**: <code>object</code> - The Pruned userObj.  
@@ -1344,9 +1188,7 @@ A helper for any functions that are agnostic in hanlders.
 <a name="module_utils..localUserLoggedIn"></a>
 
 ### utils~localUserLoggedIn(req, res, params_user, callback)
-Used as a less verbose way to check if the current user token, is associated
-with a logged in user. If not handles errors automatically, if so calls the callback
-function passing the Server Status Object, where content is User.
+Used as a less verbose way to check if the current user token, is associatedwith a logged in user. If not handles errors automatically, if so calls the callbackfunction passing the Server Status Object, where content is User.
 
 **Kind**: inner method of [<code>utils</code>](#module_utils)  
 
@@ -1360,23 +1202,19 @@ function passing the Server Status Object, where content is User.
 <a name="module_utils..constructPackageObjectFull"></a>
 
 ### utils~constructPackageObjectFull()
-Takes the raw return of a full row from the packages table,
-constructs a standardized package object full from it.
+Takes the raw return of a full row from the packages table,constructs a standardized package object full from it.
 
 **Kind**: inner method of [<code>utils</code>](#module_utils)  
 <a name="module_utils..constructPackageObjectShort"></a>
 
 ### utils~constructPackageObjectShort()
-Takes a single or array of rows from the db, and returns a JSON
-construction of package object shorts
+Takes a single or array of rows from the db, and returns a JSONconstruction of package object shorts
 
 **Kind**: inner method of [<code>utils</code>](#module_utils)  
 <a name="module_common_handler"></a>
 
 ## common\_handler
-Provides a simplistic way to refer to implement common endpoint returns.
-So these can be called as an async function without more complex functions, reducing
-verbosity, and duplication within the codebase.
+Provides a simplistic way to refer to implement common endpoint returns.So these can be called as an async function without more complex functions, reducingverbosity, and duplication within the codebase.
 
 **Implements**: <code>error</code>, <code>logger</code>  
 
@@ -1393,8 +1231,7 @@ verbosity, and duplication within the codebase.
 <a name="module_common_handler..authFail"></a>
 
 ### common_handler~authFail(req, res, user)
-Will take the <b>failed</b> user object from VerifyAuth, and respond for the endpoint as
-either a "Server Error" or a "Bad Auth", whichever is correct based on the Error bubbled from VerifyAuth.
+Will take the <b>failed</b> user object from VerifyAuth, and respond for the endpoint aseither a "Server Error" or a "Bad Auth", whichever is correct based on the Error bubbled from VerifyAuth.
 
 **Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
 **Implements**: <code>error.MissingAuthJSON</code>, <code>error.ServerErrorJSON</code>, <code>logger.HTTPLog</code>, <code>logger.ErrorLog</code>  
@@ -1487,9 +1324,7 @@ Returns the BadPackageJSON message to the user.
 <a name="module_common_handler..handleError"></a>
 
 ### common_handler~handleError(req, res, obj)
-Generic error handler mostly used to reduce the duplication of error handling in other modules.
-It checks the short error string and calls the relative endpoint.
-Note that it's designed to be called as the last async function before the return.
+Generic error handler mostly used to reduce the duplication of error handling in other modules.It checks the short error string and calls the relative endpoint.Note that it's designed to be called as the last async function before the return.
 
 **Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
 
@@ -1513,8 +1348,7 @@ Endpoint Handlers for Authentication URLs
 <a name="module_oauth_handler..getLogin"></a>
 
 ### oauth_handler~getLogin(req, res)
-Endpoint used to direct users to login, directing the user to the
-proper GitHub OAuth Page based on the backends client id.
+Endpoint used to direct users to login, directing the user to theproper GitHub OAuth Page based on the backends client id.
 
 **Kind**: inner method of [<code>oauth\_handler</code>](#module_oauth_handler)  
 
@@ -1558,8 +1392,7 @@ Endpoint Handlers in all relating to the packages themselves.
 <a name="module_package_handler..getPackages"></a>
 
 ### package_handler~getPackages(req, res)
-Endpoint to return all packages to the user. Based on any filtering
-theyved applied via query parameters.
+Endpoint to return all packages to the user. Based on any filteringtheyved applied via query parameters.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
 
@@ -1571,9 +1404,7 @@ theyved applied via query parameters.
 <a name="module_package_handler..postPackages"></a>
 
 ### package_handler~postPackages(req, res)
-This endpoint is used to publish a new package to the backend server.
-Taking the repo, and your authentication for it, determines if it can be published,
-then goes about doing so.
+This endpoint is used to publish a new package to the backend server.Taking the repo, and your authentication for it, determines if it can be published,then goes about doing so.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
 
@@ -1597,8 +1428,7 @@ Allows the user to retreive the featured packages, as package object shorts.
 <a name="module_package_handler..getPackagesSearch"></a>
 
 ### package_handler~getPackagesSearch(req, res)
-Allows user to search through all packages. Using their specified
-query parameter.
+Allows user to search through all packages. Using their specifiedquery parameter.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
 
@@ -1610,8 +1440,7 @@ query parameter.
 <a name="module_package_handler..getPackagesDetails"></a>
 
 ### package_handler~getPackagesDetails(req, res)
-Allows the user to request a single package object full, depending
-on the package included in the path parameter.
+Allows the user to request a single package object full, dependingon the package included in the path parameter.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
 
@@ -1635,8 +1464,7 @@ Allows the user to delete a repo they have ownership of.
 <a name="module_package_handler..getPackagesStargazers"></a>
 
 ### package_handler~getPackagesStargazers(req, res)
-Endpoint returns the array of `star_gazers` from a specified package.
-Taking only the package wanted, and returning it directly.
+Endpoint returns the array of `star_gazers` from a specified package.Taking only the package wanted, and returning it directly.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
 
@@ -1648,8 +1476,7 @@ Taking only the package wanted, and returning it directly.
 <a name="module_package_handler..postPackagesVersion"></a>
 
 ### package_handler~postPackagesVersion(req, res)
-Allows a new version of a package to be published. But also can allow
-a user to rename their application during this process.
+Allows a new version of a package to be published. But also can allowa user to rename their application during this process.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
 
@@ -1661,8 +1488,7 @@ a user to rename their application during this process.
 <a name="module_package_handler..getPackagesVersionTarball"></a>
 
 ### package_handler~getPackagesVersionTarball(req, res)
-Allows the user to get the tarball for a specific package version.
-Which should initiate a download of said tarball on their end.
+Allows the user to get the tarball for a specific package version.Which should initiate a download of said tarball on their end.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
 
@@ -1686,15 +1512,22 @@ Allows a user to delete a specific version of their package.
 <a name="module_package_handler..postPackagesEventUninstall"></a>
 
 ### package_handler~postPackagesEventUninstall(req, res)
-Used when a package is uninstalled, decreases the download count by 1.
-And saves this data. Originally an undocumented endpoint.
+Used when a package is uninstalled, decreases the download count by 1.And saves this data. Originally an undocumented endpoint.The decision to return a '201' was based on how other POST endpoints return,during a successful event.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
+**See**: [https://github.com/atom/apm/blob/master/src/uninstall.coffee](https://github.com/atom/apm/blob/master/src/uninstall.coffee)  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+**Properties**
+
+| Type | Description |
+| --- | --- |
+| <code>http\_method</code> | POST |
+| <code>http\_endpoint</code> | /api/packages/:packageName/versions/:versionName/events/uninstall |
 
 <a name="module_star_handler"></a>
 
@@ -1704,8 +1537,7 @@ Handler for any endpoints whose slug after `/api/` is `star`.
 <a name="module_star_handler..getStars"></a>
 
 ### star_handler~getStars(req, res)
-Endpoint for `GET /api/stars`. Whose endgoal is to return an array of all packages
-the authenticated user has stared.
+Endpoint for `GET /api/stars`. Whose endgoal is to return an array of all packagesthe authenticated user has stared.
 
 **Kind**: inner method of [<code>star\_handler</code>](#module_star_handler)  
 
@@ -1722,9 +1554,7 @@ Handler for endpoints whose slug after `/api/` is `user`.
 <a name="module_user_handler..getLoginStars"></a>
 
 ### user_handler~getLoginStars(req, res)
-Endpoint for `GET /api/users/:login/stars`. Whose goal is to return
-An array of Package Object Short's collected from the authenticated user's
-star gazer list.
+Endpoint for `GET /api/users/:login/stars`. Whose goal is to returnAn array of Package Object Short's collected from the authenticated user'sstar gazer list.
 
 **Kind**: inner method of [<code>user\_handler</code>](#module_user_handler)  
 
