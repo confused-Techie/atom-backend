@@ -322,7 +322,7 @@ async function getPackagesDetails(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
 async function deletePackagesName(req, res) {
-  // TODO 
+  // TODO
   // DELETE /api/packages/:packageName
   let params = {
     auth: req.get("Authorization"),
@@ -357,7 +357,7 @@ async function deletePackagesName(req, res) {
 }
 
 async function postPackagesStar(req, res) {
-  // TODO 
+  // TODO
   // POST /api/packages/:packageName/star
   let params = {
     auth: req.get("Authorization"),
@@ -413,7 +413,7 @@ async function postPackagesStar(req, res) {
 }
 
 async function deletePackagesStar(req, res) {
-  // TODO 
+  // TODO
   // DELETE /api/packages/:packageName/star
   let params = {
     auth: req.get("Authorization"),
@@ -481,7 +481,7 @@ async function deletePackagesStar(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
 async function getPackagesStargazers(req, res) {
-  // TODO 
+  // TODO
   // GET /api/packages/:packageName/stargazers
   let params = {
     packageName: decodeURIComponent(req.params.packageName),
@@ -521,7 +521,7 @@ async function getPackagesStargazers(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
 async function postPackagesVersion(req, res) {
-  // TODO 
+  // TODO
   // POST /api/packages/:packageName/versions
   let params = {
     tag: query.tag(req),
@@ -546,7 +546,7 @@ async function postPackagesVersion(req, res) {
 }
 
 async function getPackagesVersion(req, res) {
-  // TODO 
+  // TODO
   // GET /api/packages/:packageName/versions/:versionName
   let params = {
     packageName: decodeURIComponent(req.params.packageName),
@@ -641,7 +641,7 @@ async function getPackagesVersionTarball(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  */
 async function deletePackageVersion(req, res) {
-  // TODO 
+  // TODO
   // DELETE /api/packages/:packageName/versions/:versionName
   let params = {
     auth: req.get("Authorization"),
