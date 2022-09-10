@@ -1,19 +1,29 @@
+/**
+ * @module theme_handler
+ * @desc Endpoint Handlers relating to themes only.
+ * @implements {command_handler}
+ */
+ 
 const common = require("./common_handler.js");
 
+/** 
+ * @async 
+ * @function getThemeFeatured
+ * @desc Used to retreive all Featured Packages that are Themes. Originally an undocumented 
+ * endpoint. Returns a 200 response based on other similar responses.
+ * Additionally for the time being this list is created manually, the same method used 
+ * on Atom.ioi for now. Although there are plans to have this become automatic later on.
+ * @see {@link https://github.com/atom/apm/blob/master/src/featured.coffee|Source Code}
+ * @see {@link https://github.com/confused-Techie/atom-community-server-backend-JS/issues/23|Discussion}
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ * @property {http_method} - GET 
+ * @property {http_endpoint} - /api/themes/featured 
+ * @todo This function has never been implemented on this system.
+ */
 async function getThemeFeatured(req, res) {
-  // GET /api/themes/featured
-
-  // TODO: Undocumented Endpoint discovered, as the endpoint in use by APM to get featured themes.
-  // https://github.com/atom/apm/blob/master/src/featured.coffee
-  // Returns featured packages, filtered by themes. Unknown how these are determined.
-  // At least currently returns an 2 of items.
-  // Package Object Short Array.
+  // Returns Package Object Short Array 
   // Supports engine query parameter.
-  // Assumption: this utilizes a mystery rating system to return only themes. Allowing specificity
-  // into versions that are currently compatible.
-  // Returns a 200 response if everything goes well.
-  // Sort by package name, in alphabetical order is implemented client side. Wether this means we want to implement it
-  // or leave it to the client is hard to say.
   await common.notSupported(req, res);
 }
 
