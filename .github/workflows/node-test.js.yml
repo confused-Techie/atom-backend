@@ -22,7 +22,7 @@ env: # Now we need to setup environment variables, for the tests to run
   PAGINATE: 30
   CACHETIME: 600000
   DEBUGLOG: true
-  FILESTORE: "filesystem"
+  FILESTORE: "sql"
   GCS_BUCKET: ""
   GCS_SERVICE_ACCOUNT_FILE: ""
 
