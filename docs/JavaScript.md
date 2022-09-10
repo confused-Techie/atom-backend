@@ -406,6 +406,8 @@ a Server Status Object.
 
 ### database~getPackageByName()
 Takes a package name, and returns the raw SQL package data within a Server Status Object.
+The second parameter details boolean, indicates the type of package object to return.
+Either a short, or full.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
 <a name="module_database..getPackageCollectionByName"></a>
