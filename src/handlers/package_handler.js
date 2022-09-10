@@ -696,14 +696,15 @@ async function deletePackageVersion(req, res) {
  * @function postPackagesEventUninstall
  * @desc Used when a package is uninstalled, decreases the download count by 1.
  * And saves this data. Originally an undocumented endpoint.
+ * The decision to return a '201' was based on how other POST endpoints return,
+ * during a successful event.
+ * @see {@link https://github.com/atom/apm/blob/master/src/uninstall.coffee}
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
+ * @event POST#/api/packages/:packageName/versions/:versionName/events/uninstall
  */
 async function postPackagesEventUninstall(req, res) {
   // POST /api/packages/:packageName/versions/:versionName/events/uninstall
-  // This was originally an Undocumented endpoint, discovered as the endpoint using during an uninstall by APM.
-  // https://github.com/atom/apm/blob/master/src/uninstall.coffee
-  // The decision to return a '201' was based on how other POST endpoints return, during a successful event.
 
   let params = {
     auth: req.get("Authorization"),
