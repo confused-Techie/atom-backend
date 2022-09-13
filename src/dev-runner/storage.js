@@ -1,5 +1,5 @@
 // This is the Dev Runner Instance of ./src/storage.js
-// Intended to safely mock all features of ./src/storage.js without 
+// Intended to safely mock all features of ./src/storage.js without
 // the risk of modifying remote data, or having to rely on external services.
 
 const featuredPackages = [
@@ -10,13 +10,10 @@ const featuredPackages = [
   "teletype",
   "zentabs",
   "atom-material-syntax",
-  "atom-material-ui"
+  "atom-material-ui",
 ];
 
-const featuredThemes = [
-  "atom-material-ui",
-  "atom-material-syntax"
-];
+const featuredThemes = ["atom-material-ui", "atom-material-syntax"];
 
 const banList = [
   "atom-pythoncompiler",
@@ -34,7 +31,7 @@ const banList = [
   "slot-paling-gacor-setiap-hari",
   "slot-pulsa",
   "slothoki",
-  "slotonline"
+  "slotonline",
 ];
 
 async function getBanList() {

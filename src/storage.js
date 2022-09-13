@@ -144,7 +144,6 @@ async function getFeaturedThemes() {
 if (process.env.PULSAR_STATUS == "dev") {
   const devRunner = require("./dev-runner/storage.js");
   module.exports = devRunner;
-  
 } else {
   module.exports = {
     getBanList,

@@ -696,7 +696,6 @@ async function getSortedPackages(page, dir, method) {
 }
 
 if (process.env.PULSAR_STATUS == "dev") {
-  
 } else {
   module.exports = {
     shutdownSQL,
