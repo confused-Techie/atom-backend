@@ -1969,7 +1969,7 @@ Endpoint Handlers relating to themes only.
 Used to retreive all Featured Packages that are Themes. Originally an undocumented
 endpoint. Returns a 200 response based on other similar responses.
 Additionally for the time being this list is created manually, the same method used
-on Atom.ioi for now. Although there are plans to have this become automatic later on.
+on Atom.io for now. Although there are plans to have this become automatic later on.
 
 **Kind**: inner method of [<code>theme\_handler</code>](#module_theme_handler)  
 **See**
