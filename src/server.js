@@ -12,8 +12,12 @@ const { port } = require("./config.js").getConfig();
 const logger = require("./logger.js");
 const database = require("./database.js");
 
+if (process.env.PULSAR_STATUS == "dev") {
+  logger.warningLog("Pulsar Server is in Development Mode!");
+}
+
 const serve = app.listen(port, () => {
-  logger.infoLog(`Atom Server Listening on port ${port}`);
+  logger.infoLog(`Pulsar Server Listening on port ${port}`);
 });
 
 process.on("SIGTERM", async () => {

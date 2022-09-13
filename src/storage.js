@@ -141,8 +141,14 @@ async function getFeaturedThemes() {
   return getNew();
 }
 
-module.exports = {
-  getBanList,
-  getFeaturedPackages,
-  getFeaturedThemes,
-};
+if (process.env.PULSAR_STATUS == "dev") {
+  const devRunner = require("./dev-runner/storage.js");
+  module.exports = devRunner;
+  
+} else {
+  module.exports = {
+    getBanList,
+    getFeaturedPackages,
+    getFeaturedThemes,
+  };
+}

@@ -695,29 +695,33 @@ async function getSortedPackages(page, dir, method) {
   }
 }
 
-module.exports = {
-  shutdownSQL,
-  getPackageByID,
-  getPackageByName,
-  getPackageCollectionByName,
-  getPackageCollectionByID,
-  updatePackageByID,
-  updatePackageByName,
-  removePackageByName,
-  removePackageByID,
-  getFeaturedPackages,
-  getTotalPackageEstimate,
-  getSortedPackages,
-  getUserByName,
-  getUserByID,
-  verifyAuth,
-  getStarredPointersByUserID,
-  getStarredPointersByUserName,
-  getStarringUsersByPointer,
-  getPointerTable,
-  getUserCollectionById,
-  getPackageVersionByNameAndVersion,
-  updatePackageDownloadByName,
-  updatePackageDecrementDownloadByName,
-  getFeaturedThemes,
-};
+if (process.env.PULSAR_STATUS == "dev") {
+  
+} else {
+  module.exports = {
+    shutdownSQL,
+    getPackageByID,
+    getPackageByName,
+    getPackageCollectionByName,
+    getPackageCollectionByID,
+    updatePackageByID,
+    updatePackageByName,
+    removePackageByName,
+    removePackageByID,
+    getFeaturedPackages,
+    getTotalPackageEstimate,
+    getSortedPackages,
+    getUserByName,
+    getUserByID,
+    verifyAuth,
+    getStarredPointersByUserID,
+    getStarredPointersByUserName,
+    getStarringUsersByPointer,
+    getPointerTable,
+    getUserCollectionById,
+    getPackageVersionByNameAndVersion,
+    updatePackageDownloadByName,
+    updatePackageDecrementDownloadByName,
+    getFeaturedThemes,
+  };
+}

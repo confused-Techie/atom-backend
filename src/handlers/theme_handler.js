@@ -18,7 +18,7 @@ const logger = require("../logger.js");
  * @desc Used to retreive all Featured Packages that are Themes. Originally an undocumented
  * endpoint. Returns a 200 response based on other similar responses.
  * Additionally for the time being this list is created manually, the same method used
- * on Atom.ioi for now. Although there are plans to have this become automatic later on.
+ * on Atom.io for now. Although there are plans to have this become automatic later on.
  * @see {@link https://github.com/atom/apm/blob/master/src/featured.coffee|Source Code}
  * @see {@link https://github.com/confused-Techie/atom-community-server-backend-JS/issues/23|Discussion}
  * @param {object} req - The `Request` object inherited from the Express endpoint.
