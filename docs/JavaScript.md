@@ -1686,8 +1686,9 @@ query parameter.
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
 **Todo**
 
-- [ ] Migrate to new Database Schema, additionally determine how to integrate custom
-searching method into SQL Database.
+- [ ] Note: This **has** been migrated to the new DB, and is fully functional.
+The TODO here is to eventually move this to use the custom built in LCS search,
+rather than simple search.
 
 
 | Param | Type | Description |
@@ -1751,10 +1752,6 @@ Allows the user to delete a repo they have ownership of.
 Used to submit a new star to a package from the authenticated user.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
-**Todo**
-
-- [ ] Migrate to new Database Schema.
-
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -1774,10 +1771,6 @@ Used to submit a new star to a package from the authenticated user.
 Used to remove a star from a specific package for the authenticated usesr.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
-**Todo**
-
-- [ ] Migrate to new Database Schema.
-
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -1940,10 +1933,6 @@ Endpoint for `GET /api/stars`. Whose endgoal is to return an array of all packag
 the authenticated user has stared.
 
 **Kind**: inner method of [<code>star\_handler</code>](#module_star_handler)  
-**Todo**
-
-- [ ] Migrate to new Database Schema.
-
 
 | Param | Type | Description |
 | --- | --- | --- |
