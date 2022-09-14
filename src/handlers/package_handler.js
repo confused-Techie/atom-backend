@@ -215,8 +215,9 @@ async function getPackagesFeatured(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @property {http_method} - GET
  * @property {http_endpoint} - /api/packages/search
- * @todo Migrate to new Database Schema, additionally determine how to integrate custom
- * searching method into SQL Database.
+ * @todo Note: This **has** been migrated to the new DB, and is fully functional.
+ * The TODO here is to eventually move this to use the custom built in LCS search,
+ * rather than simple search.
  */
 async function getPackagesSearch(req, res) {
   let params = {
@@ -359,60 +360,47 @@ async function deletePackagesName(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @property {http_method} - POST
  * @property {http_endpoint} - /api/packages/:packageName/star
- * @todo Migrate to new Database Schema.
  */
 async function postPackagesStar(req, res) {
   let params = {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),
   };
-  let user = await users.verifyAuth(params.auth);
-
-  if (user.ok) {
-    // with user.ok we already know the user has valid authentication credentails, and we can allow changes.
-    let pack = await data.starPackageByName(
-      params.packageName,
-      user.content.name
-    );
-
-    if (pack.ok) {
-      // now with staring the package successfully, we also want to add this package to the user list stars.
-      let star = await users.addUserStar(params.packageName, user.content.name);
-      // this lets us add the star to the users profile.
-      if (star.ok) {
-        // now that we know the star has been added to the users profile, we can return the package, with success
-        res.status(200).json(pack.content);
-        logger.httpLog(req, res);
-      } else {
-        // the users star was not applied properly to their profile, and we would likely want to remove their star from the package before returning.
-        let unstar = await data.unstarPackageByName(
-          params.packageName,
-          user.content.name
-        );
-
-        if (unstar.ok) {
-          // since it still failed to star as originally intended, return error.
-          await common.serverError(req, res, star.content);
-        } else {
-          // unstarring after a failed staring, failed again. Oh jeez...
-          error.serverErrorJSON(res);
-          logger.httpLog(req, res);
-          logger.errorLog(
-            req,
-            res,
-            "Failed to unstar package after failing to add star to user. Unstar error, followed by User Star error to follow..."
-          );
-          logger.errorLog(req, res, unstar.content);
-          logger.errorLog(req, res, star.content);
-        }
-      }
-    } else {
-      // the users star was not applied properly to the package, and we can return without further action.
-      await common.serverError(req, res, pack.content);
-    }
-  } else {
-    await common.authFail(req, res, user);
+  
+  let user = await database.verifyAuth(params.auth);
+  
+  if (!user.ok) {
+    console.log(user);
+    await common.handleError(req, res, user);
+    return;
   }
+  
+  let star = await database.updateStars(user.content, params.packageName);
+  
+  if (!star.ok) {
+    await common.handleError(req, res, user);
+    return;
+  }
+  
+  let updatePack = await database.updatePackageIncrementStarByName(params.packageName);
+  
+  if (!updatePack.ok) {
+    await common.handleError(req, res, updatePack);
+    return;
+  }
+  
+  // Now with a success we want to return the package back in this query 
+  let pack = await database.getPackageByName(params.packageName);
+  
+  if (!pack.ok) {
+    await common.handleError(req, res, pack);
+    return;
+  }
+  
+  pack = await utils.constructPackageObjectFull(pack.content);
+  
+  res.status(200).json(pack);
+  logger.httpLog(req, res);
 }
 
 /**
@@ -641,7 +629,7 @@ async function getPackagesVersionTarball(req, res) {
     return;
   }
 
-  let save = await database.updatePackageDownloadByName(params.packageName);
+  let save = await database.updatePackageIncrementDownloadByName(params.packageName);
 
   if (!save.ok) {
     logger.warningLog(req, res, save.content);

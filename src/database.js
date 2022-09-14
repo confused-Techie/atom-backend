@@ -223,7 +223,61 @@ async function getPointerTable() {
   }
 }
 
-async function updatePackageDownloadByName(name) {
+async function updatePackageIncrementStarByName(name) {
+  try {
+    sql_storage ??= setupSQL();
+    
+    const command = await sql_storage`
+      UPDATE packages 
+      SET stargazers_count = stargazers_count + 1
+      WHERE pointer IN (
+        SELECT pointer 
+        FROM names 
+        WHERE name = ${name}
+      )
+    `;
+    
+    return command.count !== 0
+      ? { ok: true, content: command }
+      : {
+          ok: false,
+          content: "Unable to Update Package Stargazers",
+          short: "Server Error",
+        };
+        
+  } catch(err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+async function updatePackageDecrementStarByName(name) {
+  try {
+    sql_storage ??= setupSQL();
+    
+    const command = await sql_storage`
+      UPDATE packages 
+      SET stargazers_count = stargazers_count - 1
+      WHERE pointer IN (
+        SELECT pointer 
+        FROM names 
+        WHERE name = ${name}
+      )
+    `;
+    
+    return command.count !== 0
+      ? { ok: true, content: command }
+      : {
+          ok: false,
+          content: "Unable to Update Package Stargazers",
+          short: "Server Error",
+        };
+        
+  } catch(err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+async function updatePackageIncrementDownloadByName(name) {
   try {
     sql_storage ??= setupSQL();
 
@@ -502,7 +556,7 @@ async function verifyAuth(token) {
     sql_storage ??= setupSQL();
 
     const command = await sql_storage`
-      SELECT 1 FROM users
+      SELECT * FROM users
       WHERE token = ${token};
     `;
 
@@ -510,13 +564,60 @@ async function verifyAuth(token) {
     // but nothing matched the query, which in this case is for the token.
     // so this should return bad auth.
     return command.count !== 0
-      ? { ok: true, content: "Auth verified" }
+      ? { ok: true, content: command[0] }
       : {
           ok: false,
           content: `Unable to Verify Auth for Token: ${token}`,
           short: "Bad Auth",
         };
   } catch (err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+async function updateStars(user, package) {
+  try {
+    sql_storage ??= setupSQL();
+    
+    const command_pointer = await sql_storage`
+      SELECT pointer FROM names 
+      WHERE name = ${package}
+    `;
+    
+    if (command_pointer.count === 0) {
+      return {
+        ok: false,
+        content: `Unable to find package ${package} to star.`,
+        short: "Not Found"
+      };
+    }
+    console.log(command_pointer);
+    
+    // else the command is value, lets keep going 
+    
+    const command_star = await sql_storage`
+      INSERT INTO stars 
+      (package, userid) VALUES 
+      (${command_pointer[0].pointer}, ${user.id})
+      RETURNING *;
+    `;
+    
+    // Now we expect to get our data right back, and can check the 
+    // validity to know if this happened successfully or not.
+    if (command_pointer[0].pointer == command_star[0].package && user.id == command_star[0].userid) {
+      return {
+        ok: true,
+        content: `Successfully Stared ${command_pointer[0].pointer} with ${user.id}`
+      };
+    } else {
+      return {
+        ok: false,
+        content: `Failed to Star ${command_pointer[0].pointer} with ${user.id}`,
+        short: "Server Error"
+      };
+    }
+    
+  } catch(err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
@@ -754,9 +855,12 @@ if (process.env.PULSAR_STATUS == "dev") {
     getPointerTable,
     getUserCollectionById,
     getPackageVersionByNameAndVersion,
-    updatePackageDownloadByName,
+    updatePackageIncrementDownloadByName,
     updatePackageDecrementDownloadByName,
+    updatePackageIncrementStarByName,
+    updatePackageDecrementStarByName,
     getFeaturedThemes,
     simpleSearch,
+    updateStars,
   };
 }
