@@ -590,22 +590,24 @@ async function getStarringUsersByPointer(pointer) {
 async function simpleSearch(term, page, dir, sort) {
   try {
     sql_storage ??= setupSQL();
-    
+
     let offset = 0;
     let limit = paginated_amount;
-  
+
     if (page !== 1) {
       offset = page * paginated_amount;
     }
-    
+
     const command = await sql_storage`
       SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
       WHERE pointer IN (
         SELECT pointer 
         FROM names 
-        ${sql_storage`WHERE name ILIKE ${ '%' + term + '%'}` }
+        ${sql_storage`WHERE name ILIKE ${"%" + term + "%"}`}
       )
-      ORDER BY ${sort === "relevance" ? sql_storage`downloads` : sql_storage`${term}`}
+      ORDER BY ${
+        sort === "relevance" ? sql_storage`downloads` : sql_storage`${term}`
+      }
       ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
       LIMIT ${limit}
       OFFSET ${offset}
@@ -614,8 +616,7 @@ async function simpleSearch(term, page, dir, sort) {
     return command.count !== 0
       ? { ok: true, content: command }
       : { ok: false, content: `No packages found.`, short: "Not Found" };
-      
-  } catch(err) {
+  } catch (err) {
     console.log(err);
     return { ok: false, content: err, short: "Server Error" };
   }

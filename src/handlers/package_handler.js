@@ -225,30 +225,35 @@ async function getPackagesSearch(req, res) {
     direction: query.dir(req),
     query: query.query(req),
   };
-  
-  // Because the task of implementing the custom search engine is taking longer 
-  // than expected, this will instead use super basic text searching on the DB 
+
+  // Because the task of implementing the custom search engine is taking longer
+  // than expected, this will instead use super basic text searching on the DB
   // side. This is only an effort to get this working quickly and should be changed later.
   // This also means for now, the default sorting method will be downloads, not relevance.
-  
-  let packs = await database.simpleSearch(params.query, params.page, params.direction, params.sort);
-  
+
+  let packs = await database.simpleSearch(
+    params.query,
+    params.page,
+    params.direction,
+    params.sort
+  );
+
   if (!packs.ok) {
     await common.handleError(req, res, packs);
     return;
   }
-  
+
   let newPacks = await utils.constructPackageObjectShort(packs.content);
-  
+
   let totalPageEstimate = await database.getTotalPackageEstimate();
-  
+
   let total_pages;
-  
+
   if (!totalPageEstimate.ok) {
     total_pages = 1;
   }
   total_pages = totalPageEstimate.content;
-  
+
   // now to get headers.
   res.append(
     "Link",
@@ -260,13 +265,11 @@ async function getPackagesSearch(req, res) {
       params.query
     }&page=${total_pages}&sort=${params.sort}&order=${
       params.direction
-    }>; rel="last", <${server_url}/api/packages/search?q=${
-      params.query
-    }&page=${params.page + 1}&sort=${params.sort}&order=${
-      params.direction
-    }>; rel="next"`
+    }>; rel="last", <${server_url}/api/packages/search?q=${params.query}&page=${
+      params.page + 1
+    }&sort=${params.sort}&order=${params.direction}>; rel="next"`
   );
-  
+
   res.status(200).json(newPacks);
   logger.httpLog(req, res);
 }
