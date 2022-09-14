@@ -18,39 +18,37 @@ const utils = require("../utils.js");
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @property {http_method} - GET
  * @property {http_endpoint} - /api/stars
- * @todo Migrate to new Database Schema.
  */
 async function getStars(req, res) {
   let params = {
     auth: req.get("Authorization"),
   };
+  
+  let user = await database.verifyAuth(params.auth);
+  
+  if (!user.ok) {
+    await common.handleError(req, res, user);
+    return;
+  }
+  
+  let userStars = await database.getStarredPointersByUserID(user.content.id);
+  
+  if (!userStars.ok) {
+    await common.handleError(req, res, userStars);
+    return;
+  }
 
-  const onLogin = async (user) => {
-    let pointerCollection = await database.getStarredPointersByUserID(
-      user.content.id
-    );
-
-    if (!pointerCollection.ok) {
-      await common.handleError(req, res, pointerCollection);
-      return;
-    }
-
-    let packageCollection = await database.getPackageCollectionByID(
-      pointerCollection.content
-    );
-
-    if (!packageCollection.ok) {
-      await common.handleError(req, res, packageCollection);
-      return;
-    }
-
-    packageCollection = await collection.pruneShort(packageCollection.content);
-
-    res.status(200).json(packageCollection);
-    logger.httpLog(req, res);
-  };
-
-  await utils.localUserLoggedIn(req, res, params.auth, onLogin);
+  let packCol = await database.getPackageCollectionByID(userStars.content);
+  
+  if (!packCol.ok) {
+    await common.handleError(req, res, packCol);
+    return;
+  }
+  
+  let newCol = await utils.constructPackageObjectShort(packCol.content);
+  
+  res.status(200).json(newCol);
+  logger.httpLog(req, res);
 }
 
 module.exports = {

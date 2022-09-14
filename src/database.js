@@ -182,12 +182,10 @@ async function getPackageCollectionByName(packArray) {
 async function getPackageCollectionByID(packArray) {
   try {
     sql_storage ??= setupSQL();
-
-    const pointers = packArray.join(", ");
-
+    
     const command = await sql_storage`
-      SELECT data FROM packages
-      WHERE pointer IN (${pointers});
+      SELECT data FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
+      WHERE pointer IN ${sql_storage(packArray)}
     `;
 
     return command.count !== 0
@@ -697,7 +695,7 @@ async function getStarredPointersByUserID(userid) {
 
     const command = await sql_storage`
       SELECT ARRAY (
-        SELECT packagepointer FROM stars WHERE userid=${userid}
+        SELECT package FROM stars WHERE userid=${userid}
       );
     `;
 
