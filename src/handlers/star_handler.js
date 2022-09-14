@@ -6,7 +6,6 @@
 const logger = require("../logger.js");
 const database = require("../database.js");
 const common = require("./common_handler.js");
-const collection = require("../collection.js");
 const utils = require("../utils.js");
 
 /**

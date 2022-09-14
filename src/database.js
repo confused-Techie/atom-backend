@@ -571,19 +571,19 @@ async function verifyAuth(token) {
   }
 }
 
-async function updateStars(user, package) {
+async function updateStars(user, pack) {
   try {
     sql_storage ??= setupSQL();
 
     const command_pointer = await sql_storage`
       SELECT pointer FROM names 
-      WHERE name = ${package}
+      WHERE name = ${pack}
     `;
 
     if (command_pointer.count === 0) {
       return {
         ok: false,
-        content: `Unable to find package ${package} to star.`,
+        content: `Unable to find package ${pack} to star.`,
         short: "Not Found",
       };
     }
@@ -619,19 +619,19 @@ async function updateStars(user, package) {
   }
 }
 
-async function updateDeleteStar(user, package) {
+async function updateDeleteStar(user, pack) {
   try {
     sql_storage ??= setupSQL();
 
     const command_pointer = await sql_storage`
       SELECT pointer FROM names 
-      WHERE name = ${package}
+      WHERE name = ${pack}
     `;
 
     if (command_pointer.count === 0) {
       return {
         ok: false,
-        content: `Unable to find package ${package} to star.`,
+        content: `Unable to find package ${pack} to star.`,
         short: "Not Found",
       };
     }
@@ -656,14 +656,14 @@ async function updateDeleteStar(user, package) {
         // Exists is true, so it failed for some other reason
         return {
           ok: false,
-          content: `Failed to Unstar ${package} with ${user.username}`,
+          content: `Failed to Unstar ${pack} with ${user.username}`,
           short: "Server Error",
         };
       }
 
       return {
         ok: false,
-        content: `Failed to Unstar ${package} with ${user.username} Because it doesn't exist.`,
+        content: `Failed to Unstar ${pack} with ${user.username} Because it doesn't exist.`,
         short: "Not Found",
       };
     }
