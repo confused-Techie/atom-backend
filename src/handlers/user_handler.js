@@ -47,7 +47,9 @@ async function getLoginStars(req, res) {
     return;
   }
 
-  packageCollection = await utils.constructPackageObjectShort(packageCollection.content);
+  packageCollection = await utils.constructPackageObjectShort(
+    packageCollection.content
+  );
 
   res.status(200).json(packageCollection);
   logger.httpLog(req, res);
