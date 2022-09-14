@@ -1,6 +1,6 @@
 # Seperating out all workflows.
 
-name: Node.js CI - Documentation
+name: CI - Documentation
 
 on:
   workflow_run:

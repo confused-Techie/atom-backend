@@ -3,7 +3,7 @@
 
 # Workflow to install node dependencies, and run tests, and create badging.
 
-name: Node.js CI - Tests, Coverage Badging
+name: CI - Tests
 
 on:
   workflow_run:

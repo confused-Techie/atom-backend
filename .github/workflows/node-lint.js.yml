@@ -1,7 +1,7 @@
 # Initiative to seperate all workflows, to allow better insight into what actually needed
 # to happen.
 
-name: Node.js CI - Lint
+name: CI - Lint
 
 on:
   push:

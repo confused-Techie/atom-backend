@@ -1,6 +1,6 @@
 # Workflow intended to be run only on PR, that runs testing against it
 
-name: Tests 
+name: CI - Pull Tests 
 
 on:
   pull_request:
