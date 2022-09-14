@@ -23,30 +23,30 @@ async function getStars(req, res) {
   let params = {
     auth: req.get("Authorization"),
   };
-  
+
   let user = await database.verifyAuth(params.auth);
-  
+
   if (!user.ok) {
     await common.handleError(req, res, user);
     return;
   }
-  
+
   let userStars = await database.getStarredPointersByUserID(user.content.id);
-  
+
   if (!userStars.ok) {
     await common.handleError(req, res, userStars);
     return;
   }
 
   let packCol = await database.getPackageCollectionByID(userStars.content);
-  
+
   if (!packCol.ok) {
     await common.handleError(req, res, packCol);
     return;
   }
-  
+
   let newCol = await utils.constructPackageObjectShort(packCol.content);
-  
+
   res.status(200).json(newCol);
   logger.httpLog(req, res);
 }

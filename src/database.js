@@ -182,7 +182,7 @@ async function getPackageCollectionByName(packArray) {
 async function getPackageCollectionByID(packArray) {
   try {
     sql_storage ??= setupSQL();
-    
+
     const command = await sql_storage`
       SELECT data FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
       WHERE pointer IN ${sql_storage(packArray)}
