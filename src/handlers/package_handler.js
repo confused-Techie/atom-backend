@@ -418,29 +418,34 @@ async function deletePackagesStar(req, res) {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),
   };
-  
+
   let user = await database.verifyAuth(params.auth);
 
   if (!user.ok) {
     await common.handleError(req, res, user);
     return;
   }
-  
-  let unstar = await database.updateDeleteStar(user.content, params.packageName);
-  
+
+  let unstar = await database.updateDeleteStar(
+    user.content,
+    params.packageName
+  );
+
   if (!unstar.ok) {
     await common.handleError(req, res, unstar);
     return;
   }
-  
-  let updatePack = await database.updatePackageDecrementStarByName(params.packageName);
-  
+
+  let updatePack = await database.updatePackageDecrementStarByName(
+    params.packageName
+  );
+
   if (!updatePack.ok) {
     await common.handleError(req, res, updatePack);
     return;
   }
-  
-  // On a successful action here we will return an empty 201 
+
+  // On a successful action here we will return an empty 201
   res.status(201).send();
   logger.httpLog(req, res);
 }
