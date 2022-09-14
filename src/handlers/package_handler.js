@@ -370,7 +370,6 @@ async function postPackagesStar(req, res) {
   let user = await database.verifyAuth(params.auth);
 
   if (!user.ok) {
-    console.log(user);
     await common.handleError(req, res, user);
     return;
   }
@@ -413,64 +412,37 @@ async function postPackagesStar(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @property {http_method} - DELETE
  * @property {http_endpoint} - /api/packages/:packageName/star
- * @todo Migrate to new Database Schema.
  */
 async function deletePackagesStar(req, res) {
   let params = {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),
   };
+  
+  let user = await database.verifyAuth(params.auth);
 
-  const onLogin = async (user) => {
-    // now to unstar the package, by first removing the users star from the package.
-    let pack = await data.unstarPackageByName(
-      params.packageName,
-      user.content.name
-    );
-
-    if (!pack.ok) {
-      await common.handleError(req, res, pack);
-      return;
-    }
-    // we have removed the star from the package, then remove from the user.
-    let unstar = await users.removeUserStar(
-      params.packageName,
-      user.content.name
-    );
-
-    if (!unstar.ok) {
-      // BUT important to note, the star was already removed from the package itself, so this means the package doesn't
-      // list the user, but the user still lists the package, so we would need to restar the package
-      // to allow this whole flow to try again, else it will fail to unstar the package on a second attempt, leaving the user
-      // no way to actually remove the star later on.
-      let restar = await data.starPackageByName(
-        params.packageName,
-        user.content.name
-      );
-
-      if (restar.ok) {
-        await common.serverError(req, res, unstar.content);
-        return;
-      }
-
-      // We failed to restar the package after failing to unstar the user, rough...
-      error.serverErrorJSON(res);
-      logger.httpLog(req, res);
-      logger.errorLog(
-        req,
-        res,
-        "Failed to restar the package, after failing to unstar the user. Unstar logs followed by Restar logs..."
-      );
-      logger.errorLog(req, res, unstar.content);
-      logger.errorLog(req, res, restar.content);
-      return;
-    }
-
-    // now the star is successfully removed from the user, and from the package.
-    res.status(201).send();
-  };
-
-  await utils.localUserLoggedIn(req, res, params.auth, onLogin);
+  if (!user.ok) {
+    await common.handleError(req, res, user);
+    return;
+  }
+  
+  let unstar = await database.updateDeleteStar(user.content, params.packageName);
+  
+  if (!unstar.ok) {
+    await common.handleError(req, res, unstar);
+    return;
+  }
+  
+  let updatePack = await database.updatePackageDecrementStarByName(params.packageName);
+  
+  if (!updatePack.ok) {
+    await common.handleError(req, res, updatePack);
+    return;
+  }
+  
+  // On a successful action here we will return an empty 201 
+  res.status(201).send();
+  logger.httpLog(req, res);
 }
 
 /**

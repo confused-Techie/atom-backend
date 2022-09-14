@@ -589,9 +589,8 @@ async function updateStars(user, package) {
         short: "Not Found",
       };
     }
-    console.log(command_pointer);
 
-    // else the command is value, lets keep going
+    // else the command is a value, lets keep going
 
     const command_star = await sql_storage`
       INSERT INTO stars 
@@ -618,6 +617,74 @@ async function updateStars(user, package) {
       };
     }
   } catch (err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+async function updateDeleteStar(user, package) {
+  try {
+    sql_storage ??= setupSQL();
+    
+    const command_pointer = await sql_storage`
+      SELECT pointer FROM names 
+      WHERE name = ${package}
+    `;
+    
+    if (command_pointer.count === 0) {
+      return {
+        ok: false,
+        content: `Unable to find package ${package} to star.`,
+        short: "Not Found",
+      };
+    }
+    
+    const command_unstar = await sql_storage`
+      DELETE FROM stars 
+      WHERE (package = ${command_pointer[0].pointer}) AND (userid = ${user.id})
+      RETURNING *;
+    `;
+    
+    if (command_unstar.length === 0) {
+      // The command failed, let see if its because the data doesn't exist.
+      
+      const does_exist = await sql_storage`
+        SELECT EXISTS (
+          SELECT 1 FROM stars 
+          WHERE (package = ${command_pointer[0].pointer}) AND (userid = ${user.id})
+        )
+      `;
+      
+      if (does_exist[0].exists) {
+        // Exists is true, so it failed for some other reason 
+        return {
+          ok: false,
+          content: `Failed to Unstar ${package} with ${user.username}`,
+          short: "Server Error"
+        };
+      }
+      
+      return {
+        ok: false,
+        content: `Failed to Unstar ${package} with ${user.username} Because it doesn't exist.`,
+        short: "Not Found"
+      };
+      
+    }
+    
+    // if the return matches our input we know it was successful 
+    if (user.id == command_unstar[0].userid && command_pointer[0].pointer == command_unstar[0].package) {
+      return {
+        ok: true,
+        content: `Successfully Unstarred ${command_pointer[0].pointer} with ${user.id}`,
+      };
+    } else {
+      return {
+        ok: false,
+        content: `Failed to Unstar ${command_pointer[0].pointer} with ${user.id}`,
+        short: "Server Error",
+      };
+    }
+  } catch(err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
@@ -862,5 +929,6 @@ if (process.env.PULSAR_STATUS == "dev") {
     getFeaturedThemes,
     simpleSearch,
     updateStars,
+    updateDeleteStar,
   };
 }
