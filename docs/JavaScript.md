@@ -2017,15 +2017,9 @@ Handler for endpoints whose slug after `/api/` is `user`.
 <a name="module_user_handler..getLoginStars"></a>
 
 ### user_handler~getLoginStars(req, res)
-Endpoint for `GET /api/users/:login/stars`. Whose goal is to return
-An array of Package Object Short's collected from the authenticated user's
-star gazer list.
+Endpoint that returns another users Star Gazers List.
 
 **Kind**: inner method of [<code>user\_handler</code>](#module_user_handler)  
-**Todo**
-
-- [ ] Migrate to new Database Schema.
-
 
 | Param | Type | Description |
 | --- | --- | --- |
