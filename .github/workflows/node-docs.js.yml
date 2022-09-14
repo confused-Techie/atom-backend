@@ -4,7 +4,7 @@ name: CI - Documentation
 
 on:
   workflow_run:
-    workflows: [ "Node.js CI - Tests, Coverage Badging" ]
+    workflows: [ "CI - Tests" ]
     types:
       - completed
   # Using this to prevent simulatinious runs, outdating local git cache.

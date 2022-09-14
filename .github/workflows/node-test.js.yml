@@ -7,7 +7,7 @@ name: CI - Tests
 
 on:
   workflow_run:
-    workflows: [ "Node.js CI - Lint" ]
+    workflows: [ "CI - Lint" ]
     types:
       - completed
   # Using this to ensure two workflows don't finish simulatniously and cause the local git to be out of date.
