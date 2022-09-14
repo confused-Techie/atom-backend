@@ -366,39 +366,41 @@ async function postPackagesStar(req, res) {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),
   };
-  
+
   let user = await database.verifyAuth(params.auth);
-  
+
   if (!user.ok) {
     console.log(user);
     await common.handleError(req, res, user);
     return;
   }
-  
+
   let star = await database.updateStars(user.content, params.packageName);
-  
+
   if (!star.ok) {
     await common.handleError(req, res, user);
     return;
   }
-  
-  let updatePack = await database.updatePackageIncrementStarByName(params.packageName);
-  
+
+  let updatePack = await database.updatePackageIncrementStarByName(
+    params.packageName
+  );
+
   if (!updatePack.ok) {
     await common.handleError(req, res, updatePack);
     return;
   }
-  
-  // Now with a success we want to return the package back in this query 
+
+  // Now with a success we want to return the package back in this query
   let pack = await database.getPackageByName(params.packageName);
-  
+
   if (!pack.ok) {
     await common.handleError(req, res, pack);
     return;
   }
-  
+
   pack = await utils.constructPackageObjectFull(pack.content);
-  
+
   res.status(200).json(pack);
   logger.httpLog(req, res);
 }
@@ -629,7 +631,9 @@ async function getPackagesVersionTarball(req, res) {
     return;
   }
 
-  let save = await database.updatePackageIncrementDownloadByName(params.packageName);
+  let save = await database.updatePackageIncrementDownloadByName(
+    params.packageName
+  );
 
   if (!save.ok) {
     logger.warningLog(req, res, save.content);
