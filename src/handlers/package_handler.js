@@ -225,36 +225,30 @@ async function getPackagesSearch(req, res) {
     direction: query.dir(req),
     query: query.query(req),
   };
-
-  let all_packages = await data.getAllPackages();
-
-  if (!all_packages.ok) {
-    await common.handleError(req, res, all_packages);
+  
+  // Because the task of implementing the custom search engine is taking longer 
+  // than expected, this will instead use super basic text searching on the DB 
+  // side. This is only an effort to get this working quickly and should be changed later.
+  // This also means for now, the default sorting method will be downloads, not relevance.
+  
+  let packs = await database.simpleSearch(params.query, params.page, params.direction, params.sort);
+  
+  if (!packs.ok) {
+    await common.handleError(req, res, packs);
     return;
   }
-
-  let packages = await collection.deepCopy(all_packages.content);
-  packages = await collection.searchWithinPackages(params.query, packages);
-  packages = await collection.sort(packages, params.sort);
-  packages = await collection.direction(packages, params.direction);
-  // Now that the packages are sorted in the proper direction, we
-  // need to exempt results, according to our pagination.
-  let total_pages = Math.ceil(packages.length / paginated_amount);
-  // ^^^ We need to get the total before we start splicing and dicing.
-  if (params.page !== 1) {
-    packages.splice(0, params.page * paginated_amount);
-    // Remove from the start to however many packages, should be visible on previous pages.
+  
+  let newPacks = await utils.constructPackageObjectShort(packs.content);
+  
+  let totalPageEstimate = await database.getTotalPackageEstimate();
+  
+  let total_pages;
+  
+  if (!totalPageEstimate.ok) {
+    total_pages = 1;
   }
-  if (params.page !== total_pages) {
-    packages.splice(
-      params.page * paginated_amount + paginated_amount,
-      packages.length
-    );
-    // This will start after our paginated options, and remove till the
-    // end of the array, since we aren't on the last page.
-  }
-  packages = await collection.prunePOS(packages); // Package Object Short Prune.
-
+  total_pages = totalPageEstimate.content;
+  
   // now to get headers.
   res.append(
     "Link",
@@ -268,12 +262,12 @@ async function getPackagesSearch(req, res) {
       params.direction
     }>; rel="last", <${server_url}/api/packages/search?q=${
       params.query
-    }&page=${params.page++}&sort=${params.sort}&order=${
+    }&page=${params.page + 1}&sort=${params.sort}&order=${
       params.direction
     }>; rel="next"`
   );
-
-  res.status(200).json(packages);
+  
+  res.status(200).json(newPacks);
   logger.httpLog(req, res);
 }
 
