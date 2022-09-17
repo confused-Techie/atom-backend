@@ -1796,10 +1796,6 @@ Endpoint returns the array of `star_gazers` from a specified package.
 Taking only the package wanted, and returning it directly.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
-**Todo**
-
-- [ ] Migrate to new Database Schema.
-
 
 | Param | Type | Description |
 | --- | --- | --- |
