@@ -632,10 +632,19 @@ async function deletePackageVersion(req, res) {
     packageName: decodeURIComponent(req.params.packageName),
     versionName: req.params.versionName,
   };
-  let user = await users.verifyAuth(params.auth);
+  
+  // STEPS:
+  
+  /**
+  * - verify the user has local and remote permissions 
+  * - mark the specified version for deletion, if version is valid 
+  * return res.status(204).send()
+  */
+  
+  let user = await database.verifyAuth(params.auth);
 
   if (!user.ok) {
-    await common.authFail(req, res, user);
+    await common.handleError(req, res, user);
     return;
   }
 
@@ -646,33 +655,35 @@ async function deletePackageVersion(req, res) {
     return;
   }
 
-  let pack = await database.getPackageByName(params.packageName);
+  //let pack = await database.getPackageByName(params.packageName);
 
-  if (!pack.ok) {
+  //if (!pack.ok) {
     // getting package returned error.
-    await common.handleError(req, res, pack);
-    return;
-  }
+  //  await common.handleError(req, res, pack);
+  //  return;
+  //}
 
-  if (!pack.content[params.versionName]) {
+  //if (!pack.content[params.versionName]) {
     // the version does not exist.
     // we will return not found for a non-existant version deletion.
-    await common.notFound(req, res);
-  }
+  //  await common.notFound(req, res);
+  //}
 
   // the version exists
-  delete pack.content[params.versionName];
+  //delete pack.content[params.versionName];
 
   // now to write back the modified data.
-  let write = database.updatePackageByName(params.packageName, pack.content);
+  //let write = database.updatePackageByName(params.packageName, pack.content);
 
-  if (!write.ok) {
-    await common.handleError(req, res, write);
-    return;
-  }
+  //if (!write.ok) {
+  //  await common.handleError(req, res, write);
+  //  return;
+  //}
 
   // successfully wrote the modified data
-  res.status(204).send();
+  //res.status(204).send();
+  await common.notSupported(req, res);
+  logger.httpLog(req, res);
 }
 
 /**
