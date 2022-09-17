@@ -1365,6 +1365,7 @@ A helper for any functions that are agnostic in hanlders.
     * [~localUserLoggedIn(req, res, params_user, callback)](#module_utils..localUserLoggedIn)
     * [~constructPackageObjectFull()](#module_utils..constructPackageObjectFull)
     * [~constructPackageObjectShort()](#module_utils..constructPackageObjectShort)
+    * [~constructPackageObjectJSON()](#module_utils..constructPackageObjectJSON)
 
 <a name="module_utils..localUserLoggedIn"></a>
 
@@ -1394,6 +1395,14 @@ constructs a standardized package object full from it.
 ### utils~constructPackageObjectShort()
 Takes a single or array of rows from the db, and returns a JSON
 construction of package object shorts
+
+**Kind**: inner method of [<code>utils</code>](#module_utils)  
+<a name="module_utils..constructPackageObjectJSON"></a>
+
+### utils~constructPackageObjectJSON()
+Takes the return of getPackageVersionByNameAndVersion and returns
+a recreation of the package.json with a modified dist.tarball key, poionting
+to this server for download.
 
 **Kind**: inner method of [<code>utils</code>](#module_utils)  
 <a name="module_common_handler"></a>
@@ -1729,10 +1738,6 @@ on the package included in the path parameter.
 Allows the user to delete a repo they have ownership of.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
-**Todo**
-
-- [ ] Migrate to new Database Schema.
-
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -1838,10 +1843,6 @@ a user to rename their application during this process.
 Used to retreive a specific version from a package.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
-**Todo**
-
-- [ ] Migrate to new Database Schema
-
 
 | Param | Type | Description |
 | --- | --- | --- |
