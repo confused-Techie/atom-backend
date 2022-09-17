@@ -632,15 +632,15 @@ async function deletePackageVersion(req, res) {
     packageName: decodeURIComponent(req.params.packageName),
     versionName: req.params.versionName,
   };
-  
+
   // STEPS:
-  
+
   /**
-  * - verify the user has local and remote permissions 
-  * - mark the specified version for deletion, if version is valid 
-  * return res.status(204).send()
-  */
-  
+   * - verify the user has local and remote permissions
+   * - mark the specified version for deletion, if version is valid
+   * return res.status(204).send()
+   */
+
   let user = await database.verifyAuth(params.auth);
 
   if (!user.ok) {
@@ -658,14 +658,14 @@ async function deletePackageVersion(req, res) {
   //let pack = await database.getPackageByName(params.packageName);
 
   //if (!pack.ok) {
-    // getting package returned error.
+  // getting package returned error.
   //  await common.handleError(req, res, pack);
   //  return;
   //}
 
   //if (!pack.content[params.versionName]) {
-    // the version does not exist.
-    // we will return not found for a non-existant version deletion.
+  // the version does not exist.
+  // we will return not found for a non-existant version deletion.
   //  await common.notFound(req, res);
   //}
 
