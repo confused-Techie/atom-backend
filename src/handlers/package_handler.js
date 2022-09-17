@@ -470,7 +470,7 @@ async function getPackagesStargazers(req, res) {
   }
 
   let stars = await database.getStarringUsersByPointer(pack.content);
-  
+
   if (!stars.ok) {
     await common.handleError(req, res, stars);
     return;
