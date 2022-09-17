@@ -1818,7 +1818,7 @@ a user to rename their application during this process.
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
 **Todo**
 
-- [ ] Migrate to new Database Schema, and find methodology of handling rename.
+- [ ] Find methodology of handling rename.
 
 
 | Param | Type | Description |
