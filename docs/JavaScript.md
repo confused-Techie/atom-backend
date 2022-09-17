@@ -1612,6 +1612,7 @@ Endpoint Handlers in all relating to the packages themselves.
     * [~getPackagesVersion(req, res)](#module_package_handler..getPackagesVersion)
     * [~getPackagesVersionTarball(req, res)](#module_package_handler..getPackagesVersionTarball)
     * [~deletePackageVersion(req, res)](#module_package_handler..deletePackageVersion)
+        * [~user](#module_package_handler..deletePackageVersion..user)
     * [~postPackagesEventUninstall(req, res)](#module_package_handler..postPackagesEventUninstall)
 
 <a name="module_package_handler..getPackages"></a>
@@ -1895,6 +1896,14 @@ Allows a user to delete a specific version of their package.
 | <code>http\_method</code> | DELETE |
 | <code>http\_endpoint</code> | /api/packages/:packageName/versions/:versionName |
 
+<a name="module_package_handler..deletePackageVersion..user"></a>
+
+#### deletePackageVersion~user
+- verify the user has local and remote permissions
+- mark the specified version for deletion, if version is valid
+return res.status(204).send()
+
+**Kind**: inner property of [<code>deletePackageVersion</code>](#module_package_handler..deletePackageVersion)  
 <a name="module_package_handler..postPackagesEventUninstall"></a>
 
 ### package_handler~postPackagesEventUninstall(req, res)
