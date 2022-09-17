@@ -262,7 +262,7 @@ async function doesUserHaveRepo(user, repo, page = 1) {
       .set({
         Authorization:
           "Basic " +
-          Buffer.from(`${user.name}:${user.github_token}`).toString("base64"),
+          Buffer.from(`${user.username}:${user.token}`).toString("base64"),
       })
       .set({ "User-Agent": GH_USERAGENT });
 

@@ -124,9 +124,30 @@ async function constructPackageObjectShort(pack) {
   }
 }
 
+/**
+ * @async 
+ * @function constructPackageObjectJSON
+ * @desc Takes the return of getPackageVersionByNameAndVersion and returns 
+ * a recreation of the package.json with a modified dist.tarball key, poionting 
+ * to this server for download.
+ */
+async function constructPackageObjectJSON(pack) {
+  if (!Array.isArray(pack)) {
+    let newPack = pack.meta;
+    delete newPack.sha;
+    newPack.dist.tarball = `${server_url}/api/packages/${pack.meta.name}/versions/${pack.semver}/tarball`;
+    newPack.engines = pack.engine;
+    return newPack;
+  } else {
+    // this function does not currently support arrays 
+    return {};
+  }
+}
+
 module.exports = {
   isPackageNameBanned,
   localUserLoggedIn,
   constructPackageObjectFull,
   constructPackageObjectShort,
+  constructPackageObjectJSON,
 };

@@ -381,23 +381,50 @@ async function updatePackageByName(name, data) {
 async function removePackageByName(name) {
   try {
     sql_storage ??= setupSQL();
-
-    const command = await sql_storage`
-      UPDATE versions
-      SET status = "removed"
+    
+    const command_vers = await sql_storage`
+      DELETE FROM versions 
       WHERE package IN (
-        SELECT pointer FROM names
+        SELECT pointer FROM names 
         WHERE name = ${name}
       )
+      RETURNING *;
     `;
-
-    return command.count !== 0
-      ? { ok: true, content: `${name} package successfully removed.` }
-      : {
+    
+    if (command_vers.count === 0) {
+      return { ok: false, content: `Failed to delete any Versions for: ${name}`, short: "Server Error" };
+    }
+    
+    const command_pack = await sql_storage`
+      DELETE FROM packages 
+      WHERE pointer IN (
+        SELECT pointer FROM names 
+        WHERE name = ${name}
+      )
+      RETURNING *;
+    `;
+    
+    if (command.count !== 0) {
+      if (command[0].name == name) {
+        // if the data matches, its successfuly 
+        return { ok: true, content: `Successfully Deleted Package: ${name}` };
+      } else {
+        // the returned data from deletion, doesn't match what was passed.
+        return {
           ok: false,
-          content: `Unable remove the ${name} package.`,
-          short: "Server Error",
-        };
+          content: `Deleted unkown Package ${command[0].name} during Deletion of ${name}`,
+          short: "Server Error"
+        }
+      }
+    } else {
+      // nothing was returning, the delete probably failed 
+      return {
+        ok: false, 
+        content: `Failed to Delete Package for: ${name}`,
+        short: "Server Errror"
+      };
+    }
+  
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }

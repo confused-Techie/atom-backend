@@ -317,37 +317,35 @@ async function getPackagesDetails(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @property {http_method} - DELETE
  * @property {http_endpoint} - /api/packages/:packageName
- * @todo Migrate to new Database Schema.
  */
 async function deletePackagesName(req, res) {
   let params = {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),
   };
-  let user = await users.verifyAuth(params.auth);
+  
+  let user = await database.verifyAuth(params.auth);
 
   if (!user.ok) {
     await common.handleError(req, res, user);
     return;
   }
-
+  
   let gitowner = await git.ownership(user.content, params.packageName);
-
+  
   if (!gitowner.ok) {
-    await common.handleError(req, res, gitowner);
+    await commoon.handleError(req, res, gitowner);
     return;
   }
-
-  // they are logged in properly, and own the git repo they are referencing via the package name.
-  // Now we can delete the package.
-  let rm = await data.removePackageByName(params.packageName);
-
+  
+  // Now they are logged in locally, and have permission over the GitHub repo.
+  let rm = await database.removePackageByName(params.packageName);
+  
   if (!rm.ok) {
     await common.handleError(req, res, rm);
     return;
   }
-
-  // we have successfully removed the package.
+  
   res.status(204).json({ message: "Success" });
   logger.httpLog(req, res);
 }
@@ -533,7 +531,6 @@ async function postPackagesVersion(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @property {http_method} - GET
  * @property {http_endpoint} - /api/packages/:packageName/versions/:versionName
- * @todo Migrate to new Database Schema
  */
 async function getPackagesVersion(req, res) {
   let params = {
@@ -542,33 +539,23 @@ async function getPackagesVersion(req, res) {
   };
   // Check the truthiness of the returned query engine.
   if (!params.versionName) {
-    console.log("returning not found due to invalid semver.");
     // we return a 404 for the version, since its an invalid format
     await common.notFound(req, res);
     return;
   }
   // Now we know the version is a valid semver.
-  let pack = await database.getPackageByName(params.packageName);
-
+  
+  let pack = await database.getPackageVersionByNameAndVersion(params.packageName, params.versionName);
+  
   if (!pack.ok) {
-    await common.handleError(req, res, pack);
+    await common.handleError(Req, res, pack);
     return;
   }
-  // now with the package itself, lets see if that version is a valid key within in the version obj.
-  if (pack.content.versions[params.versionName]) {
-    // the version does exist, lets return it.
-    // Now additionally, we need to add a link to the tarball endpoint.
-    pack.content.versions[params.versionName].dist = {
-      tarball: `${server_url}/api/packages/${params.packageName}/versions/${params.versionName}/tarball`,
-    };
-
-    // now we can return the modified object.
-    res.status(200).json(pack.content.versions[params.versionName]);
-    logger.httpLog(req, res);
-  } else {
-    // the version does not exist, return 404
-    await common.notFound(req, res);
-  }
+  
+  let packRes = await utils.constructPackageObjectJSON(pack.content);
+  
+  res.status(200).json(packRes);
+  logger.httpLog(req, res);
 }
 
 /**
