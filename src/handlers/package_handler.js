@@ -505,21 +505,21 @@ async function postPackagesVersion(req, res) {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),
   };
-  
+
   let user = await database.verifyAuth(params.auth);
-  
+
   if (!user.ok) {
     await common.handleError(req, res, user);
     return;
   }
-  
+
   let gitowner = await git.ownership(user.content, params.packageName);
-  
+
   if (!gitowner.ok) {
     await common.handleError(req, res, gitowner);
     return;
   }
-  
+
   // TODO: Unkown how to handle a rename, so it must be planned before completion.
   await common.notSupported(req, res);
   logger.httpLog(req, res);
