@@ -496,7 +496,7 @@ async function getPackagesStargazers(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @property {http_method} - POST
  * @property {http_endpoint} - /api/packages/:packageName/versions
- * @todo Migrate to new Database Schema, and find methodology of handling rename.
+ * @todo Find methodology of handling rename.
  */
 async function postPackagesVersion(req, res) {
   let params = {
@@ -505,20 +505,24 @@ async function postPackagesVersion(req, res) {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),
   };
-
-  const onLogin = async (user) => {
-    let gitowner = await git.ownership(user.content, params.packageName);
-
-    if (!gitowner.ok) {
-      await common.handleError(req, res, gitowner);
-      return;
-    }
-
-    // TODO: Unkown how to handle a rename, so it must be planned before completion.
-    await common.notSupported(req, res);
-  };
-
-  await utils.localUserLoggedIn(req, res, params.auth, onLogin);
+  
+  let user = await database.verifyAuth(params.auth);
+  
+  if (!user.ok) {
+    await common.handleError(req, res, user);
+    return;
+  }
+  
+  let gitowner = await git.ownership(user.content, params.packageName);
+  
+  if (!gitowner.ok) {
+    await common.handleError(req, res, gitowner);
+    return;
+  }
+  
+  // TODO: Unkown how to handle a rename, so it must be planned before completion.
+  await common.notSupported(req, res);
+  logger.httpLog(req, res);
 }
 
 /**
