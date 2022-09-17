@@ -760,7 +760,7 @@ async function getStarringUsersByPointer(pointer) {
 
     const command = await sql_storage`
       SELECT ARRAY (
-        SELECT userid FROM stars WHERE packagepointer=${pointer}
+        SELECT userid FROM stars WHERE package=${pointer.pointer}
       );
     `;
 
@@ -836,8 +836,8 @@ async function getUserCollectionById(ids) {
       );
       continue;
     }
-
-    user_array.push({ login: user.user_name });
+    console.log(user);
+    user_array.push({ login: user.content.username });
   }
 
   return { ok: true, content: user_array };

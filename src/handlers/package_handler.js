@@ -457,22 +457,20 @@ async function deletePackagesStar(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @property {http_method} - GET
  * @property {http_endpoint} - /api/packages/:packageName/stargazers
- * @todo Migrate to new Database Schema.
  */
 async function getPackagesStargazers(req, res) {
   let params = {
     packageName: decodeURIComponent(req.params.packageName),
   };
   let pack = await database.getPackageByName(params.packageName);
-  let pointer = await database.getPackagePointerByName(params.packageName);
 
-  if (!pointer.ok) {
-    await common.handleError(req, res, pointer);
+  if (!pack.ok) {
+    await common.handleError(req, res, pack);
     return;
   }
 
-  let stars = await database.getStarringUsersByPointer(pointer.content);
-
+  let stars = await database.getStarringUsersByPointer(pack.content);
+  
   if (!stars.ok) {
     await common.handleError(req, res, stars);
     return;
