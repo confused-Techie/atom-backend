@@ -381,7 +381,7 @@ async function updatePackageByName(name, data) {
 async function removePackageByName(name) {
   try {
     sql_storage ??= setupSQL();
-    
+
     const command_vers = await sql_storage`
       DELETE FROM versions 
       WHERE package IN (
@@ -390,11 +390,15 @@ async function removePackageByName(name) {
       )
       RETURNING *;
     `;
-    
+
     if (command_vers.count === 0) {
-      return { ok: false, content: `Failed to delete any Versions for: ${name}`, short: "Server Error" };
+      return {
+        ok: false,
+        content: `Failed to delete any Versions for: ${name}`,
+        short: "Server Error",
+      };
     }
-    
+
     const command_pack = await sql_storage`
       DELETE FROM packages 
       WHERE pointer IN (
@@ -403,28 +407,27 @@ async function removePackageByName(name) {
       )
       RETURNING *;
     `;
-    
+
     if (command.count !== 0) {
       if (command[0].name == name) {
-        // if the data matches, its successfuly 
+        // if the data matches, its successfuly
         return { ok: true, content: `Successfully Deleted Package: ${name}` };
       } else {
         // the returned data from deletion, doesn't match what was passed.
         return {
           ok: false,
           content: `Deleted unkown Package ${command[0].name} during Deletion of ${name}`,
-          short: "Server Error"
-        }
+          short: "Server Error",
+        };
       }
     } else {
-      // nothing was returning, the delete probably failed 
+      // nothing was returning, the delete probably failed
       return {
-        ok: false, 
+        ok: false,
         content: `Failed to Delete Package for: ${name}`,
-        short: "Server Errror"
+        short: "Server Errror",
       };
     }
-  
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }

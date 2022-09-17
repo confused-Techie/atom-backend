@@ -323,29 +323,29 @@ async function deletePackagesName(req, res) {
     auth: req.get("Authorization"),
     packageName: decodeURIComponent(req.params.packageName),
   };
-  
+
   let user = await database.verifyAuth(params.auth);
 
   if (!user.ok) {
     await common.handleError(req, res, user);
     return;
   }
-  
+
   let gitowner = await git.ownership(user.content, params.packageName);
-  
+
   if (!gitowner.ok) {
     await commoon.handleError(req, res, gitowner);
     return;
   }
-  
+
   // Now they are logged in locally, and have permission over the GitHub repo.
   let rm = await database.removePackageByName(params.packageName);
-  
+
   if (!rm.ok) {
     await common.handleError(req, res, rm);
     return;
   }
-  
+
   res.status(204).json({ message: "Success" });
   logger.httpLog(req, res);
 }
@@ -544,16 +544,19 @@ async function getPackagesVersion(req, res) {
     return;
   }
   // Now we know the version is a valid semver.
-  
-  let pack = await database.getPackageVersionByNameAndVersion(params.packageName, params.versionName);
-  
+
+  let pack = await database.getPackageVersionByNameAndVersion(
+    params.packageName,
+    params.versionName
+  );
+
   if (!pack.ok) {
     await common.handleError(Req, res, pack);
     return;
   }
-  
+
   let packRes = await utils.constructPackageObjectJSON(pack.content);
-  
+
   res.status(200).json(packRes);
   logger.httpLog(req, res);
 }

@@ -125,10 +125,10 @@ async function constructPackageObjectShort(pack) {
 }
 
 /**
- * @async 
+ * @async
  * @function constructPackageObjectJSON
- * @desc Takes the return of getPackageVersionByNameAndVersion and returns 
- * a recreation of the package.json with a modified dist.tarball key, poionting 
+ * @desc Takes the return of getPackageVersionByNameAndVersion and returns
+ * a recreation of the package.json with a modified dist.tarball key, poionting
  * to this server for download.
  */
 async function constructPackageObjectJSON(pack) {
@@ -139,7 +139,7 @@ async function constructPackageObjectJSON(pack) {
     newPack.engines = pack.engine;
     return newPack;
   } else {
-    // this function does not currently support arrays 
+    // this function does not currently support arrays
     return {};
   }
 }
