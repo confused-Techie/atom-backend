@@ -144,10 +144,48 @@ async function constructPackageObjectJSON(pack) {
   }
 }
 
+/**
+ * @async
+ * @function deepCopy
+ * @depreciated Since migration to DB, and not having to worry about in memory objects.
+ * @desc Originally was a method to create a deep copy of shallow copied complex objects.
+ * Which allowed modifications on the object without worry of changing the values
+ * of the original object, or realistically cached objects. But at this point, the feature 
+ * may still be useful in the future. So has been moved from collection.js to utils.js
+ * Just in case it is needed again.
+ * @param {object} obj - The Object to Deep Copy.
+ * @return {object} A Deep Copy of the original object, that should share zero references to the original.
+ */
+async function deepCopy(obj) {
+  console.warn(`collection.deepCopy is depreciated! ${deepCopy.caller}`);
+  // this resolves github.com/confused-Techie/atom-community-server-backend-JS issue 13, and countless others.
+  // When the object is passed to these sort functions, they work off a shallow copy. Meaning their changes
+  // affect the original read data, meaning the cached data. Meaning subsequent queries may fail or error out.
+  // This will allow the object to be deep copied before modification.
+  // Because JS only will deep copy up to two levels deep within an object a custom implementation is needed.
+  // While we could stringify the object and parse, lets go with something a bit more obvious and verbose.
+
+  let outObject, value, key;
+
+  if (typeof obj !== "object" || obj === null) {
+    return obj;
+  }
+
+  outObject = Array.isArray(obj) ? [] : {};
+
+  for (key in obj) {
+    value = obj[key];
+
+    outObject[key] = await deepCopy(value);
+  }
+
+  return outObject;
+}
+
 module.exports = {
   isPackageNameBanned,
-  localUserLoggedIn,
   constructPackageObjectFull,
   constructPackageObjectShort,
   constructPackageObjectJSON,
+  deepCopy,
 };

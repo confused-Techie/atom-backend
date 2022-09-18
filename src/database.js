@@ -929,10 +929,12 @@ async function getSortedPackages(page, dir, method) {
 }
 
 if (process.env.PULSAR_STATUS == "dev") {
+  const devRunner = require("./dev-runner/database.js");
+  module.exports = devRunner;
 } else {
   module.exports = {
     shutdownSQL,
-    getPackageByID,
+    getPackageByID, 
     getPackageByName,
     getPackageCollectionByName,
     getPackageCollectionByID,

@@ -13,8 +13,6 @@
  */
 
 const common = require("./common_handler.js");
-const users = require("../users.js");
-const data = require("../data.js");
 const collection = require("../collection.js");
 const query = require("../query.js");
 const git = require("../git.js");
@@ -90,7 +88,7 @@ async function getPackages(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @property {http_method} - POST
  * @property {http_endpoint} - /api/packages
- * @todo Migrate to new Database Schema.
+ * @todo Finish function, to actually publish package.
  */
 async function postPackages(req, res) {
   let params = {
@@ -98,7 +96,7 @@ async function postPackages(req, res) {
     auth: req.get("Authorization"),
   };
 
-  let user = await users.verifyAuth(params.auth);
+  let user = await database.verifyAuth(params.auth);
 
   // Check authentication.
   if (!user.ok) {
@@ -117,10 +115,10 @@ async function postPackages(req, res) {
   // - The package doesn't exist.
   // - The user is the proper owner of the repo they are attempting to link to.
 
-  // To see if the package already exists, we will utilize our data.GetPackagePointerByName
+  // To see if the package already exists, we will utilize our database.getPackageByName
   // to hope it returns an error, that the package doesn't exist, and will avoid reading the package file itself.
-  // currently though, the repository, is `owner/repo` meanwhile GetPackagePointerByName expects just `repo`
-  let exists = await data.getPackagePointerByName(
+  // currently though, the repository, is `owner/repo` meanwhile getPackageByName expects just `repo`
+  let exists = await database.getPackageByName(
     params.repository.split("/")[1]
   );
 
@@ -155,25 +153,12 @@ async function postPackages(req, res) {
   }
 
   // Now with valid package data, we can pass it along.
-  let create = await data.newPackage(pack.content);
-
-  if (!create.ok) {
-    await common.handleError(req, res, create);
-    return;
-  }
-
-  // The package has been successfully created.
-  // And we want to now do a small test, and grab the new package to return it.
-  let new_pack = await data.getPackageByName(pack.content.name);
-
-  if (!new_pack.ok) {
-    // We were unable to get the new package, and should return an error.
-    await common.handleError(req, res, new_pack);
-    return;
-  }
-
-  new_pack = await collection.prunePOF(new_pack.content); // Package Object Full Prune before return.
-  res.status(201).json(new_pack);
+  
+  // But at this time, without further testing we can return notSupported.
+  await common.notSupported(req, res);
+  logger.httpLog(req, res);
+  
+  //res.status(201).json(new_pack);
 }
 
 /**
@@ -672,7 +657,7 @@ async function deletePackageVersion(req, res) {
   // the version exists
   //delete pack.content[params.versionName];
 
-  // now to write back the modified data.
+  // now to write back the modified data
   //let write = database.updatePackageByName(params.packageName, pack.content);
 
   //if (!write.ok) {
@@ -690,7 +675,7 @@ async function deletePackageVersion(req, res) {
  * @async
  * @function postPackagesEventUninstall
  * @desc Used when a package is uninstalled, decreases the download count by 1.
- * And saves this data. Originally an undocumented endpoint.
+ * And saves this data, Originally an undocumented endpoint.
  * The decision to return a '201' was based on how other POST endpoints return,
  * during a successful event.
  * @see {@link https://github.com/atom/apm/blob/master/src/uninstall.coffee}
@@ -705,23 +690,25 @@ async function postPackagesEventUninstall(req, res) {
     packageName: decodeURIComponent(req.params.packageName),
     versionName: req.params.versionName,
   };
-
-  const onLogin = async (user) => {
-    let write = await database.updatePackageDecrementDownloadByName(
-      params.packageName
-    );
-
-    if (!write.ok) {
-      await common.handleError(req, res, write);
-      return;
-    }
-
-    res.status(201).json({ ok: true });
-    logger.httpLog(req, res);
+  
+  let user = await database.verifyAuth(params.auth);
+  
+  if (!user.ok) {
+    await common.handleError(req, res);
     return;
-  };
+  }
+  
+  let write = await database.updatePackageDecrementDownloadByName(
+    params.packageName
+  );
 
-  await utils.localUserLoggedIn(req, res, params.auth, onLogin);
+  if (!write.ok) {
+    await common.handleError(req, res, write);
+    return;
+  }
+
+  res.status(201).json({ ok: true });
+  logger.httpLog(req, res);
 }
 
 module.exports = {
