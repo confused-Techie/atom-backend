@@ -17,7 +17,6 @@
     "js-docs": "jsdoc2md ./src/*.js ./src/handlers/*.js > ./docs/JavaScript.md",
     "contributors:add": "all-contributors add",
     "test_search": "node ./scripts/tools/search.js",
-    "db_migrate": "echo 'When data.js, resources.js, sql_data.js, users.js is orphaned.' && madge ./src/ && madge --orphans ./src/"
   },
   "author": "confused-Techie",
   "license": "MIT",

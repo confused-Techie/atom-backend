@@ -12,6 +12,19 @@
 
 > This is originally based off the research done on [Atom Community Server Backend](https://github.com/confused-Techie/atom-community-server-backend) which was written in Golang. But has been switched to JS for more broad support.
 
+## Wanting to Contribute?
+
+Please note that there should be two versions of this repo.
+
+* [`pulsar-edit/backend-server`](https://github.com/pulsar-edit/backend-server)
+* [`confused-Techie/atom-community-server-backend-JS`](https://github.com/confused-Techie/atom-community-server-backend-JS)
+
+The version of this server that exists on `confused-Techie`'s repo is intended to be the version that reaches feature parity with the existing Atom.io Backend Server. As in until it reaches release version 1.0.0 - Once this happens that repo will likely be archived, or stop receiving updates. The reason this should still exist untouched, is so that any other user of Atom that wants a drop in replacement of the backend server will be able to use this, with zero modifications, to support their Atom instance.
+
+But once version 1.0.0 is released, then all new features, and new developments should be brought over to `pulsar-edit/backend-server` since that repo will contain the Backend Server intended to be used by Pulsar.
+
+So with this in mind, please use the above to correctly address any issues or PRs. Until this warning is removed.
+
 ## Updated Information
 
 **Atom-Community-Server-Backend-JS is MOVING**
@@ -39,9 +52,11 @@ Then go ahead and create an `app.yaml` file, or rename the `app.example.yaml` to
 
 Finally you can run the API Server with `node .`, additionally there are several built in scripts that can be run with `npm run $SCRIPT_NAME`
 
-* `test`: Runs the Jest tests within the ./src/tests folder.
-* `gen-badge`: Runs `./src/tests/genBadges.js` and uses the Jest Code Coverage output to create an SVG badge.
-* `api-docs`: Uses `@confused-techie/quick-webserver-docs` to generate documentation based off the JSDoc style comments.
+* `start`: Stars the Backend Server.
+* `test`: Runs the Jest tests within the ./src/tests folder. Additionally sets environment variables `PULSAR_STATUS` = `dev` and `NODE_ENV` = `test`.
+* `dev`: Starts up the server in "Development Mode". Meaning it starts the server while additionally setting `PULSAR_STATUS` = `dev` as an environment variable.
+* `gen-badge`: !This is no longer needed, and is depreciated! Runs `./src/tests/genBadges.js` and uses the Jest Code Coverage output to create an SVG badge.
+* `api-docs`: Uses `@confused-techie/quick-webserver-docs` to generate documentation based off the JSDoc style comments, only documenting the API Endpoints.
 * `lint`: Uses `prettier` to format and lint the codebase.
 * `complex`: Uses `complexity-report` to generate complexity reports of the JavaScript. Keep in mind this does not support ES6 yet, so not all functions are documented.
 * `js-docs`: Uses `jsdoc2md` to generate documentation based off the JSDoc comments within the codebase.
