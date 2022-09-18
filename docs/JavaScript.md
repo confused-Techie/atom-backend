@@ -14,11 +14,6 @@ collections, to be returned to the user.</p>
 <dt><a href="#module_config">config</a></dt>
 <dd><p>Module that access&#39; and returns the server wide configuration.</p>
 </dd>
-<dt><a href="#module_data">data</a></dt>
-<dd><p>This is likely the most major module within the codebase. Being the handler
-for data in general. Containing the <code>Shutdown</code> function, as well as gathering the users,
-packages, package_pointer, and additionally handling any modifications of the packages.</p>
-</dd>
 <dt><a href="#module_database">database</a></dt>
 <dd><p>Provides an interface of a large collection of functions to interact
 with and retreive data from the cloud hosted database instance.</p>
@@ -48,11 +43,6 @@ all endpoints it listens on. With those endpoints being further documented in <c
 <dt><a href="#module_query">query</a></dt>
 <dd><p>Home to parsing all query parameters from the <code>Request</code> object. Ensuring a valid response.</p>
 </dd>
-<dt><a href="#module_resources">resources</a></dt>
-<dd><p>This module provides a way for other functions to read/write/remove data without knowing or
-thinking about the underlying file structure. Providing abstraction if the data resides on a local
-filesystem, Google Cloud Storage, or something else entirely.</p>
-</dd>
 <dt><a href="#module_search">search</a></dt>
 <dd><p>This module is focused on implementing different search algorithms.
 Elsewhere in the code the choice is made of which functions to call, to actual
@@ -66,10 +56,6 @@ to listen on. As well as handling a graceful shutdown of the server.</p>
 <dd><p>This module is the second generation of data storage methodology,
 in which this provides static access to files stored within regular cloud
 file storage. Specifically intended for use with Google Cloud Storage.</p>
-</dd>
-<dt><a href="#module_users">users</a></dt>
-<dd><p>Focused on interacting with User Data only. Provides functions required
-to modify, or compile user data specifically.</p>
 </dd>
 <dt><a href="#module_utils">utils</a></dt>
 <dd><p>A helper for any functions that are agnostic in hanlders.</p>
@@ -133,61 +119,6 @@ Allows simple interfaces to handle caching an object in memory. Used to cache da
 Endpoint of all features related to sorting, organizing, or pruning package
 collections, to be returned to the user.
 
-
-* [collection](#module_collection)
-    * [~sort(method, packages)](#module_collection..sort) ⇒ <code>Array.&lt;object&gt;</code>
-    * [~direction(packages, method)](#module_collection..direction) ⇒ <code>Array.&lt;object&gt;</code> \| <code>string</code>
-    * [~deepCopy(obj)](#module_collection..deepCopy) ⇒ <code>object</code>
-
-<a name="module_collection..sort"></a>
-
-### collection~sort(method, packages) ⇒ <code>Array.&lt;object&gt;</code>
-Intended for use for a collection of Packages, sort them according to any valid Sorting method.
-Note this should be called before, any Pruning has taken place.
-Prioritizes returning packages so if an invalid method is provided returns the packages
-without modification.
-
-**Kind**: inner method of [<code>collection</code>](#module_collection)  
-**Returns**: <code>Array.&lt;object&gt;</code> - The provided packages now sorted accordingly.  
-**Depreciated**: Since migrating to DB  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| method | <code>string</code> | The Method to Sort By |
-| packages | <code>Array.&lt;object&gt;</code> | The Packages in which to sort. |
-
-<a name="module_collection..direction"></a>
-
-### collection~direction(packages, method) ⇒ <code>Array.&lt;object&gt;</code> \| <code>string</code>
-Sorts an array of package objects based on the provided method.
-Intended to occur after sorting the package. Prioritizes returning packages,
-so if an invalid method is provided returns the packages with no changes.
-
-**Kind**: inner method of [<code>collection</code>](#module_collection)  
-**Returns**: <code>Array.&lt;object&gt;</code> \| <code>string</code> - The array of object packages, now organized, or directly
-returned if an invalid 'method' is supplied.  
-**Depreciated**: Since migration to DB  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| packages | <code>Array.&lt;object&gt;</code> | The array of package objects to work on. |
-| method | <code>string</code> | The method of which they should be organized. Either "desc" = Descending, or "asc" = Ascending. |
-
-<a name="module_collection..deepCopy"></a>
-
-### collection~deepCopy(obj) ⇒ <code>object</code>
-Originally was a method to create a deep copy of shallow copied complex objects.
-Which allowed modifications on the object without worry of changing the values
-of the original object, or realistically cached objects.
-
-**Kind**: inner method of [<code>collection</code>](#module_collection)  
-**Returns**: <code>object</code> - A Deep Copy of the original object, that should share zero references to the original.  
-**Depreciated**: Since migration to DB, and not having to worry about in memory objects.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| obj | <code>object</code> | The Object to Deep Copy. |
-
 <a name="module_config"></a>
 
 ## config
@@ -205,167 +136,6 @@ Or from environment variables. Prioritizing environment variables.
 ```js
 const { search_algorithm } = require("./config.js").getConfig();
 ```
-<a name="module_data"></a>
-
-## data
-This is likely the most major module within the codebase. Being the handler
-for data in general. Containing the `Shutdown` function, as well as gathering the users,
-packages, package_pointer, and additionally handling any modifications of the packages.
-
-
-* [data](#module_data)
-    * [~shutdown()](#module_data..shutdown)
-    * [~getFeatured()](#module_data..getFeatured) ⇒ <code>object</code>
-    * [~getUsers()](#module_data..getUsers) ⇒ <code>object</code>
-    * [~getPackagePointer()](#module_data..getPackagePointer) ⇒ <code>object</code>
-    * [~getAllPackages()](#module_data..getAllPackages) ⇒ <code>object</code>
-    * [~getPackageByID(id)](#module_data..getPackageByID) ⇒ <code>object</code>
-    * [~setUsers(data)](#module_data..setUsers) ⇒ <code>object</code>
-    * [~setPackagePointer(data)](#module_data..setPackagePointer) ⇒ <code>object</code>
-    * [~setPackageByID(id, data)](#module_data..setPackageByID) ⇒ <code>object</code>
-    * [~removePackageByPointer(pointer)](#module_data..removePackageByPointer) ⇒ <code>object</code>
-    * [~restorePackageByPointer(pointer)](#module_data..restorePackageByPointer) ⇒ <code>objject</code>
-
-<a name="module_data..shutdown"></a>
-
-### data~shutdown()
-The function to be called during the a server stop event. Allowing any cache
-only data to be written to disk. Checking the Cached User Data, Cached Pointer
-Data, as well as checking for any items marked for deletion, and deleting them.
-
-**Kind**: inner method of [<code>data</code>](#module_data)  
-<a name="module_data..getFeatured"></a>
-
-### data~getFeatured() ⇒ <code>object</code>
-Gets the featured packages, from the file of `featured_packages.json`.
-While it isn't planned to always use this file, it helps get us to feature parity
-faster, since this is how it was done originally on Atom.io
-Will return the cached object if available, or otherwise will read from disk.
-
-**Kind**: inner method of [<code>data</code>](#module_data)  
-**Returns**: <code>object</code> - An array of packages, that have manually been decided to be
-featured.  
-<a name="module_data..getUsers"></a>
-
-### data~getUsers() ⇒ <code>object</code>
-Used to get the fully Users File. Or all user data. This function will, if
-possible, cache the data read from the disk into `cached_user` variable to refer to later.
-And if the user data has already been cached, and is not yet expired, or otherwise
-invalidated, it will return this data. If it finds an invalidated cache, it will
-write this cache to disk, then return the new results from disk.
-
-**Kind**: inner method of [<code>data</code>](#module_data)  
-**Returns**: <code>object</code> - Server Status Object, which on success `content` contains an array of
-user objects.  
-<a name="module_data..getPackagePointer"></a>
-
-### data~getPackagePointer() ⇒ <code>object</code>
-Used to get the full package_pointer file, will cache an uncached file and return
-or will fetch an updated file if the cache has expired, or will write an
-invalidated cache, then return the new data from disk.
-
-**Kind**: inner method of [<code>data</code>](#module_data)  
-**Returns**: <code>object</code> - A Server Status Object, which on success returns the Package
-Pointer Object within `content`.  
-<a name="module_data..getAllPackages"></a>
-
-### data~getAllPackages() ⇒ <code>object</code>
-Will attempt to return all available packages in the repository.
-Caching the results, or if results have already been cached, will check the expiry
-and if expired, refresh the cache. `GetAllPackages` differs sigificantly from
-`GetPackagePointer` and `GetUsers` in that it will make no attempt to save invalidated data.
-Since it is expected that any modifications that occur to the Packages, never
-happens on the full collection, and instead is handled on an individual basis.
-Thus expecting them to be saved during those individual changes. Additionally
-While collected the full list of packages, if a package's data doesn't exist
-as a full file and only within the package_pointer, it will ignore the file,
-log it, and continue to return data.
-
-**Kind**: inner method of [<code>data</code>](#module_data)  
-**Implements**: <code>GetPackagePointer</code>, <code>GetPackageByID</code>  
-**Returns**: <code>object</code> - A Server Status Object, which on success `content` contains the full
-array of all package objects, as 'Server Package Objects'.  
-<a name="module_data..getPackageByID"></a>
-
-### data~getPackageByID(id) ⇒ <code>object</code>
-Will get a specific package, using its provided ID of the package.
-
-**Kind**: inner method of [<code>data</code>](#module_data)  
-**Implements**: <code>resources.Read</code>  
-**Returns**: <code>object</code> - A Server Status Object, which on success the `content` contains
-the package object.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| id | <code>string</code> | The ID of the package, like `UUIDv4.json`. |
-
-<a name="module_data..setUsers"></a>
-
-### data~setUsers(data) ⇒ <code>object</code>
-Will persist user data to the disk. Will first do this by adding to the
-user cache object, if it exists, otherwise will write directly to disk.
-
-**Kind**: inner method of [<code>data</code>](#module_data)  
-**Returns**: <code>object</code> - A Server Status object of success, containing only `ok`.
-Or bubbling from `resources.write()`.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| data | <code>object</code> | The new full user data to persist. |
-
-<a name="module_data..setPackagePointer"></a>
-
-### data~setPackagePointer(data) ⇒ <code>object</code>
-Persists Package Pointer Data to disk. By saving to the cache object if
-available, or otherwise writing directly to disk.
-
-**Kind**: inner method of [<code>data</code>](#module_data)  
-**Returns**: <code>object</code> - A Server Status Object of success with only `ok` if successul,
-or otherwise bubbling from `resources.write()`.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| data | <code>object</code> | The Package Pointer Object in its entirety. |
-
-<a name="module_data..setPackageByID"></a>
-
-### data~setPackageByID(id, data) ⇒ <code>object</code>
-Persists Package Data to disk. Since no cache objects exist for individual
-packages, really is a wrapper around `resources.write()` with some presets.
-
-**Kind**: inner method of [<code>data</code>](#module_data)  
-**Returns**: <code>object</code> - A server status object bubbled directly from `resources.write()`.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| id | <code>string</code> | The name of the package file to persists. In format `package-uuidv4.json`. |
-| data | <code>object</code> | The object data of the package to write. |
-
-<a name="module_data..removePackageByPointer"></a>
-
-### data~removePackageByPointer(pointer) ⇒ <code>object</code>
-Marks a package for deletion on server shutdown, using its `package.json`.
-
-**Kind**: inner method of [<code>data</code>](#module_data)  
-**Returns**: <code>object</code> - A Server Status Object, where if success only has `ok`.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| pointer | <code>string</code> | The Package Name to mark, in format `package-uuidv4.json`. |
-
-<a name="module_data..restorePackageByPointer"></a>
-
-### data~restorePackageByPointer(pointer) ⇒ <code>objject</code>
-Restores a previously marked package for deletion. Causing it to no
-longer be marked for deletion.
-
-**Kind**: inner method of [<code>data</code>](#module_data)  
-**Returns**: <code>objject</code> - A Server Status Object, where on success only contains `ok`.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| pointer | <code>string</code> | The Package Name to mark, in format `package-uuidv4.json`. |
-
 <a name="module_database"></a>
 
 ## database
@@ -985,111 +755,6 @@ exists in the data.
 | --- | --- | --- |
 | data | <code>string</code> | The data to check for possible malicious data. |
 
-<a name="module_resources"></a>
-
-## resources
-This module provides a way for other functions to read/write/remove data without knowing or
-thinking about the underlying file structure. Providing abstraction if the data resides on a local
-filesystem, Google Cloud Storage, or something else entirely.
-
-**Implements**: <code>config</code>  
-
-* [resources](#module_resources)
-    * [~CacheObject](#module_resources..CacheObject)
-        * [new CacheObject([name], contents)](#new_module_resources..CacheObject_new)
-    * [~read(type, name)](#module_resources..read) ⇒ <code>object</code>
-    * [~readFile(path)](#module_resources..readFile) ⇒ <code>object</code>
-    * [~write(type, data, name)](#module_resources..write) ⇒ <code>object</code>
-    * [~writeFile(path, data)](#module_resources..writeFile) ⇒ <code>object</code>
-    * [~remove(name)](#module_resources..remove) ⇒ <code>object</code>
-
-<a name="module_resources..CacheObject"></a>
-
-### resources~CacheObject
-**Kind**: inner class of [<code>resources</code>](#module_resources)  
-<a name="new_module_resources..CacheObject_new"></a>
-
-#### new CacheObject([name], contents)
-Allows simple interfaces to handle caching an object in memory. Used to cache data read from the filesystem.
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [name] | <code>string</code> | Optional name to assign to the Cached Object. |
-| contents | <code>object</code> | The contents of this cached object. Intended to be a JavaScript object. But could be anything. |
-
-<a name="module_resources..read"></a>
-
-### resources~read(type, name) ⇒ <code>object</code>
-Exported function to read data from the filesystem, whatever that may be.
-
-**Kind**: inner method of [<code>resources</code>](#module_resources)  
-**Returns**: <code>object</code> - If type is "package" or "pointer" returns a Server Status Object, with `content`
-being a `CacheObject` class, already initialized and ready for consumption. Otherwise if type is
-"package" returns the return from `readFile`. Errors bubble up from `readFile`.  
-**Depreciated**: Since migration to DB.  
-**Implments**: <code>readFile</code>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| type | <code>string</code> | The type of data we are reading. Valid Types: "user", "pointer", "package". |
-| name | <code>string</code> | The name of the file we are reading. Only needed if type is "package", in which case this <b>MUST</b> include `.json` for example `UUID.json`. |
-
-<a name="module_resources..readFile"></a>
-
-### resources~readFile(path) ⇒ <code>object</code>
-Non-Exported function to read data from the filesystem. Whatever that may be.
-
-**Kind**: inner method of [<code>resources</code>](#module_resources)  
-**Returns**: <code>object</code> - A Server Status Object, with `content` being the read file parsed from JSON.
-If error returns "Server Error" or "File Not Found".  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| path | <code>string</code> | The Path to whatever file we want. |
-
-<a name="module_resources..write"></a>
-
-### resources~write(type, data, name) ⇒ <code>object</code>
-The Exported Write function, to allow writing of data to the filesystem.
-
-**Kind**: inner method of [<code>resources</code>](#module_resources)  
-**Implements**: <code>writeFile</code>  
-**Returns**: <code>object</code> - Returns the object returned from `writeFile`. Errors bubble up from `writeFile`.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| type | <code>string</code> | The Type of data we are writing. Valid Types: "user", "pointer", "package" |
-| data | <code>object</code> | A JavaScript Object that will be `JSON.stringify`ed before writing. |
-| name | <code>string</code> | The path name of the file we are writing. Only required when type is "package", in which case it should be `UUID.json`, it <b>MUST</b> include the `.json`. |
-
-<a name="module_resources..writeFile"></a>
-
-### resources~writeFile(path, data) ⇒ <code>object</code>
-Non-Exported write function. Used to directly write data to the filesystem. Whatever that may be.
-
-**Kind**: inner method of [<code>resources</code>](#module_resources)  
-**Returns**: <code>object</code> - A Server Status Object, with `content` only on an error.
-Errors returned "Server Error".  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| path | <code>string</code> | The path to the file we are writing. Including the destination file. |
-| data | <code>object</code> | The Data we are writing to the filesystem. Already encoded in a compatible format. |
-
-<a name="module_resources..remove"></a>
-
-### resources~remove(name) ⇒ <code>object</code>
-**Kind**: inner method of [<code>resources</code>](#module_resources)  
-**Returns**: <code>object</code> - A Server Status Object, with `content` non-existant on a successful deletion.
-Errors returned as "Server Error".  
-**Descc**: Exported function to delete data from the filesystem, whatever that may be. But since we know
-we will only ever be deleting packages, these will only ever attempt to delete a package.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| name | <code>string</code> | The name of the package we want to delete. <b>MUST</b> include `.json`, as in `UUID.json`. |
-
 <a name="module_search"></a>
 
 ## search
@@ -1264,97 +929,6 @@ Used to retreive Google Cloud Storage Object for featured themes.
 
 **Kind**: inner method of [<code>storage</code>](#module_storage)  
 **Returns**: <code>Array</code> - JSON Parsed Array of Featured Theme Names.  
-<a name="module_users"></a>
-
-## users
-Focused on interacting with User Data only. Provides functions required
-to modify, or compile user data specifically.
-
-**Implements**: <code>data</code>  
-
-* [users](#module_users)
-    * [~verifyAuth(token, [callback])](#module_users..verifyAuth) ⇒ <code>object</code>
-    * [~getUser(username)](#module_users..getUser) ⇒ <code>object</code>
-    * [~addUserStar(packageName, userName)](#module_users..addUserStar) ⇒ <code>object</code>
-    * [~removeUserStar(packageName, userName)](#module_users..removeUserStar) ⇒ <code>object</code>
-    * [~prune(userObj)](#module_users..prune) ⇒ <code>object</code>
-
-<a name="module_users..verifyAuth"></a>
-
-### users~verifyAuth(token, [callback]) ⇒ <code>object</code>
-Checks every existing user within the users file, to see if the token provided exists within their valid
-tokens. If it does will return the entire user object. If an optional callback is provided will invoke the
-callback passing the user object, otherwise will just return the user object.
-If no valid user is found returns null.
-
-**Kind**: inner method of [<code>users</code>](#module_users)  
-**Implements**: <code>GetUsers</code>  
-**Returns**: <code>object</code> - Error Object bubbled from GetUsers, Error Object of 'Bad Auth', Object containing the User Object.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| token | <code>string</code> | Provided Token to check against all valid users. |
-| [callback] | <code>function</code> | Optional function to invoke passing the matched user. |
-
-<a name="module_users..getUser"></a>
-
-### users~getUser(username) ⇒ <code>object</code>
-Searches for a user within the user file, and if found will return the standard object
-containing the full User Object. Otherwise an error.
-
-**Kind**: inner method of [<code>users</code>](#module_users)  
-**Implements**: <code>GetUsers</code>  
-**Returns**: <code>object</code> - An error object bubbled up from GetUsers, Error Object of 'Not Found',
-Object containing full User Object.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| username | <code>string</code> | The UserName we want to search for. |
-
-<a name="module_users..addUserStar"></a>
-
-### users~addUserStar(packageName, userName) ⇒ <code>object</code>
-Adds the desired Package to the list of packages the User has starred.
-
-**Kind**: inner method of [<code>users</code>](#module_users)  
-**Implements**: <code>GetUser</code>, <code>GetUsers</code>  
-**Returns**: <code>object</code> - Error Object Bubbled from GetUser, Error Object Bubbled from GetUsers,
-Error Object Bubbled from SetUsers, Short Object of 'ok' if successful.  
-**Impmplements**: <code>SetUsers</code>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| packageName | <code>string</code> | The Name of the Package we want to add to the users star list. |
-| userName | <code>string</code> | The user we want to make this modification to. |
-
-<a name="module_users..removeUserStar"></a>
-
-### users~removeUserStar(packageName, userName) ⇒ <code>object</code>
-Removes the specified Package from the Users list of stars.
-
-**Kind**: inner method of [<code>users</code>](#module_users)  
-**Implements**: <code>GetUser</code>, <code>GetUsers</code>, <code>SetUsers</code>  
-**Returns**: <code>object</code> - Error Object Bubbled from GetUser, ErrorObject Bubbled from GetUsers,
-Error Object Bubbled from SetUsers, Error Object of 'Not Found', Short Object of successful write ok.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| packageName | <code>string</code> | The Name of the package we want to remove from the users star list. |
-| userName | <code>string</code> | The User we want to make these changes to. |
-
-<a name="module_users..prune"></a>
-
-### users~prune(userObj) ⇒ <code>object</code>
-Takes a single User Object, and prunes any server side only data from the object to return to the user.
-This pruned item should never be written back to disk, as removed the data from it removes any pointers to those values.
-
-**Kind**: inner method of [<code>users</code>](#module_users)  
-**Returns**: <code>object</code> - The Pruned userObj.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| userObj | <code>object</code> | The object of which to preform the pruning on. |
-
 <a name="module_utils"></a>
 
 ## utils
@@ -1366,6 +940,7 @@ A helper for any functions that are agnostic in hanlders.
     * [~constructPackageObjectFull()](#module_utils..constructPackageObjectFull)
     * [~constructPackageObjectShort()](#module_utils..constructPackageObjectShort)
     * [~constructPackageObjectJSON()](#module_utils..constructPackageObjectJSON)
+    * [~deepCopy(obj)](#module_utils..deepCopy) ⇒ <code>object</code>
 
 <a name="module_utils..localUserLoggedIn"></a>
 
@@ -1405,6 +980,23 @@ a recreation of the package.json with a modified dist.tarball key, poionting
 to this server for download.
 
 **Kind**: inner method of [<code>utils</code>](#module_utils)  
+<a name="module_utils..deepCopy"></a>
+
+### utils~deepCopy(obj) ⇒ <code>object</code>
+Originally was a method to create a deep copy of shallow copied complex objects.
+Which allowed modifications on the object without worry of changing the values
+of the original object, or realistically cached objects. But at this point, the feature
+may still be useful in the future. So has been moved from collection.js to utils.js
+Just in case it is needed again.
+
+**Kind**: inner method of [<code>utils</code>](#module_utils)  
+**Returns**: <code>object</code> - A Deep Copy of the original object, that should share zero references to the original.  
+**Depreciated**: Since migration to DB, and not having to worry about in memory objects.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| obj | <code>object</code> | The Object to Deep Copy. |
+
 <a name="module_common_handler"></a>
 
 ## common\_handler
@@ -1645,7 +1237,7 @@ then goes about doing so.
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
 **Todo**
 
-- [ ] Migrate to new Database Schema.
+- [ ] Finish function, to actually publish package.
 
 
 | Param | Type | Description |
@@ -1908,7 +1500,7 @@ return res.status(204).send()
 
 ### package_handler~postPackagesEventUninstall(req, res)
 Used when a package is uninstalled, decreases the download count by 1.
-And saves this data. Originally an undocumented endpoint.
+And saves this data, Originally an undocumented endpoint.
 The decision to return a '201' was based on how other POST endpoints return,
 during a successful event.
 
