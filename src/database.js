@@ -934,7 +934,7 @@ if (process.env.PULSAR_STATUS == "dev") {
 } else {
   module.exports = {
     shutdownSQL,
-    getPackageByID, 
+    getPackageByID,
     getPackageByName,
     getPackageCollectionByName,
     getPackageCollectionByID,

@@ -1,8 +1,8 @@
 /**
  * @module storage (DevRunner)
- * @desc This DevRunner instance of Storage is what is exported when the server 
+ * @desc This DevRunner instance of Storage is what is exported when the server
  * detects that it is running in development mode, and requires ./src/storage.js
- * Intended to safely mock all features of ./src/storage.js without the risk 
+ * Intended to safely mock all features of ./src/storage.js without the risk
  * of modifying remote data, or having to rely on external services.
  */
 

@@ -150,7 +150,7 @@ async function constructPackageObjectJSON(pack) {
  * @depreciated Since migration to DB, and not having to worry about in memory objects.
  * @desc Originally was a method to create a deep copy of shallow copied complex objects.
  * Which allowed modifications on the object without worry of changing the values
- * of the original object, or realistically cached objects. But at this point, the feature 
+ * of the original object, or realistically cached objects. But at this point, the feature
  * may still be useful in the future. So has been moved from collection.js to utils.js
  * Just in case it is needed again.
  * @param {object} obj - The Object to Deep Copy.

@@ -256,7 +256,7 @@ async function engineFilter(pack, engine) {
   return pack;
 }
 
-module.exports = { 
+module.exports = {
   engineFilter,
   searchWithinPackages,
 };

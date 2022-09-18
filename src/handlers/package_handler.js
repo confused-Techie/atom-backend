@@ -118,9 +118,7 @@ async function postPackages(req, res) {
   // To see if the package already exists, we will utilize our database.getPackageByName
   // to hope it returns an error, that the package doesn't exist, and will avoid reading the package file itself.
   // currently though, the repository, is `owner/repo` meanwhile getPackageByName expects just `repo`
-  let exists = await database.getPackageByName(
-    params.repository.split("/")[1]
-  );
+  let exists = await database.getPackageByName(params.repository.split("/")[1]);
 
   if (exists.ok) {
     // The package exists.
@@ -153,11 +151,11 @@ async function postPackages(req, res) {
   }
 
   // Now with valid package data, we can pass it along.
-  
+
   // But at this time, without further testing we can return notSupported.
   await common.notSupported(req, res);
   logger.httpLog(req, res);
-  
+
   //res.status(201).json(new_pack);
 }
 
@@ -690,14 +688,14 @@ async function postPackagesEventUninstall(req, res) {
     packageName: decodeURIComponent(req.params.packageName),
     versionName: req.params.versionName,
   };
-  
+
   let user = await database.verifyAuth(params.auth);
-  
+
   if (!user.ok) {
     await common.handleError(req, res);
     return;
   }
-  
+
   let write = await database.updatePackageDecrementDownloadByName(
     params.packageName
   );
