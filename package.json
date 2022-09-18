@@ -16,7 +16,7 @@
     "complex": "cr --newmi --config .complexrc .",
     "js-docs": "jsdoc2md ./src/*.js ./src/handlers/*.js > ./docs/JavaScript.md",
     "contributors:add": "all-contributors add",
-    "test_search": "node ./scripts/tools/search.js",
+    "test_search": "node ./scripts/tools/search.js"
   },
   "author": "confused-Techie",
   "license": "MIT",
