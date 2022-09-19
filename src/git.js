@@ -276,7 +276,7 @@ async function doesUserHaveRepo(user, repo, page = 1) {
       // after going through every repo returned, we haven't found a repo
       // the user owns. Lets check if theres multiple pages of returns.
       //console.log(res.headers);
-      if (res.headers["link"].includes(`?page=${page++}`)) {
+      if (res.headers["link"].includes("?page=" + page++)) {
         // if the link headers on the page include the query parameter
         // of the next page number
         return await doesUserHaveRepo(user, repo, page++);
