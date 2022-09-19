@@ -63,8 +63,8 @@ async function engineFilter(pack, engine) {
   // Providing other types may lead to unexpected behaviors.
   // Always to be executed after passing the semver format validity.
   const gt = (a1, a2) => {
-    const v1 = a1.map((n) => parseInt(n));
-    const v2 = a2.map((n) => parseInt(n));
+    const v1 = a1.map((n) => parseInt(n, 10));
+    const v2 = a2.map((n) => parseInt(n, 10));
 
     if (v1[0] > v2[0]) {
       return true;
@@ -82,8 +82,8 @@ async function engineFilter(pack, engine) {
   };
 
   const lt = (a1, a2) => {
-    const v1 = a1.map((n) => parseInt(n));
-    const v2 = a2.map((n) => parseInt(n));
+    const v1 = a1.map((n) => parseInt(n, 10));
+    const v2 = a2.map((n) => parseInt(n, 10));
 
     if (v1[0] < v2[0]) {
       return true;
