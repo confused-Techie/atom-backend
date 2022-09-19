@@ -417,13 +417,13 @@ async function removePackageByName(name) {
       };
     }
 
-    return (command_pack[0].name === name)
-        ? { ok: true, content: `Successfully Deleted Package: ${name}` }
-        : {
-            ok: false,
-            content: `Deleted unkown Package ${command_pack[0].name} during Deletion of ${name}`,
-            short: "Server Error",
-          };
+    return command_pack[0].name === name
+      ? { ok: true, content: `Successfully Deleted Package: ${name}` }
+      : {
+          ok: false,
+          content: `Deleted unkown Package ${command_pack[0].name} during Deletion of ${name}`,
+          short: "Server Error",
+        };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
