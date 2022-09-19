@@ -266,28 +266,29 @@ async function doesUserHaveRepo(user, repo, page = 1) {
       })
       .set({ "User-Agent": GH_USERAGENT });
 
-    if (res.status === 200) {
-      for (let i = 0; i < res.body.length; i++) {
-        if (res.body[i].full_name === repo) {
-          return { ok: true, content: res.body[i] };
-        }
-      }
-
-      // after going through every repo returned, we haven't found a repo
-      // the user owns. Lets check if theres multiple pages of returns.
-      //console.log(res.headers);
-      if (res.headers["link"].includes("?page=" + page++)) {
-        // if the link headers on the page include the query parameter
-        // of the next page number
-        return await doesUserHaveRepo(user, repo, page++);
-      }
-
-      // if there are no increasing pages, return no access
-      return { ok: false, short: "No Access" };
-    } else {
-      // we received some other status code, and should return a failure.
+    if (res.status !== 200) {
+      // we do not received 200 code: return a failure.
       return { ok: false, short: "Failed Request" };
     }
+
+    for (let i = 0; i < res.body.length; i++) {
+      if (res.body[i].full_name === repo) {
+        return { ok: true, content: res.body[i] };
+      }
+    }
+
+    // After going through every repo returned, we haven't found a repo
+    // the user owns. Lets check if theres multiple pages of returns.
+    //console.log(res.headers);
+    const nextpage = page + 1;
+    if (res.headers["link"].includes("?page=" + nextpage)) {
+      // if the link headers on the page include the query parameter
+      // of the next page number
+      return await doesUserHaveRepo(user, repo, nextpage);
+    }
+
+    // if there are no increasing pages, return no access
+    return { ok: false, short: "No Access" };
   } catch (err) {
     console.log(err);
     console.log(err.response.request.header);
