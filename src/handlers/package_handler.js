@@ -317,7 +317,7 @@ async function deletePackagesName(req, res) {
   let gitowner = await git.ownership(user.content, params.packageName);
 
   if (!gitowner.ok) {
-    await commoon.handleError(req, res, gitowner);
+    await common.handleError(req, res, gitowner);
     return;
   }
 
@@ -536,7 +536,7 @@ async function getPackagesVersion(req, res) {
   );
 
   if (!pack.ok) {
-    await common.handleError(Req, res, pack);
+    await common.handleError(req, res, pack);
     return;
   }
 
