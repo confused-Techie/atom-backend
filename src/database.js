@@ -104,9 +104,9 @@ async function getPackageByName(name) {
     //`;
     const command = await sql_storage`
       SELECT p.*, JSON_AGG(v.*)
-      FROM packages p 
-      JOIN versions v ON p.pointer = v.package 
-      JOIN names n ON n.pointer = p.pointer 
+      FROM packages p
+      JOIN versions v ON p.pointer = v.package
+      JOIN names n ON n.pointer = p.pointer
       WHERE n.name = ${name}
       GROUP BY p.pointer, v.package;
     `;
@@ -129,10 +129,10 @@ async function getPackageVersionByNameAndVersion(name, version) {
 
     const command = await sql_storage`
       SELECT *
-      FROM versions 
+      FROM versions
       WHERE package IN (
-        SELECT pointer 
-        FROM names 
+        SELECT pointer
+        FROM names
         WHERE name = ${name}
       )
       AND semver = ${version}
@@ -226,11 +226,11 @@ async function updatePackageIncrementStarByName(name) {
     sql_storage ??= setupSQL();
 
     const command = await sql_storage`
-      UPDATE packages 
+      UPDATE packages
       SET stargazers_count = stargazers_count + 1
       WHERE pointer IN (
-        SELECT pointer 
-        FROM names 
+        SELECT pointer
+        FROM names
         WHERE name = ${name}
       )
     `;
@@ -252,11 +252,11 @@ async function updatePackageDecrementStarByName(name) {
     sql_storage ??= setupSQL();
 
     const command = await sql_storage`
-      UPDATE packages 
+      UPDATE packages
       SET stargazers_count = stargazers_count - 1
       WHERE pointer IN (
-        SELECT pointer 
-        FROM names 
+        SELECT pointer
+        FROM names
         WHERE name = ${name}
       )
     `;
@@ -278,11 +278,11 @@ async function updatePackageIncrementDownloadByName(name) {
     sql_storage ??= setupSQL();
 
     const command = await sql_storage`
-      UPDATE packages 
+      UPDATE packages
       SET downloads = downloads + 1
       WHERE pointer IN (
-        SELECT pointer 
-        FROM names 
+        SELECT pointer
+        FROM names
         WHERE name = ${name}
       )
     `;
@@ -304,11 +304,11 @@ async function updatePackageDecrementDownloadByName(name) {
     sql_storage ??= setupSQL();
 
     const command = await sql_storage`
-      UPDATE packages 
+      UPDATE packages
       SET downloads = downloads - 1
       WHERE pointer IN (
-        SELECT pointer 
-        FROM names 
+        SELECT pointer
+        FROM names
         WHERE name = ${name}
       )
     `;
@@ -383,9 +383,9 @@ async function removePackageByName(name) {
     sql_storage ??= setupSQL();
 
     const command_vers = await sql_storage`
-      DELETE FROM versions 
+      DELETE FROM versions
       WHERE package IN (
-        SELECT pointer FROM names 
+        SELECT pointer FROM names
         WHERE name = ${name}
       )
       RETURNING *;
@@ -400,27 +400,15 @@ async function removePackageByName(name) {
     }
 
     const command_pack = await sql_storage`
-      DELETE FROM packages 
+      DELETE FROM packages
       WHERE pointer IN (
-        SELECT pointer FROM names 
+        SELECT pointer FROM names
         WHERE name = ${name}
       )
       RETURNING *;
     `;
 
-    if (command.count !== 0) {
-      if (command[0].name == name) {
-        // if the data matches, its successfuly
-        return { ok: true, content: `Successfully Deleted Package: ${name}` };
-      } else {
-        // the returned data from deletion, doesn't match what was passed.
-        return {
-          ok: false,
-          content: `Deleted unkown Package ${command[0].name} during Deletion of ${name}`,
-          short: "Server Error",
-        };
-      }
-    } else {
+    if (command_pack.count === 0) {
       // nothing was returning, the delete probably failed
       return {
         ok: false,
@@ -428,6 +416,14 @@ async function removePackageByName(name) {
         short: "Server Errror",
       };
     }
+
+    return (command_pack[0].name === name)
+        ? { ok: true, content: `Successfully Deleted Package: ${name}` }
+        : {
+            ok: false,
+            content: `Deleted unkown Package ${command_pack[0].name} during Deletion of ${name}`,
+            short: "Server Error",
+          };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -606,7 +602,7 @@ async function updateStars(user, pack) {
     sql_storage ??= setupSQL();
 
     const command_pointer = await sql_storage`
-      SELECT pointer FROM names 
+      SELECT pointer FROM names
       WHERE name = ${pack}
     `;
 
@@ -621,8 +617,8 @@ async function updateStars(user, pack) {
     // else the command is a value, lets keep going
 
     const command_star = await sql_storage`
-      INSERT INTO stars 
-      (package, userid) VALUES 
+      INSERT INTO stars
+      (package, userid) VALUES
       (${command_pointer[0].pointer}, ${user.id})
       RETURNING *;
     `;
@@ -654,7 +650,7 @@ async function updateDeleteStar(user, pack) {
     sql_storage ??= setupSQL();
 
     const command_pointer = await sql_storage`
-      SELECT pointer FROM names 
+      SELECT pointer FROM names
       WHERE name = ${pack}
     `;
 
@@ -667,7 +663,7 @@ async function updateDeleteStar(user, pack) {
     }
 
     const command_unstar = await sql_storage`
-      DELETE FROM stars 
+      DELETE FROM stars
       WHERE (package = ${command_pointer[0].pointer}) AND (userid = ${user.id})
       RETURNING *;
     `;
@@ -677,7 +673,7 @@ async function updateDeleteStar(user, pack) {
 
       const does_exist = await sql_storage`
         SELECT EXISTS (
-          SELECT 1 FROM stars 
+          SELECT 1 FROM stars
           WHERE (package = ${command_pointer[0].pointer}) AND (userid = ${user.id})
         )
       `;
@@ -799,8 +795,8 @@ async function simpleSearch(term, page, dir, sort) {
     const command = await sql_storage`
       SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
       WHERE pointer IN (
-        SELECT pointer 
-        FROM names 
+        SELECT pointer
+        FROM names
         ${sql_storage`WHERE name ILIKE ${"%" + term + "%"}`}
       )
       ORDER BY ${
@@ -876,7 +872,7 @@ async function getSortedPackages(page, dir, method) {
       case "downloads":
         command = await sql_storage`
           SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
-          ORDER BY downloads 
+          ORDER BY downloads
           ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
           LIMIT ${limit}
           OFFSET ${offset}
@@ -885,7 +881,7 @@ async function getSortedPackages(page, dir, method) {
       case "created_at":
         command = await sql_storage`
           SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
-          ORDER BY created 
+          ORDER BY created
           ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
           LIMIT ${limit}
           OFFSET ${offset}
@@ -894,7 +890,7 @@ async function getSortedPackages(page, dir, method) {
       case "updated_at":
         command = await sql_storage`
           SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
-          ORDER BY updated 
+          ORDER BY updated
           ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
           LIMIT ${limit}
           OFFSET ${offset}
@@ -903,7 +899,7 @@ async function getSortedPackages(page, dir, method) {
       case "stars":
         command = await sql_storage`
           SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
-          ORDER BY stargazers_count 
+          ORDER BY stargazers_count
           ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
           LIMIT ${limit}
           OFFSET ${offset}
