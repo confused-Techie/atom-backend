@@ -15,3 +15,5 @@ app.example.yaml
 data/
 coverage/
 docs/
+scripts/
+coverage/
