@@ -40,6 +40,6 @@ env_variables:
   DB_USER: ""
   DB_PASS: ""
   DB_DB: ""
-  DB_PORT: 8080 
+  DB_PORT: 8080
   # This should be the path to a cert file for your DB
   DB_SSL_CERT: ""
