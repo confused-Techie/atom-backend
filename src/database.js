@@ -92,13 +92,9 @@ async function getPackageByName(name) {
 
     // While this query acheives the same as the one below it, there is about .1ms saved.
     //const command = await sql_storage`
-    //  SELECT p.*, JSON_AGG(v.*)
-    //  FROM packages p
-    //  JOIN versions v ON p.pointer = v.package
+    //  SELECT p.*, JSON_AGG(v.*) FROM packages p JOIN versions v ON p.pointer = v.package
     //  WHERE pointer IN (
-    //    SELECT pointer
-    //    FROM names
-    //    WHERE name = ${name}
+    //    SELECT pointer FROM names WHERE name = ${name}
     //  )
     //  GROUP BY p.pointer, v.package;
     //`;
