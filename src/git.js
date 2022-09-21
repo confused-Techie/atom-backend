@@ -220,8 +220,7 @@ async function createPackage(repo) {
       let ver = pack.version;
       for (let i = 0; i < repoTag.length; i++) {
         if (repoTag[i].name.replace("v", "") == ver) {
-          newPack.versions[pack.version].tarball_url =
-          repoTag[i].tarball_url;
+          newPack.versions[pack.version].tarball_url = repoTag[i].tarball_url;
           newPack.versions[pack.version].sha = repoTag[i].commit.sha;
         }
       }
@@ -418,10 +417,10 @@ async function getRepoReadMe(repo) {
     // then this is not found, and we should try again for the lowercase readme.md
     try {
       console.log(`https://api.github.com/repos/${repo}/contents/readme.md`);
-        const resLower = await superagent
+      const resLower = await superagent
         .get(`https://api.github.com/repos/${repo}/contents/readme.md`)
-          .set({ Authorization: "Basic " + encodedToken })
-          .set({ "User-Agent": GH_USERAGENT });
+        .set({ Authorization: "Basic " + encodedToken })
+        .set({ "User-Agent": GH_USERAGENT });
 
       switch (resLower.status) {
         case 200:
