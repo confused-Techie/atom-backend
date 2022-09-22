@@ -61,9 +61,78 @@ function shutdownSQL() {
  * @param {object} pack - The `Server Object Full` package.
  * @returns {object} A Server Status Object.
  */
- async function insertNewPackage(pack) {
+async function insertNewPackage(pack) {
+  try {
+    // TODO: Not sure here if we have to stringify all the package or
+    // only some properties of it.
+    const pack_data = JSON.stringify(pack);
 
- }
+    let command = await sql_storage`
+    INSERT INTO packages (name, creation_method, data)
+    VALUES (${pack.name}, ${pack.creation_method}, ${pack_data})
+    RETURNING pointer;
+    `;
+
+    const pointer = command[0].pointer;
+    if (pointer === undefined) {
+      return {
+        ok: false,
+        content: `Cannot insert ${pack.name} in packages table`,
+        short: "Server Error",
+      };
+    }
+
+    // Populate names table
+    command = await sql_storage`
+    INSERT INTO names
+    (name, pointer) VALUES
+    (${pack.name}, ${pointer});
+    `;
+
+    if (command.count === 0) {
+      return {
+        ok: false,
+        content: `Cannot insert ${pack.name} in names table`,
+        short: "Server Error",
+      };
+    }
+
+    // Populate versions table
+    const latest = pack.releases.latest;
+    const pv = pack.versions;
+
+    // TODO: The following versions handled needs cleanup
+    for (const ver of Object.keys(pv)) {
+      const status = (pv[ver] === latest) ? "latest" : "published";
+
+      const engine = pv[ver].engines;
+      const jsonEngine = JSON.stringify(engine);
+
+      // Save version object into meta, but strip engines and license properties
+      // since we save them in the specific separate columns
+      let meta = pv[ver];
+      delete meta.engines;
+      delete meta.license;
+      const jsonMeta = JSON.stringify(meta);
+
+      command = await sql_storage`
+      INSERT INTO versions (package, status, semver, license, engine, meta)
+      VALUES (${pointer}, ${status}, ${ver}, ${pv[ver].license}, ${jsonEngine}, ${jsonMeta})
+      RETURNING id;
+      `;
+    }
+
+    return (command[0].id !== undefined)
+      ? { ok: true, content: command[0].id }
+      : {
+          ok: false,
+          content: `Cannot insert ${ver} version for ${pack.name} package in versions table`,
+          short: "Server Error",
+      };
+  } catch (e) {
+      return { ok: false, content: err, short: "Server Error" };
+  }
+}
 
 
 /**

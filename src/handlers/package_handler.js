@@ -158,6 +158,12 @@ async function postPackages(req, res) {
   }
 
   // Now with valid package data, we can insert them into the DB.
+  let insertedNewPack = await database.insertNewPackage(pack):
+
+  if (!insertedNewPack.ok) {
+    await common.handleError(req, res, pack);
+    return;
+  }
 
   // But at this time, without further testing we can return notSupported.
   await common.notSupported(req, res);
