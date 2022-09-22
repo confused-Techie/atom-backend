@@ -157,7 +157,7 @@ async function postPackages(req, res) {
     return;
   }
 
-  // Now with valid package data, we can pass it along.
+  // Now with valid package data, we can insert them into the DB.
 
   // But at this time, without further testing we can return notSupported.
   await common.notSupported(req, res);

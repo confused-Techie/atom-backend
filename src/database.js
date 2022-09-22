@@ -55,6 +55,18 @@ function shutdownSQL() {
 }
 
 /**
+ * @async
+ * @function insertNewPackage
+ * @desc Insert a new package inside the DB taking a `Server Object Full` as argument.
+ * @param {object} pack - The `Server Object Full` package.
+ * @returns {object} A Server Status Object.
+ */
+ async function insertNewPackage(pack) {
+
+ }
+
+
+/**
  * @function getPackageByID
  * @desc Takes a package pointer UUID, and returns the package object within
  * a Server Status Object.
@@ -90,7 +102,7 @@ async function getPackageByName(name) {
   try {
     sql_storage ??= setupSQL();
 
-    // While this query acheives the same as the one below it, there is about .1ms saved.
+    // While this query achieves the same as the one below it, there is about .1ms saved.
     //const command = await sql_storage`
     //  SELECT p.*, JSON_AGG(v.*) FROM packages p JOIN versions v ON p.pointer = v.package
     //  WHERE pointer IN (
@@ -156,7 +168,8 @@ async function getPackageCollectionByName(packArray) {
     sql_storage ??= setupSQL();
 
     const command = await sql_storage`
-      SELECT data FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
+      SELECT data
+      FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
       WHERE pointer IN (
         SELECT pointer FROM names
         WHERE name IN ${sql_storage(packArray)}
@@ -926,6 +939,7 @@ if (process.env.PULSAR_STATUS == "dev") {
 } else {
   module.exports = {
     shutdownSQL,
+    insertNewPackage,
     getPackageByID,
     getPackageByName,
     getPackageCollectionByName,

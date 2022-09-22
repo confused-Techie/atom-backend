@@ -194,10 +194,10 @@ async function createPackage(repo) {
     // package will just have a 'version', so we will check which is present.
     if (pack.versions) {
       // now to add the release data to each release within the package
-      for (let i = 0; i < Object.keys(pack.versions).length; i++) {
-        for (let y = 0; y < repoTag.length; y++) {
-          let ver = Object.keys(pack.versions)[i];
-          if (repoTag[y].name.replace("v", "") == ver) {
+      for (const ver of Object.keys(pack.versions)) {
+        for (const tag of repoTag) {
+          const shortTag = tag.name.replace("v", "");
+          if (ver == shortTag) {
             // they match tag and version, stuff the data into the package.
             newPack.versions[ver] = pack;
             // TODO::
@@ -207,21 +207,23 @@ async function createPackage(repo) {
             // versions to their repo, this would cause identical versions to be created, although
             // would have the correct download URL. So the error would only be visual when browsing
             // the packages details.
-            newPack.versions[ver].tarball_url = repoTag[y].tarball_url;
-            newPack.versions[ver].sha = repoTag[y].commit.sha;
+            newPack.versions[ver].tarball_url = tag.tarball_url;
+            newPack.versions[ver].sha = tag.commit.sha;
           }
         }
       }
+
     } else if (pack.version) {
       newPack.versions[pack.version] = pack;
       // Otherwise if they only have a version tag, we can make the first entry onto the versions.
-      // This first entry of course, contains the package.json currently, and in the future, will allow modifications.
+      // This first entry of course, contains the package.json currently, and in the future,
+      // will allow modifications.
       // But now we do need to retreive, the tarball data.
-      let ver = pack.version;
-      for (let i = 0; i < repoTag.length; i++) {
-        if (repoTag[i].name.replace("v", "") == ver) {
-          newPack.versions[pack.version].tarball_url = repoTag[i].tarball_url;
-          newPack.versions[pack.version].sha = repoTag[i].commit.sha;
+      for (const tag of repoTag) {
+        const shortTag = tag.name.replace("v", "");
+        if (pack.version == shortTag) {
+          newPack.versions[pack.version].tarball_url = tag.tarball_url;
+          newPack.versions[pack.version].sha = tag.commit.sha;
         }
       }
     }
@@ -230,6 +232,7 @@ async function createPackage(repo) {
     newPack.releases = {
       latest: repoTag[0].name.replace("v", ""),
     };
+
     // for this we just use the most recent tag published to the repo.
     // and now the object is complete, lets return the pack, as a Server Status Object.
     return { ok: true, content: newPack };
