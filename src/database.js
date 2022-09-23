@@ -62,76 +62,79 @@ function shutdownSQL() {
  * @returns {object} A Server Status Object.
  */
 async function insertNewPackage(pack) {
-  try {
-    // TODO: Not sure here if we have to stringify all the package or
-    // only some properties of it.
-    const pack_data = JSON.stringify(pack);
+  sql_storage ??= setupSQL();
 
+  // Since this operation involves multiple queries, we perform a
+  // PostgreSQL transaction executing a callback on begin().
+  // All data is committed into the database only if no errors occur.
+  return await sql_storage.begin(async () => {
+    const pack_data = {
+      name: pack.name,
+      repository: pack.repository,
+      readme: pack.readme,
+      metadata: pack.metadata
+    };
+
+    // No need to specify downloads and stargazers. They default at 0 on creation.
     let command = await sql_storage`
-    INSERT INTO packages (name, creation_method, data)
-    VALUES (${pack.name}, ${pack.creation_method}, ${pack_data})
-    RETURNING pointer;
+      INSERT INTO packages (name, creation_method, data)
+      VALUES (${pack.name}, ${pack.creation_method}, ${pack_data})
+      RETURNING pointer;
     `;
 
     const pointer = command[0].pointer;
     if (pointer === undefined) {
-      return {
-        ok: false,
-        content: `Cannot insert ${pack.name} in packages table`,
-        short: "Server Error",
-      };
+      throw `Cannot insert ${pack.name} in packages table`;
     }
 
     // Populate names table
     command = await sql_storage`
-    INSERT INTO names
-    (name, pointer) VALUES
-    (${pack.name}, ${pointer});
+      INSERT INTO names
+      (name, pointer) VALUES
+      (${pack.name}, ${pointer});
     `;
 
     if (command.count === 0) {
-      return {
-        ok: false,
-        content: `Cannot insert ${pack.name} in names table`,
-        short: "Server Error",
-      };
+      throw `Cannot insert ${pack.name} in names table`;
     }
 
     // Populate versions table
     const latest = pack.releases.latest;
     const pv = pack.versions;
 
-    // TODO: The following versions handled needs cleanup
     for (const ver of Object.keys(pv)) {
-      const status = (pv[ver] === latest) ? "latest" : "published";
+      const status = (ver === latest) ? "latest" : "published";
 
-      const engine = pv[ver].engines;
-      const jsonEngine = JSON.stringify(engine);
+      // Since many packages don't define an engine field,
+      // we will do it for them if not present,
+      // following suit with what Atom internal packages do.
+      const engine = pv[ver].engines ?? { "atom": "*" };
+
+      // It's common practice for packages to not specify license,
+      // therefore set it as NONE if undefined.
+      const license = pv[ver].license ?? "NONE";
 
       // Save version object into meta, but strip engines and license properties
-      // since we save them in the specific separate columns
+      // since we save them into specific separate columns.
       let meta = pv[ver];
       delete meta.engines;
       delete meta.license;
-      const jsonMeta = JSON.stringify(meta);
 
       command = await sql_storage`
-      INSERT INTO versions (package, status, semver, license, engine, meta)
-      VALUES (${pointer}, ${status}, ${ver}, ${pv[ver].license}, ${jsonEngine}, ${jsonMeta})
-      RETURNING id;
+        INSERT INTO versions (package, status, semver, license, engine, meta)
+        VALUES (${pointer}, ${status}, ${ver}, ${license}, ${engine}, ${meta})
+        RETURNING id;
       `;
+
+      if (command[0].id === undefined) {
+        throw `Cannot insert ${ver} version for ${p.name} package in versions table`;
+      }
     }
 
-    return (command[0].id !== undefined)
-      ? { ok: true, content: command[0].id }
-      : {
-          ok: false,
-          content: `Cannot insert ${ver} version for ${pack.name} package in versions table`,
-          short: "Server Error",
-      };
-  } catch (e) {
-      return { ok: false, content: err, short: "Server Error" };
-  }
+    return { ok: true, content: pointer };
+  }).catch((err) => {
+    return { ok: false, content: err, short: "Server Error" };
+  });
 }
 
 
