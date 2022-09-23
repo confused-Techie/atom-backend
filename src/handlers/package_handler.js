@@ -111,14 +111,21 @@ async function postPackages(req, res) {
     return;
   }
 
-  // Now here we need to check several things for a new package:
-  // - The package doesn't exist.
-  // - The user is the proper owner of the repo they are attempting to link to.
+  // Check the package does NOT exists.
+  // We will utilize our database.getPackageByName to see if it returns an error,
+  // which means the package doesn't exist.
+  // Currently though the repository is in `owner/repo` format,
+  // meanwhile getPackageByName expects just `repo`
 
-  // To see if the package already exists, we will utilize our database.getPackageByName
-  // to hope it returns an error, that the package doesn't exist, and will avoid reading the package file itself.
-  // currently though, the repository, is `owner/repo` meanwhile getPackageByName expects just `repo`
-  let exists = await database.getPackageByName(params.repository.split("/")[1]);
+  const repo = params.repository.split("/")[1];
+
+  if (repo === undefined) {
+    // The repository format is invalid.
+    await common.badRepoJSON(req, res);
+    return;
+  }
+
+  let exists = await database.getPackageByName(repo);
 
   if (exists.ok) {
     // The package exists.
@@ -150,7 +157,13 @@ async function postPackages(req, res) {
     return;
   }
 
-  // Now with valid package data, we can pass it along.
+  // Now with valid package data, we can insert them into the DB.
+  let insertedNewPack = await database.insertNewPackage(pack):
+
+  if (!insertedNewPack.ok) {
+    await common.handleError(req, res, pack);
+    return;
+  }
 
   // But at this time, without further testing we can return notSupported.
   await common.notSupported(req, res);
