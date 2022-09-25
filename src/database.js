@@ -128,7 +128,7 @@ async function insertNewPackage(pack) {
       `;
 
         if (command[0].id === undefined) {
-          throw `Cannot insert ${ver} version for ${p.name} package in versions table`;
+          throw `Cannot insert ${ver} version for ${pack.name} package in versions table`;
         }
       }
 
