@@ -249,7 +249,7 @@ async function getPackagesSearch(req, res) {
 
   let totalPageEstimate = await database.getTotalPackageEstimate();
 
-  let total_pages = (!totalPageEstimate.ok) ? 1 : totalPageEstimate.content;
+  let total_pages = !totalPageEstimate.ok ? 1 : totalPageEstimate.content;
 
   // now to get headers.
   res.append(

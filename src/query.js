@@ -118,7 +118,7 @@ function query(req) {
  */
 function engine(req) {
   // adding support for being passed the request object, or a specific version to check.
-  let prov = (typeof req === "object") ? req.query.engine : req;
+  let prov = typeof req === "object" ? req.query.engine : req;
 
   if (prov === undefined) {
     return false;

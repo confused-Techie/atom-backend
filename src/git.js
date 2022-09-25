@@ -212,7 +212,6 @@ async function createPackage(repo) {
           }
         }
       }
-
     } else if (pack.version) {
       newPack.versions[pack.version] = pack;
       // Otherwise if they only have a version tag, we can make the first entry onto the versions.
