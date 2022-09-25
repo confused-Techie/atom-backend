@@ -146,8 +146,9 @@ with and retreive data from the cloud hosted database instance.
 * [database](#module_database)
     * [~setupSQL()](#module_database..setupSQL) ⇒ <code>object</code>
     * [~shutdownSQL()](#module_database..shutdownSQL)
+    * [~insertNewPackage(pack)](#module_database..insertNewPackage) ⇒ <code>object</code>
     * [~getPackageByID()](#module_database..getPackageByID)
-    * [~getPackageByName()](#module_database..getPackageByName)
+    * [~getPackageByName(name, user)](#module_database..getPackageByName)
     * [~getPackageCollectionByName()](#module_database..getPackageCollectionByName)
     * [~getPackageCollectionByID()](#module_database..getPackageCollectionByID)
     * [~getPointerTable()](#module_database..getPointerTable)
@@ -172,6 +173,18 @@ Exceptions thrown here should be caught and handled in the caller.
 Ensures any Database connection is properly, and safely closed before exiting.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..insertNewPackage"></a>
+
+### database~insertNewPackage(pack) ⇒ <code>object</code>
+Insert a new package inside the DB taking a `Server Object Full` as argument.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A Server Status Object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| pack | <code>object</code> | The `Server Object Full` package. |
+
 <a name="module_database..getPackageByID"></a>
 
 ### database~getPackageByID()
@@ -181,12 +194,16 @@ a Server Status Object.
 **Kind**: inner method of [<code>database</code>](#module_database)  
 <a name="module_database..getPackageByName"></a>
 
-### database~getPackageByName()
-Takes a package name, and returns the raw SQL package data within a Server Status Object.
-The second parameter details boolean, indicates the type of package object to return.
-Either a short, or full.
+### database~getPackageByName(name, user)
+Takes a package name and returns the raw SQL package with all its versions.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name of the package. |
+| user | <code>bool</code> | Whether the packages has to be exposed outside or not. If true, all sensitive data like primary and foreign keys are not selected because they are intended to be used only internally. |
+
 <a name="module_database..getPackageCollectionByName"></a>
 
 ### database~getPackageCollectionByName()
@@ -1192,7 +1209,7 @@ Endpoint Handlers in all relating to the packages themselves.
 
 * [package_handler](#module_package_handler)
     * [~getPackages(req, res)](#module_package_handler..getPackages)
-    * [~postPackages(req, res)](#module_package_handler..postPackages)
+    * [~postPackages(req, res)](#module_package_handler..postPackages) ⇒ <code>string</code>
     * [~getPackagesFeatured(req, res)](#module_package_handler..getPackagesFeatured)
     * [~getPackagesSearch(req, res)](#module_package_handler..getPackagesSearch)
     * [~getPackagesDetails(req, res)](#module_package_handler..getPackagesDetails)
@@ -1229,16 +1246,14 @@ theyved applied via query parameters.
 
 <a name="module_package_handler..postPackages"></a>
 
-### package_handler~postPackages(req, res)
+### package_handler~postPackages(req, res) ⇒ <code>string</code>
 This endpoint is used to publish a new package to the backend server.
 Taking the repo, and your authentication for it, determines if it can be published,
 then goes about doing so.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
-**Todo**
-
-- [ ] Finish function, to actually publish package.
-
+**Returns**: <code>string</code> - JSON object of new data pushed into the database, but stripped of
+sensitive informations like primary and foreign keys.  
 
 | Param | Type | Description |
 | --- | --- | --- |
