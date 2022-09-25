@@ -166,11 +166,13 @@ async function getPackageByID(id) {
 
 /**
  * @function getPackageByName
- * @desc Takes a package name, and returns the raw SQL package data within a Server Status Object.
- * The second parameter details boolean, indicates the type of package object to return.
- * Either a short, or full.
+ * @desc Takes a package name and returns the raw SQL package with all its versions.
+ * @param {string} name - The name of the package.
+ * @param {bool} user - Whether the packages has to be exposed outside or not.
+ * If true, all sensitive data like primary and foreign keys are not selected
+ * because they are intended to be used only internally.
  */
-async function getPackageByName(name) {
+async function getPackageByName(name, user = false) {
   try {
     sql_storage ??= setupSQL();
 
@@ -182,11 +184,18 @@ async function getPackageByName(name) {
     //  )
     //  GROUP BY p.pointer, v.package;
     //`;
+
+    const p_key = user ? "" : "p.pointer,";
+    const v_key = user ? "" : "v.id, v.package,";
+
     const command = await sql_storage`
-      SELECT p.*, JSON_AGG(v.*)
+      SELECT
+        ${p_key} p.name, p.created, p.updated, p.creation_method,
+        p.downloads, p.stargazers_count, p.original_stargazers, p.data,
+        JSON_AGG(${v_key} v.status, v.semver, v.license, v.engine, v.meta)
       FROM packages p
-      JOIN versions v ON p.pointer = v.package
-      JOIN names n ON n.pointer = p.pointer
+        JOIN versions v ON p.pointer = v.package
+        JOIN names n ON n.pointer = p.pointer
       WHERE n.name = ${name}
       GROUP BY p.pointer, v.package;
     `;

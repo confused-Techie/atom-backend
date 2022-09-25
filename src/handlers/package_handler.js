@@ -86,9 +86,10 @@ async function getPackages(req, res) {
  * then goes about doing so.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
+ * @return {string} JSON object of new data pushed into the database, but stripped of
+ * sensitive informations like primary and foreign keys.
  * @property {http_method} - POST
  * @property {http_endpoint} - /api/packages
- * @todo Finish function, to actually publish package.
  */
 async function postPackages(req, res) {
   let params = {
@@ -125,7 +126,7 @@ async function postPackages(req, res) {
     return;
   }
 
-  let exists = await database.getPackageByName(repo);
+  const exists = await database.getPackageByName(repo);
 
   if (exists.ok) {
     // The package exists.
@@ -142,7 +143,7 @@ async function postPackages(req, res) {
   }
 
   // Now we know the package doesn't exist. And we want to check that the user owns this repo on git.
-  let gitowner = await git.ownership(user.content, params.repository);
+  const gitowner = await git.ownership(user.content, params.repository);
 
   if (!gitowner.ok) {
     await common.handleError(req, res, gitowner);
@@ -150,26 +151,30 @@ async function postPackages(req, res) {
   }
 
   // Now knowing they own the git repo, and it doesn't exist here, lets publish.
-  let pack = await git.createPackage(params.repository);
+  let new_pack = await git.createPackage(params.repository);
 
-  if (!pack.ok) {
-    await common.handleError(req, res, pack);
+  if (!new_pack.ok) {
+    await common.handleError(req, res, new_pack);
     return;
   }
 
   // Now with valid package data, we can insert them into the DB.
-  let insertedNewPack = await database.insertNewPackage(pack):
+  let inserted_new_pack = await database.insertNewPackage(new_pack);
 
-  if (!insertedNewPack.ok) {
-    await common.handleError(req, res, pack);
+  if (!inserted_new_pack.ok) {
+    await common.handleError(req, res, inserted_new_pack);
     return;
   }
 
-  // But at this time, without further testing we can return notSupported.
-  await common.notSupported(req, res);
-  logger.httpLog(req, res);
+  // Finally we return what was actually put into the database,
+  // but without database keys which we don't want to expose outside.
+  const new_db_pack = await database.getPackageByName(repo, true);
 
-  //res.status(201).json(new_pack);
+  if (new_db_pack.ok) {
+    res.status(201).json(new_db_pack.content);
+  } else {
+    common.serverError(req, res, "Cannot retrieve new package from DB");
+  }
 }
 
 /**
