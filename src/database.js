@@ -224,7 +224,7 @@ async function getPackageVersionByNameAndVersion(name, version) {
         FROM names
         WHERE name = ${name}
       )
-      AND semver = ${version}
+      AND semver = ${version};
     `;
 
     return command.count !== 0
@@ -322,7 +322,7 @@ async function updatePackageIncrementStarByName(name) {
         SELECT pointer
         FROM names
         WHERE name = ${name}
-      )
+      );
     `;
 
     return command.count !== 0
@@ -348,7 +348,7 @@ async function updatePackageDecrementStarByName(name) {
         SELECT pointer
         FROM names
         WHERE name = ${name}
-      )
+      );
     `;
 
     return command.count !== 0
@@ -374,7 +374,7 @@ async function updatePackageIncrementDownloadByName(name) {
         SELECT pointer
         FROM names
         WHERE name = ${name}
-      )
+      );
     `;
 
     return command.count !== 0
@@ -400,7 +400,7 @@ async function updatePackageDecrementDownloadByName(name) {
         SELECT pointer
         FROM names
         WHERE name = ${name}
-      )
+      );
     `;
 
     return command.count !== 0
@@ -526,7 +526,7 @@ async function removePackageByID(id) {
     const command = await sql_storage`
       UPDATE versions
       SET status = "removed"
-      WHERE package = id
+      WHERE package = id;
     `;
 
     return command.count !== 0
@@ -693,7 +693,7 @@ async function updateStars(user, pack) {
 
     const command_pointer = await sql_storage`
       SELECT pointer FROM names
-      WHERE name = ${pack}
+      WHERE name = ${pack};
     `;
 
     if (command_pointer.count === 0) {
@@ -741,7 +741,7 @@ async function updateDeleteStar(user, pack) {
 
     const command_pointer = await sql_storage`
       SELECT pointer FROM names
-      WHERE name = ${pack}
+      WHERE name = ${pack};
     `;
 
     if (command_pointer.count === 0) {
@@ -765,7 +765,7 @@ async function updateDeleteStar(user, pack) {
         SELECT EXISTS (
           SELECT 1 FROM stars
           WHERE (package = ${command_pointer[0].pointer}) AND (userid = ${user.id})
-        )
+        );
       `;
 
       if (does_exist[0].exists) {
@@ -956,7 +956,7 @@ async function getSortedPackages(page, dir, method) {
   try {
     sql_storage ??= setupSQL();
 
-    let command;
+    let command = null;
 
     switch (method) {
       case "downloads":
@@ -965,7 +965,7 @@ async function getSortedPackages(page, dir, method) {
           ORDER BY downloads
           ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
           LIMIT ${limit}
-          OFFSET ${offset}
+          OFFSET ${offset};
         `;
         break;
       case "created_at":
@@ -974,7 +974,7 @@ async function getSortedPackages(page, dir, method) {
           ORDER BY created
           ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
           LIMIT ${limit}
-          OFFSET ${offset}
+          OFFSET ${offset};
         `;
         break;
       case "updated_at":
@@ -983,7 +983,7 @@ async function getSortedPackages(page, dir, method) {
           ORDER BY updated
           ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
           LIMIT ${limit}
-          OFFSET ${offset}
+          OFFSET ${offset};
         `;
         break;
       case "stars":
@@ -992,7 +992,7 @@ async function getSortedPackages(page, dir, method) {
           ORDER BY stargazers_count
           ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
           LIMIT ${limit}
-          OFFSET ${offset}
+          OFFSET ${offset};
         `;
         break;
       default:
