@@ -146,6 +146,7 @@ with and retreive data from the cloud hosted database instance.
 * [database](#module_database)
     * [~setupSQL()](#module_database..setupSQL) ⇒ <code>object</code>
     * [~shutdownSQL()](#module_database..shutdownSQL)
+    * [~insertNewPackage(pack)](#module_database..insertNewPackage) ⇒ <code>object</code>
     * [~getPackageByID()](#module_database..getPackageByID)
     * [~getPackageByName()](#module_database..getPackageByName)
     * [~getPackageCollectionByName()](#module_database..getPackageCollectionByName)
@@ -172,6 +173,18 @@ Exceptions thrown here should be caught and handled in the caller.
 Ensures any Database connection is properly, and safely closed before exiting.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..insertNewPackage"></a>
+
+### database~insertNewPackage(pack) ⇒ <code>object</code>
+Insert a new package inside the DB taking a `Server Object Full` as argument.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A Server Status Object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| pack | <code>object</code> | The `Server Object Full` package. |
+
 <a name="module_database..getPackageByID"></a>
 
 ### database~getPackageByID()
