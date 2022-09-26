@@ -1,11 +1,11 @@
-# Atom Community Server Backend JS
+# Atom Backend
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/d4ca4ded429c446fb28d0654c8c05d6d)](https://www.codacy.com/gh/confused-Techie/atom-community-server-backend-JS/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=confused-Techie/atom-community-server-backend-JS&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/d4ca4ded429c446fb28d0654c8c05d6d)](https://www.codacy.com/gh/confused-Techie/atom-backend/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=confused-Techie/atom-community-server-backend-JS&amp;utm_campaign=Badge_Grade)
 [![Coverage Status](https://coveralls.io/repos/github/confused-Techie/atom-community-server-backend-JS/badge.svg?branch=main)](https://coveralls.io/github/confused-Techie/atom-community-server-backend-JS?branch=main)
 
-[![CI - Documentation](https://github.com/confused-Techie/atom-community-server-backend-JS/actions/workflows/node-docs.js.yml/badge.svg)](https://github.com/confused-Techie/atom-community-server-backend-JS/actions/workflows/node-docs.js.yml)
-[![CI - Lint](https://github.com/confused-Techie/atom-community-server-backend-JS/actions/workflows/node-lint.js.yml/badge.svg)](https://github.com/confused-Techie/atom-community-server-backend-JS/actions/workflows/node-lint.js.yml)
-[![CI - Tests](https://github.com/confused-Techie/atom-community-server-backend-JS/actions/workflows/node-test.js.yml/badge.svg)](https://github.com/confused-Techie/atom-community-server-backend-JS/actions/workflows/node-test.js.yml)
+[![CI - Documentation](https://github.com/confused-Techie/atom-backend/actions/workflows/node-docs.js.yml/badge.svg)](https://github.com/confused-Techie/atom-backend/actions/workflows/node-docs.js.yml)
+[![CI - Lint](https://github.com/confused-Techie/atom-backend/actions/workflows/node-lint.js.yml/badge.svg)](https://github.com/confused-Techie/atom-backend/actions/workflows/node-lint.js.yml)
+[![CI - Tests](https://github.com/confused-Techie/atom-backend/actions/workflows/node-test.js.yml/badge.svg)](https://github.com/confused-Techie/atom-backend/actions/workflows/node-test.js.yml)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
@@ -16,8 +16,8 @@
 
 Please note that there should be two versions of this repo.
 
-* [`pulsar-edit/backend-server`](https://github.com/pulsar-edit/backend-server)
-* [`confused-Techie/atom-community-server-backend-JS`](https://github.com/confused-Techie/atom-community-server-backend-JS)
+* [`pulsar-edit/package-backend`](https://github.com/pulsar-edit/package-backend)
+* [`confused-Techie/atom-backend`](https://github.com/confused-Techie/atom-backend)
 
 The version of this server that exists on `confused-Techie`'s repo is intended to be the version that reaches feature parity with the existing Atom.io Backend Server. As in until it reaches release version 1.0.0 - Once this happens that repo will likely be archived, or stop receiving updates. The reason this should still exist untouched, is so that any other user of Atom that wants a drop in replacement of the backend server will be able to use this, with zero modifications, to support their Atom instance.
 
@@ -27,11 +27,11 @@ So with this in mind, please use the above to correctly address any issues or PR
 
 ## Updated Information
 
-**Atom-Community-Server-Backend-JS is MOVING**
+**Atom-Backend is MOVING**
 
 While this is currently the home for the new backend during development, that won't always be the case.
 
-The long term goals will be to have this package move to the new `Pulsar-Edit` repo. If you are wondering what's 'Pulsar' while the title here says 'Atom-Community' [read more](https://github.com/pulsar-edit/.github/tree/main/profile) about this change.
+The long term goals will be to have this package move to the new `Pulsar-Edit` repo. If you are wondering what's 'Pulsar' while the title here says 'Atom' [read more](https://github.com/pulsar-edit/.github/tree/main/profile) about this change.
 
 The goal for now is of course to keep this new Backend compatible with any fork of Atom that may arise, as currently it should be a drop in replacement of the currently existing backend.
 
@@ -73,7 +73,7 @@ There's a crash course guide to any new contributors available [develpers.md](/d
 
 Additionally for any bug hunters [Complexity Reports](/docs/complexity-report.md) are generated. Keep in mind since the tools underlying AST generator doesn't support ES6 not everything is included currently.
 
-Finally there are many `TODO::`s scattered around for things that still need to be done. Otherwise a collection of 'Good First Issues' are [available](https://github.com/confused-Techie/atom-community-server-backend-JS/issues). And lastly theres a collection of all [functions/methods](/docs/major_todo.md) and their current status to help someone quickly jump in.
+Finally there are many `TODO::`s scattered around for things that still need to be done. Otherwise a collection of 'Good First Issues' are [available](https://github.com/confused-Techie/atom-backend/issues). And lastly theres a collection of all [functions/methods](/docs/major_todo.md) and their current status to help someone quickly jump in.
 
 If you'd like to help [Atom-Community Core](https://github.com/atom-community/atom) there is still much work to be done.
 
@@ -134,8 +134,8 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/confused-Techie"><img src="https://avatars.githubusercontent.com/u/26921489?v=4?s=100" width="100px;" alt=""/><br /><sub><b>confused_techie</b></sub></a><br /><a href="https://github.com/confused-Techie/atom-community-server-backend-JS/commits?author=confused-Techie" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/Digitalone1"><img src="https://avatars.githubusercontent.com/u/25790525?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Giusy Digital</b></sub></a><br /><a href="https://github.com/confused-Techie/atom-community-server-backend-JS/commits?author=Digitalone1" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/confused-Techie"><img src="https://avatars.githubusercontent.com/u/26921489?v=4?s=100" width="100px;" alt=""/><br /><sub><b>confused_techie</b></sub></a><br /><a href="https://github.com/confused-Techie/atom-backend/commits?author=confused-Techie" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/Digitalone1"><img src="https://avatars.githubusercontent.com/u/25790525?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Giusy Digital</b></sub></a><br /><a href="https://github.com/confused-Techie/atom-backend/commits?author=Digitalone1" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/DeeDeeG"><img src="https://avatars.githubusercontent.com/u/20157115?v=4?s=100" width="100px;" alt=""/><br /><sub><b>DeeDeeG</b></sub></a><br /><a href="#ideas-DeeDeeG" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
