@@ -21,7 +21,7 @@ Please note that there should be two versions of this repo.
 
 The version of this server that exists on `confused-Techie`'s repo is intended to be the version that reaches feature parity with the existing Atom.io Backend Server. As in until it reaches release version 1.0.0 - Once this happens that repo will likely be archived, or stop receiving updates. The reason this should still exist untouched, is so that any other user of Atom that wants a drop in replacement of the backend server will be able to use this, with zero modifications, to support their Atom instance.
 
-But once version 1.0.0 is released, then all new features, and new developments should be brought over to `pulsar-edit/backend-server` since that repo will contain the Backend Server intended to be used by Pulsar.
+But once version 1.0.0 is released, then all new features, and new developments should be brought over to `pulsar-edit/package-backend` since that repo will contain the Backend Server intended to be used by Pulsar.
 
 So with this in mind, please use the above to correctly address any issues or PRs. Until this warning is removed.
 
