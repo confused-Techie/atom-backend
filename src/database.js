@@ -67,76 +67,77 @@ async function insertNewPackage(pack) {
   // Since this operation involves multiple queries, we perform a
   // PostgreSQL transaction executing a callback on begin().
   // All data is committed into the database only if no errors occur.
-  return await sql_storage.begin(async () => {
-    const pack_data = {
-      name: pack.name,
-      repository: pack.repository,
-      readme: pack.readme,
-      metadata: pack.metadata
-    };
+  return await sql_storage
+    .begin(async () => {
+      const pack_data = {
+        name: pack.name,
+        repository: pack.repository,
+        readme: pack.readme,
+        metadata: pack.metadata,
+      };
 
-    // No need to specify downloads and stargazers. They default at 0 on creation.
-    let command = await sql_storage`
+      // No need to specify downloads and stargazers. They default at 0 on creation.
+      let command = await sql_storage`
       INSERT INTO packages (name, creation_method, data)
       VALUES (${pack.name}, ${pack.creation_method}, ${pack_data})
       RETURNING pointer;
     `;
 
-    const pointer = command[0].pointer;
-    if (pointer === undefined) {
-      throw `Cannot insert ${pack.name} in packages table`;
-    }
+      const pointer = command[0].pointer;
+      if (pointer === undefined) {
+        throw `Cannot insert ${pack.name} in packages table`;
+      }
 
-    // Populate names table
-    command = await sql_storage`
+      // Populate names table
+      command = await sql_storage`
       INSERT INTO names
       (name, pointer) VALUES
       (${pack.name}, ${pointer});
     `;
 
-    if (command.count === 0) {
-      throw `Cannot insert ${pack.name} in names table`;
-    }
+      if (command.count === 0) {
+        throw `Cannot insert ${pack.name} in names table`;
+      }
 
-    // Populate versions table
-    const latest = pack.releases.latest;
-    const pv = pack.versions;
+      // Populate versions table
+      const latest = pack.releases.latest;
+      const pv = pack.versions;
 
-    for (const ver of Object.keys(pv)) {
-      const status = (ver === latest) ? "latest" : "published";
+      for (const ver of Object.keys(pv)) {
+        const status = ver === latest ? "latest" : "published";
 
-      // Since many packages don't define an engine field,
-      // we will do it for them if not present,
-      // following suit with what Atom internal packages do.
-      const engine = pv[ver].engines ?? { "atom": "*" };
+        // Since many packages don't define an engine field,
+        // we will do it for them if not present,
+        // following suit with what Atom internal packages do.
+        const engine = pv[ver].engines ?? { atom: "*" };
 
-      // It's common practice for packages to not specify license,
-      // therefore set it as NONE if undefined.
-      const license = pv[ver].license ?? "NONE";
+        // It's common practice for packages to not specify license,
+        // therefore set it as NONE if undefined.
+        const license = pv[ver].license ?? "NONE";
 
-      // Save version object into meta, but strip engines and license properties
-      // since we save them into specific separate columns.
-      let meta = pv[ver];
-      delete meta.engines;
-      delete meta.license;
+        // Save version object into meta, but strip engines and license properties
+        // since we save them into specific separate columns.
+        let meta = pv[ver];
+        delete meta.engines;
+        delete meta.license;
 
-      command = await sql_storage`
+        command = await sql_storage`
         INSERT INTO versions (package, status, semver, license, engine, meta)
         VALUES (${pointer}, ${status}, ${ver}, ${license}, ${engine}, ${meta})
         RETURNING id;
       `;
 
-      if (command[0].id === undefined) {
-        throw `Cannot insert ${ver} version for ${p.name} package in versions table`;
+        if (command[0].id === undefined) {
+          throw `Cannot insert ${ver} version for ${p.name} package in versions table`;
+        }
       }
-    }
 
-    return { ok: true, content: pointer };
-  }).catch((err) => {
-    return { ok: false, content: err, short: "Server Error" };
-  });
+      return { ok: true, content: pointer };
+    })
+    .catch((err) => {
+      return { ok: false, content: err, short: "Server Error" };
+    });
 }
-
 
 /**
  * @function getPackageByID
