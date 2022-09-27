@@ -31,6 +31,7 @@ let sql_storage; // SQL object, to interact with the DB.
  * @returns {object} PostgreSQL connection object.
  */
 function setupSQL() {
+  console.log(DB_HOST);
   return postgres({
     host: DB_HOST,
     username: DB_USER,
@@ -1006,7 +1007,7 @@ async function getSortedPackages(page, dir, method) {
   }
 }
 
-if (process.env.PULSAR_STATUS == "dev") {
+if (process.env.PULSAR_STATUS == "dev" && process.env.PULSAR_DB_STATUS != "normal") {
   const devRunner = require("./dev-runner/database.js");
   module.exports = devRunner;
 } else {

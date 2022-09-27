@@ -1,7 +1,7 @@
 # Atom Backend
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/d4ca4ded429c446fb28d0654c8c05d6d)](https://www.codacy.com/gh/confused-Techie/atom-backend/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=confused-Techie/atom-community-server-backend-JS&amp;utm_campaign=Badge_Grade)
-[![Coverage Status](https://coveralls.io/repos/github/confused-Techie/atom-community-server-backend-JS/badge.svg?branch=main)](https://coveralls.io/github/confused-Techie/atom-community-server-backend-JS?branch=main)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/d4ca4ded429c446fb28d0654c8c05d6d)](https://www.codacy.com/gh/confused-Techie/atom-backend/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=confused-Techie/atom-backend&amp;utm_campaign=Badge_Grade)
+[![Coverage Status](https://coveralls.io/repos/github/confused-Techie/atom-backend/badge.svg?branch=main)](https://coveralls.io/github/confused-Techie/atom-backend?branch=main)
 
 [![CI - Documentation](https://github.com/confused-Techie/atom-backend/actions/workflows/node-docs.js.yml/badge.svg)](https://github.com/confused-Techie/atom-backend/actions/workflows/node-docs.js.yml)
 [![CI - Lint](https://github.com/confused-Techie/atom-backend/actions/workflows/node-lint.js.yml/badge.svg)](https://github.com/confused-Techie/atom-backend/actions/workflows/node-lint.js.yml)

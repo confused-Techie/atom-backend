@@ -16,7 +16,9 @@
     "complex": "cr --newmi --config .complexrc .",
     "js-docs": "jsdoc2md ./src/*.js ./src/handlers/*.js > ./docs/JavaScript.md",
     "contributors:add": "all-contributors add",
-    "test_search": "node ./scripts/tools/search.js"
+    "test_search": "node ./scripts/tools/search.js",
+    "test_w_db": "set PULSAR_STATUS=dev&& set PULSAR_DB_STATUS=normal&& node ./src/dev_server.js",
+    "migrations:test": "pg-migrations apply --directory ./src/dev-runner/migrations"
   },
   "author": "confused-Techie",
   "license": "MIT",
@@ -27,6 +29,15 @@
       "text",
       "lcovonly"
     ]
+  },
+  "pg": {
+    "test": {
+      "migrationsScript": [
+        "npm",
+        "run",
+        "migrations:test"
+      ]
+    }
   },
   "dependencies": {
     "@confused-techie/watchyourlanguage": "^1.0.0",
@@ -39,6 +50,8 @@
   },
   "devDependencies": {
     "@confused-techie/quick-webserver-docs": "^0.1.6",
+    "@databases/pg-migrations": "^5.0.1",
+    "@databases/pg-test": "^3.1.2",
     "all-contributors-cli": "^6.20.0",
     "complexity-report": "^2.0.0-alpha",
     "jest": "^28.1.2",
