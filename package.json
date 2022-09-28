@@ -29,6 +29,9 @@
       "lcovonly"
     ]
   },
+  "globals": {
+    "jest": "readonly"
+  },
   "pg": {
     "test": {
       "migrationsScript": [

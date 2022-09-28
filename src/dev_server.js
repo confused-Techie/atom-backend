@@ -1,9 +1,18 @@
-// Dev server runner.
-// Should setup an in memory Database using pg-test, handling the setup and teardown,
-// while additionally starting up the api server itself, letting it run as per normal.
+/**
+ * @module dev_server
+ * @desc The Development initializer of `main.js` as well as managing the startup of a locally created Docker SQL
+ * Server. This uses pg-test to set up a database hosted on local Docker. Migrating all data as needed,
+ * to allow the real server feel, without having access or the risk of the production database. But otherwise runs
+ * the backend API server as normal.
+ */
 
+/* eslint-disable node/no-unpublished-require
+  * --------
+  * This is the recommended and only way to mock how Jest would use the module.
+*/
 const dbSetup = require("../node_modules/@databases/pg-test/jest/globalSetup");
 const dbTeardown = require("../node_modules/@databases/pg-test/jest/globalTeardown");
+/* eslint-enable node/no-unpublished-require */
 
 async function test() {
   await dbSetup();
@@ -25,18 +34,11 @@ async function test() {
   // we will define our own port to use here.
   process.env.PORT = 8080;
 
-
-  console.log("hello world");
-  console.log(process.env.DB_HOST);
-
   const app = require("./main.js");
   const logger = require("./logger.js");
   const database = require("./database.js");
   // We can only require these items after we have set our env variables
 
-  // Currently this causes database.js to error out.
-  // Error: Client network socket disconnected before secure TLS connection was established.
-  // i need to not try and setup ssl, and disable pw
   logger.warningLog("Pulsar Server is in Development Mode with a Local Database!");
 
   const serve = app.listen(process.env.PORT, () => {
@@ -44,21 +46,32 @@ async function test() {
   });
 
   process.on("SIGTERM", async () => {
-    await localExterminate("SIGTERM", serve);
+    await localExterminate("SIGTERM", serve, database);
   });
 
   process.on("SIGINT", async () => {
-    await localExterminate("SIGINT", serve);
+    await localExterminate("SIGINT", serve, database);
   });
 
 }
 
-async function localExterminate(callee, serve) {
+/**
+ * @async
+ * @function localExterminate
+ * @desc Similar to `server.js` exterminate(), except used for the `dev_server.js` instance.
+ * @param {string} callee - Simply a way to better log what called the server to shutdown.
+ * @param {object} serve - The instance of the ExpressJS `app` that has started listening and can be called to shutdown.
+ * @param {object} db - The instance of the `database.js` module, used to properly close its connections during a
+ * graceful shutdown.
+ */
+async function localExterminate(callee, serve, db) {
   console.log(`${callee} signal received: closing HTTP server.`);
+  await db.shutdownSQL();
   await dbTeardown();
   console.log("Exiting...");
   serve.close(() => {
     console.log("HTTP Server Closed.");
   });
 }
+
 test();
