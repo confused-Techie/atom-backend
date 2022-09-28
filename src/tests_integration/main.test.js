@@ -3,11 +3,16 @@
 // Really testing the type of objects are returned, and specific errors are returned.
 // It will try to avoid expecting exact values, but may rely on test data.
 
-// eslint-disable-next-line node/no-unpublished-require
+/* eslint-disable node/no-unpublished-require
+ * --------
+ * This is the recommended and only way to mock how Jest would use the module.
+ * For supertest it seems strange this caused an error. But was needed anyway.
+ */
 const request = require("supertest");
 
 const dbSetup = require("../../node_modules/@databases/pg-test/jest/globalSetup");
 const dbTeardown = require("../../node_modules/@databases/pg-test/jest/globalTeardown");
+/* eslint-enable node/no-unpublished-require */
 
 let app;
 
@@ -16,6 +21,7 @@ beforeAll(async () => {
 
   let db_url = process.env.DATABASE_URL;
   let db_url_reg = /(\S*:\/\/)(\S*)@(\S*):(\S*)\/(\S*)/;
+  let db_url_parsed = db_url_reg.exec(db_url);
 
   process.env.DB_HOST = db_url_parsed[3];
   process.env.DB_USER = db_url_parsed[2];
@@ -29,7 +35,9 @@ afterAll(async () => {
   await dbTeardown();
 });
 
-console.log("This is in development, for integration tests properly working.");
+console.log(
+  "This is in development, integration tests may not function as expected."
+);
 
 describe("Get /api/packages", () => {
   test("Should respond with an array of packages.", async () => {
