@@ -25,7 +25,6 @@ async function test() {
   // we will define our own port to use here.
   process.env.PORT = 8080;
 
-
   console.log("hello world");
   console.log(process.env.DB_HOST);
 
@@ -37,7 +36,9 @@ async function test() {
   // Currently this causes database.js to error out.
   // Error: Client network socket disconnected before secure TLS connection was established.
   // i need to not try and setup ssl, and disable pw
-  logger.warningLog("Pulsar Server is in Development Mode with a Local Database!");
+  logger.warningLog(
+    "Pulsar Server is in Development Mode with a Local Database!"
+  );
 
   const serve = app.listen(process.env.PORT, () => {
     logger.infoLog(`Pulsar Server Listening on port ${process.env.PORT}`);
@@ -50,7 +51,6 @@ async function test() {
   process.on("SIGINT", async () => {
     await localExterminate("SIGINT", serve);
   });
-
 }
 
 async function localExterminate(callee, serve) {
