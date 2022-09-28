@@ -3,8 +3,8 @@
 // Really testing the type of objects are returned, and specific errors are returned.
 // It will try to avoid expecting exact values, but may rely on test data.
 
-/* eslint-disable node/no-unpublished-require
- * --------
+/* eslint-disable node/no-unpublished-require */
+/**
  * This is the recommended and only way to mock how Jest would use the module.
  * For supertest it seems strange this caused an error. But was needed anyway.
  */
