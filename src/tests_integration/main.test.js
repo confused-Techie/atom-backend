@@ -6,7 +6,31 @@
 // eslint-disable-next-line node/no-unpublished-require
 const request = require("supertest");
 
-const app = require("../main.js");
+const dbSetup = require("../../node_modules/@databases/pg-test/jest/globalSetup");
+const dbTeardown = require("../../node_modules/@databases/pg-test/jest/globalTeardown");
+
+let app;
+
+beforeAll(async () => {
+  await dbSetup();
+
+  let db_url = process.env.DATABASE_URL;
+  let db_url_reg = /(\S*:\/\/)(\S*)@(\S*):(\S*)\/(\S*)/;
+
+  process.env.DB_HOST = db_url_parsed[3];
+  process.env.DB_USER = db_url_parsed[2];
+  process.env.DB_DB = db_url_parsed[5];
+  process.env.DB_PORT = db_url_parsed[4];
+
+  app = require("../main.js");
+
+});
+
+afterAll(async () => {
+  await dbTeardown();
+});
+
+console.log("This is in development, for integration tests properly working.");
 
 describe("Get /api/packages", () => {
   test("Should respond with an array of packages.", async () => {

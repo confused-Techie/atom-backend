@@ -1,7 +1,7 @@
 # Atom Backend
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/d4ca4ded429c446fb28d0654c8c05d6d)](https://www.codacy.com/gh/confused-Techie/atom-backend/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=confused-Techie/atom-community-server-backend-JS&amp;utm_campaign=Badge_Grade)
-[![Coverage Status](https://coveralls.io/repos/github/confused-Techie/atom-community-server-backend-JS/badge.svg?branch=main)](https://coveralls.io/github/confused-Techie/atom-community-server-backend-JS?branch=main)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/d4ca4ded429c446fb28d0654c8c05d6d)](https://www.codacy.com/gh/confused-Techie/atom-backend/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=confused-Techie/atom-backend&amp;utm_campaign=Badge_Grade)
+[![Coverage Status](https://coveralls.io/repos/github/confused-Techie/atom-backend/badge.svg?branch=main)](https://coveralls.io/github/confused-Techie/atom-backend?branch=main)
 
 [![CI - Documentation](https://github.com/confused-Techie/atom-backend/actions/workflows/node-docs.js.yml/badge.svg)](https://github.com/confused-Techie/atom-backend/actions/workflows/node-docs.js.yml)
 [![CI - Lint](https://github.com/confused-Techie/atom-backend/actions/workflows/node-lint.js.yml/badge.svg)](https://github.com/confused-Techie/atom-backend/actions/workflows/node-lint.js.yml)
@@ -13,6 +13,8 @@
 > This is originally based off the research done on [Atom Community Server Backend](https://github.com/confused-Techie/atom-community-server-backend) which was written in Golang. But has been switched to JS for more broad support.
 
 ## Wanting to Contribute?
+
+### Developers please read through this whole document again, as it documents large changes in how to contribute.
 
 Please note that there should be two versions of this repo.
 
@@ -50,18 +52,63 @@ To install all package dependencies.
 
 Then go ahead and create an `app.yaml` file, or rename the `app.example.yaml` to `app.yaml`. The contents of these files can mirror each other or you can read through the comments of `app.example.yaml` to find suitable alternatives for what you are testing. This config specifies the port of the server, the URL, as well as many other aspects.
 
-Finally you can run the API Server with `node .`, additionally there are several built in scripts that can be run with `npm run $SCRIPT_NAME`
+Finally, while not at all recommended, you can run the API Server with `node .`.
 
-* `start`: Stars the Backend Server.
-* `test`: Runs the Jest tests within the ./src/tests folder. Additionally sets environment variables `PULSAR_STATUS` = `dev` and `NODE_ENV` = `test`.
-* `dev`: Starts up the server in "Development Mode". Meaning it starts the server while additionally setting `PULSAR_STATUS` = `dev` as an environment variable.
-* `gen-badge`: !This is no longer needed, and is depreciated! Runs `./src/tests/genBadges.js` and uses the Jest Code Coverage output to create an SVG badge.
-* `api-docs`: Uses `@confused-techie/quick-webserver-docs` to generate documentation based off the JSDoc style comments, only documenting the API Endpoints.
-* `lint`: Uses `prettier` to format and lint the codebase.
-* `complex`: Uses `complexity-report` to generate complexity reports of the JavaScript. Keep in mind this does not support ES6 yet, so not all functions are documented.
-* `js-docs`: Uses `jsdoc2md` to generate documentation based off the JSDoc comments within the codebase.
-* `contributors:add`: Uses `all-contributors` to add a new contributor to the README.
-* `test_search`: Uses the `./src/tests/search.js` to run the search specified in `app.yaml` to test the results against several different words, phrases, and sentences, with different data sets.
+It is instead recommended that you use the built in scripts to run the server. Of which there are several that can be run with `npm run $SCRIPT_NAME`
+
+* `start`: Starts the Backend Server normally. Using your `config.yaml` for all needed values. This is what's used in production.
+
+* `test:unit`: This can be used for unit testing, like items placed in `./src/tests`. Using this does the following:
+  - Sets `NODE_ENV=test`
+  - Sets `PULSAR_STATUS=dev`
+  - Runs the unit tests located in `./src/tests/` using `jest`.
+  - Requires that there will be no calls to the Database. This does not handle the loading of the Database in any way.
+  - Uses mocked responses for all functions in `./src/storage.js` to avoid having to contact Google Storage APIs.
+
+* `test:integration`: This is used exclusively for Integration testing. As in tests that require a Database to connect to.
+  - Sets `NODE_ENV=test`
+  - Sets `PULSAR_STATUS=dev`
+  - Runs the integration tests located in `./src/tests_integration` using `jest`.
+  - Requires the ability to spin up a local Database that it will connect to, ignoring the values in your `config.yaml`
+  - Uses mocked responses for all functions in `./src/storage.js` to avoid having to contact Google Storage APIs.
+
+* `start:dev`: This can be used for local development of the backend if you don't have access to the production database. Spinning up a local only Database for testing purposes. But otherwise running the backend server exactly like `start`.
+  - Sets `PULSAR_STATUS=dev`
+  - Starts up the server using `./src/dev_server.js` instead of `./src/server.js`
+  - Requires the ability to spin up a local Database that it will connect to, ignoring the values in your `config.yaml`
+  - Uses mocked responses for all functions in `./src/storage.js` to avoid having to contact Google Storage APIs.
+
+* `api-docs`: Uses `@confused-techie/quick-webserver-docs` to generate documentation based off the JSDoc style comments, only documenting the API Endpoints. This should be done by GitHub Actions.
+
+* `lint`: Uses `prettier` to format and lint the codebase. This should be done by GitHub Actions.
+
+* `complex`: Uses `complexity-report` to generate complexity reports of the JavaScript. Keep in mind this does not support ES6 yet, so not all functions are documented. This should be done by GitHub Actions.
+
+* `js-docs`: Uses `jsdoc2md` to generate documentation based off JSDoc comments within the codebase. This should be done by GitHub Actions.
+
+There are some additional scripts that you likely won't encounter during normal development of the Backend, but are documented here for posterity.
+
+* `contributors:add`: Uses `all-contributors` to add a new contributor to the README.md
+
+* `test_search`: Uses the `./scripts/tools/search.js` to run the different search methods against a pre-set amount of data, and return the scores.
+
+* `migrations`: This is used by `@database/pg-migrations` to run the SQL scripts found in `./src/dev-runner/migrations/001-initial-migration.sql` to populate the local database when in use by certain scripts mentioned above.
+
+
+## Development with a Local Database
+
+To make development as easy as possible, and to ensure everyone can properly test there code, the ability for a local database to be automatically spun up is now included in the Backend Server.
+
+This means that if you run any of the following scripts it will assume you have the ability to run a local database.
+
+* `test:integration`
+* `start:dev`
+
+The ability to spin up this local database means that your system must have docker installed. Then using docker the Backend Server will automatically start up a development database and insert data into it. This means you can safely delete any data, or otherwise test as if working on the production database.
+
+To check what data you should expect to be able to find within the database view the [Migration Script](/src/dev-runner/migrations/0001-initial-migration.sql).
+
+If you experience any issues using this new feature, please feel free to open an issue.
 
 ## Documentation
 
