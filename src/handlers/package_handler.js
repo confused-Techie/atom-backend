@@ -241,8 +241,16 @@ async function getPackagesSearch(req, res) {
   );
 
   if (!packs.ok) {
-    await common.handleError(req, res, packs);
-    return;
+    if (packs.short == "Not Found") {
+      // Because getting not found from the search, means the users
+      // search just had no matches, we will specially handle this to return
+      // an empty array instead.
+      res.status(200).json([]);
+      logger.httpLog(req, res);
+    } else {
+      await common.handleError(req, res, packs);
+      return;
+    }
   }
 
   let newPacks = await utils.constructPackageObjectShort(packs.content);

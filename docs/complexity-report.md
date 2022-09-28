@@ -1,15 +1,15 @@
-# Complexity report, 9/25/2022
+# Complexity report, 9/26/2022
 
-* Mean per-function logical LOC: 13.935042735042735
+* Mean per-function logical LOC: 13.96923076923077
 * Mean per-function parameter count: 0.6816239316239316
 * Mean per-function cyclomatic complexity: 3.465811965811966
-* Mean per-function Halstead effort: 10919.75580955217
-* Mean per-module maintainability index: 68.87846715997684
+* Mean per-function Halstead effort: 10969.376684745035
+* Mean per-module maintainability index: 68.82237297072035
 * First-order density: 2.9585798816568047%
 * Change cost: 11.242603550295858%
 * Core size: 100%
 
-## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/cache.js
+## /home/runner/work/atom-backend/atom-backend/src/cache.js
 
 * Physical LOC: 28
 * Logical LOC: 3
@@ -19,27 +19,27 @@
 * Maintainability index: 78.8444767459975
 * Dependency count: 1
 
-## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/config.js
+## /home/runner/work/atom-backend/atom-backend/src/config.js
 
-* Physical LOC: 105
+* Physical LOC: 104
 * Logical LOC: 41
 * Mean parameter count: 0
 * Cyclomatic complexity: 22
 * Cyclomatic complexity density: 53.65853658536586%
-* Maintainability index: 43.00116835246302
+* Maintainability index: 42.987004475579404
 * Dependency count: 2
 * Function: **getConfig**
     * Line No.: 17
-    * Physical LOC: 90
+    * Physical LOC: 89
     * Logical LOC: 36
     * Parameter count: 0
     * Cyclomatic complexity: 22
     * Cyclomatic complexity density: 61.111111111111114%
-    * Halstead difficulty: 32.11764705882353
-    * Halstead volume: 2559.506320537093
-    * Halstead effort: 82205.3206478384
+    * Halstead difficulty: 32.620000000000005
+    * Halstead volume: 2538
+    * Halstead effort: 82789.56000000001
 
-## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/debug_utils.js
+## /home/runner/work/atom-backend/atom-backend/src/debug_utils.js
 
 * Physical LOC: 30
 * Logical LOC: 22
@@ -59,7 +59,7 @@
     * Halstead volume: 475.6861996976024
     * Halstead effort: 8970.082622869073
 
-## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/error.js
+## /home/runner/work/atom-backend/atom-backend/src/error.js
 
 * Physical LOC: 114
 * Logical LOC: 33
@@ -149,7 +149,7 @@
     * Halstead volume: 48.43204266092217
     * Halstead effort: 110.70181179639353
 
-## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/logger.js
+## /home/runner/work/atom-backend/atom-backend/src/logger.js
 
 * Physical LOC: 93
 * Logical LOC: 25
@@ -209,14 +209,14 @@
     * Halstead volume: 19.651484454403228
     * Halstead effort: 29.47722668160484
 
-## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/query.js
+## /home/runner/work/atom-backend/atom-backend/src/query.js
 
-* Physical LOC: 206
-* Logical LOC: 77
+* Physical LOC: 211
+* Logical LOC: 81
 * Mean parameter count: 1.1111111111111112
 * Cyclomatic complexity: 24
-* Cyclomatic complexity density: 31.16883116883117%
-* Maintainability index: 67.72317332784459
+* Cyclomatic complexity density: 29.629629629629626%
+* Maintainability index: 67.00811274439386
 * Dependency count: 0
 * Function: **page**
     * Line No.: 18
@@ -260,16 +260,16 @@
     * Halstead effort: 1455.2670977288954
 * Function: **engine**
     * Line No.: 119
-    * Physical LOC: 19
-    * Logical LOC: 5
+    * Physical LOC: 24
+    * Logical LOC: 9
     * Parameter count: 1
     * Cyclomatic complexity: 4
-    * Cyclomatic complexity density: 80%
-    * Halstead difficulty: 9.5
-    * Halstead volume: 160.5395382709427
-    * Halstead effort: 1525.1256135739557
+    * Cyclomatic complexity density: 44.44444444444444%
+    * Halstead difficulty: 11.454545454545455
+    * Halstead volume: 180.94247824228052
+    * Halstead effort: 2072.613841684304
 * Function: **repo**
-    * Line No.: 145
+    * Line No.: 150
     * Physical LOC: 17
     * Logical LOC: 5
     * Parameter count: 1
@@ -279,7 +279,7 @@
     * Halstead volume: 129.65784284662087
     * Halstead effort: 1037.262742772967
 * Function: **tag**
-    * Line No.: 169
+    * Line No.: 174
     * Physical LOC: 5
     * Logical LOC: 2
     * Parameter count: 1
@@ -289,7 +289,7 @@
     * Halstead volume: 57.359400011538504
     * Halstead effort: 258.1173000519233
 * Function: **rename**
-    * Line No.: 182
+    * Line No.: 187
     * Physical LOC: 16
     * Logical LOC: 10
     * Parameter count: 1
@@ -299,7 +299,7 @@
     * Halstead volume: 165.66917302429982
     * Halstead effort: 1144.6233772587989
 * Function: **pathTraversalAttempt**
-    * Line No.: 207
+    * Line No.: 212
     * Physical LOC: 15
     * Logical LOC: 6
     * Parameter count: 1
@@ -309,7 +309,7 @@
     * Halstead volume: 162.53496664211536
     * Halstead effort: 1425.3066305539346
 
-## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/search.js
+## /home/runner/work/atom-backend/atom-backend/src/search.js
 
 * Physical LOC: 176
 * Logical LOC: 73
@@ -379,7 +379,7 @@
     * Halstead volume: 380.3296723500879
     * Halstead effort: 12318.455498894515
 
-## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/scripts/tools/genBadges.js
+## /home/runner/work/atom-backend/atom-backend/scripts/tools/genBadges.js
 
 * Physical LOC: 90
 * Logical LOC: 50
@@ -429,7 +429,7 @@
     * Halstead volume: 91.37651812938249
     * Halstead effort: 186.9065143555551
 
-## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/dev-runner/database.js
+## /home/runner/work/atom-backend/atom-backend/src/dev-runner/database.js
 
 * Physical LOC: 1
 * Logical LOC: 0
@@ -439,7 +439,7 @@
 * Maintainability index: 100
 * Dependency count: 0
 
-## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/tests/collection.test.js
+## /home/runner/work/atom-backend/atom-backend/src/tests/collection.test.js
 
 * Physical LOC: 16
 * Logical LOC: 8
@@ -449,7 +449,7 @@
 * Maintainability index: 67.2376785271678
 * Dependency count: 1
 
-## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/tests/debug_utils.test.js
+## /home/runner/work/atom-backend/atom-backend/src/tests/debug_utils.test.js
 
 * Physical LOC: 16
 * Logical LOC: 2
@@ -459,7 +459,7 @@
 * Maintainability index: 86.03073855173344
 * Dependency count: 1
 
-## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/tests/logger.test.js
+## /home/runner/work/atom-backend/atom-backend/src/tests/logger.test.js
 
 * Physical LOC: 39
 * Logical LOC: 4
@@ -469,7 +469,7 @@
 * Maintainability index: 76.39879935103494
 * Dependency count: 1
 
-## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/tests/query.test.js
+## /home/runner/work/atom-backend/atom-backend/src/tests/query.test.js
 
 * Physical LOC: 118
 * Logical LOC: 77

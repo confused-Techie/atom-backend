@@ -4,19 +4,20 @@
   "description": "The Pulsar API Backend for the Community fork of Atom.",
   "main": "src/server.js",
   "engines": {
-    "node": ">= 10.7.0 < 14.15.0"
+    "node": ">= 10.7.0 < 16.16.0"
   },
   "scripts": {
     "start": "node ./src/server.js",
-    "test": "set NODE_ENV=test&& set PULSAR_STATUS=dev&& jest",
-    "dev": "set PULSAR_STATUS=dev&& node ./src/server.js",
-    "gen-badge": "echo 'This is no longer needed, after Coveralls Integration. Running anyway...' && node ./scripts/tools/genBadges.js",
+    "test:unit": "set NODE_ENV=test&& set PULSAR_STATUS=dev&& jest ./src/tests/",
+    "test:integration": "set NODE_ENV=test&& set PULSAR_STATUS=dev&& jest ./src/tests_integration/",
+    "start:dev": "set PULSAR_STATUS=dev&& node ./src/dev_server.js",
     "api-docs": "quick-webserver-docs -i ./src/main.js -o ./docs/api.md",
     "lint": "prettier --check -u -w .",
     "complex": "cr --newmi --config .complexrc .",
     "js-docs": "jsdoc2md ./src/*.js ./src/handlers/*.js > ./docs/JavaScript.md",
     "contributors:add": "all-contributors add",
-    "test_search": "node ./scripts/tools/search.js"
+    "test_search": "node ./scripts/tools/search.js",
+    "migrations": "pg-migrations apply --directory ./src/dev-runner/migrations"
   },
   "author": "confused-Techie",
   "license": "MIT",
@@ -27,6 +28,18 @@
       "text",
       "lcovonly"
     ]
+  },
+  "globals": {
+    "jest": "readonly"
+  },
+  "pg": {
+    "test": {
+      "migrationsScript": [
+        "npm",
+        "run",
+        "migrations"
+      ]
+    }
   },
   "dependencies": {
     "@confused-techie/watchyourlanguage": "^1.0.0",
@@ -39,6 +52,8 @@
   },
   "devDependencies": {
     "@confused-techie/quick-webserver-docs": "^0.1.6",
+    "@databases/pg-migrations": "^5.0.1",
+    "@databases/pg-test": "^3.1.2",
     "all-contributors-cli": "^6.20.0",
     "complexity-report": "^2.0.0-alpha",
     "jest": "^28.1.2",

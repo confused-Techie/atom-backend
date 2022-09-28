@@ -31,17 +31,26 @@ let sql_storage; // SQL object, to interact with the DB.
  * @returns {object} PostgreSQL connection object.
  */
 function setupSQL() {
-  return postgres({
-    host: DB_HOST,
-    username: DB_USER,
-    password: DB_PASS,
-    database: DB_DB,
-    port: DB_PORT,
-    ssl: {
-      rejectUnauthorized: true,
-      ca: fs.readFileSync(DB_SSL_CERT).toString(),
-    },
-  });
+  if (process.env.PULSAR_STATUS == "dev") {
+    return postgres({
+      host: DB_HOST,
+      username: DB_USER,
+      database: DB_DB,
+      port: DB_PORT,
+    });
+  } else {
+    return postgres({
+      host: DB_HOST,
+      username: DB_USER,
+      password: DB_PASS,
+      database: DB_DB,
+      port: DB_PORT,
+      ssl: {
+        rejectUnauthorized: true,
+        ca: fs.readFileSync(DB_SSL_CERT).toString(),
+      },
+    });
+  }
 }
 
 /**
@@ -1015,40 +1024,35 @@ async function getSortedPackages(page, dir, method) {
   }
 }
 
-if (process.env.PULSAR_STATUS == "dev") {
-  const devRunner = require("./dev-runner/database.js");
-  module.exports = devRunner;
-} else {
-  module.exports = {
-    shutdownSQL,
-    insertNewPackage,
-    getPackageByID,
-    getPackageByName,
-    getPackageCollectionByName,
-    getPackageCollectionByID,
-    updatePackageByID,
-    updatePackageByName,
-    removePackageByName,
-    removePackageByID,
-    getFeaturedPackages,
-    getTotalPackageEstimate,
-    getSortedPackages,
-    getUserByName,
-    getUserByID,
-    verifyAuth,
-    getStarredPointersByUserID,
-    getStarredPointersByUserName,
-    getStarringUsersByPointer,
-    getPointerTable,
-    getUserCollectionById,
-    getPackageVersionByNameAndVersion,
-    updatePackageIncrementDownloadByName,
-    updatePackageDecrementDownloadByName,
-    updatePackageIncrementStarByName,
-    updatePackageDecrementStarByName,
-    getFeaturedThemes,
-    simpleSearch,
-    updateStars,
-    updateDeleteStar,
-  };
-}
+module.exports = {
+  shutdownSQL,
+  insertNewPackage,
+  getPackageByID,
+  getPackageByName,
+  getPackageCollectionByName,
+  getPackageCollectionByID,
+  updatePackageByID,
+  updatePackageByName,
+  removePackageByName,
+  removePackageByID,
+  getFeaturedPackages,
+  getTotalPackageEstimate,
+  getSortedPackages,
+  getUserByName,
+  getUserByID,
+  verifyAuth,
+  getStarredPointersByUserID,
+  getStarredPointersByUserName,
+  getStarringUsersByPointer,
+  getPointerTable,
+  getUserCollectionById,
+  getPackageVersionByNameAndVersion,
+  updatePackageIncrementDownloadByName,
+  updatePackageDecrementDownloadByName,
+  updatePackageIncrementStarByName,
+  updatePackageDecrementStarByName,
+  getFeaturedThemes,
+  simpleSearch,
+  updateStars,
+  updateDeleteStar,
+};
