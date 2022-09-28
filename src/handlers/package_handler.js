@@ -172,7 +172,9 @@ async function postPackages(req, res) {
   let new_db_pack = await database.getPackageByName(repo, true);
 
   if (new_db_pack.ok) {
-    const package_object_full = await utils.constructPackageObjectFull(new_db_pack.content);
+    const package_object_full = await utils.constructPackageObjectFull(
+      new_db_pack.content
+    );
     res.status(201).json(package_object_full);
   } else {
     common.serverError(req, res, "Cannot retrieve new package from DB");
