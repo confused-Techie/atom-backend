@@ -3,8 +3,7 @@
 name: CI - Pull Unit Tests
 
 on:
-  pull_request:
-    types: [opened]
+  - pull_request
 
 env:
   # Now we need to setup environment variables, for the tests to run
