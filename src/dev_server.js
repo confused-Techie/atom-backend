@@ -7,9 +7,9 @@
  */
 
 /* eslint-disable node/no-unpublished-require
-  * --------
-  * This is the recommended and only way to mock how Jest would use the module.
-*/
+ * --------
+ * This is the recommended and only way to mock how Jest would use the module.
+ */
 const dbSetup = require("../node_modules/@databases/pg-test/jest/globalSetup");
 const dbTeardown = require("../node_modules/@databases/pg-test/jest/globalTeardown");
 /* eslint-enable node/no-unpublished-require */
@@ -39,8 +39,9 @@ async function test() {
   const database = require("./database.js");
   // We can only require these items after we have set our env variables
 
-  logger.warningLog("Pulsar Server is in Development Mode with a Local Database!");
-
+  logger.warningLog(
+    "Pulsar Server is in Development Mode with a Local Database!"
+  );
 
   const serve = app.listen(process.env.PORT, () => {
     logger.infoLog(`Pulsar Server Listening on port ${process.env.PORT}`);

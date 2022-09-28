@@ -4,10 +4,10 @@
 // It will try to avoid expecting exact values, but may rely on test data.
 
 /* eslint-disable node/no-unpublished-require
-  * --------
-  * This is the recommended and only way to mock how Jest would use the module.
-  * For supertest it seems strange this caused an error. But was needed anyway.
-*/
+ * --------
+ * This is the recommended and only way to mock how Jest would use the module.
+ * For supertest it seems strange this caused an error. But was needed anyway.
+ */
 const request = require("supertest");
 
 const dbSetup = require("../../node_modules/@databases/pg-test/jest/globalSetup");
@@ -35,7 +35,9 @@ afterAll(async () => {
   await dbTeardown();
 });
 
-console.log("This is in development, integration tests may not function as expected.");
+console.log(
+  "This is in development, integration tests may not function as expected."
+);
 
 describe("Get /api/packages", () => {
   test("Should respond with an array of packages.", async () => {
