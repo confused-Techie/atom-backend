@@ -196,13 +196,16 @@ async function getPackageByName(name, user = false) {
     //`;
 
     const p_key = user ? "" : "p.pointer,";
-    const v_key = user ? "" : "v.id, v.package,";
+    const v_key = user ? "" : "'id', v.id, 'package', v.package,";
 
     const command = await sql_storage`
       SELECT
         ${p_key} p.name, p.created, p.updated, p.creation_method,
         p.downloads, p.stargazers_count, p.original_stargazers, p.data,
-        JSON_AGG(${v_key} v.status, v.semver, v.license, v.engine, v.meta)
+        JSONB_AGG(JSON_BUILD_OBJECT(
+          ${v_key} 'status', v.status, 'semver', v.semver,
+          'license', v.license, 'engine', v.engine, 'meta', v.meta
+        )) AS versions
       FROM packages p
         JOIN versions v ON p.pointer = v.package
         JOIN names n ON n.pointer = p.pointer
