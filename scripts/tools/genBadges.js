@@ -3,6 +3,9 @@
 // Takes a small config object here and creates an SVG. Super simplistic,
 // and the config is there for hopes the eventuall it does support other options.
 
+// UPDATE!!
+// This script is no longer used. Its usefulness stopped after its ability was transfered over to the coveralls service.
+
 const fs = require("fs");
 
 const config = {

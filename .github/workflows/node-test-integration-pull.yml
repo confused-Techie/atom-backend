@@ -1,27 +1,23 @@
-# Workflow intended to be run only on PR, that runs testing against it
+# Workflow intended to be run only on a PR, that runs integrations tests against it
 
-name: CI - Pull Unit Tests
+name: CI - Pull Integration Tests
 
 on:
   pull_request:
     types: [opened]
 
 env:
-  # Now we need to setup environment variables, for the tests to run
-  # Since its expected that the app.yml exists.
   PORT: 8080
   SEARCHALGORITHM: "lcs"
   SERVERURL: "http://localhost:8080"
   PAGINATE: 30
-  CACHETIME: 600000
+  CACHETIME: 60000
   DEBUGLOG: true
   FILESTORE: "sql"
-  # Only further testing will tell, if this will have to link to a test DB
 
 jobs:
   tests:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [16.x]
@@ -36,4 +32,4 @@ jobs:
       - name: Install Dependencies
         run: npm install
       - name: Run Tests
-        run: npm run test:unit
+        run: npm run test:integration 

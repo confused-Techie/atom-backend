@@ -34,6 +34,9 @@ async function test() {
   const database = require("./database.js");
   // We can only require these items after we have set our env variables
 
+  // Currently this causes database.js to error out.
+  // Error: Client network socket disconnected before secure TLS connection was established.
+  // i need to not try and setup ssl, and disable pw
   logger.warningLog("Pulsar Server is in Development Mode with a Local Database!");
 
   const serve = app.listen(process.env.PORT, () => {
