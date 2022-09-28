@@ -54,38 +54,43 @@ async function localUserLoggedIn(req, res, params_user, callback) {
 /**
  * @async
  * @function constructPackageObjectFull
- * @desc Takes the raw return of a full row from the packages table,
+ * @desc Takes the raw return of a full row from database.getPackageByName() and
  * constructs a standardized package object full from it.
+ * This should be called only on the data provided by database.getPackageByName(),
+ * otherwise the behavior is unexpected.
  */
 async function constructPackageObjectFull(pack) {
   const parseVersions = function (vers) {
     let retVer = {};
 
-    for (let i = 0; i < vers.length; i++) {
-      retVer[vers[i].semver] = vers[i].meta;
-      retVer[vers[i].semver].license = vers[i].license;
-      retVer[vers[i].semver].engine = vers[i].engine;
-      retVer[vers[i].semver].dist = {
-        tarball: `${server_url}/api/packages/${pack.name}/versions/${vers[i].semver}/tarball`,
+    for (let v of vers) {
+      retVer[v.semver] = v.meta;
+      retVer[v.semver].license = v.license;
+      retVer[v.semver].engine = v.engine;
+      retVer[v.semver].dist = {
+        tarball: `${server_url}/api/packages/${pack.name}/versions/${v.semver}/tarball`,
       };
     }
+
     return retVer;
   };
 
   const findLatestVersion = function (vers) {
-    for (let i = 0; i < vers.length; i++) {
-      if (vers[i].status === "latest") {
-        return vers[i].semver;
+    for (const v of vers) {
+      if (v.status === "latest") {
+        return v.semver;
       }
     }
+    return null;
   };
 
   let newPack = pack.data;
+  newPack.name = pack.name;
   newPack.downloads = pack.downloads;
-  newPack.stargazers_count = pack.stargazers_count;
-  newPack.versions = parseVersions(pack.json_agg);
+  newPack.stargazers_count = pack.stargazers_count + pack.original_stargazers;
+  newPack.versions = parseVersions(pack.versions);
   newPack.releases = {
-    latest: findLatestVersion(pack.json_agg),
+    latest: findLatestVersion(pack.versions)
   };
 
   return newPack;

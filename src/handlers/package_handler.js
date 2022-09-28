@@ -166,12 +166,14 @@ async function postPackages(req, res) {
     return;
   }
 
-  // Finally we return what was actually put into the database,
-  // but without database keys which we don't want to expose outside.
-  const new_db_pack = await database.getPackageByName(repo, true);
+  // Finally we can return what was actually put into the database.
+  // Retrieve the data from database.getPackageByName() and
+  // convert it into Package Object Full format.
+  let new_db_pack = await database.getPackageByName(repo, true);
 
   if (new_db_pack.ok) {
-    res.status(201).json(new_db_pack.content);
+    const package_object_full = await utils.constructPackageObjectFull(new_db_pack.content);
+    res.status(201).json(package_object_full);
   } else {
     common.serverError(req, res, "Cannot retrieve new package from DB");
   }

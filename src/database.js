@@ -99,9 +99,8 @@ async function insertNewPackage(pack) {
 
       // Populate names table
       command = await sql_storage`
-      INSERT INTO names
-      (name, pointer) VALUES
-      (${pack.name}, ${pointer});
+      INSERT INTO names (name, pointer)
+      VALUES (${pack.name}, ${pointer});
     `;
 
       if (command.count === 0) {
@@ -177,10 +176,14 @@ async function getPackageByID(id) {
 /**
  * @function getPackageByName
  * @desc Takes a package name and returns the raw SQL package with all its versions.
+ * This module is also used to get the data to be sent to utils.constructPackageObjectFull()
+ * in order to convert the query result in Package Object Full format.
+ * In that case it's recommended to set the user flag as true for security reasons.
  * @param {string} name - The name of the package.
  * @param {bool} user - Whether the packages has to be exposed outside or not.
- * If true, all sensitive data like primary and foreign keys are not selected
- * because they are intended to be used only internally.
+ * If true, all sensitive data like primary and foreign keys are not selected.
+ * Even if the keys are ignored by utils.constructPackageObjectFull(), it's still
+ * safe to not inclue them in case, by mistake, we publish the return of this module.
  */
 async function getPackageByName(name, user = false) {
   try {
