@@ -29,7 +29,6 @@ beforeAll(async () => {
   process.env.DB_PORT = db_url_parsed[4];
 
   app = require("../main.js");
-
 });
 
 afterAll(async () => {

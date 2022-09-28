@@ -36,7 +36,7 @@ function setupSQL() {
       host: DB_HOST,
       username: DB_USER,
       database: DB_DB,
-      port: DB_PORT
+      port: DB_PORT,
     });
   } else {
     return postgres({

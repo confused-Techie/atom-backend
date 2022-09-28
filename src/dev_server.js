@@ -41,6 +41,7 @@ async function test() {
 
   logger.warningLog("Pulsar Server is in Development Mode with a Local Database!");
 
+
   const serve = app.listen(process.env.PORT, () => {
     logger.infoLog(`Pulsar Server Listening on port ${process.env.PORT}`);
   });
@@ -52,7 +53,6 @@ async function test() {
   process.on("SIGINT", async () => {
     await localExterminate("SIGINT", serve, database);
   });
-
 }
 
 /**
