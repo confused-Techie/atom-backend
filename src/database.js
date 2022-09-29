@@ -99,9 +99,8 @@ async function insertNewPackage(pack) {
 
       // Populate names table
       command = await sql_storage`
-      INSERT INTO names
-      (name, pointer) VALUES
-      (${pack.name}, ${pointer});
+      INSERT INTO names (name, pointer)
+      VALUES (${pack.name}, ${pointer});
     `;
 
       if (command.count === 0) {
@@ -137,7 +136,7 @@ async function insertNewPackage(pack) {
       `;
 
         if (command[0].id === undefined) {
-          throw `Cannot insert ${ver} version for ${p.name} package in versions table`;
+          throw `Cannot insert ${ver} version for ${pack.name} package in versions table`;
         }
       }
 
@@ -176,11 +175,17 @@ async function getPackageByID(id) {
 
 /**
  * @function getPackageByName
- * @desc Takes a package name, and returns the raw SQL package data within a Server Status Object.
- * The second parameter details boolean, indicates the type of package object to return.
- * Either a short, or full.
+ * @desc Takes a package name and returns the raw SQL package with all its versions.
+ * This module is also used to get the data to be sent to utils.constructPackageObjectFull()
+ * in order to convert the query result in Package Object Full format.
+ * In that case it's recommended to set the user flag as true for security reasons.
+ * @param {string} name - The name of the package.
+ * @param {bool} user - Whether the packages has to be exposed outside or not.
+ * If true, all sensitive data like primary and foreign keys are not selected.
+ * Even if the keys are ignored by utils.constructPackageObjectFull(), it's still
+ * safe to not inclue them in case, by mistake, we publish the return of this module.
  */
-async function getPackageByName(name) {
+async function getPackageByName(name, user = false) {
   try {
     sql_storage ??= setupSQL();
 
@@ -192,11 +197,24 @@ async function getPackageByName(name) {
     //  )
     //  GROUP BY p.pointer, v.package;
     //`;
+
     const command = await sql_storage`
-      SELECT p.*, JSON_AGG(v.*)
+      SELECT
+        ${
+          user ? sql_storage`` : sql_storage`p.pointer,`
+        } p.name, p.created, p.updated, p.creation_method,
+        p.downloads, p.stargazers_count, p.original_stargazers, p.data,
+        JSONB_AGG(JSON_BUILD_OBJECT(
+          ${
+            user
+              ? sql_storage``
+              : sql_storage`'id', v.id, 'package', v.package,`
+          } 'status', v.status, 'semver', v.semver,
+          'license', v.license, 'engine', v.engine, 'meta', v.meta
+        )) AS versions
       FROM packages p
-      JOIN versions v ON p.pointer = v.package
-      JOIN names n ON n.pointer = p.pointer
+        JOIN versions v ON p.pointer = v.package
+        JOIN names n ON n.pointer = p.pointer
       WHERE n.name = ${name}
       GROUP BY p.pointer, v.package;
     `;
@@ -225,7 +243,7 @@ async function getPackageVersionByNameAndVersion(name, version) {
         FROM names
         WHERE name = ${name}
       )
-      AND semver = ${version}
+      AND semver = ${version};
     `;
 
     return command.count !== 0
@@ -323,7 +341,7 @@ async function updatePackageIncrementStarByName(name) {
         SELECT pointer
         FROM names
         WHERE name = ${name}
-      )
+      );
     `;
 
     return command.count !== 0
@@ -349,7 +367,7 @@ async function updatePackageDecrementStarByName(name) {
         SELECT pointer
         FROM names
         WHERE name = ${name}
-      )
+      );
     `;
 
     return command.count !== 0
@@ -375,7 +393,7 @@ async function updatePackageIncrementDownloadByName(name) {
         SELECT pointer
         FROM names
         WHERE name = ${name}
-      )
+      );
     `;
 
     return command.count !== 0
@@ -401,7 +419,7 @@ async function updatePackageDecrementDownloadByName(name) {
         SELECT pointer
         FROM names
         WHERE name = ${name}
-      )
+      );
     `;
 
     return command.count !== 0
@@ -527,7 +545,7 @@ async function removePackageByID(id) {
     const command = await sql_storage`
       UPDATE versions
       SET status = "removed"
-      WHERE package = id
+      WHERE package = id;
     `;
 
     return command.count !== 0
@@ -694,7 +712,7 @@ async function updateStars(user, pack) {
 
     const command_pointer = await sql_storage`
       SELECT pointer FROM names
-      WHERE name = ${pack}
+      WHERE name = ${pack};
     `;
 
     if (command_pointer.count === 0) {
@@ -742,7 +760,7 @@ async function updateDeleteStar(user, pack) {
 
     const command_pointer = await sql_storage`
       SELECT pointer FROM names
-      WHERE name = ${pack}
+      WHERE name = ${pack};
     `;
 
     if (command_pointer.count === 0) {
@@ -766,7 +784,7 @@ async function updateDeleteStar(user, pack) {
         SELECT EXISTS (
           SELECT 1 FROM stars
           WHERE (package = ${command_pointer[0].pointer}) AND (userid = ${user.id})
-        )
+        );
       `;
 
       if (does_exist[0].exists) {
@@ -957,7 +975,7 @@ async function getSortedPackages(page, dir, method) {
   try {
     sql_storage ??= setupSQL();
 
-    let command;
+    let command = null;
 
     switch (method) {
       case "downloads":
@@ -966,7 +984,7 @@ async function getSortedPackages(page, dir, method) {
           ORDER BY downloads
           ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
           LIMIT ${limit}
-          OFFSET ${offset}
+          OFFSET ${offset};
         `;
         break;
       case "created_at":
@@ -975,7 +993,7 @@ async function getSortedPackages(page, dir, method) {
           ORDER BY created
           ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
           LIMIT ${limit}
-          OFFSET ${offset}
+          OFFSET ${offset};
         `;
         break;
       case "updated_at":
@@ -984,7 +1002,7 @@ async function getSortedPackages(page, dir, method) {
           ORDER BY updated
           ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
           LIMIT ${limit}
-          OFFSET ${offset}
+          OFFSET ${offset};
         `;
         break;
       case "stars":
@@ -993,7 +1011,7 @@ async function getSortedPackages(page, dir, method) {
           ORDER BY stargazers_count
           ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
           LIMIT ${limit}
-          OFFSET ${offset}
+          OFFSET ${offset};
         `;
         break;
       default:

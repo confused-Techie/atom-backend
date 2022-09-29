@@ -16,7 +16,8 @@ const yaml = require("js-yaml");
  */
 function getConfig() {
   try {
-    let data;
+    let data = null;
+
     try {
       let fileContent = fs.readFileSync("./app.yaml", "utf8");
       data = yaml.load(fileContent);
