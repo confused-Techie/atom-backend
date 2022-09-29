@@ -87,4 +87,5 @@ VALUES (
 );
 
 INSERT INTO users (username, token, avatar)
-VALUES ('dever', 'valid-token', 'https://roadtonowhere.com');
+VALUES ('dever', 'valid-token', 'https://roadtonowhere.com'),
+('misc_test_user', 'no-valid-token', 'https://roadtonowhere.com');
