@@ -71,6 +71,8 @@ describe("Verify 'Query' Query Returns", () => {
 const engine_cases = [
   [{ query: { engine: "0.1.2" } }, "0.1.2"],
   [{ query: { engine: "JustText" } }, false], // should return false to indicate that no check is needed.
+  [{ query: { engine: undefined } }, false],
+  ["2.5.6", "2.5.6"],
 ];
 
 describe("Verify Engine Query Returns", () => {
