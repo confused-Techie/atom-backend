@@ -5,7 +5,6 @@
  */
 
 const search_func = require("./search.js");
-const logger = require("./logger.js");
 const { search_algorithm } = require("./config.js").getConfig();
 
 async function searchWithinPackages(
