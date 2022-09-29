@@ -18,11 +18,11 @@ describe("Test lengths Returned by different Variables", () => {
       {
         obj: {
           boolean: false,
-          value: "H"
-        }
+          value: "H",
+        },
       },
       6,
-    ]
+    ],
   ];
 
   test.each(object_cases)("Given %o Returns %p", (arg, expectedResult) => {

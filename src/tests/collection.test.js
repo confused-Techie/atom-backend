@@ -7,16 +7,16 @@ describe("engineFilter returns version expected.", () => {
         "2.0.0": {
           version: "2.0.0",
           engines: {
-            atom: ">1.0.0 <2.0.0"
-          }
+            atom: ">1.0.0 <2.0.0",
+          },
         },
         "1.9.9": {
           version: "1.9.9",
           engines: {
-            atom: ">1.0.0 <2.0.0"
-          }
-        }
-      }
+            atom: ">1.0.0 <2.0.0",
+          },
+        },
+      },
     };
 
     let engine = "1.5.0";
@@ -31,16 +31,16 @@ describe("engineFilter returns version expected.", () => {
         "2.0.0": {
           version: "2.0.0",
           engines: {
-            atom: ">=1.5.0 <2.0.0"
-          }
+            atom: ">=1.5.0 <2.0.0",
+          },
         },
         "1.9.9": {
           version: "1.9.9",
           engines: {
-            atom: ">1.0.0 <=1.4.9"
-          }
-        }
-      }
+            atom: ">1.0.0 <=1.4.9",
+          },
+        },
+      },
     };
 
     let engine = "1.4.9";
@@ -55,16 +55,16 @@ describe("engineFilter returns version expected.", () => {
         "2.0.0": {
           version: "2.0.0",
           engines: {
-            atom: ">=1.2.3 <2.0.0"
-          }
+            atom: ">=1.2.3 <2.0.0",
+          },
         },
         "1.0.0": {
           version: "1.0.0",
           engines: {
-            atom: ">1.0.0 <1.2.3"
-          }
-        }
-      }
+            atom: ">1.0.0 <1.2.3",
+          },
+        },
+      },
     };
 
     let engine = "1.2.3";
@@ -72,5 +72,4 @@ describe("engineFilter returns version expected.", () => {
     let res = await collection.engineFilter(pack, engine);
     expect(res.metadata.version == "2.0.0");
   });
-
 });
