@@ -4,7 +4,7 @@ name: CI - Documentation
 
 on:
   workflow_run:
-    workflows: [ "CI - Tests" ]
+    workflows: [ "CI - Unit Tests" ]
     types:
       - completed
   # Using this to prevent simulatinious runs, outdating local git cache.
