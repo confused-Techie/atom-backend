@@ -200,10 +200,16 @@ async function getPackageByName(name, user = false) {
 
     const command = await sql_storage`
       SELECT
-        ${user ? sql_storage`` : sql_storage`p.pointer,`} p.name, p.created, p.updated, p.creation_method,
+        ${
+          user ? sql_storage`` : sql_storage`p.pointer,`
+        } p.name, p.created, p.updated, p.creation_method,
         p.downloads, p.stargazers_count, p.original_stargazers, p.data,
         JSONB_AGG(JSON_BUILD_OBJECT(
-          ${user ? sql_storage`` : sql_storage`'id', v.id, 'package', v.package,`} 'status', v.status, 'semver', v.semver,
+          ${
+            user
+              ? sql_storage``
+              : sql_storage`'id', v.id, 'package', v.package,`
+          } 'status', v.status, 'semver', v.semver,
           'license', v.license, 'engine', v.engine, 'meta', v.meta
         )) AS versions
       FROM packages p
