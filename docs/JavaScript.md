@@ -23,6 +23,12 @@ with and retreive data from the cloud hosted database instance.</p>
 to better assist in tracking down bugs. Since many sets of data cannot be reliably output to the console
 this can help to view the transmutations of data as its handled.</p>
 </dd>
+<dt><a href="#module_dev_server">dev_server</a></dt>
+<dd><p>The Development initializer of <code>main.js</code> as well as managing the startup of a locally created Docker SQL
+Server. This uses pg-test to set up a database hosted on local Docker. Migrating all data as needed,
+to allow the real server feel, without having access or the risk of the production database. But otherwise runs
+the backend API server as normal.</p>
+</dd>
 <dt><a href="#module_error">error</a></dt>
 <dd><p>Contains different error messages that can be returned, adding them and their
 respective HTTP Status Codes to the <code>Response</code> object provided to them.
@@ -196,13 +202,16 @@ a Server Status Object.
 
 ### database~getPackageByName(name, user)
 Takes a package name and returns the raw SQL package with all its versions.
+This module is also used to get the data to be sent to utils.constructPackageObjectFull()
+in order to convert the query result in Package Object Full format.
+In that case it's recommended to set the user flag as true for security reasons.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the package. |
-| user | <code>bool</code> | Whether the packages has to be exposed outside or not. If true, all sensitive data like primary and foreign keys are not selected because they are intended to be used only internally. |
+| user | <code>bool</code> | Whether the packages has to be exposed outside or not. If true, all sensitive data like primary and foreign keys are not selected. Even if the keys are ignored by utils.constructPackageObjectFull(), it's still safe to not inclue them in case, by mistake, we publish the return of this module. |
 
 <a name="module_database..getPackageCollectionByName"></a>
 
@@ -275,6 +284,38 @@ to help determine how an object changes over time.
 | Param | Type | Description |
 | --- | --- | --- |
 | obj | <code>object</code> | The Object to inspect. |
+
+<a name="module_dev_server"></a>
+
+## dev\_server
+The Development initializer of `main.js` as well as managing the startup of a locally created Docker SQL
+Server. This uses pg-test to set up a database hosted on local Docker. Migrating all data as needed,
+to allow the real server feel, without having access or the risk of the production database. But otherwise runs
+the backend API server as normal.
+
+
+* [dev_server](#module_dev_server)
+    * [~dbSetup](#module_dev_server..dbSetup)
+    * [~localExterminate(callee, serve, db)](#module_dev_server..localExterminate)
+
+<a name="module_dev_server..dbSetup"></a>
+
+### dev_server~dbSetup
+This is the recommended and only way to mock how Jest would use the module.
+
+**Kind**: inner constant of [<code>dev\_server</code>](#module_dev_server)  
+<a name="module_dev_server..localExterminate"></a>
+
+### dev_server~localExterminate(callee, serve, db)
+Similar to `server.js` exterminate(), except used for the `dev_server.js` instance.
+
+**Kind**: inner method of [<code>dev\_server</code>](#module_dev_server)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| callee | <code>string</code> | Simply a way to better log what called the server to shutdown. |
+| serve | <code>object</code> | The instance of the ExpressJS `app` that has started listening and can be called to shutdown. |
+| db | <code>object</code> | The instance of the `database.js` module, used to properly close its connections during a graceful shutdown. |
 
 <a name="module_error"></a>
 
@@ -978,8 +1019,10 @@ function passing the Server Status Object, where content is User.
 <a name="module_utils..constructPackageObjectFull"></a>
 
 ### utils~constructPackageObjectFull()
-Takes the raw return of a full row from the packages table,
+Takes the raw return of a full row from database.getPackageByName() and
 constructs a standardized package object full from it.
+This should be called only on the data provided by database.getPackageByName(),
+otherwise the behavior is unexpected.
 
 **Kind**: inner method of [<code>utils</code>](#module_utils)  
 <a name="module_utils..constructPackageObjectShort"></a>
