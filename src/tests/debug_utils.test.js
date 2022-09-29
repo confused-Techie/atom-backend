@@ -8,6 +8,21 @@ describe("Test lengths Returned by different Variables", () => {
       },
       22,
     ],
+    [
+      {
+        boolean: true,
+      },
+      4,
+    ],
+    [
+      {
+        obj: {
+          boolean: false,
+          value: "H"
+        }
+      },
+      6,
+    ]
   ];
 
   test.each(object_cases)("Given %o Returns %p", (arg, expectedResult) => {

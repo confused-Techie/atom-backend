@@ -85,3 +85,6 @@ VALUES (
   4, 'd27dbd37-e58e-4e02-b804-9e3e6ae02fb1', 'latest', '0.11.9', 'MIT', '{"atom": "*", "node": "*"}',
   '{"name": "language-cpp", "description": "C++ Support in Atom", "keywords": ["tree-sitter"]}'
 );
+
+INSERT INTO users (username, token, avatar)
+VALUES ('dever', 'valid-token', 'https://roadtonowhere.com');
