@@ -21,7 +21,7 @@ async function test() {
   let db_url = process.env.DATABASE_URL;
   // this gives us something like postgres://test-user@localhost:5432/test-db
   // We then need to map these values to where the API server expects,
-  let db_url_reg = /postgres:\/\/([^@\s]+)@([^:\s]+):(\d+)\/([^\/\s]+)/;
+  let db_url_reg = /postgres:\/\/([\/\S]+)@([\/\S]+):(\d+)\/([\/\S]+)/;
   let db_url_parsed = db_url_reg.exec(db_url);
 
   // set the parsed URL as proper env
