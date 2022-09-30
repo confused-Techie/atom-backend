@@ -18,7 +18,7 @@ const query = require("../query.js");
 const git = require("../git.js");
 const logger = require("../logger.js");
 const error = require("../error.js");
-const { server_url, paginated_amount } = require("../config.js").getConfig();
+const { server_url } = require("../config.js").getConfig();
 const utils = require("../utils.js");
 const database = require("../database.js");
 
