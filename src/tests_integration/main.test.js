@@ -20,7 +20,7 @@ beforeAll(async () => {
   await dbSetup();
 
   let db_url = process.env.DATABASE_URL;
-  let db_url_reg = /postgres:\/\/([^@\s]+)@([^:\s]+):(\d+)\/([^\/\s]+)/;
+  let db_url_reg = /postgres:\/\/([^\s]+)@([^\s]+):(\d+)\/([^\s]+)/;
   let db_url_parsed = db_url_reg.exec(db_url);
 
   process.env.DB_HOST = db_url_parsed[2];
