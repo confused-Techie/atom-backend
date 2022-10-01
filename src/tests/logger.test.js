@@ -59,10 +59,10 @@ describe("warningLog Call", () => {
         start: "0",
         method: "GET",
         url: "https://dev.com",
-        protocol: "HTTP"
+        protocol: "HTTP",
       },
       {
-        statusCode: "200"
+        statusCode: "200",
       },
       "No real error. Just test."
     );

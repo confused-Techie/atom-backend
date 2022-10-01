@@ -13,5 +13,5 @@ describe("isPackageNameBanned Tests", () => {
     let name = "innocent-name";
     let isBanned = await utils.isPackageNameBanned(name);
     expect(isBanned).toBeFalsy();
-  })
+  });
 });
