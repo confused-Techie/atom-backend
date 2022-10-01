@@ -1,6 +1,6 @@
 /**
  * @module utils
- * @desc A helper for any functions that are agnostic in hanlders.
+ * @desc A helper for any functions that are agnostic in handlers.
  */
 const logger = require("./logger.js");
 const common = require("./handlers/common_handler.js");
@@ -8,6 +8,15 @@ const database = require("./database.js");
 const storage = require("./storage.js");
 const { server_url } = require("./config.js").getConfig();
 
+/**
+ * @async
+ * @function isPackageNameBanned
+ * @desc This uses the `storage.js` to retreive a banlist. And then simply
+ * iterates through the banList array, until it finds a match to the name
+ * it was given. If no match is found then it returns false.
+ * @param {string} name - The name of the package to check if it is banned.
+ * @returns {boolean} Returns true if the given name is banned. False otherwise.
+ */
 async function isPackageNameBanned(name) {
   let names = await storage.getBanList();
 
@@ -30,34 +39,16 @@ async function isPackageNameBanned(name) {
 
 /**
  * @async
- * @function localUserLoggedIn
- * @desc Used as a less verbose way to check if the current user token, is associated
- * with a logged in user. If not handles errors automatically, if so calls the callback
- * function passing the Server Status Object, where content is User.
- * @param {object} req -
- * @param {object} res -
- * @param {string} params_user - Usually `params.auth` or otherwise the authorization
- * token within the header field.
- * @param {function} callback - The callback to invoke only if the user is properly authenticated.
- */
-async function localUserLoggedIn(req, res, params_user, callback) {
-  let user = await database.verifyAuth(params_user);
-
-  if (!user.ok) {
-    await common.authFail(req, res, user);
-    return;
-  }
-
-  callback(user);
-}
-
-/**
- * @async
  * @function constructPackageObjectFull
  * @desc Takes the raw return of a full row from database.getPackageByName() and
  * constructs a standardized package object full from it.
  * This should be called only on the data provided by database.getPackageByName(),
  * otherwise the behavior is unexpected.
+ * @param {object} pack - The anticipated raw SQL return that contains all data
+ * to construct a Package Object Full.
+ * @returns {object} A properly formatted and converted Package Object Full.
+ * @see {@link https://github.com/confused-Techie/atom-backend/blob/main/docs/returns.md#package-object-full}
+ * @see {@link https://github.com/confused-Techie/atom-backend/blob/main/docs/queries.md#retrieve-single-package--package-object-full}
  */
 async function constructPackageObjectFull(pack) {
   const parseVersions = function (vers) {
@@ -101,6 +92,11 @@ async function constructPackageObjectFull(pack) {
  * @function constructPackageObjectShort
  * @desc Takes a single or array of rows from the db, and returns a JSON
  * construction of package object shorts
+ * @param {object} pack - The anticipated raw SQL return that contains all data
+ * to construct a Package Object Short.
+ * @returns {object} A properly formatted and converted Package Object Short.
+ * @see {@link https://github.com/confused-Techie/atom-backend/blob/main/docs/returns.md#package-object-short}
+ * @see {@link https://github.com/confused-Techie/atom-backend/blob/main/docs/queries.md#retrieve-many-sorted-packages--package-object-short}
  */
 async function constructPackageObjectShort(pack) {
   if (Array.isArray(pack)) {
@@ -135,6 +131,9 @@ async function constructPackageObjectShort(pack) {
  * @desc Takes the return of getPackageVersionByNameAndVersion and returns
  * a recreation of the package.json with a modified dist.tarball key, poionting
  * to this server for download.
+ * @param {object} pack - The expected raw SQL return of `getPackageVersionByNameAndVersion`
+ * @returns {object} A properly formatted Package Object Mini.
+ * @see {@link https://github.com/confused-Techie/atom-backend/blob/main/docs/returns.md#package-object-mini}
  */
 async function constructPackageObjectJSON(pack) {
   if (!Array.isArray(pack)) {
@@ -159,7 +158,7 @@ async function constructPackageObjectJSON(pack) {
  * may still be useful in the future. So has been moved from collection.js to utils.js
  * Just in case it is needed again.
  * @param {object} obj - The Object to Deep Copy.
- * @return {object} A Deep Copy of the original object, that should share zero references to the original.
+ * @returns {object} A Deep Copy of the original object, that should share zero references to the original.
  */
 async function deepCopy(obj) {
   console.warn(`collection.deepCopy is depreciated! ${deepCopy.caller}`);

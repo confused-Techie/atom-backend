@@ -16,6 +16,10 @@
 
 ### Developers please read through this whole document again, as it documents large changes in how to contribute.
 
+To read through an overview and find links for contributors take a look at [the Documentation](/docs/index.md)
+
+---
+
 Please note that there should be two versions of this repo.
 
 * [`pulsar-edit/package-backend`](https://github.com/pulsar-edit/package-backend)
