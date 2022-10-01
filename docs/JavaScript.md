@@ -64,7 +64,7 @@ in which this provides static access to files stored within regular cloud
 file storage. Specifically intended for use with Google Cloud Storage.</p>
 </dd>
 <dt><a href="#module_utils">utils</a></dt>
-<dd><p>A helper for any functions that are agnostic in hanlders.</p>
+<dd><p>A helper for any functions that are agnostic in handlers.</p>
 </dd>
 <dt><a href="#module_common_handler">common_handler</a></dt>
 <dd><p>Provides a simplistic way to refer to implement common endpoint returns.
@@ -990,56 +990,83 @@ Used to retreive Google Cloud Storage Object for featured themes.
 <a name="module_utils"></a>
 
 ## utils
-A helper for any functions that are agnostic in hanlders.
+A helper for any functions that are agnostic in handlers.
 
 
 * [utils](#module_utils)
-    * [~localUserLoggedIn(req, res, params_user, callback)](#module_utils..localUserLoggedIn)
-    * [~constructPackageObjectFull()](#module_utils..constructPackageObjectFull)
-    * [~constructPackageObjectShort()](#module_utils..constructPackageObjectShort)
-    * [~constructPackageObjectJSON()](#module_utils..constructPackageObjectJSON)
+    * [~isPackageNameBanned(name)](#module_utils..isPackageNameBanned) ⇒ <code>boolean</code>
+    * [~constructPackageObjectFull(pack)](#module_utils..constructPackageObjectFull) ⇒ <code>object</code>
+    * [~constructPackageObjectShort(pack)](#module_utils..constructPackageObjectShort) ⇒ <code>object</code>
+    * [~constructPackageObjectJSON(pack)](#module_utils..constructPackageObjectJSON) ⇒ <code>object</code>
     * [~deepCopy(obj)](#module_utils..deepCopy) ⇒ <code>object</code>
 
-<a name="module_utils..localUserLoggedIn"></a>
+<a name="module_utils..isPackageNameBanned"></a>
 
-### utils~localUserLoggedIn(req, res, params_user, callback)
-Used as a less verbose way to check if the current user token, is associated
-with a logged in user. If not handles errors automatically, if so calls the callback
-function passing the Server Status Object, where content is User.
+### utils~isPackageNameBanned(name) ⇒ <code>boolean</code>
+This uses the `storage.js` to retreive a banlist. And then simply
+iterates through the banList array, until it finds a match to the name
+it was given. If no match is found then it returns false.
 
 **Kind**: inner method of [<code>utils</code>](#module_utils)  
+**Returns**: <code>boolean</code> - Returns true if the given name is banned. False otherwise.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| req | <code>object</code> | - |
-| res | <code>object</code> | - |
-| params_user | <code>string</code> | Usually `params.auth` or otherwise the authorization token within the header field. |
-| callback | <code>function</code> | The callback to invoke only if the user is properly authenticated. |
+| name | <code>string</code> | The name of the package to check if it is banned. |
 
 <a name="module_utils..constructPackageObjectFull"></a>
 
-### utils~constructPackageObjectFull()
+### utils~constructPackageObjectFull(pack) ⇒ <code>object</code>
 Takes the raw return of a full row from database.getPackageByName() and
 constructs a standardized package object full from it.
 This should be called only on the data provided by database.getPackageByName(),
 otherwise the behavior is unexpected.
 
 **Kind**: inner method of [<code>utils</code>](#module_utils)  
+**Returns**: <code>object</code> - A properly formatted and converted Package Object Full.  
+**See**
+
+- [https://github.com/confused-Techie/atom-backend/blob/main/docs/returns.md#package-object-full](https://github.com/confused-Techie/atom-backend/blob/main/docs/returns.md#package-object-full)
+- [https://github.com/confused-Techie/atom-backend/blob/main/docs/queries.md#retrieve-single-package--package-object-full](https://github.com/confused-Techie/atom-backend/blob/main/docs/queries.md#retrieve-single-package--package-object-full)
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| pack | <code>object</code> | The anticipated raw SQL return that contains all data to construct a Package Object Full. |
+
 <a name="module_utils..constructPackageObjectShort"></a>
 
-### utils~constructPackageObjectShort()
+### utils~constructPackageObjectShort(pack) ⇒ <code>object</code>
 Takes a single or array of rows from the db, and returns a JSON
 construction of package object shorts
 
 **Kind**: inner method of [<code>utils</code>](#module_utils)  
+**Returns**: <code>object</code> - A properly formatted and converted Package Object Short.  
+**See**
+
+- [https://github.com/confused-Techie/atom-backend/blob/main/docs/returns.md#package-object-short](https://github.com/confused-Techie/atom-backend/blob/main/docs/returns.md#package-object-short)
+- [https://github.com/confused-Techie/atom-backend/blob/main/docs/queries.md#retrieve-many-sorted-packages--package-object-short](https://github.com/confused-Techie/atom-backend/blob/main/docs/queries.md#retrieve-many-sorted-packages--package-object-short)
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| pack | <code>object</code> | The anticipated raw SQL return that contains all data to construct a Package Object Short. |
+
 <a name="module_utils..constructPackageObjectJSON"></a>
 
-### utils~constructPackageObjectJSON()
+### utils~constructPackageObjectJSON(pack) ⇒ <code>object</code>
 Takes the return of getPackageVersionByNameAndVersion and returns
 a recreation of the package.json with a modified dist.tarball key, poionting
 to this server for download.
 
 **Kind**: inner method of [<code>utils</code>](#module_utils)  
+**Returns**: <code>object</code> - A properly formatted Package Object Mini.  
+**See**: [https://github.com/confused-Techie/atom-backend/blob/main/docs/returns.md#package-object-mini](https://github.com/confused-Techie/atom-backend/blob/main/docs/returns.md#package-object-mini)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| pack | <code>object</code> | The expected raw SQL return of `getPackageVersionByNameAndVersion` |
+
 <a name="module_utils..deepCopy"></a>
 
 ### utils~deepCopy(obj) ⇒ <code>object</code>
