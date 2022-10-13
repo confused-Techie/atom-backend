@@ -1,17 +1,33 @@
+jest.mock('../storage.js');
+const getBanList = require('../storage.js').getBanList;
+
 const utils = require("../utils");
 
 describe("isPackageNameBanned Tests", () => {
-  // Now since the editor is started in development mode for testing, we know
-  // banned package lists will fallback to a static list here.
+
   test("Returns true correctly for banned item", async () => {
-    let name = "situs-slot-gacor";
+    getBanList.mockResolvedValue({ ok: true, content: ['banned-item'] });
+    let name = "banned-item";
+
     let isBanned = await utils.isPackageNameBanned(name);
-    expect(isBanned).toBeTruthy();
+
+    expect(isBanned.ok).toBeTruthy();
   });
 
   test("Returns false correctly for non-banned item", async () => {
-    let name = "innocent-name";
+    getBanList.mockResolvedValue({ ok: true, content: ['banned-item'] });
+    let name = "not-banned-item";
+
     let isBanned = await utils.isPackageNameBanned(name);
-    expect(isBanned).toBeFalsy();
+
+    expect(isBanned.ok).toBeFalsy();
   });
+
+  test("Returns true if no banned list can be retrieved", async () => {
+    getBanList.mockResolvedValue({ ok: false });
+
+    let isBanned = await utils.isPackageNameBanned('any');
+
+    expect(isBanned.ok).toBeTruthy();
+  })
 });
