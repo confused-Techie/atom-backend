@@ -11,7 +11,7 @@ env:
   SERVERURL: "http://localhost:8080"
   PAGINATE: 30
   CACHETIME: 60000
-  DEBUGLOG: true
+  DEBUG: true
   FILESTORE: "sql"
 
 jobs:

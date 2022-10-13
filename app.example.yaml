@@ -19,7 +19,7 @@ env_variables:
   # The default value for testing is 10 minutes = 600000
   CACHETIME: 600000
   # Should only be enabled in non-production builds. Enabled as true for extra output during testing.
-  DEBUGLOG: true
+  DEBUG: true
   # This indicates how the server will retreive data.
   # - "filesystem": Means the data is within the ./data folder.
   # - "gcs": Means the data will be hosted in Google Cloud Storage.

@@ -5,7 +5,7 @@
  * @implements {config}
  */
 
-const { debug } = require("./config.js").getConfig();
+const config = require("./config.js").getConfig();
 
 /**
  * @function httpLog
@@ -86,7 +86,7 @@ function infoLog(value) {
  * DEBUG:: VALUE
  */
 function debugLog(value) {
-  if (debug) {
+  if (config.debug()) {
     console.log(`DEBUG:: ${value}`);
   }
 }

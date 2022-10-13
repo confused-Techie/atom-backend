@@ -21,7 +21,7 @@ env: # Now we need to setup environment variables, for the tests to run
   SERVERURL: "http://localhost:8080"
   PAGINATE: 30
   CACHETIME: 600000
-  DEBUGLOG: true
+  DEBUG: true
   FILESTORE: "sql"
   GCS_BUCKET: ""
   GCS_SERVICE_ACCOUNT_FILE: ""

@@ -57,9 +57,9 @@ function getConfig() {
       cache_time: process.env.CACHETIME
         ? process.env.CACHETIME
         : data.env_variables.CACHETIME,
-      debug: process.env.DEBUGLOG
-        ? process.env.DEBUGLOG
-        : data.env_variables.DEBUGLOG,
+      debug: () => process.env.DEBUG
+        ? process.env.DEBUG
+        : data.env_variables.DEBUG,
       file_store: process.env.FILESTORE
         ? process.env.FILESTORE
         : data.env_variables.FILESTORE,

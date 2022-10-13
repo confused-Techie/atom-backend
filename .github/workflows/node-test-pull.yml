@@ -13,7 +13,7 @@ env:
   SERVERURL: "http://localhost:8080"
   PAGINATE: 30
   CACHETIME: 600000
-  DEBUGLOG: true
+  DEBUG: true
   FILESTORE: "sql"
   # Only further testing will tell, if this will have to link to a test DB
 
