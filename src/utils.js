@@ -18,23 +18,16 @@ const { server_url } = require("./config.js").getConfig();
  * @returns {boolean} Returns true if the given name is banned. False otherwise.
  */
 async function isPackageNameBanned(name) {
-  let names = await storage.getBanList();
-
-  if (!names.ok) {
+  let banList = await storage.getBanList();
+  if (!banList.ok) {
     // we failed to find the ban list. For now we will just return ok.
     logger.warningLog(null, null, "Unable to locate Name Ban List");
     return { ok: true };
   }
 
-  for (let i = 0; i < names.content.length; i++) {
-    if (name === names.content[i]) {
-      // it was found on a ban list.
-      return { ok: false };
-    }
-  }
-
-  // name wasn't found on any ban lists.
-  return { ok: true };
+  return banList.content.find(b => name === b)
+    ? { ok: true }
+    : { ok: false };
 }
 
 /**
