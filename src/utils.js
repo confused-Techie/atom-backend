@@ -25,9 +25,7 @@ async function isPackageNameBanned(name) {
     return { ok: true };
   }
 
-  return banList.content.find(b => name === b)
-    ? { ok: true }
-    : { ok: false };
+  return banList.content.find((b) => name === b) ? { ok: true } : { ok: false };
 }
 
 /**
