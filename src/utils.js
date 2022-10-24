@@ -3,8 +3,6 @@
  * @desc A helper for any functions that are agnostic in handlers.
  */
 const logger = require("./logger.js");
-const common = require("./handlers/common_handler.js");
-const database = require("./database.js");
 const storage = require("./storage.js");
 const { server_url } = require("./config.js").getConfig();
 
