@@ -7,7 +7,7 @@
 [![CI - Lint](https://github.com/confused-Techie/atom-backend/actions/workflows/node-lint.js.yml/badge.svg)](https://github.com/confused-Techie/atom-backend/actions/workflows/node-lint.js.yml)
 [![CI - Tests](https://github.com/confused-Techie/atom-backend/actions/workflows/node-test.js.yml/badge.svg)](https://github.com/confused-Techie/atom-backend/actions/workflows/node-test.js.yml)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 > This is originally based off the research done on [Atom Community Server Backend](https://github.com/confused-Techie/atom-community-server-backend) which was written in Golang. But has been switched to JS for more broad support.
@@ -188,6 +188,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/confused-Techie"><img src="https://avatars.githubusercontent.com/u/26921489?v=4?s=100" width="100px;" alt=""/><br /><sub><b>confused_techie</b></sub></a><br /><a href="https://github.com/confused-Techie/atom-backend/commits?author=confused-Techie" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/Digitalone1"><img src="https://avatars.githubusercontent.com/u/25790525?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Giusy Digital</b></sub></a><br /><a href="https://github.com/confused-Techie/atom-backend/commits?author=Digitalone1" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/DeeDeeG"><img src="https://avatars.githubusercontent.com/u/20157115?v=4?s=100" width="100px;" alt=""/><br /><sub><b>DeeDeeG</b></sub></a><br /><a href="#ideas-DeeDeeG" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/ndr-brt"><img src="https://avatars.githubusercontent.com/u/8570990?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ndr_brt</b></sub></a><br /><a href="https://github.com/confused-Techie/atom-backend/commits?author=ndr-brt" title="Code">💻</a></td>
   </tr>
 </table>
 
