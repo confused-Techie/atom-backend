@@ -1,7 +1,7 @@
 export default [
   {
     globals: {
-      "jest": "readonly"
-    }
-  }
-]
+      jest: "readonly",
+    },
+  },
+];
