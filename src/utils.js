@@ -132,8 +132,17 @@ async function constructPackageObjectJSON(pack) {
     newPack.engines = pack.engine;
     return newPack;
   } else {
-    // this function does not currently support arrays
-    return {};
+    let arrPack = [];
+
+    for (let i = 0; i < pack.length; i++) {
+      let newPack = pack[i].meta;
+      delete newPack.sha;
+      newPack.dist.tarball = `${server_url}/api/packages/${pack[i].meta.name}/versions/${pack[i].semver}/tarball`;
+      newPack.engines = pack[i].engine;
+      arrPack.push(newPack);
+    }
+    
+    return arrPack;
   }
 }
 
