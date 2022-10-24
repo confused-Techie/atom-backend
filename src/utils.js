@@ -141,7 +141,7 @@ async function constructPackageObjectJSON(pack) {
       newPack.engines = pack[i].engine;
       arrPack.push(newPack);
     }
-    
+
     return arrPack;
   }
 }
