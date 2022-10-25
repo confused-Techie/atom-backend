@@ -5,7 +5,7 @@ test("Cache Creates Object As Expected", async () => {
   expect(typeof newCache === "object").toBeTruthy();
 });
 
-describe("Cache Objects Have the Functions and Variables Expected", async () => {
+describe("Cache Objects Have the Functions and Variables Expected", () => {
   let newCache = new cache.CacheObject("test-contents", "test-name");
 
   test("Cache Object Contains Birth", async () => {
