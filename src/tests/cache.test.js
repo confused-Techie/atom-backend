@@ -31,5 +31,4 @@ describe("Cache Objects Have the Functions and Variables Expected", async () => 
   test("Cache Object contains Name as Instantiated", async () => {
     expect(newCache.name).toEqual("test-name");
   });
-
 });

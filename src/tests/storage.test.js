@@ -1,7 +1,6 @@
 const storage = require("../storage.js");
 
 describe("Functions Return Proper Values", () => {
-
   test("getBanList Returns Array", async () => {
     let value = storage.getBanList();
     expect(Array.isArray(value)).toBeTruthy();
@@ -16,5 +15,4 @@ describe("Functions Return Proper Values", () => {
     let value = storage.getFeaturedThemes();
     expect(Array.isArray(value)).toBeTruthy();
   });
-
 });
