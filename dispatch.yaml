@@ -1,10 +1,16 @@
 dispatch:
-  # Default Service (This Service) Routes all `api` subdomain requests
-  - url: "api.pulsar-edit.dev"
-    service: default
-  # Adding the old domain just in case it's still in use
-  - url: "pulsar-edit.com"
-    service: default
-  # The Package Browser Service handles all `web` subdomain requests
-  - url: "web.pulsar-edit.dev"
+  # The Package Browser Service handles all `web` subdomain root requests
+  - url: "web.pulsar-edit.dev/"
     service: package-browser
+
+  # Package Browser Service handles root `web` subdomain requests with paths
+  - url: "web.pulsar-edit.dev/*"
+    service: package-browser
+
+  # Default (This) Service handles `api` root requests
+  - url: "api.pulsar-edit.dev/"
+    service: default
+
+  # Default (This) Service handles `api` subdomain requests with paths
+  - url: "api.pulsar-edit.dev/*"
+    service: default
