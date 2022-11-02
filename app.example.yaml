@@ -3,6 +3,7 @@
 # app.yaml is in the git ignore to prevent any secrets from leaking.
 
 runtime: nodejs14
+service: default
 
 env_variables:
   PORT: 8080
