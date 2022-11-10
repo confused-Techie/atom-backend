@@ -820,7 +820,7 @@ async function updateStars(user, pack) {
 
 /**
  * @function updateDeleteStar
- * @description
+ * @description Needs verification.
  * @todo Write these documents when possible.
  */
 async function updateDeleteStar(user, pack) {
