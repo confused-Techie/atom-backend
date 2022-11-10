@@ -159,7 +159,7 @@
 * Maintainability index: 78.94734382015348
 * Dependency count: 1
 * Function: **httpLog**
-    * Line No.: 18
+    * Line No.: 17
     * Physical LOC: 9
     * Logical LOC: 3
     * Parameter count: 2
@@ -169,7 +169,7 @@
     * Halstead volume: 85.95159310338741
     * Halstead effort: 315.1558413790872
 * Function: **errorLog**
-    * Line No.: 38
+    * Line No.: 37
     * Physical LOC: 7
     * Logical LOC: 2
     * Parameter count: 3
@@ -179,7 +179,7 @@
     * Halstead volume: 68.53238859703687
     * Halstead effort: 190.36774610288018
 * Function: **warningLog**
-    * Line No.: 58
+    * Line No.: 57
     * Physical LOC: 10
     * Logical LOC: 5
     * Parameter count: 3
@@ -189,7 +189,7 @@
     * Halstead volume: 168.55519570060713
     * Halstead effort: 1379.0879648231492
 * Function: **infoLog**
-    * Line No.: 76
+    * Line No.: 75
     * Physical LOC: 3
     * Logical LOC: 1
     * Parameter count: 1
@@ -199,7 +199,7 @@
     * Halstead volume: 11.60964047443681
     * Halstead effort: 11.60964047443681
 * Function: **debugLog**
-    * Line No.: 88
+    * Line No.: 87
     * Physical LOC: 5
     * Logical LOC: 2
     * Parameter count: 1
@@ -219,7 +219,7 @@
 * Maintainability index: 67.72317332784459
 * Dependency count: 0
 * Function: **page**
-    * Line No.: 18
+    * Line No.: 14
     * Physical LOC: 11
     * Logical LOC: 5
     * Parameter count: 1
@@ -229,7 +229,7 @@
     * Halstead volume: 127.43782540330756
     * Halstead effort: 917.5523429038144
 * Function: **sort**
-    * Line No.: 38
+    * Line No.: 34
     * Physical LOC: 13
     * Logical LOC: 5
     * Parameter count: 2
@@ -239,7 +239,7 @@
     * Halstead volume: 158.32466846199546
     * Halstead effort: 1068.6915121184693
 * Function: **dir**
-    * Line No.: 60
+    * Line No.: 56
     * Physical LOC: 18
     * Logical LOC: 9
     * Parameter count: 1
@@ -249,7 +249,7 @@
     * Halstead volume: 249.72817064368866
     * Halstead effort: 2593.331002838305
 * Function: **query**
-    * Line No.: 87
+    * Line No.: 83
     * Physical LOC: 25
     * Logical LOC: 12
     * Parameter count: 1
@@ -259,7 +259,7 @@
     * Halstead volume: 210.90827503317323
     * Halstead effort: 1455.2670977288954
 * Function: **engine**
-    * Line No.: 119
+    * Line No.: 115
     * Physical LOC: 19
     * Logical LOC: 5
     * Parameter count: 1
@@ -269,7 +269,7 @@
     * Halstead volume: 160.5395382709427
     * Halstead effort: 1525.1256135739557
 * Function: **repo**
-    * Line No.: 145
+    * Line No.: 141
     * Physical LOC: 17
     * Logical LOC: 5
     * Parameter count: 1
@@ -279,7 +279,7 @@
     * Halstead volume: 129.65784284662087
     * Halstead effort: 1037.262742772967
 * Function: **tag**
-    * Line No.: 169
+    * Line No.: 165
     * Physical LOC: 5
     * Logical LOC: 2
     * Parameter count: 1
@@ -289,7 +289,7 @@
     * Halstead volume: 57.359400011538504
     * Halstead effort: 258.1173000519233
 * Function: **rename**
-    * Line No.: 182
+    * Line No.: 178
     * Physical LOC: 16
     * Logical LOC: 10
     * Parameter count: 1
@@ -299,7 +299,7 @@
     * Halstead volume: 165.66917302429982
     * Halstead effort: 1144.6233772587989
 * Function: **pathTraversalAttempt**
-    * Line No.: 207
+    * Line No.: 203
     * Physical LOC: 15
     * Logical LOC: 6
     * Parameter count: 1
@@ -319,7 +319,7 @@
 * Maintainability index: 58.997676233691614
 * Dependency count: 0
 * Function: **levenshtein**
-    * Line No.: 18
+    * Line No.: 19
     * Physical LOC: 3
     * Logical LOC: 1
     * Parameter count: 2
@@ -329,7 +329,7 @@
     * Halstead volume: 16.253496664211536
     * Halstead effort: 27.089161107019226
 * Function: **vlSimilarity**
-    * Line No.: 30
+    * Line No.: 31
     * Physical LOC: 15
     * Logical LOC: 9
     * Parameter count: 2
@@ -339,7 +339,7 @@
     * Halstead volume: 203.13062045970605
     * Halstead effort: 2640.6980659761784
 * Function: **vlEditDistance**
-    * Line No.: 54
+    * Line No.: 55
     * Physical LOC: 27
     * Logical LOC: 20
     * Parameter count: 2
@@ -349,7 +349,7 @@
     * Halstead volume: 639.091324039907
     * Halstead effort: 23177.71201851396
 * Function: **levenshteinWSDM**
-    * Line No.: 92
+    * Line No.: 93
     * Physical LOC: 31
     * Logical LOC: 13
     * Parameter count: 2
@@ -359,7 +359,7 @@
     * Halstead volume: 543.2311061925092
     * Halstead effort: 9204.749299373072
 * Function: **lcs**
-    * Line No.: 136
+    * Line No.: 137
     * Physical LOC: 26
     * Logical LOC: 13
     * Parameter count: 2
@@ -369,7 +369,7 @@
     * Halstead volume: 609.3661461775857
     * Halstead effort: 16309.505677105972
 * Function: **lcsTraceBack**
-    * Line No.: 173
+    * Line No.: 174
     * Physical LOC: 15
     * Logical LOC: 7
     * Parameter count: 5

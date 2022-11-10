@@ -47,7 +47,9 @@ logging methods if a log server is ever implemented.</p>
 all endpoints it listens on. With those endpoints being further documented in <code>api.md</code>.</p>
 </dd>
 <dt><a href="#module_query">query</a></dt>
-<dd><p>Home to parsing all query parameters from the <code>Request</code> object. Ensuring a valid response.</p>
+<dd><p>Home to parsing all query parameters from the <code>Request</code> object. Ensuring a valid response.
+While most values will just return their default there are some expecptions:
+engine(): Returns false if not defined, to allow a fast way to determine if results need to be pruned.</p>
 </dd>
 <dt><a href="#module_search">search</a></dt>
 <dd><p>This module is focused on implementing different search algorithms.
@@ -155,12 +157,29 @@ with and retreive data from the cloud hosted database instance.
     * [~insertNewPackage(pack)](#module_database..insertNewPackage) ⇒ <code>object</code>
     * [~getPackageByID()](#module_database..getPackageByID)
     * [~getPackageByName(name, user)](#module_database..getPackageByName)
+    * [~getPackageVersionByNameAndVersion(name, version)](#module_database..getPackageVersionByNameAndVersion) ⇒ <code>object</code>
     * [~getPackageCollectionByName()](#module_database..getPackageCollectionByName)
     * [~getPackageCollectionByID()](#module_database..getPackageCollectionByID)
     * [~getPointerTable()](#module_database..getPointerTable)
+    * [~updatePackageIncrementStarByName(name)](#module_database..updatePackageIncrementStarByName) ⇒ <code>object</code>
+    * [~updatePackageDecrementStarByName(name)](#module_database..updatePackageDecrementStarByName) ⇒ <code>object</code>
+    * [~updatePackageIncrementDownloadByName(name)](#module_database..updatePackageIncrementDownloadByName) ⇒ <code>object</code>
+    * [~updatePackageDecrementDownloadByName(name)](#module_database..updatePackageDecrementDownloadByName) ⇒ <code>object</code>
+    * [~updatePackageByID(id, data)](#module_database..updatePackageByID) ⇒ <code>object</code>
+    * [~updatePackageByName(name, data)](#module_database..updatePackageByName) ⇒ <code>object</code>
     * [~getFeaturedPackages()](#module_database..getFeaturedPackages)
     * [~getFeaturedThemes()](#module_database..getFeaturedThemes)
     * [~getTotalPackageEstimate()](#module_database..getTotalPackageEstimate)
+    * [~getUserByName()](#module_database..getUserByName)
+    * [~getUserByID()](#module_database..getUserByID)
+    * [~verifyAuth()](#module_database..verifyAuth)
+    * [~updateStars()](#module_database..updateStars)
+    * [~updateDeleteStar()](#module_database..updateDeleteStar)
+    * [~getStarredPointersByUserID()](#module_database..getStarredPointersByUserID)
+    * [~getStarringUsersByUserName()](#module_database..getStarringUsersByUserName)
+    * [~getStarringUsersByPointer()](#module_database..getStarringUsersByPointer)
+    * [~simpleSearch()](#module_database..simpleSearch)
+    * [~getUserCollectionById(ids)](#module_database..getUserCollectionById) ⇒ <code>array</code>
     * [~getSortedPackages()](#module_database..getSortedPackages)
 
 <a name="module_database..setupSQL"></a>
@@ -213,6 +232,19 @@ In that case it's recommended to set the user flag as true for security reasons.
 | name | <code>string</code> | The name of the package. |
 | user | <code>bool</code> | Whether the packages has to be exposed outside or not. If true, all sensitive data like primary and foreign keys are not selected. Even if the keys are ignored by utils.constructPackageObjectFull(), it's still safe to not inclue them in case, by mistake, we publish the return of this module. |
 
+<a name="module_database..getPackageVersionByNameAndVersion"></a>
+
+### database~getPackageVersionByNameAndVersion(name, version) ⇒ <code>object</code>
+Uses the name of a package and it's version to return the version info.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name of the package to query. |
+| version | <code>string</code> | The version of the package to query. |
+
 <a name="module_database..getPackageCollectionByName"></a>
 
 ### database~getPackageCollectionByName()
@@ -233,6 +265,88 @@ Returns a full package pointer table, allowing the full reference of package nam
 to package pointer UUIDs.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..updatePackageIncrementStarByName"></a>
+
+### database~updatePackageIncrementStarByName(name) ⇒ <code>object</code>
+Uses the package name to increment it's stargazers count by one.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - The effected server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The package name. |
+
+<a name="module_database..updatePackageDecrementStarByName"></a>
+
+### database~updatePackageDecrementStarByName(name) ⇒ <code>object</code>
+Uses the package name to decrement it's stargazers count by one.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - The effected server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The package name. |
+
+<a name="module_database..updatePackageIncrementDownloadByName"></a>
+
+### database~updatePackageIncrementDownloadByName(name) ⇒ <code>object</code>
+Uses the package name to increment the download count by one.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - The modified server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The package name. |
+
+<a name="module_database..updatePackageDecrementDownloadByName"></a>
+
+### database~updatePackageDecrementDownloadByName(name) ⇒ <code>object</code>
+Uses the package name to decrement the download count by one.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - The modified server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The package name. |
+
+<a name="module_database..updatePackageByID"></a>
+
+### database~updatePackageByID(id, data) ⇒ <code>object</code>
+Updates a Packages content, with new data.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - The modified Server Status Object.  
+**Todo**
+
+- [ ] This is one of the original functions migrated to SQL, and should be reviewed for accuracy.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>string</code> | The packages ID. |
+| data | <code>object</code> | The Object data to update it with. |
+
+<a name="module_database..updatePackageByName"></a>
+
+### database~updatePackageByName(name, data) ⇒ <code>object</code>
+Updates the packages content, with new data.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+**Todo**
+
+- [ ] This is one of the original functions migrated to SQL, and should be reviewed for accuracy.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The packages name. |
+| data | <code>object</code> | The object data to update it with. |
+
 <a name="module_database..getFeaturedPackages"></a>
 
 ### database~getFeaturedPackages()
@@ -256,6 +370,81 @@ Returns an estimate of how many rows are included in the packages SQL table.
 Used to aid in trunication and page generation of Link headers for large requests.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..getUserByName"></a>
+
+### database~getUserByName()
+Get a users details providing their username.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..getUserByID"></a>
+
+### database~getUserByID()
+Get user details providing their ID.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..verifyAuth"></a>
+
+### database~verifyAuth()
+Verify if an auth token matches a user, and get that user back if it does.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Todo**
+
+- [ ] Early write, should be reviewed.
+
+<a name="module_database..updateStars"></a>
+
+### database~updateStars()
+TODO Not sure at this point.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..updateDeleteStar"></a>
+
+### database~updateDeleteStar()
+Needs verification.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Todo**
+
+- [ ] Write these documents when possible.
+
+<a name="module_database..getStarredPointersByUserID"></a>
+
+### database~getStarredPointersByUserID()
+Get all stars of a user by their user id.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..getStarringUsersByUserName"></a>
+
+### database~getStarringUsersByUserName()
+Get all starred pointers by a username.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..getStarringUsersByPointer"></a>
+
+### database~getStarringUsersByPointer()
+Use the pointer of a package to collect all users that have starred it.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..simpleSearch"></a>
+
+### database~simpleSearch()
+The current Fuzzy-Finder implementation of search. Ideally eventually
+will use a more advanced search method.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+<a name="module_database..getUserCollectionById"></a>
+
+### database~getUserCollectionById(ids) ⇒ <code>array</code>
+Returns an array of Users and their associated data via the ids.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>array</code> - The array of users collected.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| ids | <code>array</code> | The IDs of users to collect the data of. |
+
 <a name="module_database..getSortedPackages"></a>
 
 ### database~getSortedPackages()
@@ -577,7 +766,6 @@ and returns undefined otherwise.
 Allows easy logging of the server. Allowing it to become simple to add additional
 logging methods if a log server is ever implemented.
 
-**Implements**: <code>config</code>  
 
 * [logger](#module_logger)
     * [~httpLog(req, res)](#module_logger..httpLog)
@@ -679,11 +867,12 @@ DEBUG:: VALUE
 The Main functionality for the entire server. Sets up the Express server, providing
 all endpoints it listens on. With those endpoints being further documented in `api.md`.
 
-**Implements**: <code>update\_handler</code>, <code>star\_handler</code>, <code>user\_handler</code>, <code>theme\_handler</code>, <code>package\_handler</code>, <code>common\_handler</code>  
 <a name="module_query"></a>
 
 ## query
 Home to parsing all query parameters from the `Request` object. Ensuring a valid response.
+While most values will just return their default there are some expecptions:
+engine(): Returns false if not defined, to allow a fast way to determine if results need to be pruned.
 
 
 * [query](#module_query)
@@ -740,7 +929,7 @@ query parameter.
 
 ### query~query(req) ⇒ <code>string</code>
 Checks the 'q' query parameter, trunicating it at 50 characters, and checking simplisticly that
-it is not a malicious request.
+it is not a malicious request. Returning "" if an unsafe or invalid query is passed.
 
 **Kind**: inner method of [<code>query</code>](#module_query)  
 **Implements**: <code>pathTraversalAttempt</code>  
@@ -820,6 +1009,7 @@ This module is focused on implementing different search algorithms.
 Elsewhere in the code the choice is made of which functions to call, to actual
 execute a search function.
 
+**Depreciated**: Since search now uses Fuzzy Finding built into PostgreSQL  
 
 * [search](#module_search)
     * [~levenshtein(s1, s2)](#module_search..levenshtein) ⇒ <code>function</code>
@@ -929,7 +1119,6 @@ Subsequence.
 The initializer of `main.js` starting up the Express Server, and setting the port
 to listen on. As well as handling a graceful shutdown of the server.
 
-**Implements**: <code>main</code>, <code>config</code>, <code>logger</code>  
 <a name="module_server..exterminate"></a>
 
 ### server~exterminate(callee)
