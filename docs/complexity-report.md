@@ -1,4 +1,4 @@
-# Complexity report, 11/2/2022
+# Complexity report, 11/10/2022
 
 * Mean per-function logical LOC: 10.28641975308642
 * Mean per-function parameter count: 0.4922839506172839
@@ -441,7 +441,7 @@
 
 ## /home/runner/work/atom-backend/atom-backend/src/tests/logger.test.js
 
-* Physical LOC: 98
+* Physical LOC: 105
 * Logical LOC: 7
 * Mean parameter count: 0
 * Cyclomatic complexity: 1
