@@ -39,15 +39,15 @@ const banList = [
 ];
 
 async function getBanList() {
-  return banList;
+  return { ok: true, content: banList };
 }
 
 async function getFeaturedPackages() {
-  return featuredPackages;
+  return { ok: true, content: featuredPackages };
 }
 
 async function getFeaturedThemes() {
-  return featuredThemes;
+  return { ok: true, content: featuredThemes };
 }
 
 module.exports = {

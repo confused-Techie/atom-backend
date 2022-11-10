@@ -17,6 +17,8 @@ on:
 env: # Now we need to setup environment variables, for the tests to run
      # Since its expected that the app.yml exists.
   PORT: 8080
+  PULSAR_STATUS: "dev"
+  NODE_ENV: "test"
   SEARCHALGORITHM: "lcs"
   SERVERURL: "http://localhost:8080"
   PAGINATE: 30
