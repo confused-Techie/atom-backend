@@ -2,7 +2,6 @@
  * @module logger
  * @desc Allows easy logging of the server. Allowing it to become simple to add additional
  * logging methods if a log server is ever implemented.
- * @implements {config}
  */
 
 const { debug } = require("./config.js").getConfig();

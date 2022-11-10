@@ -1,5 +1,6 @@
 /**
  * @module search
+ * @depreciated Since search now uses Fuzzy Finding built into PostgreSQL
  * @desc This module is focused on implementing different search algorithms.
  * Elsewhere in the code the choice is made of which functions to call, to actual
  * execute a search function.

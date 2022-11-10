@@ -2,9 +2,6 @@
  * @module server
  * @desc The initializer of `main.js` starting up the Express Server, and setting the port
  * to listen on. As well as handling a graceful shutdown of the server.
- * @implements {main}
- * @implements {config}
- * @implements {logger}
  */
 
 const app = require("./main.js");

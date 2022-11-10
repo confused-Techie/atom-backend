@@ -231,6 +231,13 @@ async function getPackageByName(name, user = false) {
   }
 }
 
+/**
+* @function getPackageVersionByNameAndVersion
+* @desc Uses the name of a package and it's version to return the version info.
+* @param {string} name - The name of the package to query.
+* @param {string} version - The version of the package to query.
+* @returns {object} A server status object.
+*/
 async function getPackageVersionByNameAndVersion(name, version) {
   try {
     sql_storage ??= setupSQL();
@@ -330,6 +337,12 @@ async function getPointerTable() {
   }
 }
 
+/**
+* @function updatePackageIncrementStarByName
+* @description Uses the package name to increment it's stargazers count by one.
+* @param {string} name - The package name.
+* @returns {object} The effected server status object.
+*/
 async function updatePackageIncrementStarByName(name) {
   try {
     sql_storage ??= setupSQL();
@@ -356,6 +369,12 @@ async function updatePackageIncrementStarByName(name) {
   }
 }
 
+/**
+* @function updatePackageDecrementStarByName
+* @description Uses the package name to decrement it's stargazers count by one.
+* @param {string} name - The package name.
+* @returns {object} The effected server status object.
+*/
 async function updatePackageDecrementStarByName(name) {
   try {
     sql_storage ??= setupSQL();
@@ -382,6 +401,12 @@ async function updatePackageDecrementStarByName(name) {
   }
 }
 
+/**
+* @function updatePackageIncrementDownloadByName
+* @description Uses the package name to increment the download count by one.
+* @param {string} name - The package name.
+* @returns {object} The modified server status object.
+*/
 async function updatePackageIncrementDownloadByName(name) {
   try {
     sql_storage ??= setupSQL();
@@ -408,6 +433,12 @@ async function updatePackageIncrementDownloadByName(name) {
   }
 }
 
+/**
+* @function updatePackageDecrementDownloadByName
+* @description Uses the package name to decrement the download count by one.
+* @param {string} name - The package name.
+* @returns {object} The modified server status object.
+*/
 async function updatePackageDecrementDownloadByName(name) {
   try {
     sql_storage ??= setupSQL();
@@ -434,6 +465,14 @@ async function updatePackageDecrementDownloadByName(name) {
   }
 }
 
+/**
+* @function updatePackageByID
+* @todo This is one of the original functions migrated to SQL, and should be reviewed for accuracy.
+* @description Updates a Packages content, with new data.
+* @param {string} id - The packages ID.
+* @param {object} data - The Object data to update it with.
+* @returns {object} The modified Server Status Object.
+*/
 async function updatePackageByID(id, data) {
   try {
     sql_storage ??= setupSQL();
@@ -459,6 +498,14 @@ async function updatePackageByID(id, data) {
   }
 }
 
+/**
+* @function updatePackageByName
+* @todo This is one of the original functions migrated to SQL, and should be reviewed for accuracy.
+* @description Updates the packages content, with new data.
+* @param {string} name - The packages name.
+* @param {object} data - The object data to update it with.
+* @returns {object} A server status object.
+*/
 async function updatePackageByName(name, data) {
   try {
     sql_storage ??= setupSQL();
@@ -632,6 +679,10 @@ async function getTotalPackageEstimate() {
   }
 }
 
+/**
+* @function getUserByName
+* @description Get a users details providing their username.
+*/
 async function getUserByName(username) {
   try {
     sql_storage ??= setupSQL();
@@ -653,6 +704,10 @@ async function getUserByName(username) {
   }
 }
 
+/**
+* @function getUserByID
+* @description Get user details providing their ID.
+*/
 async function getUserByID(id) {
   try {
     sql_storage ??= setupSQL();
@@ -682,6 +737,11 @@ async function getUserByID(id) {
   }
 }
 
+/**
+* @function verifyAuth
+* @description Verify if an auth token matches a user, and get that user back if it does.
+* @todo Early write, should be reviewed.
+*/
 async function verifyAuth(token) {
   try {
     sql_storage ??= setupSQL();
@@ -706,6 +766,10 @@ async function verifyAuth(token) {
   }
 }
 
+/**
+* @function updateStars
+* @description TODO Not sure at this point.
+*/
 async function updateStars(user, pack) {
   try {
     sql_storage ??= setupSQL();
@@ -754,6 +818,11 @@ async function updateStars(user, pack) {
   }
 }
 
+/**
+* @function updateDeleteStar
+* @description
+* @todo Write these documents when possible.
+*/
 async function updateDeleteStar(user, pack) {
   try {
     sql_storage ??= setupSQL();
@@ -824,6 +893,10 @@ async function updateDeleteStar(user, pack) {
   }
 }
 
+/**
+* @function getStarredPointersByUserID
+* @description Get all stars of a user by their user id.
+*/
 async function getStarredPointersByUserID(userid) {
   try {
     sql_storage ??= setupSQL();
@@ -848,6 +921,10 @@ async function getStarredPointersByUserID(userid) {
   }
 }
 
+/**
+* @function getStarringUsersByUserName
+* @description Get all starred pointers by a username.
+*/
 async function getStarredPointersByUserName(username) {
   let user = await getUserByName(username);
 
@@ -862,6 +939,10 @@ async function getStarredPointersByUserName(username) {
   return starred;
 }
 
+/**
+* @function getStarringUsersByPointer
+* @description Use the pointer of a package to collect all users that have starred it.
+*/
 async function getStarringUsersByPointer(pointer) {
   try {
     sql_storage ??= setupSQL();
@@ -890,6 +971,11 @@ async function getStarringUsersByPointer(pointer) {
   }
 }
 
+/**
+* @function simpleSearch
+* @description The current Fuzzy-Finder implementation of search. Ideally eventually
+* will use a more advanced search method.
+*/
 async function simpleSearch(term, page, dir, sort) {
   try {
     sql_storage ??= setupSQL();
@@ -925,6 +1011,12 @@ async function simpleSearch(term, page, dir, sort) {
   }
 }
 
+/**
+* @function getUserCollectionById
+* @description Returns an array of Users and their associated data via the ids.
+* @param {array} ids - The IDs of users to collect the data of.
+* @returns {array} The array of users collected.
+*/
 async function getUserCollectionById(ids) {
   let user_array = [];
 

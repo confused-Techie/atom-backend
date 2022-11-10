@@ -1,13 +1,9 @@
 /**
  * @module query
  * @desc Home to parsing all query parameters from the `Request` object. Ensuring a valid response.
+ * While most values will just return their default there are some expecptions:
+ * engine(): Returns false if not defined, to allow a fast way to determine if results need to be pruned.
  */
-
-// While most values will just return their default there are some expecptions:
-// q or the query of the search will return false if nothing is provided, to allow a fast way to return an empty
-// array
-// engines of the showing package details will return false if not defined, to allow a fast way
-// of knowing not to prune results
 
 /**
  * @function page
@@ -79,7 +75,7 @@ function dir(req) {
 /**
  * @function query
  * @desc Checks the 'q' query parameter, trunicating it at 50 characters, and checking simplisticly that
- * it is not a malicious request.
+ * it is not a malicious request. Returning "" if an unsafe or invalid query is passed.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @returns {string} A valid search string derived from 'q' query parameter. Or '' if invalid.
  * @implements {pathTraversalAttempt}

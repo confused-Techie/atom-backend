@@ -2,12 +2,6 @@
  * @module main
  * @desc The Main functionality for the entire server. Sets up the Express server, providing
  * all endpoints it listens on. With those endpoints being further documented in `api.md`.
- * @implements {update_handler}
- * @implements {star_handler}
- * @implements {user_handler}
- * @implements {theme_handler}
- * @implements {package_handler}
- * @implements {common_handler}
  */
 
 const express = require("express");
