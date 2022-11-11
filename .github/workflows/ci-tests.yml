@@ -48,8 +48,14 @@ jobs:
         with:
           commit_message: GH Action Tests - Coverage Info
 
-      - name: Coveralls Upload
+      - name: Codecov Upload
         if: always() # Needed to ensure coverage is commited even on test failure
-        uses: coverallsapp/github-action@master
+        uses: codecov/codecov-action@v3
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          files: ./coverage/clover.xml
+
+      #- name: Coveralls Upload
+        #if: always() # Needed to ensure coverage is commited even on test failure
+        #uses: coverallsapp/github-action@master
+        #with:
+          #github-token: ${{ secrets.GITHUB_TOKEN }}

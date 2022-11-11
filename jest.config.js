@@ -12,7 +12,7 @@ const config = {
     {
       displayName: "Unit-Tests",
       collectCoverage: true,
-      coverageReporters: ["json-summary", "text", "lcovonly"],
+      coverageReporters: ["text", "clover"],
       testMatch: ["<rootDir>/src/tests/*.js"],
     },
   ],
