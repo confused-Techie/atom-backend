@@ -48,7 +48,7 @@ expect.extend({
     }
   },
   toHaveHTTPCode(req, want) {
-    if (res.statusCode == want) {
+    if (req.statusCode == want) {
       return {
         pass: true,
         message: () => "",
