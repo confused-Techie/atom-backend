@@ -37,12 +37,13 @@ expect.extend({
     if (Array.isArray(value)) {
       return {
         pass: true,
-        message: () => '',
+        message: () => "",
       };
     } else {
       return {
         pass: false,
-        message: () => `Expected ${value} to be an array but Array.isArray() = false`,
+        message: () =>
+          `Expected ${value} to be an array but Array.isArray() = false`,
       };
     }
   },
