@@ -42,8 +42,7 @@ expect.extend({
     } else {
       return {
         pass: false,
-        message: () =>
-          `Expected ${value} to be an array but Array.isArray() = false`,
+        message: () => `Expected Array but received: ${this.utils.printReceived(value)}`,
       };
     }
   },
