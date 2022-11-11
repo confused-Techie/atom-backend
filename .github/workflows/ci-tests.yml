@@ -16,12 +16,13 @@ jobs:
 
     steps:
       - name: Checkout the latest code
-        uses: actions/setup-node@v3
+        uses: actions/setup-checkout@v3
 
       - name: Setup NodeJS - ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
       - name: Install Dependencies
         run: npm install
