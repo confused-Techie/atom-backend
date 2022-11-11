@@ -251,6 +251,7 @@ async function getPackagesSearch(req, res) {
       // an empty array instead.
       res.status(200).json([]);
       logger.httpLog(req, res);
+      return;
     } else {
       await common.handleError(req, res, packs);
       return;
