@@ -14,7 +14,7 @@ env:
   PAGINATE: 30
   SERVERURL: "http://localhost:8080"
   NODE_ENV: "test"
-  PULSAR_STATUS: "test"  # This helps some modules know they are in a test environment 
+  PULSAR_STATUS: "test"  # This helps some modules know they are in a test environment
 
 jobs:
   tests:
@@ -39,6 +39,9 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: TEST - Set Env Variables the Linux Way
+        run: export PULSAR_STATUS=dev
+        run: export NODE_ENV=test
       - name: Run Tests
         run: npm run test
 
