@@ -63,7 +63,7 @@ describe("Get /api/packages", () => {
 
 describe("GET /api/packages/search", () => {
   test("Valid Search Returns Array", async () => {
-    const res = await request(app).get("/api/packages?q=value");
+    const res = await request(app).get("/api/packages/search?q=value");
     expect(res.body).toBeArray();
     //expect(Array.isArray(res.body)).toBeTruthy();
   });

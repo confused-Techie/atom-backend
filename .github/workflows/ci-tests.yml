@@ -14,7 +14,7 @@ env:
   PAGINATE: 30
   SERVERURL: "http://localhost:8080"
   NODE_ENV: "test"
-  PULSAR_STATUS: "test"  # This helps some modules know they are in a test environment
+  PULSAR_STATUS: "dev"  # This helps some modules know they are in a test environment
 
 jobs:
   tests:
