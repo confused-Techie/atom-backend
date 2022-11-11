@@ -46,7 +46,7 @@ async function getPackages(req, res) {
   );
 
   if (!packages.ok) {
-    await common.handleError(req, res, packages);
+    await common.handleError(req, res, packages, 1001);
     return;
   }
 

@@ -23,7 +23,7 @@ const logger = require("../logger.js");
  * @implements {logger.HTTPLog}
  * @implements {logger.ErrorLog}
  */
-async function authFail(req, res, user) {
+async function authFail(req, res, user, num) {
   switch (user.short) {
     case "Bad Auth":
     case "Auth Fail": // support for being passed a git return.
@@ -33,7 +33,7 @@ async function authFail(req, res, user) {
     default:
       error.serverErrorJSON(res);
       logger.httpLog(req, res);
-      logger.errorLog(req, res, user.content);
+      logger.errorLog(req, res, user.content, num);
       break;
   }
 }
@@ -49,10 +49,10 @@ async function authFail(req, res, user) {
  * @implements {logger.HTTPLog}
  * @implements {logger.ErrorLog}
  */
-async function serverError(req, res, err) {
+async function serverError(req, res, err, num) {
   error.serverErrorJSON(res);
   logger.httpLog(req, res);
-  logger.errorLog(req, res, err);
+  logger.errorLog(req, res, err, num);
 }
 
 /**
@@ -120,8 +120,8 @@ async function badRepoJSON(req, res) {
  * @implements {error.BadPackageJSON}
  * @implements {logger.HTTPLog}
  */
-async function badPackageJSON(req, res) {
-  error.badPackageJSON(res);
+async function badPackageJSON(req, res, num) {
+  error.badPackageJSON(res, num);
   logger.httpLog(req, res);
 }
 
@@ -135,29 +135,29 @@ async function badPackageJSON(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @param {object} obj - the Raw Status Object of the User, expected to return from `VerifyAuth`.
  */
-async function handleError(req, res, obj) {
+async function handleError(req, res, obj, num) {
   switch (obj.short) {
     case "Not Found":
       await notFound(req, res);
       break;
 
     case "Bad Repo":
-      await badRepoJSON(req, res);
+      await badRepoJSON(req, res, num);
       break;
 
     case "Bad Package":
-      await badPackageJSON(req, res);
+      await badPackageJSON(req, res, num);
       break;
 
     case "No Repo Access":
     case "Bad Auth":
-      await authFail(req, res, obj);
+      await authFail(req, res, obj, num);
       break;
 
     case "File Not Found":
     case "Server Error":
     default:
-      await serverError(req, res, obj.content);
+      await serverError(req, res, obj.content, num);
       break;
   }
 }
