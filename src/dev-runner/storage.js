@@ -6,11 +6,7 @@
  * of modifying remote data, or having to rely on external services.
  */
 
-const featuredPackages = [
-  "hydrogen",
-  "atom-clock",
-  "hey-pane"
-];
+const featuredPackages = ["hydrogen", "atom-clock", "hey-pane"];
 
 const featuredThemes = ["atom-material-ui", "atom-material-syntax"];
 
