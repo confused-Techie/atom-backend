@@ -55,7 +55,7 @@ async function getPackages(req, res) {
   let total_pages = await database.getTotalPackageEstimate();
 
   if (!total_pages.ok) {
-    await common.handleError(req, res, total_pages);
+    await common.handleError(req, res, total_pages, 1002);
     return;
   }
 
