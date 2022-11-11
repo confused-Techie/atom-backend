@@ -1,3 +1,5 @@
+# Single GitHub Action to run tests against the codebase
+# This test includes integration tests and unit tests all in one.
 name: CI - Tests
 
 on:
@@ -31,11 +33,13 @@ jobs:
         run: npm run test
 
       - name: Commit Coverage
+        if: always() # Needed to ensure coverage is commit even on test failure.
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: GH Action Tests - Coverage Info
 
       - name: Coveralls Upload
+        if: always() # Needed to ensure coverage is commited even on test failure
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}

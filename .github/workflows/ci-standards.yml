@@ -1,3 +1,6 @@
+# GitHub Action to include all documentation that needs to generated, and all linting
+# that needs to be done into a single PR.
+
 name: CI - Standards
 
 on:
