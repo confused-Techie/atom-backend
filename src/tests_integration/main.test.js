@@ -85,7 +85,7 @@ describe("GET /api/packages/search", () => {
   });
   test("Invalid Search Returns Empty Array", async () => {
     const res = await request(app).get("/api/packages/search?q=not-one-match");
-    expect(res.body.length).toBeGreaterThan(1);
+    expect(res.body.length).toBeLessThan(1);
   });
 });
 

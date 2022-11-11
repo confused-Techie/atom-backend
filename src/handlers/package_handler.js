@@ -259,6 +259,13 @@ async function getPackagesSearch(req, res) {
 
   let newPacks = await utils.constructPackageObjectShort(packs.content);
 
+  if (Object.keys(newPacks).length < 1) {
+    newPacks = [];
+    // This also helps protect against misreturned searches. As in getting a 404 rather
+    // than empty search results.
+    // See: https://github.com/confused-Techie/atom-backend/issues/59
+  }
+
   let totalPageEstimate = await database.getTotalPackageEstimate();
 
   let total_pages = !totalPageEstimate.ok ? 1 : totalPageEstimate.content;
