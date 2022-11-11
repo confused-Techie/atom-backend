@@ -39,12 +39,6 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: TEST - Set Env Variables the Linux Way
-        run: export PULSAR_STATUS="dev"
-
-      - name: TEST - Number 2
-        run: export NODE_ENV="test"
-
       - name: Run Tests
         run: npm run test
 
