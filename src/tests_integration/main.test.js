@@ -72,12 +72,20 @@ describe("Get /api/packages", () => {
     const res = await request(app).get("/api/packages");
     expect(res).toHaveHTTPCode(200);
   });
+  test("Should 404 on invalid Method", async () => {
+    const res = await request(app).patch("/api/packages");
+    expect(res).toHaveHTTPCode(404);
+  });
 });
 
 describe("GET /api/packages/search", () => {
   test("Valid Search Returns Array", async () => {
     const res = await request(app).get("/api/packages/search?q=language");
     expect(res.body).toBeArray();
+  });
+  test("Valid Search Returns Success Status Code", async () => {
+    const res = await request(app).get("/api/packages/search?q=language");
+    expect(res).toHaveHTTPCode(200);
   });
   test("Invalid Search Returns Array", async () => {
     const res = await request(app).get("/api/packages/search?q=not-one-match");
@@ -110,7 +118,7 @@ describe("DELETE /api/packages/:packageName", () => {
 });
 
 describe("GET /api/updates", () => {
-  // TODO: /api/updates returns NotSupported at this time.
+  test.todo("/api/updates currentlty returns Not Supported.");
   test("Returns NotSupported Status Code.", async () => {
     const res = await request(app).get("/api/updates");
     expect(res).toHaveHTTPCode(501);

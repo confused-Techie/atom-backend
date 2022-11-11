@@ -253,7 +253,7 @@ async function getPackagesSearch(req, res) {
       logger.httpLog(req, res);
       return;
     } else {
-      await common.handleError(req, res, packs);
+      await common.handleError(req, res, packs, 1007);
       return;
     }
   }

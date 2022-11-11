@@ -33,6 +33,7 @@ Error codes within `1000-1999` are error codes that relate to an error originati
 - 1004 : `package_handler.getPackagesDetails()` - The request `database.getPackageByName()` Returned `ok: false`.
 - 1005 : `package_handler.deletePackagesName()` - The request `database.verifyAuth()` Returned `ok: false`.
 - 1006 : `package_handler.deletePackagesName()` - The Request `database.removePackageByName()` Returned `ok: false`.
+- 1007 : `package_handler.getPakcagesSearch()` - The Request `database.simpleSearch()` Returned `ok: false`.
 
 ### 2000
 
