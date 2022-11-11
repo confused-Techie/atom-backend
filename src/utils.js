@@ -108,10 +108,14 @@ async function constructPackageObjectShort(pack) {
     return retPacks;
   } else {
     // not an array
-    if (pack.data === undefined || pack.downloads === undefined || pack.stargazers_count === undefined
-        || pack.semver === undefined) {
-          return {};
-        }
+    if (
+      pack.data === undefined ||
+      pack.downloads === undefined ||
+      pack.stargazers_count === undefined ||
+      pack.semver === undefined
+    ) {
+      return {};
+    }
     let newPack = pack.data;
     newPack.downloads = pack.downloads;
     newPack.stargazers_count = pack.stargazers_count;
