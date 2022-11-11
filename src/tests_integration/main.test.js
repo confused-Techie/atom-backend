@@ -3,36 +3,30 @@
 // Really testing the type of objects are returned, and specific errors are returned.
 // It will try to avoid expecting exact values, but may rely on test data.
 
-/* eslint-disable node/no-unpublished-require */
-/**
- * This is the recommended and only way to mock how Jest would use the module.
- * For supertest it seems strange this caused an error. But was needed anyway.
- */
 const request = require("supertest");
-
-const dbSetup = require("../../node_modules/@databases/pg-test/jest/globalSetup");
-const dbTeardown = require("../../node_modules/@databases/pg-test/jest/globalTeardown");
-/* eslint-enable node/no-unpublished-require */
-
 let app;
 
-beforeAll(async () => {
-  await dbSetup();
+jest.setTimeout(300000);
 
+beforeAll(async () => {
   let db_url = process.env.DATABASE_URL;
+  // this gives us something like postgres://test-user@localhost:5432/test-db
+  // We then need to map these values to where the API server expects,
   let db_url_reg = /postgres:\/\/([\/\S]+)@([\/\S]+):(\d+)\/([\/\S]+)/;
   let db_url_parsed = db_url_reg.exec(db_url);
 
+  // set the parsed URL as proper env
   process.env.DB_HOST = db_url_parsed[2];
   process.env.DB_USER = db_url_parsed[1];
   process.env.DB_DB = db_url_parsed[4];
   process.env.DB_PORT = db_url_parsed[3];
 
-  app = require("../main.js");
-});
+  // Then since we want to make sure we don't initialize the config module, before we have set our values,
+  // we will define our own port to use here.
+  process.env.PORT = 8080;
 
-afterAll(async () => {
-  await dbTeardown();
+  app = require("../main.js");
+
 });
 
 console.log(
