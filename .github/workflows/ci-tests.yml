@@ -40,8 +40,8 @@ jobs:
         run: npm install
 
       - name: TEST - Set Env Variables the Linux Way
-        run: export PULSAR_STATUS=dev
-        run: export NODE_ENV=test
+        run: export PULSAR_STATUS=dev; export NODE_ENV=test
+
       - name: Run Tests
         run: npm run test
 
