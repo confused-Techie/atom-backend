@@ -38,19 +38,20 @@ function checkGCS() {
 async function getBanList() {
   checkGCS();
 
-  if (GCLOUD_STORAGE_BUCKET === undefined ||
-      GOOGLE_APPLICATION_CREDENTIALS === undefined ||
-      process.env.PULSAR_STATUS == "dev") {
+  if (
+    GCLOUD_STORAGE_BUCKET === undefined ||
+    GOOGLE_APPLICATION_CREDENTIALS === undefined ||
+    process.env.PULSAR_STATUS == "dev"
+  ) {
+    // This catches the instance when tests are being run, without access
+    // or good reason to reach to 3rd party servers.
+    // We will log a warning, and return preset test data.
+    console.log("storage.js.getBanList() Returning Development Set of Data.");
 
-      // This catches the instance when tests are being run, without access
-      // or good reason to reach to 3rd party servers.
-      // We will log a warning, and return preset test data.
-      console.log("storage.js.getBanList() Returning Development Set of Data.");
-
-      return {
-        ok: true,
-        content: [ "slothoki", "slot-pulsa", "slot-dana", "hoki-slot" ]
-      };
+    return {
+      ok: true,
+      content: ["slothoki", "slot-pulsa", "slot-dana", "hoki-slot"],
+    };
   }
   const getNew = async function () {
     try {
@@ -90,19 +91,22 @@ async function getBanList() {
 async function getFeaturedPackages() {
   checkGCS();
 
-  if (GCLOUD_STORAGE_BUCKET === undefined ||
-      GOOGLE_APPLICATION_CREDENTIALS === undefined ||
-      process.env.PULSAR_STATUS == "dev") {
+  if (
+    GCLOUD_STORAGE_BUCKET === undefined ||
+    GOOGLE_APPLICATION_CREDENTIALS === undefined ||
+    process.env.PULSAR_STATUS == "dev"
+  ) {
+    // This catches the instance when tests are being run, without access
+    // or good reason to reach to 3rd party servers.
+    // We will log a warning, and return preset test data.
+    console.log(
+      "storage.js.getFeaturedPackages() Returning Development Set of Data."
+    );
 
-      // This catches the instance when tests are being run, without access
-      // or good reason to reach to 3rd party servers.
-      // We will log a warning, and return preset test data.
-      console.log("storage.js.getFeaturedPackages() Returning Development Set of Data.");
-
-      return {
-        ok: true,
-        content: [ "hydrogen", "atom-clock", "hey-pane" ]
-      };
+    return {
+      ok: true,
+      content: ["hydrogen", "atom-clock", "hey-pane"],
+    };
   }
 
   const getNew = async function () {
@@ -142,19 +146,22 @@ async function getFeaturedPackages() {
 async function getFeaturedThemes() {
   checkGCS();
 
-  if (GCLOUD_STORAGE_BUCKET === undefined ||
-      GOOGLE_APPLICATION_CREDENTIALS === undefined ||
-      process.env.PULSAR_STATUS == "dev") {
+  if (
+    GCLOUD_STORAGE_BUCKET === undefined ||
+    GOOGLE_APPLICATION_CREDENTIALS === undefined ||
+    process.env.PULSAR_STATUS == "dev"
+  ) {
+    // This catches the instance when tests are being run, without access
+    // or good reason to reach to 3rd party servers.
+    // We will log a warning, and return preset test data.
+    console.log(
+      "storage.js.getFeaturedThemes() Returning Development Set of Data."
+    );
 
-      // This catches the instance when tests are being run, without access
-      // or good reason to reach to 3rd party servers.
-      // We will log a warning, and return preset test data.
-      console.log("storage.js.getFeaturedThemes() Returning Development Set of Data.");
-
-      return {
-        ok: true,
-        content: [ "atom-material-ui", "atom-material-syntax" ]
-      };
+    return {
+      ok: true,
+      content: ["atom-material-ui", "atom-material-syntax"],
+    };
   }
 
   const getNew = async function () {
