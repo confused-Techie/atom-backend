@@ -61,7 +61,11 @@ CREATE TABLE versions (
 INSERT INTO packages (pointer, name, creation_method, downloads, stargazers_count, data, original_stargazers)
 VALUES (
   'd28c7ce5-c9c4-4fb6-a499-a7c6dcec355b', 'language-css', 'user made', 400004, 76,
-  '{"name": "language-css", "description": "CSS Support in Atom", "keywords": ["tree-sitter"]}', 76
+  '{"name": "language-css", "readme": "Cool readme", "metadata": {"bugs": {"url": "https://github.com/atom/language-css/issues"},
+  "name": "language-css", "engines": {"atom": "*","node":"*"},"license":"MIT","version":"0.45.7","homepage":"http://atom.github.io/language-css",
+  "keywords":["tree-sitter"],"repository":{"url":"https://github.com/atom/language-css.git","type":"git"},"description":"CSS Support in Atom",
+  "dependencies":{"tree-sitter-css":"^0.19.0"},"devDependencies":{"coffeelint":"^1.10.1"}},"repository":{"url":"https://github.com/atom/langauge-css",
+  "type":"git"}}', 76
 ), (
   'd27dbd37-e58e-4e02-b804-9e3e6ae02fb1', 'language-cpp', 'user made', 849156, 91,
   '{"name": "language-cpp", "description": "C++ Support in Atom", "keywords": ["tree-sitter"]}', 91
