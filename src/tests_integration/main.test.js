@@ -26,7 +26,6 @@ beforeAll(async () => {
   process.env.PORT = 8080;
 
   app = require("../main.js");
-
 });
 
 console.log(

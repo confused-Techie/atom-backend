@@ -1,5 +1,5 @@
 module.exports = {
   globals: {
-    jest: "readonly"
-  }
+    jest: "readonly",
+  },
 };
