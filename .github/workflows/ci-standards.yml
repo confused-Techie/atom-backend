@@ -1,0 +1,45 @@
+name: CI - Standards
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  standards:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+    - name: Checkout the latest code
+      uses: actions/setup-node@v3
+
+    - name: Setup NodeJS - ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Lint Codebase
+      run: npm run lint
+
+    - name: Generate Web API Docs
+      run: npm run api-docs
+
+    - name: Generate JSDocs
+      run: npm run js-docs
+
+    - name: Generate Complexity Reports
+      run: npm run complex
+
+    - name: Commit All Changes
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: GH Action Standards
