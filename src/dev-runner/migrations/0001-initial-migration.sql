@@ -76,6 +76,12 @@ VALUES (
 ), (
   '1e19da12-322a-4b37-99ff-64f866cc0cfa', 'hey-pane', 'Migrated from Atom.io', 206804, 176,
   '{"name": "hey-pane", "readme": "hey-pane!", "metadata": { "main": "./lib/hey-pane", "license": "MIT"}}', 176
+), (
+  'a0ef01cb-720e-4c0d-80c5-f0ed441f31fc', 'atom-material-ui', 'Migrated from Atom.io', 2509605, 1772,
+  '{"name": "atom-material-ui", "readme": "ATOM!"}', 1772
+), (
+  '28952de5-ddbf-41a8-8d87-5d7e9d7ad7ac', 'atom-material-syntax', 'Migrated from Atom.io', 1743927, 1309,
+  '{"name": "atom-material-syntax"}', 1309
 );
 
 INSERT INTO names (name, pointer)
@@ -89,6 +95,10 @@ VALUES (
   'atom-clock', 'aea26882-8459-4725-82ad-41bf7aa608c3'
 ), (
   'hey-pane', '1e19da12-322a-4b37-99ff-64f866cc0cfa'
+), (
+  'atom-material-ui', 'a0ef01cb-720e-4c0d-80c5-f0ed441f31fc'
+), (
+  'atom-material-syntax', '28952de5-ddbf-41a8-8d87-5d7e9d7ad7ac'
 );
 
 INSERT INTO versions (id, package, status, semver, license, engine, meta)
@@ -113,6 +123,12 @@ VALUES (
 ), (
   152901, '1e19da12-322a-4b37-99ff-64f866cc0cfa', 'latest', '1.2.0', 'MIT', '{"atom": "*"}',
   '{"name":"hey-pane", "dist": {"tarball": "https://www.atom.io/api/packages/hydrogen/version/1.2.0/tarball"}}'
+), (
+  135512, 'a0ef01cb-720e-4c0d-80c5-f0ed441f31fc', 'latest', '2.1.3', 'MIT', '{"atom": "*"}',
+  '{"name": "atom-material-ui", "dist": {"tarball": "https://www.atom.io/api/packages/atom-material-ui/version/2.1.3/tarball"}}'
+), (
+  169370, '28952de5-ddbf-41a8-8d87-5d7e9d7ad7ac', 'latest', '1.0.8', 'MIT', '{"atom":"*"}',
+  '{"name": "atom-material-syntax", "dist": {"tarball":"https://www.atom/io/api/packages/atom-material-syntax/version/1.0.8/tarball"}}'
 );
 
 INSERT INTO users (username, token, avatar)

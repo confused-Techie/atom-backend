@@ -85,9 +85,9 @@ describe("GET /api/updates", () => {
 });
 
 describe("GET Theme Featured", () => {
-  test("Returns NotSupported Status Code", async () => {
+  test("Returns Successful Status Code", async () => {
     const res = await request(app).get("/api/themes/featured");
-    expect(res.statusCode).toBe(501);
+    expect(res.statusCode).toBe(200);
   });
   test("Returns NotSupported Message", async () => {
     const res = await request(app).get("/api/updates");
