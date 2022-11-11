@@ -1,6 +1,7 @@
 # Atom Backend
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/d4ca4ded429c446fb28d0654c8c05d6d)](https://www.codacy.com/gh/confused-Techie/atom-backend/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=confused-Techie/atom-backend&amp;utm_campaign=Badge_Grade)
+[![codecov](https://codecov.io/gh/confused-Techie/atom-backend/branch/main/graph/badge.svg?token=LZ33F9DSH4)](https://codecov.io/gh/confused-Techie/atom-backend)
 
 [![CI - Standards](https://github.com/confused-Techie/atom-backend/actions/workflows/ci-standards.yml/badge.svg)](https://github.com/confused-Techie/atom-backend/actions/workflows/ci-standards.yml)
 [![CI - Tests](https://github.com/confused-Techie/atom-backend/actions/workflows/ci-tests.yml/badge.svg)](https://github.com/confused-Techie/atom-backend/actions/workflows/ci-tests.yml)
