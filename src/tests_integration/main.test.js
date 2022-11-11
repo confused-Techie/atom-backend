@@ -65,7 +65,6 @@ describe("GET /api/packages/search", () => {
   test("Valid Search Returns Array", async () => {
     const res = await request(app).get("/api/packages/search?q=language");
     expect(res.body).toBeArray();
-
   });
   test.todo("Add a test case for a search that doesn't match any results.");
 });
