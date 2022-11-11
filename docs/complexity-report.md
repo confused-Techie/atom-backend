@@ -3,8 +3,8 @@
 * Mean per-function logical LOC: 10.376608187134503
 * Mean per-function parameter count: 0.4874269005847953
 * Mean per-function cyclomatic complexity: 2.6345029239766085
-* Mean per-function Halstead effort: 7391.611220556829
-* Mean per-module maintainability index: 75.72465818176086
+* Mean per-function Halstead effort: 7385.527335846575
+* Mean per-module maintainability index: 75.73305314222397
 * First-order density: 1.3850415512465373%
 * Change cost: 6.9252077562326875%
 * Core size: 100%
@@ -16,7 +16,7 @@
 * Mean parameter count: 0
 * Cyclomatic complexity: 1
 * Cyclomatic complexity density: 7.6923076923076925%
-* Maintainability index: 61.06342904606204
+* Maintainability index: 61.2229332948611
 * Dependency count: 0
 
 ## /home/runner/work/atom-backend/atom-backend/src/cache.js
