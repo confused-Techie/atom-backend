@@ -1,9 +1,9 @@
 const config = {
+  collectCoverage: true,
+  coverageReporters: ["text", "clover"],
   projects: [
     {
       displayName: "Integration-Tests",
-      collectCoverage: true,
-      coverageReporters: ["json-summary", "text", "lcovonly"],
       globalSetup: "<rootDir>/node_modules/@databases/pg-test/jest/globalSetup",
       globalTeardown:
         "<rootDir>/node_modules/@databases/pg-test/jest/globalTeardown",
@@ -11,8 +11,6 @@ const config = {
     },
     {
       displayName: "Unit-Tests",
-      collectCoverage: true,
-      coverageReporters: ["text", "clover"],
       testMatch: ["<rootDir>/src/tests/*.js"],
     },
   ],
