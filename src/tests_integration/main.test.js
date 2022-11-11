@@ -32,10 +32,27 @@ console.log(
   "This is in development, integration tests may not function as expected."
 );
 
+expect.extend({
+  toBeArray(value) {
+    if (Array.isArray(value)) {
+      return {
+        pass: true,
+        message: () => '',
+      };
+    } else {
+      return {
+        pass: false,
+        message: () => `Expected ${value} to be an array but Array.isArray() = false`,
+      };
+    }
+  },
+});
+
 describe("Get /api/packages", () => {
   test("Should respond with an array of packages.", async () => {
     const res = await request(app).get("/api/packages");
-    expect(Array.isArray(res.body)).toBeTruthy();
+    expect(res.body).toBeArray();
+    //expect(Array.isArray(res.body)).toBeTruthy();
   });
   test("Should return valid Status Code", async () => {
     const res = await request(app).get("/api/packages");
@@ -46,7 +63,8 @@ describe("Get /api/packages", () => {
 describe("GET /api/packages/search", () => {
   test("Valid Search Returns Array", async () => {
     const res = await request(app).get("/api/packages?q=value");
-    expect(Array.isArray(res.body)).toBeTruthy();
+    expect(res.body).toBeArray();
+    //expect(Array.isArray(res.body)).toBeTruthy();
   });
 });
 
