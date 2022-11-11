@@ -42,7 +42,8 @@ expect.extend({
     } else {
       return {
         pass: false,
-        message: () => `Expected Array but received: ${this.utils.printReceived(value)}`,
+        message: () =>
+          `Expected Array but received: ${this.utils.printReceived(value)}`,
       };
     }
   },
