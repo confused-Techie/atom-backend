@@ -142,7 +142,7 @@ describe("GET Packages Featured", () => {
   test("Returns Array", async () => {
     const res = await request(app).get("/api/packages/featured");
     expect(res.body).toBeArray();
-  })
+  });
 });
 
 describe("GET /api/stars", () => {
