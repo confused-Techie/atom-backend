@@ -60,9 +60,6 @@ function getConfig() {
       debug: process.env.DEBUGLOG
         ? process.env.DEBUGLOG
         : data.env_variables.DEBUGLOG,
-      file_store: process.env.FILESTORE
-        ? process.env.FILESTORE
-        : data.env_variables.FILESTORE,
       GCLOUD_STORAGE_BUCKET: process.env.GCLOUD_STORAGE_BUCKET
         ? process.env.GCLOUD_STORAGE_BUCKET
         : data.env_variables.GCLOUD_STORAGE_BUCKET,

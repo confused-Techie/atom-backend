@@ -8,6 +8,8 @@ service: default
 env_variables:
   PORT: 8080
   # Valid Search:
+  # -- Please note currently SEARCHALGORITHM is ignored
+  # In favour of built in fuzzy matching.
   # Longest Common Sequence: "lcs"
   # Levenshtein Distance: "levenshtein_distance"
   # Levenshtein Distance w/ Word Seperators - Double Mean: "levenshtein_distance_wsdm"
@@ -21,10 +23,6 @@ env_variables:
   CACHETIME: 600000
   # Should only be enabled in non-production builds. Enabled as true for extra output during testing.
   DEBUGLOG: true
-  # This indicates how the server will retreive data.
-  # - "filesystem": Means the data is within the ./data folder.
-  # - "gcs": Means the data will be hosted in Google Cloud Storage.
-  FILESTORE: "filesystem"
   # The following settings are for storing data within Google Cloud Storage
   GCLOUD_STORAGE_BUCKET: "bucket_name"
   GOOGLE_APPLICATION_CREDENTIALS: "local_file_path"
