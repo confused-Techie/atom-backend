@@ -89,6 +89,11 @@ async function constructPackageObjectFull(pack) {
  */
 async function constructPackageObjectShort(pack) {
   if (Array.isArray(pack)) {
+    if (pack.length == 0) {
+      // Sometimes it seems an empty array will be passed here, in that case we will protect against
+      // manipulation of `undefined` objects
+      return [];
+    }
     let retPacks = [];
 
     for (let i = 0; i < pack.length; i++) {

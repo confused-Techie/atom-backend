@@ -47,17 +47,30 @@ expect.extend({
       };
     }
   },
+  toHaveHTTPCode(req, want) {
+    if (res.statusCode == want) {
+      return {
+        pass: true,
+        message: () => "",
+      };
+    } else {
+      return {
+        pass: false,
+        message: () =>
+          `Expected HTTP Status Code: ${want} but got ${req.statusCode}`,
+      };
+    }
+  },
 });
 
 describe("Get /api/packages", () => {
   test("Should respond with an array of packages.", async () => {
     const res = await request(app).get("/api/packages");
     expect(res.body).toBeArray();
-    //expect(Array.isArray(res.body)).toBeTruthy();
   });
   test("Should return valid Status Code", async () => {
     const res = await request(app).get("/api/packages");
-    expect(res.statusCode).toBe(200);
+    expect(res).toHaveHTTPCode(200);
   });
 });
 
@@ -66,7 +79,14 @@ describe("GET /api/packages/search", () => {
     const res = await request(app).get("/api/packages/search?q=language");
     expect(res.body).toBeArray();
   });
-  test.todo("Add a test case for a search that doesn't match any results.");
+  test("Invalid Search Returns Array", async () => {
+    const res = await request(app).get("/api/packages/search?q=not-one-match");
+    expect(res.body).toBeArray();
+  });
+  test("Invalid Search Returns Empty Array", async () => {
+    const res = await request(app).get("/api/packages/search?q=not-one-match");
+    expect(res.body.length).toBeGreaterThan(1);
+  });
 });
 
 describe("GET /api/packages/:packageName", () => {
@@ -85,7 +105,7 @@ describe("DELETE /api/packages/:packageName", () => {
   // not to comprimise SQL data.
   test.skip("No Auth, fails", async () => {
     const res = await request(app).remove("/api/packages/what-a-package");
-    expect(res.statusCode).toBe(401); // Otherwise the no auth http status code.
+    expect(res).toHaveHTTPCode(401);
   });
 });
 
@@ -93,7 +113,7 @@ describe("GET /api/updates", () => {
   // TODO: /api/updates returns NotSupported at this time.
   test("Returns NotSupported Status Code.", async () => {
     const res = await request(app).get("/api/updates");
-    expect(res.statusCode).toBe(501);
+    expect(res).toHaveHTTPCode(501);
   });
   test("Returns NotSupported Message", async () => {
     const res = await request(app).get("/api/updates");
@@ -106,21 +126,23 @@ describe("GET /api/updates", () => {
 describe("GET Theme Featured", () => {
   test("Returns Successful Status Code", async () => {
     const res = await request(app).get("/api/themes/featured");
-    expect(res.statusCode).toBe(200);
+    expect(res).toHaveHTTPCode(200);
   });
-  test("Returns NotSupported Message", async () => {
-    const res = await request(app).get("/api/updates");
-    expect(res.body.message).toBe(
-      "While under development this feature is not supported."
-    );
+  test("Returns Array", async () => {
+    const res = await request(app).get("/api/themes/featured");
+    expect(res.body).toBeArray();
   });
 });
 
 describe("GET Packages Featured", () => {
   test("Returns Successful Status Code", async () => {
     const res = await request(app).get("/api/packages/featured");
-    expect(res.statusCode).toBe(200);
+    expect(res).toHaveHTTPCode(200);
   });
+  test("Returns Array", async () => {
+    const res = await request(app).get("/api/packages/featured");
+    expect(res.body).toBeArray();
+  })
 });
 
 describe("GET /api/stars", () => {

@@ -201,7 +201,7 @@ async function getPackagesFeatured(req, res) {
   let col = await database.getFeaturedPackages();
 
   if (!col.ok) {
-    await common.handleError(req, res, col);
+    await common.handleError(req, res, col, 1003);
     return;
   }
 
@@ -301,7 +301,7 @@ async function getPackagesDetails(req, res) {
   let pack = await database.getPackageByName(params.name);
 
   if (!pack.ok) {
-    await common.handleError(req, res, pack);
+    await common.handleError(req, res, pack, 1004);
     return;
   }
 
@@ -335,14 +335,14 @@ async function deletePackagesName(req, res) {
   let user = await database.verifyAuth(params.auth);
 
   if (!user.ok) {
-    await common.handleError(req, res, user);
+    await common.handleError(req, res, user, 1005);
     return;
   }
 
   let gitowner = await git.ownership(user.content, params.packageName);
 
   if (!gitowner.ok) {
-    await common.handleError(req, res, gitowner);
+    await common.handleError(req, res, gitowner, 4001);
     return;
   }
 
@@ -350,7 +350,7 @@ async function deletePackagesName(req, res) {
   let rm = await database.removePackageByName(params.packageName);
 
   if (!rm.ok) {
-    await common.handleError(req, res, rm);
+    await common.handleError(req, res, rm, 1006);
     return;
   }
 

@@ -1001,12 +1001,11 @@ async function simpleSearch(term, page, dir, sort) {
       LIMIT ${limit}
       OFFSET ${offset}
     `;
-    console.log(command);
+
     return command.count !== 0
       ? { ok: true, content: command }
       : { ok: false, content: `No packages found.`, short: "Not Found" };
   } catch (err) {
-    console.log(err);
     return { ok: false, content: err, short: "Server Error" };
   }
 }

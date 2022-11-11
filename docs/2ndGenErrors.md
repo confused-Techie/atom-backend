@@ -19,9 +19,9 @@ While Numeric Error Codes will now accompany traditional error messages, this wi
 
 # Numeric Error Codes
 
-### 0000
+### 9999
 
-The numeric error code `0000` means that whatever reported the error either doesn't support Numeric Error Codes yet, or was unable to return anything to help. Likely meaning something truly unexpected happened.
+The numeric error code `9999` means that whatever reported the error either doesn't support Numeric Error Codes yet, or was unable to return anything to help. Likely meaning something truly unexpected happened.
 
 ### 1000
 
@@ -29,6 +29,10 @@ Error codes within `1000-1999` are error codes that relate to an error originati
 
 - 1001 : `package_handler.getPackages()` - The initial request `database.getSortedPackages()` Returned `ok: false`.
 - 1002 : `package_handler.getPackages()` - The request `database.getTotalPackageEstimate()` Returned `ok: false`.
+- 1003 : `package_handler.getPackagesFeatured()` - The request `database.getFeaturedPackages()` Returned `ok: false`.
+- 1004 : `package_handler.getPackagesDetails()` - The request `database.getPackageByName()` Returned `ok: false`.
+- 1005 : `package_handler.deletePackagesName()` - The request `database.verifyAuth()` Returned `ok: false`.
+- 1006 : `package_handler.deletePackagesName()` - The Request `database.removePackageByName()` Returned `ok: false`.
 
 ### 2000
 
@@ -41,3 +45,5 @@ Error codes within `3000-3999` are error codes that relate to errors utility and
 ### 4000
 
 Error codes within `4000-4999` relate to the catch all of other interactions on the codebase. And could relate to many different modules, but the documentation for your error code should provide insight.
+
+- 4001 : `package_handler.deletePackagesName()` - The request `git.ownership()` Returned `ok: false`.
