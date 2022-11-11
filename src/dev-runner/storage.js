@@ -9,12 +9,7 @@
 const featuredPackages = [
   "hydrogen",
   "atom-clock",
-  "hey-pane",
-  "scroll-through-time",
-  "teletype",
-  "zentabs",
-  "atom-material-syntax",
-  "atom-material-ui",
+  "hey-pane"
 ];
 
 const featuredThemes = ["atom-material-ui", "atom-material-syntax"];
