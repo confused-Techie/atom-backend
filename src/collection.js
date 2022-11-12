@@ -8,10 +8,10 @@ const search_func = require("./search.js");
 const { search_algorithm } = require("./config.js").getConfig();
 
 /**
-  * @function searchWithinPackages
-  * @desc Previously used to preform searches against the built in search algorithm. But since the switch
-  * to native fuzzy matching this may be depreciated.
-  */
+ * @function searchWithinPackages
+ * @desc Previously used to preform searches against the built in search algorithm. But since the switch
+ * to native fuzzy matching this may be depreciated.
+ */
 async function searchWithinPackages(
   search,
   packages,
@@ -62,11 +62,11 @@ async function searchWithinPackages(
 }
 
 /**
-  * @function engineFilter
-  * @desc A complex function that provides filtering by Atom engine version.
-  * This should take a package with it's versions and retreive whatever matches
-  * that engine version as provided.
-  */
+ * @function engineFilter
+ * @desc A complex function that provides filtering by Atom engine version.
+ * This should take a package with it's versions and retreive whatever matches
+ * that engine version as provided.
+ */
 async function engineFilter(pack, engine) {
   // Comparison utils:
   // These ones expect to get valid strings as parameters, which should be convertible to numbers.

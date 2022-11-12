@@ -127,6 +127,26 @@ Allows simple interfaces to handle caching an object in memory. Used to cache da
 Endpoint of all features related to sorting, organizing, or pruning package
 collections, to be returned to the user.
 
+
+* [collection](#module_collection)
+    * [~searchWithinPackages()](#module_collection..searchWithinPackages)
+    * [~engineFilter()](#module_collection..engineFilter)
+
+<a name="module_collection..searchWithinPackages"></a>
+
+### collection~searchWithinPackages()
+Previously used to preform searches against the built in search algorithm. But since the switch
+to native fuzzy matching this may be depreciated.
+
+**Kind**: inner method of [<code>collection</code>](#module_collection)  
+<a name="module_collection..engineFilter"></a>
+
+### collection~engineFilter()
+A complex function that provides filtering by Atom engine version.
+This should take a package with it's versions and retreive whatever matches
+that engine version as provided.
+
+**Kind**: inner method of [<code>collection</code>](#module_collection)  
 <a name="module_config"></a>
 
 ## config

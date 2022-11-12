@@ -33,7 +33,7 @@ describe("Cache Objects Have the Functions and Variables Expected", () => {
   });
 
   test("Cache Object Contains Function 'invalidate'", async () => {
-    expect(typeof newCache.invalidate === 'function').toBeTruthy();
+    expect(typeof newCache.invalidate === "function").toBeTruthy();
   });
 
   test("Cache Object Returns Boolean for Expired", async () => {
