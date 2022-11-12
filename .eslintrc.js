@@ -1,15 +1,36 @@
 module.exports = {
-  extends: ["eslint:recommended", "node/recommended"],
-  plugins: ["node/recommended"],
-  globals: {
-    jest: "readonly",
-  },
-  rules: {
-    "node/no-unpublished-require": [
-      "error",
-      {
-        allowModules: ["supertest"],
-      },
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es2021": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:node/recommended"
     ],
-  },
-};
+    "overrides": [
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    },
+    "rules": {
+      "node/no-unpublished-require": ["error", {
+        "allowModules": [
+          "supertest"
+        ]
+      }]
+    },
+    "plugins": [
+      "node/recommended"
+    ],
+    "globals": {
+      "jest": "readonly",
+      "test": "readonly",
+      "expect": "readonly",
+      "describe": "readonly",
+      "beforeAll": "readonly",
+      "afterEach": "readonly",
+      "process": "writeable",
+      "Buffer": "readonly"
+    }
+}
