@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1668244526800" clover="3.2.0">
-  <project timestamp="1668244526800" name="All files">
+<coverage generated="1668288344111" clover="3.2.0">
+  <project timestamp="1668288344111" name="All files">
     <metrics statements="1152" coveredstatements="579" conditionals="556" coveredconditionals="251" methods="152" coveredmethods="98" elements="1860" coveredelements="928" complexity="0" loc="1152" ncloc="1152" packages="2" files="20" classes="20"/>
     <package name="src">
       <metrics statements="833" coveredstatements="421" conditionals="444" coveredconditionals="211" methods="124" coveredmethods="80"/>
-      <file name="cache.js" path="/home/runner/work/atom-backend/atom-backend/src/cache.js">
+      <file name="cache.js" path="/home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/cache.js">
         <metrics statements="10" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2"/>
         <line num="9" count="4" type="stmt"/>
         <line num="19" count="2" type="stmt"/>
@@ -17,7 +17,7 @@
         <line num="30" count="0" type="stmt"/>
         <line num="34" count="4" type="stmt"/>
       </file>
-      <file name="collection.js" path="/home/runner/work/atom-backend/atom-backend/src/collection.js">
+      <file name="collection.js" path="/home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/collection.js">
         <metrics statements="89" coveredstatements="56" conditionals="66" coveredconditionals="37" methods="9" coveredmethods="8"/>
         <line num="7" count="2" type="stmt"/>
         <line num="8" count="2" type="stmt"/>
@@ -109,7 +109,7 @@
         <line num="266" count="3" type="stmt"/>
         <line num="269" count="2" type="stmt"/>
       </file>
-      <file name="config.js" path="/home/runner/work/atom-backend/atom-backend/src/config.js">
+      <file name="config.js" path="/home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/config.js">
         <metrics statements="15" coveredstatements="10" conditionals="42" coveredconditionals="26" methods="1" coveredmethods="1"/>
         <line num="6" count="8" type="stmt"/>
         <line num="7" count="8" type="stmt"/>
@@ -127,7 +127,7 @@
         <line num="101" count="0" type="stmt"/>
         <line num="105" count="8" type="stmt"/>
       </file>
-      <file name="database.js" path="/home/runner/work/atom-backend/atom-backend/src/database.js">
+      <file name="database.js" path="/home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/database.js">
         <metrics statements="234" coveredstatements="71" conditionals="120" coveredconditionals="32" methods="33" coveredmethods="12"/>
         <line num="7" count="1" type="stmt"/>
         <line num="8" count="1" type="stmt"/>
@@ -364,7 +364,7 @@
         <line num="1139" count="0" type="stmt"/>
         <line num="1143" count="1" type="stmt"/>
       </file>
-      <file name="debug_utils.js" path="/home/runner/work/atom-backend/atom-backend/src/debug_utils.js">
+      <file name="debug_utils.js" path="/home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/debug_utils.js">
         <metrics statements="15" coveredstatements="15" conditionals="6" coveredconditionals="6" methods="1" coveredmethods="1"/>
         <line num="16" count="3" type="stmt"/>
         <line num="17" count="3" type="stmt"/>
@@ -382,7 +382,7 @@
         <line num="39" count="3" type="stmt"/>
         <line num="42" count="1" type="stmt"/>
       </file>
-      <file name="error.js" path="/home/runner/work/atom-backend/atom-backend/src/error.js">
+      <file name="error.js" path="/home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/error.js">
         <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="8" coveredmethods="8"/>
         <line num="18" count="7" type="stmt"/>
         <line num="31" count="5" type="stmt"/>
@@ -394,7 +394,7 @@
         <line num="116" count="5" type="stmt"/>
         <line num="121" count="3" type="stmt"/>
       </file>
-      <file name="git.js" path="/home/runner/work/atom-backend/atom-backend/src/git.js">
+      <file name="git.js" path="/home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/git.js">
         <metrics statements="133" coveredstatements="11" conditionals="61" coveredconditionals="4" methods="7" coveredmethods="1"/>
         <line num="6" count="1" type="stmt"/>
         <line num="8" count="1" type="stmt"/>
@@ -530,7 +530,7 @@
         <line num="513" count="0" type="stmt"/>
         <line num="517" count="1" type="stmt"/>
       </file>
-      <file name="logger.js" path="/home/runner/work/atom-backend/atom-backend/src/logger.js">
+      <file name="logger.js" path="/home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/logger.js">
         <metrics statements="20" coveredstatements="19" conditionals="18" coveredconditionals="16" methods="5" coveredmethods="5"/>
         <line num="7" count="6" type="stmt"/>
         <line num="18" count="61" type="stmt"/>
@@ -553,7 +553,7 @@
         <line num="101" count="2" type="stmt"/>
         <line num="105" count="6" type="stmt"/>
       </file>
-      <file name="main.js" path="/home/runner/work/atom-backend/atom-backend/src/main.js">
+      <file name="main.js" path="/home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/main.js">
         <metrics statements="58" coveredstatements="48" conditionals="0" coveredconditionals="0" methods="23" coveredmethods="13"/>
         <line num="7" count="1" type="stmt"/>
         <line num="8" count="1" type="stmt"/>
@@ -614,7 +614,7 @@
         <line num="584" count="2" type="stmt"/>
         <line num="587" count="1" type="stmt"/>
       </file>
-      <file name="query.js" path="/home/runner/work/atom-backend/atom-backend/src/query.js">
+      <file name="query.js" path="/home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/query.js">
         <metrics statements="59" coveredstatements="59" conditionals="50" coveredconditionals="50" methods="10" coveredmethods="10"/>
         <line num="15" count="15" type="stmt"/>
         <line num="16" count="15" type="stmt"/>
@@ -676,7 +676,7 @@
         <line num="232" count="9" type="stmt"/>
         <line num="235" count="2" type="stmt"/>
       </file>
-      <file name="search.js" path="/home/runner/work/atom-backend/atom-backend/src/search.js">
+      <file name="search.js" path="/home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/search.js">
         <metrics statements="58" coveredstatements="57" conditionals="28" coveredconditionals="24" methods="9" coveredmethods="9"/>
         <line num="20" count="5" type="stmt"/>
         <line num="32" count="15" type="stmt"/>
@@ -737,7 +737,7 @@
         <line num="187" count="6" type="stmt"/>
         <line num="190" count="3" type="stmt"/>
       </file>
-      <file name="storage.js" path="/home/runner/work/atom-backend/atom-backend/src/storage.js">
+      <file name="storage.js" path="/home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/storage.js">
         <metrics statements="64" coveredstatements="19" conditionals="29" coveredconditionals="8" methods="7" coveredmethods="4"/>
         <line num="8" count="3" type="stmt"/>
         <line num="9" count="3" type="stmt"/>
@@ -804,7 +804,7 @@
         <line num="192" count="0" type="stmt"/>
         <line num="195" count="3" type="stmt"/>
       </file>
-      <file name="utils.js" path="/home/runner/work/atom-backend/atom-backend/src/utils.js">
+      <file name="utils.js" path="/home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/utils.js">
         <metrics statements="69" coveredstatements="38" conditionals="24" coveredconditionals="8" methods="8" coveredmethods="6"/>
         <line num="5" count="2" type="stmt"/>
         <line num="6" count="2" type="stmt"/>
@@ -879,7 +879,7 @@
     </package>
     <package name="src.handlers">
       <metrics statements="319" coveredstatements="158" conditionals="112" coveredconditionals="40" methods="28" coveredmethods="18"/>
-      <file name="common_handler.js" path="/home/runner/work/atom-backend/atom-backend/src/handlers/common_handler.js">
+      <file name="common_handler.js" path="/home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/handlers/common_handler.js">
         <metrics statements="35" coveredstatements="31" conditionals="12" coveredconditionals="8" methods="8" coveredmethods="8"/>
         <line num="10" count="2" type="stmt"/>
         <line num="11" count="2" type="stmt"/>
@@ -917,7 +917,7 @@
         <line num="162" count="1" type="stmt"/>
         <line num="166" count="2" type="stmt"/>
       </file>
-      <file name="oauth_handler.js" path="/home/runner/work/atom-backend/atom-backend/src/handlers/oauth_handler.js">
+      <file name="oauth_handler.js" path="/home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/handlers/oauth_handler.js">
         <metrics statements="5" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
         <line num="8" count="1" type="stmt"/>
         <line num="9" count="1" type="stmt"/>
@@ -925,7 +925,7 @@
         <line num="48" count="0" type="stmt"/>
         <line num="51" count="1" type="stmt"/>
       </file>
-      <file name="package_handler.js" path="/home/runner/work/atom-backend/atom-backend/src/handlers/package_handler.js">
+      <file name="package_handler.js" path="/home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/handlers/package_handler.js">
         <metrics statements="222" coveredstatements="96" conditionals="86" coveredconditionals="30" methods="14" coveredmethods="7"/>
         <line num="15" count="1" type="stmt"/>
         <line num="16" count="1" type="stmt"/>
@@ -1150,7 +1150,7 @@
         <line num="756" count="0" type="stmt"/>
         <line num="759" count="1" type="stmt"/>
       </file>
-      <file name="star_handler.js" path="/home/runner/work/atom-backend/atom-backend/src/handlers/star_handler.js">
+      <file name="star_handler.js" path="/home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/handlers/star_handler.js">
         <metrics statements="21" coveredstatements="10" conditionals="6" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="6" count="1" type="stmt"/>
         <line num="7" count="1" type="stmt"/>
@@ -1174,7 +1174,7 @@
         <line num="50" count="0" type="stmt"/>
         <line num="53" count="1" type="stmt"/>
       </file>
-      <file name="theme_handler.js" path="/home/runner/work/atom-backend/atom-backend/src/handlers/theme_handler.js">
+      <file name="theme_handler.js" path="/home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/handlers/theme_handler.js">
         <metrics statements="12" coveredstatements="10" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="10" count="1" type="stmt"/>
         <line num="11" count="1" type="stmt"/>
@@ -1189,13 +1189,13 @@
         <line num="42" count="2" type="stmt"/>
         <line num="45" count="1" type="stmt"/>
       </file>
-      <file name="update_handler.js" path="/home/runner/work/atom-backend/atom-backend/src/handlers/update_handler.js">
+      <file name="update_handler.js" path="/home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/handlers/update_handler.js">
         <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="7" count="1" type="stmt"/>
         <line num="21" count="2" type="stmt"/>
         <line num="24" count="1" type="stmt"/>
       </file>
-      <file name="user_handler.js" path="/home/runner/work/atom-backend/atom-backend/src/handlers/user_handler.js">
+      <file name="user_handler.js" path="/home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/handlers/user_handler.js">
         <metrics statements="21" coveredstatements="5" conditionals="6" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="6" count="1" type="stmt"/>
         <line num="7" count="1" type="stmt"/>
