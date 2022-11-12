@@ -13,11 +13,7 @@
  */
 function page(req) {
   let def = 1;
-  let prov = req.query.page;
-
-  if (prov === undefined) {
-    return def;
-  }
+  let prov = req.query.page ?? def;
 
   // ensure it's a proper number
   return prov.match(/^\d+$/) !== null ? prov : def;
@@ -36,11 +32,7 @@ function sort(req, def = "downloads") {
   // it will default to downloads, but if we pass the default, such as during search we can provide
   // the default relevance
   let valid = ["downloads", "created_at", "updated_at", "stars", "relevance"];
-  let prov = req.query.sort;
-
-  if (prov === undefined) {
-    return def;
-  }
+  let prov = req.query.sort ?? def;
 
   return valid.includes(prov) ? prov : def;
 }
@@ -61,11 +53,8 @@ function dir(req) {
   if (prov === undefined) {
     // Seems that the autolink headers use order, while documentation uses direction.
     // Since we are not sure where in the codebase it uses the other, we will just accept both.
-    let altprov = req.query.order;
+    let altprov = req.query.order ?? def;
 
-    if (altprov === undefined) {
-      return def;
-    }
     return valid.includes(altprov) ? altprov : def;
   }
 
@@ -93,13 +82,7 @@ function query(req) {
     let decodeProv = decodeURIComponent(prov); // this will undo any encoding done to get the request to us.
 
     // Then some basic checks to help prevent malicious queries.
-    if (pathTraversalAttempt(decodeProv)) {
-      // detected path traversal attack. Return empty query.
-      return "";
-    } else {
-      // Do not allow strings longer than `max_length` characters
-      return decodeProv.slice(0, max_length).trim();
-    }
+    return pathTraversalAttempt(decodeProv) ? "" : decodeProv.slice(0, max_length).trim();
   } catch (err) {
     // an error occured while decoding the URI component. Return an empty query.
     return "";
@@ -141,11 +124,7 @@ function engine(req) {
 function auth(req) {
   let token = req.get("Authorization");
 
-  if (token === undefined || token === null || token === "") {
-    return "";
-  }
-
-  return token;
+  return token ?? "";
 }
 
 /**
@@ -181,7 +160,7 @@ function repo(req) {
 function tag(req) {
   let prov = req.query.tag;
 
-  return prov !== undefined ? prov : "";
+  return prov ?? "";
 }
 
 /**
@@ -199,12 +178,13 @@ function rename(req) {
     return false;
   }
 
-  if (prov === "true" || prov === "TRUE") {
-    return true;
-  } else if (prov === "false" || prov === "FALSE") {
-    return false;
-  } else {
-    return false;
+  switch (prov.toLowerCase()) {
+    case "true":
+      return true;
+    case "false":
+      return false;
+    default:
+      return false;
   }
 }
 

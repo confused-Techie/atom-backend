@@ -31,24 +31,29 @@ async function ownership(user, repo) {
     console.log(
       `git.js.Ownership() Is returning Dev Only Permissions for ${user.username}`
     );
-    if (user.username == "admin_user") {
-      // This is a special case that will allow unfettered access to all server resources, and global resources.
-      // It must be ensured that the production instance doesn't run in dev mode, or risk Unauthorized access.
-      return { ok: true, content: "Development Admin User" };
-    }
-    if (user.username == "no_perm_user") {
-      return {
-        ok: false,
-        content: "Development NoPerms User",
-        short: "No Repo Access",
-      };
-    }
 
-    return {
-      ok: false,
-      content: "Server in Dev Mode passed unhandled user",
-      short: "Server Error",
-    };
+    switch (user.username) {
+      case "admin_user":
+        // This is a special case that will allow unfettered
+        // access to all server resources, and global resources.
+        // It must be ensured that the production instance doesn't run
+        // in dev mode, or risk Unauthorized access.
+        return { ok: true, content: "Development Admin User" };
+
+      case "no_perm_user":
+        return {
+          ok: false,
+          content: "Development NoPerms User",
+          short: "No Repo Access",
+        };
+
+      default:
+        return {
+          ok: false,
+          content: "Server in Dev Mode passed unhandled user",
+          short: "Server Error",
+        };
+    }
   }
 
   let withinPackages = await doesUserHaveRepo(user, repo);
@@ -58,46 +63,46 @@ async function ownership(user, repo) {
   if (withinPackages.ok) {
     // if the user has access directly return withinPackages
     return withinPackages;
-  } else {
-    // if the user doesn't have access check one of the many returns
-    switch (withinPackages.short) {
-      case "No Access":
-        // the user does not have any access to the repo.
-        return { ok: false, short: "No Repo Access" };
+  }
 
-      case "Failed Request":
-        // the request returned an unexpected error. For now return error
-        return {
-          ok: false,
-          short: "Server Error",
-          content: "GitHub Returned an unexpected error.",
-        };
+  // if the user doesn't have access check one of the many returns
+  switch (withinPackages.short) {
+    case "No Access":
+      // the user does not have any access to the repo.
+      return { ok: false, short: "No Repo Access" };
 
-      case "Server Error":
-        // an error occured.
-        return {
-          ok: false,
-          short: "Server Error",
-          content: withinPackages.content,
-        };
+    case "Failed Request":
+      // the request returned an unexpected error. For now return error
+      return {
+        ok: false,
+        short: "Server Error",
+        content: "GitHub Returned an unexpected error.",
+      };
 
-      case "No Auth":
-        // the token used is invalid
-        // TODO: properly handle token refresh.
-        return {
-          ok: false,
-          short: "Server Error",
-          content: "Unrefreshed token.",
-        };
+    case "Server Error":
+      // an error occured.
+      return {
+        ok: false,
+        short: "Server Error",
+        content: withinPackages.content,
+      };
 
-      default:
-        // unkown short provided
-        return {
-          ok: false,
-          short: "Server Error",
-          content: "Unkown short provided during git.Ownership",
-        };
-    }
+    case "No Auth":
+      // the token used is invalid
+      // TODO: properly handle token refresh.
+      return {
+        ok: false,
+        short: "Server Error",
+        content: "Unrefreshed token.",
+      };
+
+    default:
+      // unkown short provided
+      return {
+        ok: false,
+        short: "Server Error",
+        content: "Unkown short provided during git.Ownership",
+      };
   }
 }
 
