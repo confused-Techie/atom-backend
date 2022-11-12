@@ -133,11 +133,11 @@ function engine(req) {
 }
 
 /**
-  * @function auth
-  * @desc Retreives Authorization Headers from Request, and Checks for Undefined.
-  * @param {object} req = The `Request` object inherited from the Express endpoint.
-  * @returns {string} Returning a valid Authorization Token, or '' if invalid/not found.
-  */
+ * @function auth
+ * @desc Retreives Authorization Headers from Request, and Checks for Undefined.
+ * @param {object} req = The `Request` object inherited from the Express endpoint.
+ * @returns {string} Returning a valid Authorization Token, or '' if invalid/not found.
+ */
 function auth(req) {
   let token = req.get("Authorization");
 

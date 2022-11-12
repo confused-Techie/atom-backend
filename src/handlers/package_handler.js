@@ -94,7 +94,7 @@ async function getPackages(req, res) {
 async function postPackages(req, res) {
   let params = {
     repository: query.repo(req),
-    auth: query.auth(req)
+    auth: query.auth(req),
   };
 
   let user = await database.verifyAuth(params.auth);
@@ -392,7 +392,12 @@ async function postPackagesStar(req, res) {
 
   if (!exists.ok) {
     // The package we are trying to star doesn't exist, resolve with a 404.
-    await common.handleError(req, res, { ok: false, short: "Not Found", content: exists.content}, 1012);
+    await common.handleError(
+      req,
+      res,
+      { ok: false, short: "Not Found", content: exists.content },
+      1012
+    );
     return;
   }
 

@@ -38,7 +38,9 @@ function errorLog(req, res, err, num = 9999) {
   // this will be a generic error logger to grab some stats about what happened, how the server handled it. And of course the error.
   let duration = Date.now() - req.start;
   console.log(
-    `ERROR-${num}:: ${req.ip} "${req.method} ${req.url} ${req.protocol}" ${res.statusCode} ${duration}ms ! ${err.toString()}`
+    `ERROR-${num}:: ${req.ip} "${req.method} ${req.url} ${req.protocol}" ${
+      res.statusCode
+    } ${duration}ms ! ${err.toString()}`
   );
 }
 
@@ -60,7 +62,9 @@ function warningLog(req, res, err, num = 9999) {
   } else {
     let duration = Date.now() - req.start;
     console.log(
-      `WARNING-${num}:: ${req.ip} "${req.method} ${req.url} ${req.protocol}" ${res.statusCode} ${duration}ms ! ${err.toString()}`
+      `WARNING-${num}:: ${req.ip} "${req.method} ${req.url} ${req.protocol}" ${
+        res.statusCode
+      } ${duration}ms ! ${err.toString()}`
     );
   }
 }

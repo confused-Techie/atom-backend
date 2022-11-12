@@ -881,6 +881,7 @@ engine(): Returns false if not defined, to allow a fast way to determine if resu
     * [~dir(req)](#module_query..dir) ⇒ <code>string</code>
     * [~query(req)](#module_query..query) ⇒ <code>string</code>
     * [~engine(req)](#module_query..engine) ⇒ <code>string</code> \| <code>boolean</code>
+    * [~auth(req)](#module_query..auth) ⇒ <code>string</code>
     * [~repo(req)](#module_query..repo) ⇒ <code>string</code>
     * [~tag(req)](#module_query..tag) ⇒ <code>string</code>
     * [~rename(req)](#module_query..rename) ⇒ <code>boolean</code>
@@ -950,6 +951,18 @@ Parses the 'engine' query parameter to ensure its valid, otherwise returning fal
 | Param | Type | Description |
 | --- | --- | --- |
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+
+<a name="module_query..auth"></a>
+
+### query~auth(req) ⇒ <code>string</code>
+Retreives Authorization Headers from Request, and Checks for Undefined.
+
+**Kind**: inner method of [<code>query</code>](#module_query)  
+**Returns**: <code>string</code> - Returning a valid Authorization Token, or '' if invalid/not found.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | = The `Request` object inherited from the Express endpoint. |
 
 <a name="module_query..repo"></a>
 
