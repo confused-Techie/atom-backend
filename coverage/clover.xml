@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1668222910686" clover="3.2.0">
-  <project timestamp="1668222910686" name="All files">
-    <metrics statements="1121" coveredstatements="210" conditionals="533" coveredconditionals="56" methods="151" coveredmethods="25" elements="1805" coveredelements="291" complexity="0" loc="1121" ncloc="1121" packages="2" files="19" classes="19"/>
+<coverage generated="1668223054302" clover="3.2.0">
+  <project timestamp="1668223054302" name="All files">
+    <metrics statements="1136" coveredstatements="550" conditionals="539" coveredconditionals="230" methods="152" coveredmethods="95" elements="1827" coveredelements="875" complexity="0" loc="1136" ncloc="1136" packages="2" files="20" classes="20"/>
     <package name="src">
-      <metrics statements="802" coveredstatements="133" conditionals="422" coveredconditionals="41" methods="123" coveredmethods="19"/>
-      <file name="cache.js" path="D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\cache.js">
-        <metrics statements="10" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="0"/>
-        <line num="9" count="1" type="stmt"/>
-        <line num="19" count="0" type="stmt"/>
-        <line num="20" count="0" type="stmt"/>
-        <line num="21" count="0" type="stmt"/>
-        <line num="22" count="0" type="stmt"/>
-        <line num="23" count="0" type="stmt"/>
-        <line num="24" count="0" type="stmt"/>
+      <metrics statements="817" coveredstatements="400" conditionals="428" coveredconditionals="196" methods="124" coveredmethods="77"/>
+      <file name="cache.js" path="/home/runner/work/atom-backend/atom-backend/src/cache.js">
+        <metrics statements="10" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="1"/>
+        <line num="9" count="4" type="stmt"/>
+        <line num="19" count="2" type="stmt"/>
+        <line num="20" count="2" type="stmt"/>
+        <line num="21" count="2" type="stmt"/>
+        <line num="22" count="2" type="stmt"/>
+        <line num="23" count="2" type="stmt"/>
+        <line num="24" count="2" type="stmt"/>
         <line num="27" count="0" type="stmt"/>
         <line num="30" count="0" type="stmt"/>
-        <line num="34" count="1" type="stmt"/>
+        <line num="34" count="4" type="stmt"/>
       </file>
-      <file name="collection.js" path="D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\collection.js">
-        <metrics statements="89" coveredstatements="3" conditionals="66" coveredconditionals="0" methods="9" coveredmethods="0"/>
-        <line num="7" count="1" type="stmt"/>
-        <line num="8" count="1" type="stmt"/>
+      <file name="collection.js" path="/home/runner/work/atom-backend/atom-backend/src/collection.js">
+        <metrics statements="89" coveredstatements="56" conditionals="66" coveredconditionals="37" methods="9" coveredmethods="8"/>
+        <line num="7" count="2" type="stmt"/>
+        <line num="8" count="2" type="stmt"/>
         <line num="21" count="0" type="cond" truecount="0" falsecount="4"/>
         <line num="27" count="0" type="stmt"/>
         <line num="28" count="0" type="stmt"/>
@@ -33,102 +33,102 @@
         <line num="48" count="0" type="stmt"/>
         <line num="51" count="0" type="stmt"/>
         <line num="56" count="0" type="stmt"/>
-        <line num="64" count="0" type="stmt"/>
-        <line num="65" count="0" type="stmt"/>
-        <line num="66" count="0" type="stmt"/>
-        <line num="68" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="64" count="3" type="stmt"/>
+        <line num="65" count="12" type="stmt"/>
+        <line num="66" count="12" type="stmt"/>
+        <line num="68" count="4" type="cond" truecount="1" falsecount="1"/>
         <line num="69" count="0" type="stmt"/>
-        <line num="70" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="70" count="4" type="cond" truecount="1" falsecount="1"/>
         <line num="71" count="0" type="stmt"/>
-        <line num="74" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="75" count="0" type="stmt"/>
-        <line num="76" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="77" count="0" type="stmt"/>
-        <line num="80" count="0" type="stmt"/>
-        <line num="83" count="0" type="stmt"/>
-        <line num="84" count="0" type="stmt"/>
-        <line num="85" count="0" type="stmt"/>
-        <line num="87" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="88" count="0" type="stmt"/>
-        <line num="89" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="74" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="75" count="2" type="stmt"/>
+        <line num="76" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="77" count="1" type="stmt"/>
+        <line num="80" count="1" type="stmt"/>
+        <line num="83" count="3" type="stmt"/>
+        <line num="84" count="12" type="stmt"/>
+        <line num="85" count="12" type="stmt"/>
+        <line num="87" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="88" count="3" type="stmt"/>
+        <line num="89" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="90" count="0" type="stmt"/>
-        <line num="93" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="93" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="94" count="0" type="stmt"/>
-        <line num="95" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="95" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="96" count="0" type="stmt"/>
-        <line num="99" count="0" type="stmt"/>
-        <line num="102" count="0" type="stmt"/>
-        <line num="103" count="0" type="cond" truecount="0" falsecount="3"/>
-        <line num="111" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="99" count="1" type="stmt"/>
+        <line num="102" count="3" type="stmt"/>
+        <line num="103" count="3" type="cond" truecount="3" falsecount="0"/>
+        <line num="111" count="3" type="cond" truecount="1" falsecount="1"/>
         <line num="112" count="0" type="stmt"/>
-        <line num="115" count="0" type="stmt"/>
-        <line num="118" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="115" count="3" type="stmt"/>
+        <line num="118" count="3" type="cond" truecount="1" falsecount="1"/>
         <line num="119" count="0" type="stmt"/>
-        <line num="123" count="0" type="stmt"/>
-        <line num="125" count="0" type="stmt"/>
-        <line num="127" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="123" count="3" type="stmt"/>
+        <line num="125" count="3" type="stmt"/>
+        <line num="127" count="4" type="cond" truecount="1" falsecount="1"/>
         <line num="128" count="0" type="stmt"/>
-        <line num="132" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="132" count="4" type="cond" truecount="1" falsecount="1"/>
         <line num="133" count="0" type="stmt"/>
-        <line num="138" count="0" type="stmt"/>
-        <line num="139" count="0" type="stmt"/>
-        <line num="142" count="0" type="stmt"/>
-        <line num="146" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="148" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="150" count="0" type="stmt"/>
-        <line num="155" count="0" type="stmt"/>
-        <line num="157" count="0" type="stmt"/>
-        <line num="167" count="0" type="stmt"/>
-        <line num="172" count="0" type="stmt"/>
-        <line num="176" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="178" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="180" count="0" type="stmt"/>
-        <line num="185" count="0" type="stmt"/>
-        <line num="187" count="0" type="stmt"/>
-        <line num="197" count="0" type="stmt"/>
-        <line num="201" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="138" count="4" type="stmt"/>
+        <line num="139" count="4" type="stmt"/>
+        <line num="142" count="4" type="stmt"/>
+        <line num="146" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="148" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="150" count="2" type="stmt"/>
+        <line num="155" count="2" type="stmt"/>
+        <line num="157" count="2" type="stmt"/>
+        <line num="167" count="2" type="stmt"/>
+        <line num="172" count="4" type="stmt"/>
+        <line num="176" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="178" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="180" count="3" type="stmt"/>
+        <line num="185" count="3" type="stmt"/>
+        <line num="187" count="1" type="stmt"/>
+        <line num="197" count="1" type="stmt"/>
+        <line num="201" count="4" type="cond" truecount="2" falsecount="2"/>
         <line num="204" count="0" type="stmt"/>
         <line num="208" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="212" count="0" type="stmt"/>
         <line num="214" count="0" type="stmt"/>
         <line num="218" count="0" type="stmt"/>
-        <line num="222" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="222" count="4" type="cond" truecount="1" falsecount="1"/>
         <line num="224" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="225" count="0" type="stmt"/>
         <line num="227" count="0" type="stmt"/>
-        <line num="229" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="229" count="4" type="cond" truecount="1" falsecount="1"/>
         <line num="231" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="232" count="0" type="stmt"/>
         <line num="234" count="0" type="stmt"/>
-        <line num="239" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="240" count="0" type="stmt"/>
-        <line num="242" count="0" type="stmt"/>
-        <line num="247" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="239" count="4" type="cond" truecount="4" falsecount="0"/>
+        <line num="240" count="3" type="stmt"/>
+        <line num="242" count="3" type="stmt"/>
+        <line num="247" count="3" type="cond" truecount="1" falsecount="1"/>
         <line num="249" count="0" type="stmt"/>
-        <line num="253" count="0" type="stmt"/>
-        <line num="255" count="0" type="stmt"/>
-        <line num="258" count="1" type="stmt"/>
+        <line num="253" count="3" type="stmt"/>
+        <line num="255" count="3" type="stmt"/>
+        <line num="258" count="2" type="stmt"/>
       </file>
-      <file name="config.js" path="D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\config.js">
-        <metrics statements="15" coveredstatements="9" conditionals="42" coveredconditionals="19" methods="1" coveredmethods="1"/>
-        <line num="6" count="1" type="stmt"/>
-        <line num="7" count="1" type="stmt"/>
-        <line num="18" count="9" type="stmt"/>
-        <line num="19" count="9" type="stmt"/>
-        <line num="21" count="9" type="stmt"/>
-        <line num="22" count="9" type="stmt"/>
-        <line num="23" count="9" type="stmt"/>
-        <line num="26" count="0" type="cond" truecount="0" falsecount="2"/>
+      <file name="config.js" path="/home/runner/work/atom-backend/atom-backend/src/config.js">
+        <metrics statements="15" coveredstatements="10" conditionals="42" coveredconditionals="26" methods="1" coveredmethods="1"/>
+        <line num="6" count="8" type="stmt"/>
+        <line num="7" count="8" type="stmt"/>
+        <line num="18" count="21" type="stmt"/>
+        <line num="19" count="21" type="stmt"/>
+        <line num="21" count="21" type="stmt"/>
+        <line num="22" count="21" type="stmt"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="26" count="21" type="cond" truecount="1" falsecount="1"/>
         <line num="30" count="0" type="stmt"/>
         <line num="31" count="0" type="stmt"/>
-        <line num="35" count="0" type="stmt"/>
-        <line num="45" count="9" type="stmt"/>
+        <line num="35" count="21" type="stmt"/>
+        <line num="45" count="21" type="stmt"/>
         <line num="100" count="0" type="stmt"/>
         <line num="101" count="0" type="stmt"/>
-        <line num="105" count="1" type="stmt"/>
+        <line num="105" count="8" type="stmt"/>
       </file>
-      <file name="database.js" path="D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\database.js">
-        <metrics statements="231" coveredstatements="28" conditionals="118" coveredconditionals="13" methods="33" coveredmethods="5"/>
+      <file name="database.js" path="/home/runner/work/atom-backend/atom-backend/src/database.js">
+        <metrics statements="231" coveredstatements="62" conditionals="118" coveredconditionals="28" methods="33" coveredmethods="11"/>
         <line num="7" count="1" type="stmt"/>
         <line num="8" count="1" type="stmt"/>
         <line num="9" count="1" type="stmt"/>
@@ -168,20 +168,20 @@
         <line num="159" count="0" type="stmt"/>
         <line num="164" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="172" count="0" type="stmt"/>
-        <line num="189" count="6" type="stmt"/>
-        <line num="190" count="6" type="stmt"/>
-        <line num="201" count="6" type="stmt"/>
-        <line num="222" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="189" count="12" type="stmt"/>
+        <line num="190" count="12" type="stmt"/>
+        <line num="201" count="12" type="stmt"/>
+        <line num="222" count="12" type="cond" truecount="2" falsecount="0"/>
         <line num="230" count="0" type="stmt"/>
         <line num="242" count="0" type="stmt"/>
         <line num="243" count="0" type="stmt"/>
         <line num="245" count="0" type="stmt"/>
         <line num="256" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="264" count="0" type="stmt"/>
-        <line num="274" count="0" type="stmt"/>
-        <line num="275" count="0" type="stmt"/>
-        <line num="277" count="0" type="stmt"/>
-        <line num="286" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="274" count="4" type="stmt"/>
+        <line num="275" count="4" type="stmt"/>
+        <line num="277" count="4" type="stmt"/>
+        <line num="286" count="4" type="cond" truecount="1" falsecount="1"/>
         <line num="290" count="0" type="stmt"/>
         <line num="299" count="0" type="stmt"/>
         <line num="300" count="0" type="stmt"/>
@@ -240,22 +240,22 @@
         <line num="592" count="0" type="stmt"/>
         <line num="598" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="606" count="0" type="stmt"/>
-        <line num="618" count="0" type="stmt"/>
-        <line num="620" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="618" count="2" type="stmt"/>
+        <line num="620" count="2" type="cond" truecount="1" falsecount="1"/>
         <line num="621" count="0" type="stmt"/>
-        <line num="624" count="0" type="stmt"/>
-        <line num="626" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="639" count="0" type="stmt"/>
-        <line num="641" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="624" count="2" type="stmt"/>
+        <line num="626" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="639" count="2" type="stmt"/>
+        <line num="641" count="2" type="cond" truecount="1" falsecount="1"/>
         <line num="642" count="0" type="stmt"/>
-        <line num="645" count="0" type="stmt"/>
-        <line num="649" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="661" count="0" type="stmt"/>
-        <line num="662" count="0" type="stmt"/>
-        <line num="664" count="0" type="stmt"/>
-        <line num="668" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="645" count="2" type="stmt"/>
+        <line num="649" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="661" count="8" type="stmt"/>
+        <line num="662" count="8" type="stmt"/>
+        <line num="664" count="8" type="stmt"/>
+        <line num="668" count="8" type="cond" truecount="1" falsecount="1"/>
         <line num="669" count="0" type="stmt"/>
-        <line num="676" count="0" type="stmt"/>
+        <line num="676" count="8" type="stmt"/>
         <line num="678" count="0" type="stmt"/>
         <line num="687" count="0" type="stmt"/>
         <line num="688" count="0" type="stmt"/>
@@ -269,10 +269,10 @@
         <line num="721" count="0" type="stmt"/>
         <line num="728" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="736" count="0" type="stmt"/>
-        <line num="746" count="8" type="stmt"/>
-        <line num="747" count="8" type="stmt"/>
-        <line num="749" count="8" type="stmt"/>
-        <line num="757" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="746" count="23" type="stmt"/>
+        <line num="747" count="23" type="stmt"/>
+        <line num="749" count="23" type="stmt"/>
+        <line num="757" count="23" type="cond" truecount="2" falsecount="0"/>
         <line num="765" count="0" type="stmt"/>
         <line num="774" count="2" type="stmt"/>
         <line num="775" count="2" type="stmt"/>
@@ -320,14 +320,14 @@
         <line num="965" count="0" type="stmt"/>
         <line num="968" count="0" type="stmt"/>
         <line num="970" count="0" type="stmt"/>
-        <line num="980" count="0" type="stmt"/>
-        <line num="981" count="0" type="stmt"/>
-        <line num="983" count="0" type="stmt"/>
-        <line num="984" count="0" type="stmt"/>
-        <line num="986" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="980" count="8" type="stmt"/>
+        <line num="981" count="8" type="stmt"/>
+        <line num="983" count="8" type="stmt"/>
+        <line num="984" count="8" type="stmt"/>
+        <line num="986" count="8" type="cond" truecount="1" falsecount="1"/>
         <line num="987" count="0" type="stmt"/>
-        <line num="990" count="0" type="stmt"/>
-        <line num="1005" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="990" count="8" type="stmt"/>
+        <line num="1005" count="8" type="cond" truecount="2" falsecount="0"/>
         <line num="1009" count="0" type="stmt"/>
         <line num="1020" count="0" type="stmt"/>
         <line num="1022" count="0" type="stmt"/>
@@ -339,16 +339,16 @@
         <line num="1038" count="0" type="stmt"/>
         <line num="1039" count="0" type="stmt"/>
         <line num="1042" count="0" type="stmt"/>
-        <line num="1059" count="0" type="stmt"/>
-        <line num="1060" count="0" type="stmt"/>
-        <line num="1062" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="1059" count="2" type="stmt"/>
+        <line num="1060" count="2" type="stmt"/>
+        <line num="1062" count="2" type="cond" truecount="1" falsecount="1"/>
         <line num="1063" count="0" type="stmt"/>
-        <line num="1066" count="0" type="stmt"/>
-        <line num="1067" count="0" type="stmt"/>
-        <line num="1069" count="0" type="stmt"/>
-        <line num="1071" count="0" type="cond" truecount="0" falsecount="5"/>
-        <line num="1073" count="0" type="stmt"/>
-        <line num="1080" count="0" type="stmt"/>
+        <line num="1066" count="2" type="stmt"/>
+        <line num="1067" count="2" type="stmt"/>
+        <line num="1069" count="2" type="stmt"/>
+        <line num="1071" count="2" type="cond" truecount="1" falsecount="4"/>
+        <line num="1073" count="2" type="stmt"/>
+        <line num="1080" count="2" type="stmt"/>
         <line num="1082" count="0" type="stmt"/>
         <line num="1089" count="0" type="stmt"/>
         <line num="1091" count="0" type="stmt"/>
@@ -357,23 +357,41 @@
         <line num="1107" count="0" type="stmt"/>
         <line num="1109" count="0" type="stmt"/>
         <line num="1114" count="0" type="stmt"/>
-        <line num="1121" count="0" type="stmt"/>
+        <line num="1121" count="2" type="stmt"/>
         <line num="1123" count="0" type="stmt"/>
         <line num="1127" count="1" type="stmt"/>
       </file>
-      <file name="error.js" path="D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\error.js">
-        <metrics statements="9" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="8" coveredmethods="3"/>
-        <line num="18" count="2" type="stmt"/>
-        <line num="31" count="0" type="stmt"/>
-        <line num="45" count="4" type="stmt"/>
-        <line num="60" count="1" type="stmt"/>
-        <line num="72" count="0" type="stmt"/>
-        <line num="84" count="0" type="stmt"/>
-        <line num="99" count="0" type="stmt"/>
-        <line num="116" count="0" type="stmt"/>
-        <line num="121" count="1" type="stmt"/>
+      <file name="debug_utils.js" path="/home/runner/work/atom-backend/atom-backend/src/debug_utils.js">
+        <metrics statements="15" coveredstatements="15" conditionals="6" coveredconditionals="6" methods="1" coveredmethods="1"/>
+        <line num="16" count="3" type="stmt"/>
+        <line num="17" count="3" type="stmt"/>
+        <line num="18" count="3" type="stmt"/>
+        <line num="20" count="3" type="stmt"/>
+        <line num="25" count="3" type="stmt"/>
+        <line num="26" count="8" type="stmt"/>
+        <line num="28" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="29" count="2" type="stmt"/>
+        <line num="30" count="6" type="cond" truecount="4" falsecount="0"/>
+        <line num="31" count="4" type="stmt"/>
+        <line num="32" count="4" type="stmt"/>
+        <line num="33" count="5" type="stmt"/>
+        <line num="36" count="2" type="stmt"/>
+        <line num="39" count="3" type="stmt"/>
+        <line num="42" count="1" type="stmt"/>
       </file>
-      <file name="git.js" path="D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\git.js">
+      <file name="error.js" path="/home/runner/work/atom-backend/atom-backend/src/error.js">
+        <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="8" coveredmethods="8"/>
+        <line num="18" count="7" type="stmt"/>
+        <line num="31" count="5" type="stmt"/>
+        <line num="45" count="15" type="stmt"/>
+        <line num="60" count="5" type="stmt"/>
+        <line num="72" count="4" type="stmt"/>
+        <line num="84" count="7" type="stmt"/>
+        <line num="99" count="2" type="stmt"/>
+        <line num="116" count="5" type="stmt"/>
+        <line num="121" count="3" type="stmt"/>
+      </file>
+      <file name="git.js" path="/home/runner/work/atom-backend/atom-backend/src/git.js">
         <metrics statements="126" coveredstatements="5" conditionals="55" coveredconditionals="0" methods="7" coveredmethods="0"/>
         <line num="6" count="1" type="stmt"/>
         <line num="8" count="1" type="stmt"/>
@@ -502,25 +520,25 @@
         <line num="489" count="0" type="stmt"/>
         <line num="493" count="1" type="stmt"/>
       </file>
-      <file name="logger.js" path="D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\logger.js">
-        <metrics statements="14" coveredstatements="7" conditionals="10" coveredconditionals="0" methods="5" coveredmethods="2"/>
-        <line num="7" count="1" type="stmt"/>
-        <line num="18" count="9" type="stmt"/>
-        <line num="19" count="9" type="stmt"/>
-        <line num="20" count="9" type="stmt"/>
-        <line num="39" count="1" type="stmt"/>
-        <line num="40" count="1" type="stmt"/>
-        <line num="58" count="0" type="cond" truecount="0" falsecount="6"/>
-        <line num="59" count="0" type="stmt"/>
-        <line num="61" count="0" type="stmt"/>
-        <line num="62" count="0" type="stmt"/>
-        <line num="76" count="0" type="stmt"/>
-        <line num="88" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="89" count="0" type="stmt"/>
-        <line num="93" count="1" type="stmt"/>
+      <file name="logger.js" path="/home/runner/work/atom-backend/atom-backend/src/logger.js">
+        <metrics statements="14" coveredstatements="14" conditionals="10" coveredconditionals="9" methods="5" coveredmethods="5"/>
+        <line num="7" count="6" type="stmt"/>
+        <line num="18" count="57" type="stmt"/>
+        <line num="19" count="57" type="stmt"/>
+        <line num="20" count="57" type="stmt"/>
+        <line num="39" count="4" type="stmt"/>
+        <line num="40" count="4" type="stmt"/>
+        <line num="60" count="2" type="cond" truecount="6" falsecount="0"/>
+        <line num="61" count="1" type="stmt"/>
+        <line num="63" count="1" type="stmt"/>
+        <line num="64" count="1" type="stmt"/>
+        <line num="80" count="1" type="stmt"/>
+        <line num="92" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="93" count="2" type="stmt"/>
+        <line num="97" count="6" type="stmt"/>
       </file>
-      <file name="main.js" path="D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\main.js">
-        <metrics statements="58" coveredstatements="38" conditionals="0" coveredconditionals="0" methods="23" coveredmethods="3"/>
+      <file name="main.js" path="/home/runner/work/atom-backend/atom-backend/src/main.js">
+        <metrics statements="58" coveredstatements="48" conditionals="0" coveredconditionals="0" methods="23" coveredmethods="13"/>
         <line num="7" count="1" type="stmt"/>
         <line num="8" count="1" type="stmt"/>
         <line num="10" count="1" type="stmt"/>
@@ -532,26 +550,26 @@
         <line num="16" count="1" type="stmt"/>
         <line num="17" count="1" type="stmt"/>
         <line num="19" count="1" type="stmt"/>
-        <line num="21" count="9" type="stmt"/>
-        <line num="22" count="9" type="stmt"/>
+        <line num="21" count="48" type="stmt"/>
+        <line num="22" count="48" type="stmt"/>
         <line num="33" count="1" type="stmt"/>
-        <line num="37" count="0" type="stmt"/>
+        <line num="37" count="2" type="stmt"/>
         <line num="50" count="1" type="stmt"/>
         <line num="51" count="0" type="stmt"/>
         <line num="62" count="1" type="stmt"/>
         <line num="63" count="0" type="stmt"/>
         <line num="100" count="1" type="stmt"/>
-        <line num="101" count="0" type="stmt"/>
+        <line num="101" count="2" type="stmt"/>
         <line num="137" count="1" type="stmt"/>
-        <line num="138" count="0" type="stmt"/>
+        <line num="138" count="9" type="stmt"/>
         <line num="152" count="1" type="stmt"/>
-        <line num="153" count="0" type="stmt"/>
+        <line num="153" count="2" type="stmt"/>
         <line num="196" count="1" type="stmt"/>
-        <line num="197" count="0" type="stmt"/>
+        <line num="197" count="8" type="stmt"/>
         <line num="224" count="1" type="stmt"/>
-        <line num="225" count="1" type="stmt"/>
+        <line num="225" count="5" type="stmt"/>
         <line num="262" count="1" type="stmt"/>
-        <line num="263" count="0" type="stmt"/>
+        <line num="263" count="4" type="stmt"/>
         <line num="290" count="1" type="stmt"/>
         <line num="291" count="8" type="stmt"/>
         <line num="317" count="1" type="stmt"/>
@@ -569,152 +587,152 @@
         <line num="500" count="1" type="stmt"/>
         <line num="503" count="0" type="stmt"/>
         <line num="518" count="1" type="stmt"/>
-        <line num="519" count="0" type="stmt"/>
+        <line num="519" count="2" type="stmt"/>
         <line num="541" count="1" type="stmt"/>
         <line num="542" count="0" type="stmt"/>
         <line num="563" count="1" type="stmt"/>
-        <line num="564" count="0" type="stmt"/>
+        <line num="564" count="2" type="stmt"/>
         <line num="578" count="1" type="stmt"/>
-        <line num="579" count="0" type="stmt"/>
+        <line num="579" count="2" type="stmt"/>
         <line num="582" count="1" type="stmt"/>
-        <line num="585" count="0" type="stmt"/>
+        <line num="585" count="2" type="stmt"/>
         <line num="588" count="1" type="stmt"/>
       </file>
-      <file name="query.js" path="D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\query.js">
-        <metrics statements="59" coveredstatements="8" conditionals="50" coveredconditionals="7" methods="10" coveredmethods="2"/>
-        <line num="15" count="0" type="stmt"/>
-        <line num="16" count="0" type="stmt"/>
-        <line num="18" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="19" count="0" type="stmt"/>
-        <line num="23" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="38" count="0" type="stmt"/>
-        <line num="39" count="0" type="stmt"/>
-        <line num="41" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="42" count="0" type="stmt"/>
-        <line num="45" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="57" count="0" type="stmt"/>
-        <line num="58" count="0" type="stmt"/>
-        <line num="59" count="0" type="stmt"/>
-        <line num="61" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="64" count="0" type="stmt"/>
-        <line num="66" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="67" count="0" type="stmt"/>
-        <line num="69" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="72" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="84" count="0" type="stmt"/>
-        <line num="86" count="0" type="stmt"/>
-        <line num="88" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="89" count="0" type="stmt"/>
-        <line num="92" count="0" type="stmt"/>
-        <line num="93" count="0" type="stmt"/>
-        <line num="96" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="98" count="0" type="stmt"/>
-        <line num="101" count="0" type="stmt"/>
-        <line num="105" count="0" type="stmt"/>
-        <line num="117" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="119" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="120" count="1" type="stmt"/>
-        <line num="129" count="0" type="stmt"/>
-        <line num="132" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="142" count="8" type="stmt"/>
-        <line num="144" count="8" type="cond" truecount="5" falsecount="0"/>
-        <line num="145" count="2" type="stmt"/>
-        <line num="148" count="6" type="stmt"/>
-        <line num="158" count="0" type="stmt"/>
-        <line num="160" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="161" count="0" type="stmt"/>
-        <line num="164" count="0" type="stmt"/>
-        <line num="172" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="182" count="0" type="stmt"/>
-        <line num="184" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="195" count="0" type="stmt"/>
-        <line num="197" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="199" count="0" type="stmt"/>
-        <line num="202" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="203" count="0" type="stmt"/>
-        <line num="204" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="205" count="0" type="stmt"/>
-        <line num="207" count="0" type="stmt"/>
-        <line num="225" count="0" type="stmt"/>
-        <line num="227" count="0" type="stmt"/>
-        <line num="228" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="229" count="0" type="stmt"/>
-        <line num="232" count="0" type="stmt"/>
-        <line num="235" count="1" type="stmt"/>
+      <file name="query.js" path="/home/runner/work/atom-backend/atom-backend/src/query.js">
+        <metrics statements="59" coveredstatements="59" conditionals="50" coveredconditionals="50" methods="10" coveredmethods="10"/>
+        <line num="15" count="14" type="stmt"/>
+        <line num="16" count="14" type="stmt"/>
+        <line num="18" count="14" type="cond" truecount="2" falsecount="0"/>
+        <line num="19" count="11" type="stmt"/>
+        <line num="23" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="38" count="13" type="stmt"/>
+        <line num="39" count="13" type="stmt"/>
+        <line num="41" count="13" type="cond" truecount="2" falsecount="0"/>
+        <line num="42" count="11" type="stmt"/>
+        <line num="45" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="57" count="19" type="stmt"/>
+        <line num="58" count="19" type="stmt"/>
+        <line num="59" count="19" type="stmt"/>
+        <line num="61" count="19" type="cond" truecount="2" falsecount="0"/>
+        <line num="64" count="15" type="stmt"/>
+        <line num="66" count="15" type="cond" truecount="2" falsecount="0"/>
+        <line num="67" count="9" type="stmt"/>
+        <line num="69" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="72" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="84" count="12" type="stmt"/>
+        <line num="86" count="12" type="stmt"/>
+        <line num="88" count="12" type="cond" truecount="2" falsecount="0"/>
+        <line num="89" count="1" type="stmt"/>
+        <line num="92" count="11" type="stmt"/>
+        <line num="93" count="11" type="stmt"/>
+        <line num="96" count="10" type="cond" truecount="2" falsecount="0"/>
+        <line num="98" count="1" type="stmt"/>
+        <line num="101" count="9" type="stmt"/>
+        <line num="105" count="1" type="stmt"/>
+        <line num="117" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="119" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="120" count="6" type="stmt"/>
+        <line num="129" count="3" type="stmt"/>
+        <line num="132" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="142" count="21" type="stmt"/>
+        <line num="144" count="21" type="cond" truecount="5" falsecount="0"/>
+        <line num="145" count="4" type="stmt"/>
+        <line num="148" count="17" type="stmt"/>
+        <line num="158" count="12" type="stmt"/>
+        <line num="160" count="12" type="cond" truecount="2" falsecount="0"/>
+        <line num="161" count="1" type="stmt"/>
+        <line num="164" count="11" type="stmt"/>
+        <line num="172" count="11" type="cond" truecount="2" falsecount="0"/>
+        <line num="182" count="2" type="stmt"/>
+        <line num="184" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="195" count="6" type="stmt"/>
+        <line num="197" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="199" count="1" type="stmt"/>
+        <line num="202" count="5" type="cond" truecount="4" falsecount="0"/>
+        <line num="203" count="2" type="stmt"/>
+        <line num="204" count="3" type="cond" truecount="4" falsecount="0"/>
+        <line num="205" count="2" type="stmt"/>
+        <line num="207" count="1" type="stmt"/>
+        <line num="225" count="10" type="stmt"/>
+        <line num="227" count="10" type="stmt"/>
+        <line num="228" count="28" type="cond" truecount="2" falsecount="0"/>
+        <line num="229" count="1" type="stmt"/>
+        <line num="232" count="9" type="stmt"/>
+        <line num="235" count="2" type="stmt"/>
       </file>
-      <file name="search.js" path="D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\search.js">
-        <metrics statements="58" coveredstatements="1" conditionals="28" coveredconditionals="0" methods="9" coveredmethods="0"/>
-        <line num="20" count="0" type="stmt"/>
-        <line num="32" count="0" type="stmt"/>
-        <line num="33" count="0" type="stmt"/>
-        <line num="34" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="35" count="0" type="stmt"/>
-        <line num="36" count="0" type="stmt"/>
-        <line num="38" count="0" type="stmt"/>
-        <line num="39" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="40" count="0" type="stmt"/>
-        <line num="42" count="0" type="stmt"/>
-        <line num="56" count="0" type="stmt"/>
-        <line num="57" count="0" type="stmt"/>
-        <line num="59" count="0" type="stmt"/>
-        <line num="60" count="0" type="stmt"/>
-        <line num="61" count="0" type="stmt"/>
-        <line num="62" count="0" type="stmt"/>
-        <line num="63" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="64" count="0" type="stmt"/>
-        <line num="66" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="67" count="0" type="stmt"/>
-        <line num="68" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="69" count="0" type="stmt"/>
-        <line num="71" count="0" type="stmt"/>
-        <line num="72" count="0" type="stmt"/>
-        <line num="76" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="77" count="0" type="stmt"/>
-        <line num="80" count="0" type="stmt"/>
-        <line num="106" count="0" type="stmt"/>
-        <line num="107" count="0" type="stmt"/>
-        <line num="108" count="0" type="stmt"/>
-        <line num="109" count="0" type="stmt"/>
-        <line num="111" count="0" type="stmt"/>
-        <line num="112" count="0" type="stmt"/>
-        <line num="113" count="0" type="stmt"/>
-        <line num="114" count="0" type="stmt"/>
-        <line num="115" count="0" type="stmt"/>
-        <line num="117" count="0" type="stmt"/>
-        <line num="118" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="122" count="0" type="stmt"/>
-        <line num="140" count="0" type="stmt"/>
-        <line num="141" count="0" type="stmt"/>
-        <line num="142" count="0" type="stmt"/>
-        <line num="144" count="0" type="stmt"/>
-        <line num="146" count="0" type="stmt"/>
-        <line num="147" count="0" type="stmt"/>
-        <line num="148" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="149" count="0" type="stmt"/>
-        <line num="151" count="0" type="stmt"/>
-        <line num="156" count="0" type="stmt"/>
-        <line num="160" count="0" type="stmt"/>
-        <line num="175" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="176" count="0" type="stmt"/>
-        <line num="178" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="179" count="0" type="stmt"/>
-        <line num="184" count="0" type="cond" truecount="0" falsecount="2"/>
+      <file name="search.js" path="/home/runner/work/atom-backend/atom-backend/src/search.js">
+        <metrics statements="58" coveredstatements="57" conditionals="28" coveredconditionals="24" methods="9" coveredmethods="9"/>
+        <line num="20" count="5" type="stmt"/>
+        <line num="32" count="15" type="stmt"/>
+        <line num="33" count="15" type="stmt"/>
+        <line num="34" count="15" type="cond" truecount="2" falsecount="0"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="36" count="1" type="stmt"/>
+        <line num="38" count="15" type="stmt"/>
+        <line num="39" count="15" type="cond" truecount="2" falsecount="0"/>
+        <line num="40" count="1" type="stmt"/>
+        <line num="42" count="14" type="stmt"/>
+        <line num="56" count="14" type="stmt"/>
+        <line num="57" count="14" type="stmt"/>
+        <line num="59" count="14" type="stmt"/>
+        <line num="60" count="14" type="stmt"/>
+        <line num="61" count="71" type="stmt"/>
+        <line num="62" count="71" type="stmt"/>
+        <line num="63" count="341" type="cond" truecount="2" falsecount="0"/>
+        <line num="64" count="67" type="stmt"/>
+        <line num="66" count="274" type="cond" truecount="2" falsecount="0"/>
+        <line num="67" count="217" type="stmt"/>
+        <line num="68" count="217" type="cond" truecount="2" falsecount="0"/>
+        <line num="69" count="179" type="stmt"/>
+        <line num="71" count="217" type="stmt"/>
+        <line num="72" count="217" type="stmt"/>
+        <line num="76" count="71" type="cond" truecount="2" falsecount="0"/>
+        <line num="77" count="57" type="stmt"/>
+        <line num="80" count="14" type="stmt"/>
+        <line num="106" count="3" type="stmt"/>
+        <line num="107" count="3" type="stmt"/>
+        <line num="108" count="3" type="stmt"/>
+        <line num="109" count="3" type="stmt"/>
+        <line num="111" count="3" type="stmt"/>
+        <line num="112" count="3" type="stmt"/>
+        <line num="113" count="6" type="stmt"/>
+        <line num="114" count="6" type="stmt"/>
+        <line num="115" count="10" type="stmt"/>
+        <line num="117" count="6" type="stmt"/>
+        <line num="118" count="10" type="cond" truecount="1" falsecount="3"/>
+        <line num="122" count="6" type="stmt"/>
+        <line num="140" count="3" type="stmt"/>
+        <line num="141" count="3" type="stmt"/>
+        <line num="142" count="3" type="stmt"/>
+        <line num="144" count="19" type="stmt"/>
+        <line num="146" count="3" type="stmt"/>
+        <line num="147" count="16" type="stmt"/>
+        <line num="148" count="81" type="cond" truecount="2" falsecount="0"/>
+        <line num="149" count="14" type="stmt"/>
+        <line num="151" count="67" type="stmt"/>
+        <line num="156" count="3" type="stmt"/>
+        <line num="160" count="3" type="stmt"/>
+        <line num="175" count="22" type="cond" truecount="4" falsecount="0"/>
+        <line num="176" count="3" type="stmt"/>
+        <line num="178" count="19" type="cond" truecount="2" falsecount="0"/>
+        <line num="179" count="13" type="stmt"/>
+        <line num="184" count="6" type="cond" truecount="1" falsecount="1"/>
         <line num="185" count="0" type="stmt"/>
-        <line num="187" count="0" type="stmt"/>
-        <line num="190" count="1" type="stmt"/>
+        <line num="187" count="6" type="stmt"/>
+        <line num="190" count="3" type="stmt"/>
       </file>
-      <file name="storage.js" path="D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\storage.js">
-        <metrics statements="64" coveredstatements="5" conditionals="29" coveredconditionals="0" methods="7" coveredmethods="0"/>
-        <line num="8" count="1" type="stmt"/>
-        <line num="9" count="1" type="stmt"/>
-        <line num="10" count="1" type="stmt"/>
-        <line num="12" count="1" type="stmt"/>
-        <line num="22" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="23" count="0" type="stmt"/>
-        <line num="39" count="0" type="stmt"/>
-        <line num="41" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="49" count="0" type="stmt"/>
-        <line num="51" count="0" type="stmt"/>
+      <file name="storage.js" path="/home/runner/work/atom-backend/atom-backend/src/storage.js">
+        <metrics statements="64" coveredstatements="19" conditionals="29" coveredconditionals="8" methods="7" coveredmethods="4"/>
+        <line num="8" count="3" type="stmt"/>
+        <line num="9" count="3" type="stmt"/>
+        <line num="10" count="3" type="stmt"/>
+        <line num="12" count="3" type="stmt"/>
+        <line num="22" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="23" count="2" type="stmt"/>
+        <line num="39" count="1" type="stmt"/>
+        <line num="41" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="49" count="1" type="stmt"/>
+        <line num="51" count="1" type="stmt"/>
         <line num="56" count="0" type="stmt"/>
         <line num="57" count="0" type="stmt"/>
         <line num="58" count="0" type="stmt"/>
@@ -730,10 +748,10 @@
         <line num="77" count="0" type="stmt"/>
         <line num="80" count="0" type="stmt"/>
         <line num="81" count="0" type="stmt"/>
-        <line num="92" count="0" type="stmt"/>
-        <line num="94" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="102" count="0" type="stmt"/>
-        <line num="106" count="0" type="stmt"/>
+        <line num="92" count="3" type="stmt"/>
+        <line num="94" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="102" count="3" type="stmt"/>
+        <line num="106" count="3" type="stmt"/>
         <line num="112" count="0" type="stmt"/>
         <line num="113" count="0" type="stmt"/>
         <line num="114" count="0" type="stmt"/>
@@ -749,10 +767,10 @@
         <line num="133" count="0" type="stmt"/>
         <line num="136" count="0" type="stmt"/>
         <line num="137" count="0" type="stmt"/>
-        <line num="147" count="0" type="stmt"/>
-        <line num="149" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="157" count="0" type="stmt"/>
-        <line num="161" count="0" type="stmt"/>
+        <line num="147" count="3" type="stmt"/>
+        <line num="149" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="157" count="3" type="stmt"/>
+        <line num="161" count="3" type="stmt"/>
         <line num="167" count="0" type="stmt"/>
         <line num="168" count="0" type="stmt"/>
         <line num="169" count="0" type="stmt"/>
@@ -768,49 +786,49 @@
         <line num="188" count="0" type="stmt"/>
         <line num="191" count="0" type="stmt"/>
         <line num="192" count="0" type="stmt"/>
-        <line num="195" count="1" type="stmt"/>
+        <line num="195" count="3" type="stmt"/>
       </file>
-      <file name="utils.js" path="D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\utils.js">
-        <metrics statements="69" coveredstatements="23" conditionals="24" coveredconditionals="2" methods="8" coveredmethods="3"/>
-        <line num="5" count="1" type="stmt"/>
-        <line num="6" count="1" type="stmt"/>
-        <line num="7" count="1" type="stmt"/>
-        <line num="19" count="0" type="stmt"/>
-        <line num="20" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="22" count="0" type="stmt"/>
-        <line num="23" count="0" type="stmt"/>
-        <line num="26" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="43" count="2" type="stmt"/>
-        <line num="44" count="2" type="stmt"/>
-        <line num="46" count="2" type="stmt"/>
-        <line num="47" count="4" type="stmt"/>
-        <line num="48" count="4" type="stmt"/>
-        <line num="49" count="4" type="stmt"/>
-        <line num="50" count="4" type="stmt"/>
-        <line num="55" count="2" type="stmt"/>
-        <line num="58" count="2" type="stmt"/>
-        <line num="59" count="2" type="stmt"/>
-        <line num="60" count="4" type="cond" truecount="2" falsecount="0"/>
-        <line num="61" count="2" type="stmt"/>
+      <file name="utils.js" path="/home/runner/work/atom-backend/atom-backend/src/utils.js">
+        <metrics statements="69" coveredstatements="38" conditionals="24" coveredconditionals="8" methods="8" coveredmethods="6"/>
+        <line num="5" count="2" type="stmt"/>
+        <line num="6" count="2" type="stmt"/>
+        <line num="7" count="2" type="stmt"/>
+        <line num="19" count="3" type="stmt"/>
+        <line num="20" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="22" count="1" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="26" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="43" count="4" type="stmt"/>
+        <line num="44" count="4" type="stmt"/>
+        <line num="46" count="4" type="stmt"/>
+        <line num="47" count="8" type="stmt"/>
+        <line num="48" count="8" type="stmt"/>
+        <line num="49" count="8" type="stmt"/>
+        <line num="50" count="8" type="stmt"/>
+        <line num="55" count="4" type="stmt"/>
+        <line num="58" count="4" type="stmt"/>
+        <line num="59" count="4" type="stmt"/>
+        <line num="60" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="61" count="4" type="stmt"/>
         <line num="64" count="0" type="stmt"/>
-        <line num="67" count="2" type="stmt"/>
-        <line num="68" count="2" type="stmt"/>
-        <line num="69" count="2" type="stmt"/>
-        <line num="70" count="2" type="stmt"/>
-        <line num="71" count="2" type="stmt"/>
-        <line num="72" count="2" type="stmt"/>
-        <line num="76" count="2" type="stmt"/>
-        <line num="91" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="92" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="67" count="4" type="stmt"/>
+        <line num="68" count="4" type="stmt"/>
+        <line num="69" count="4" type="stmt"/>
+        <line num="70" count="4" type="stmt"/>
+        <line num="71" count="4" type="stmt"/>
+        <line num="72" count="4" type="stmt"/>
+        <line num="76" count="4" type="stmt"/>
+        <line num="91" count="12" type="cond" truecount="1" falsecount="1"/>
+        <line num="92" count="12" type="cond" truecount="1" falsecount="1"/>
         <line num="95" count="0" type="stmt"/>
-        <line num="97" count="0" type="stmt"/>
-        <line num="99" count="0" type="stmt"/>
-        <line num="100" count="0" type="stmt"/>
-        <line num="101" count="0" type="stmt"/>
-        <line num="102" count="0" type="stmt"/>
-        <line num="103" count="0" type="stmt"/>
-        <line num="106" count="0" type="stmt"/>
-        <line num="108" count="0" type="stmt"/>
+        <line num="97" count="12" type="stmt"/>
+        <line num="99" count="12" type="stmt"/>
+        <line num="100" count="36" type="stmt"/>
+        <line num="101" count="36" type="stmt"/>
+        <line num="102" count="36" type="stmt"/>
+        <line num="103" count="36" type="stmt"/>
+        <line num="106" count="36" type="stmt"/>
+        <line num="108" count="12" type="stmt"/>
         <line num="111" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="117" count="0" type="stmt"/>
         <line num="119" count="0" type="stmt"/>
@@ -840,50 +858,50 @@
         <line num="192" count="0" type="stmt"/>
         <line num="194" count="0" type="stmt"/>
         <line num="197" count="0" type="stmt"/>
-        <line num="200" count="1" type="stmt"/>
+        <line num="200" count="2" type="stmt"/>
       </file>
     </package>
     <package name="src.handlers">
-      <metrics statements="319" coveredstatements="77" conditionals="111" coveredconditionals="15" methods="28" coveredmethods="6"/>
-      <file name="common_handler.js" path="D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\handlers\common_handler.js">
-        <metrics statements="35" coveredstatements="19" conditionals="11" coveredconditionals="5" methods="8" coveredmethods="4"/>
-        <line num="10" count="1" type="stmt"/>
-        <line num="11" count="1" type="stmt"/>
-        <line num="27" count="4" type="cond" truecount="2" falsecount="1"/>
-        <line num="30" count="4" type="stmt"/>
-        <line num="31" count="4" type="stmt"/>
-        <line num="32" count="4" type="stmt"/>
-        <line num="34" count="0" type="stmt"/>
-        <line num="35" count="0" type="stmt"/>
-        <line num="36" count="0" type="stmt"/>
-        <line num="37" count="0" type="stmt"/>
-        <line num="53" count="1" type="stmt"/>
-        <line num="54" count="1" type="stmt"/>
-        <line num="55" count="1" type="stmt"/>
-        <line num="68" count="2" type="stmt"/>
-        <line num="69" count="2" type="stmt"/>
-        <line num="82" count="0" type="stmt"/>
-        <line num="83" count="0" type="stmt"/>
-        <line num="96" count="0" type="stmt"/>
-        <line num="97" count="0" type="stmt"/>
-        <line num="110" count="0" type="stmt"/>
-        <line num="111" count="0" type="stmt"/>
-        <line num="124" count="0" type="stmt"/>
-        <line num="125" count="0" type="stmt"/>
-        <line num="139" count="7" type="cond" truecount="3" falsecount="5"/>
-        <line num="141" count="2" type="stmt"/>
-        <line num="142" count="2" type="stmt"/>
+      <metrics statements="319" coveredstatements="150" conditionals="111" coveredconditionals="34" methods="28" coveredmethods="18"/>
+      <file name="common_handler.js" path="/home/runner/work/atom-backend/atom-backend/src/handlers/common_handler.js">
+        <metrics statements="35" coveredstatements="31" conditionals="11" coveredconditionals="6" methods="8" coveredmethods="8"/>
+        <line num="10" count="2" type="stmt"/>
+        <line num="11" count="2" type="stmt"/>
+        <line num="27" count="14" type="cond" truecount="3" falsecount="0"/>
+        <line num="30" count="13" type="stmt"/>
+        <line num="31" count="13" type="stmt"/>
+        <line num="32" count="13" type="stmt"/>
+        <line num="34" count="1" type="stmt"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="36" count="1" type="stmt"/>
+        <line num="37" count="1" type="stmt"/>
+        <line num="53" count="2" type="stmt"/>
+        <line num="54" count="2" type="stmt"/>
+        <line num="55" count="2" type="stmt"/>
+        <line num="68" count="5" type="stmt"/>
+        <line num="69" count="5" type="stmt"/>
+        <line num="82" count="3" type="stmt"/>
+        <line num="83" count="3" type="stmt"/>
+        <line num="96" count="3" type="stmt"/>
+        <line num="97" count="3" type="stmt"/>
+        <line num="110" count="7" type="stmt"/>
+        <line num="111" count="7" type="stmt"/>
+        <line num="124" count="2" type="stmt"/>
+        <line num="125" count="2" type="stmt"/>
+        <line num="139" count="17" type="cond" truecount="3" falsecount="5"/>
+        <line num="141" count="4" type="stmt"/>
+        <line num="142" count="4" type="stmt"/>
         <line num="145" count="0" type="stmt"/>
         <line num="146" count="0" type="stmt"/>
         <line num="149" count="0" type="stmt"/>
         <line num="150" count="0" type="stmt"/>
-        <line num="154" count="4" type="stmt"/>
-        <line num="155" count="4" type="stmt"/>
+        <line num="154" count="12" type="stmt"/>
+        <line num="155" count="12" type="stmt"/>
         <line num="160" count="1" type="stmt"/>
         <line num="161" count="1" type="stmt"/>
-        <line num="165" count="1" type="stmt"/>
+        <line num="165" count="2" type="stmt"/>
       </file>
-      <file name="oauth_handler.js" path="D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\handlers\oauth_handler.js">
+      <file name="oauth_handler.js" path="/home/runner/work/atom-backend/atom-backend/src/handlers/oauth_handler.js">
         <metrics statements="5" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
         <line num="8" count="1" type="stmt"/>
         <line num="9" count="1" type="stmt"/>
@@ -891,8 +909,8 @@
         <line num="48" count="0" type="stmt"/>
         <line num="51" count="1" type="stmt"/>
       </file>
-      <file name="package_handler.js" path="D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\handlers\package_handler.js">
-        <metrics statements="222" coveredstatements="38" conditionals="86" coveredconditionals="10" methods="14" coveredmethods="2"/>
+      <file name="package_handler.js" path="/home/runner/work/atom-backend/atom-backend/src/handlers/package_handler.js">
+        <metrics statements="222" coveredstatements="88" conditionals="86" coveredconditionals="26" methods="14" coveredmethods="7"/>
         <line num="15" count="1" type="stmt"/>
         <line num="16" count="1" type="stmt"/>
         <line num="17" count="1" type="stmt"/>
@@ -902,36 +920,36 @@
         <line num="21" count="1" type="stmt"/>
         <line num="22" count="1" type="stmt"/>
         <line num="23" count="1" type="stmt"/>
-        <line num="36" count="0" type="stmt"/>
-        <line num="42" count="0" type="stmt"/>
-        <line num="48" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="36" count="2" type="stmt"/>
+        <line num="42" count="2" type="stmt"/>
+        <line num="48" count="2" type="cond" truecount="1" falsecount="1"/>
         <line num="49" count="0" type="stmt"/>
         <line num="50" count="0" type="stmt"/>
-        <line num="53" count="0" type="stmt"/>
-        <line num="55" count="0" type="stmt"/>
-        <line num="57" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="53" count="2" type="stmt"/>
+        <line num="55" count="2" type="stmt"/>
+        <line num="57" count="2" type="cond" truecount="1" falsecount="1"/>
         <line num="58" count="0" type="stmt"/>
         <line num="59" count="0" type="stmt"/>
-        <line num="62" count="0" type="stmt"/>
-        <line num="77" count="0" type="stmt"/>
-        <line num="78" count="0" type="stmt"/>
-        <line num="95" count="0" type="stmt"/>
-        <line num="100" count="0" type="stmt"/>
-        <line num="103" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="104" count="0" type="stmt"/>
-        <line num="105" count="0" type="stmt"/>
-        <line num="109" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="111" count="0" type="stmt"/>
-        <line num="112" count="0" type="stmt"/>
-        <line num="121" count="0" type="stmt"/>
-        <line num="123" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="62" count="2" type="stmt"/>
+        <line num="77" count="2" type="stmt"/>
+        <line num="78" count="2" type="stmt"/>
+        <line num="95" count="9" type="stmt"/>
+        <line num="100" count="9" type="stmt"/>
+        <line num="103" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="104" count="2" type="stmt"/>
+        <line num="105" count="2" type="stmt"/>
+        <line num="109" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="111" count="5" type="stmt"/>
+        <line num="112" count="5" type="stmt"/>
+        <line num="121" count="2" type="stmt"/>
+        <line num="123" count="2" type="cond" truecount="1" falsecount="1"/>
         <line num="125" count="0" type="stmt"/>
         <line num="126" count="0" type="stmt"/>
-        <line num="129" count="0" type="stmt"/>
-        <line num="131" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="133" count="0" type="stmt"/>
-        <line num="134" count="0" type="stmt"/>
-        <line num="135" count="0" type="stmt"/>
+        <line num="129" count="2" type="stmt"/>
+        <line num="131" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="133" count="2" type="stmt"/>
+        <line num="134" count="2" type="stmt"/>
+        <line num="135" count="2" type="stmt"/>
         <line num="139" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="141" count="0" type="stmt"/>
         <line num="142" count="0" type="stmt"/>
@@ -952,45 +970,45 @@
         <line num="175" count="0" type="stmt"/>
         <line num="178" count="0" type="stmt"/>
         <line num="180" count="0" type="stmt"/>
-        <line num="201" count="0" type="stmt"/>
-        <line num="203" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="201" count="2" type="stmt"/>
+        <line num="203" count="2" type="cond" truecount="1" falsecount="1"/>
         <line num="204" count="0" type="stmt"/>
         <line num="205" count="0" type="stmt"/>
-        <line num="208" count="0" type="stmt"/>
-        <line num="210" count="0" type="stmt"/>
-        <line num="211" count="0" type="stmt"/>
-        <line num="228" count="0" type="stmt"/>
-        <line num="240" count="0" type="stmt"/>
-        <line num="247" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="248" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="252" count="0" type="stmt"/>
-        <line num="253" count="0" type="stmt"/>
-        <line num="254" count="0" type="stmt"/>
+        <line num="208" count="2" type="stmt"/>
+        <line num="210" count="2" type="stmt"/>
+        <line num="211" count="2" type="stmt"/>
+        <line num="228" count="8" type="stmt"/>
+        <line num="240" count="8" type="stmt"/>
+        <line num="247" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="248" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="252" count="2" type="stmt"/>
+        <line num="253" count="2" type="stmt"/>
+        <line num="254" count="2" type="stmt"/>
         <line num="256" count="0" type="stmt"/>
         <line num="257" count="0" type="stmt"/>
-        <line num="261" count="0" type="stmt"/>
-        <line num="263" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="261" count="6" type="stmt"/>
+        <line num="263" count="6" type="cond" truecount="1" falsecount="1"/>
         <line num="264" count="0" type="stmt"/>
-        <line num="270" count="0" type="stmt"/>
-        <line num="272" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="275" count="0" type="stmt"/>
-        <line num="290" count="0" type="stmt"/>
-        <line num="291" count="0" type="stmt"/>
-        <line num="305" count="1" type="stmt"/>
-        <line num="309" count="1" type="stmt"/>
-        <line num="311" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="312" count="0" type="stmt"/>
-        <line num="313" count="0" type="stmt"/>
-        <line num="316" count="1" type="stmt"/>
-        <line num="318" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="270" count="6" type="stmt"/>
+        <line num="272" count="6" type="cond" truecount="1" falsecount="1"/>
+        <line num="275" count="6" type="stmt"/>
+        <line num="290" count="6" type="stmt"/>
+        <line num="291" count="6" type="stmt"/>
+        <line num="305" count="5" type="stmt"/>
+        <line num="309" count="5" type="stmt"/>
+        <line num="311" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="312" count="2" type="stmt"/>
+        <line num="313" count="2" type="stmt"/>
+        <line num="316" count="3" type="stmt"/>
+        <line num="318" count="3" type="cond" truecount="1" falsecount="1"/>
         <line num="321" count="0" type="stmt"/>
-        <line num="324" count="1" type="stmt"/>
-        <line num="325" count="1" type="stmt"/>
-        <line num="338" count="0" type="stmt"/>
-        <line num="343" count="0" type="stmt"/>
-        <line num="345" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="346" count="0" type="stmt"/>
-        <line num="347" count="0" type="stmt"/>
+        <line num="324" count="3" type="stmt"/>
+        <line num="325" count="3" type="stmt"/>
+        <line num="338" count="4" type="stmt"/>
+        <line num="343" count="4" type="stmt"/>
+        <line num="345" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="346" count="4" type="stmt"/>
+        <line num="347" count="4" type="stmt"/>
         <line num="350" count="0" type="stmt"/>
         <line num="352" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="353" count="0" type="stmt"/>
@@ -1009,124 +1027,124 @@
         <line num="391" count="4" type="stmt"/>
         <line num="393" count="4" type="cond" truecount="2" falsecount="0"/>
         <line num="395" count="2" type="stmt"/>
-        <line num="396" count="2" type="stmt"/>
-        <line num="399" count="2" type="stmt"/>
-        <line num="401" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="402" count="1" type="stmt"/>
-        <line num="403" count="1" type="stmt"/>
-        <line num="404" count="1" type="stmt"/>
+        <line num="401" count="2" type="stmt"/>
+        <line num="404" count="2" type="stmt"/>
+        <line num="406" count="2" type="cond" truecount="2" falsecount="0"/>
         <line num="407" count="1" type="stmt"/>
-        <line num="411" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="412" count="0" type="stmt"/>
-        <line num="413" count="0" type="stmt"/>
-        <line num="417" count="1" type="stmt"/>
-        <line num="419" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="420" count="0" type="stmt"/>
-        <line num="421" count="0" type="stmt"/>
-        <line num="424" count="1" type="stmt"/>
-        <line num="426" count="1" type="stmt"/>
-        <line num="427" count="1" type="stmt"/>
-        <line num="440" count="0" type="stmt"/>
+        <line num="408" count="1" type="stmt"/>
+        <line num="409" count="1" type="stmt"/>
+        <line num="412" count="1" type="stmt"/>
+        <line num="416" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="417" count="0" type="stmt"/>
+        <line num="418" count="0" type="stmt"/>
+        <line num="422" count="1" type="stmt"/>
+        <line num="424" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="425" count="0" type="stmt"/>
+        <line num="426" count="0" type="stmt"/>
+        <line num="429" count="1" type="stmt"/>
+        <line num="431" count="1" type="stmt"/>
+        <line num="432" count="1" type="stmt"/>
         <line num="445" count="0" type="stmt"/>
-        <line num="447" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="448" count="0" type="stmt"/>
-        <line num="449" count="0" type="stmt"/>
-        <line num="452" count="0" type="stmt"/>
-        <line num="457" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="458" count="0" type="stmt"/>
-        <line num="459" count="0" type="stmt"/>
-        <line num="462" count="0" type="stmt"/>
-        <line num="466" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="450" count="0" type="stmt"/>
+        <line num="452" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="453" count="0" type="stmt"/>
+        <line num="454" count="0" type="stmt"/>
+        <line num="457" count="0" type="stmt"/>
+        <line num="462" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="463" count="0" type="stmt"/>
+        <line num="464" count="0" type="stmt"/>
         <line num="467" count="0" type="stmt"/>
-        <line num="468" count="0" type="stmt"/>
+        <line num="471" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="472" count="0" type="stmt"/>
         <line num="473" count="0" type="stmt"/>
-        <line num="487" count="0" type="stmt"/>
-        <line num="490" count="0" type="stmt"/>
-        <line num="492" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="493" count="0" type="stmt"/>
-        <line num="494" count="0" type="stmt"/>
-        <line num="497" count="0" type="stmt"/>
-        <line num="499" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="500" count="0" type="stmt"/>
-        <line num="501" count="0" type="stmt"/>
-        <line num="504" count="0" type="stmt"/>
-        <line num="506" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="507" count="0" type="stmt"/>
-        <line num="508" count="0" type="stmt"/>
-        <line num="511" count="0" type="stmt"/>
+        <line num="477" count="0" type="stmt"/>
+        <line num="478" count="0" type="stmt"/>
+        <line num="492" count="0" type="stmt"/>
+        <line num="495" count="0" type="stmt"/>
+        <line num="497" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="498" count="0" type="stmt"/>
+        <line num="499" count="0" type="stmt"/>
+        <line num="502" count="0" type="stmt"/>
+        <line num="504" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="505" count="0" type="stmt"/>
+        <line num="506" count="0" type="stmt"/>
+        <line num="509" count="0" type="stmt"/>
+        <line num="511" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="512" count="0" type="stmt"/>
-        <line num="527" count="0" type="stmt"/>
-        <line num="534" count="0" type="stmt"/>
-        <line num="536" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="537" count="0" type="stmt"/>
-        <line num="538" count="0" type="stmt"/>
-        <line num="541" count="0" type="stmt"/>
-        <line num="543" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="544" count="0" type="stmt"/>
-        <line num="545" count="0" type="stmt"/>
+        <line num="513" count="0" type="stmt"/>
+        <line num="516" count="0" type="stmt"/>
+        <line num="517" count="0" type="stmt"/>
+        <line num="532" count="0" type="stmt"/>
+        <line num="539" count="0" type="stmt"/>
+        <line num="541" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="542" count="0" type="stmt"/>
+        <line num="543" count="0" type="stmt"/>
+        <line num="546" count="0" type="stmt"/>
+        <line num="548" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="549" count="0" type="stmt"/>
         <line num="550" count="0" type="stmt"/>
-        <line num="563" count="0" type="stmt"/>
-        <line num="568" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="570" count="0" type="stmt"/>
-        <line num="571" count="0" type="stmt"/>
+        <line num="554" count="0" type="stmt"/>
+        <line num="555" count="0" type="stmt"/>
+        <line num="568" count="0" type="stmt"/>
+        <line num="573" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="575" count="0" type="stmt"/>
-        <line num="580" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="581" count="0" type="stmt"/>
-        <line num="582" count="0" type="stmt"/>
-        <line num="585" count="0" type="stmt"/>
+        <line num="576" count="0" type="stmt"/>
+        <line num="580" count="0" type="stmt"/>
+        <line num="585" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="586" count="0" type="stmt"/>
         <line num="587" count="0" type="stmt"/>
-        <line num="588" count="0" type="stmt"/>
-        <line num="602" count="0" type="stmt"/>
-        <line num="610" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="613" count="0" type="stmt"/>
-        <line num="614" count="0" type="stmt"/>
+        <line num="590" count="0" type="stmt"/>
+        <line num="592" count="0" type="stmt"/>
+        <line num="593" count="0" type="stmt"/>
+        <line num="607" count="0" type="stmt"/>
+        <line num="615" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="618" count="0" type="stmt"/>
-        <line num="623" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="624" count="0" type="stmt"/>
-        <line num="625" count="0" type="stmt"/>
-        <line num="628" count="0" type="stmt"/>
-        <line num="632" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="619" count="0" type="stmt"/>
+        <line num="623" count="0" type="stmt"/>
+        <line num="628" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="629" count="0" type="stmt"/>
+        <line num="630" count="0" type="stmt"/>
         <line num="633" count="0" type="stmt"/>
-        <line num="639" count="0" type="stmt"/>
-        <line num="640" count="0" type="stmt"/>
-        <line num="641" count="0" type="stmt"/>
-        <line num="655" count="0" type="stmt"/>
-        <line num="669" count="0" type="stmt"/>
-        <line num="671" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="672" count="0" type="stmt"/>
-        <line num="673" count="0" type="stmt"/>
-        <line num="676" count="0" type="stmt"/>
-        <line num="678" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="679" count="0" type="stmt"/>
-        <line num="680" count="0" type="stmt"/>
-        <line num="710" count="0" type="stmt"/>
-        <line num="711" count="0" type="stmt"/>
-        <line num="728" count="0" type="stmt"/>
-        <line num="734" count="0" type="stmt"/>
-        <line num="736" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="737" count="0" type="stmt"/>
-        <line num="738" count="0" type="stmt"/>
-        <line num="741" count="0" type="stmt"/>
-        <line num="745" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="637" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="638" count="0" type="stmt"/>
+        <line num="644" count="0" type="stmt"/>
+        <line num="645" count="0" type="stmt"/>
+        <line num="646" count="0" type="stmt"/>
+        <line num="660" count="0" type="stmt"/>
+        <line num="674" count="0" type="stmt"/>
+        <line num="676" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="677" count="0" type="stmt"/>
+        <line num="678" count="0" type="stmt"/>
+        <line num="681" count="0" type="stmt"/>
+        <line num="683" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="684" count="0" type="stmt"/>
+        <line num="685" count="0" type="stmt"/>
+        <line num="715" count="0" type="stmt"/>
+        <line num="716" count="0" type="stmt"/>
+        <line num="733" count="0" type="stmt"/>
+        <line num="739" count="0" type="stmt"/>
+        <line num="741" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="742" count="0" type="stmt"/>
+        <line num="743" count="0" type="stmt"/>
         <line num="746" count="0" type="stmt"/>
-        <line num="747" count="0" type="stmt"/>
-        <line num="750" count="0" type="stmt"/>
+        <line num="750" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="751" count="0" type="stmt"/>
-        <line num="754" count="1" type="stmt"/>
+        <line num="752" count="0" type="stmt"/>
+        <line num="755" count="0" type="stmt"/>
+        <line num="756" count="0" type="stmt"/>
+        <line num="759" count="1" type="stmt"/>
       </file>
-      <file name="star_handler.js" path="D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\handlers\star_handler.js">
-        <metrics statements="21" coveredstatements="5" conditionals="6" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <file name="star_handler.js" path="/home/runner/work/atom-backend/atom-backend/src/handlers/star_handler.js">
+        <metrics statements="21" coveredstatements="10" conditionals="6" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="6" count="1" type="stmt"/>
         <line num="7" count="1" type="stmt"/>
         <line num="8" count="1" type="stmt"/>
         <line num="9" count="1" type="stmt"/>
-        <line num="22" count="0" type="stmt"/>
-        <line num="26" count="0" type="stmt"/>
-        <line num="28" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="29" count="0" type="stmt"/>
-        <line num="30" count="0" type="stmt"/>
+        <line num="22" count="2" type="stmt"/>
+        <line num="26" count="2" type="stmt"/>
+        <line num="28" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="29" count="2" type="stmt"/>
+        <line num="30" count="2" type="stmt"/>
         <line num="33" count="0" type="stmt"/>
         <line num="35" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="36" count="0" type="stmt"/>
@@ -1140,28 +1158,28 @@
         <line num="50" count="0" type="stmt"/>
         <line num="53" count="1" type="stmt"/>
       </file>
-      <file name="theme_handler.js" path="D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\handlers\theme_handler.js">
-        <metrics statements="12" coveredstatements="5" conditionals="2" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <file name="theme_handler.js" path="/home/runner/work/atom-backend/atom-backend/src/handlers/theme_handler.js">
+        <metrics statements="12" coveredstatements="10" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="10" count="1" type="stmt"/>
         <line num="11" count="1" type="stmt"/>
         <line num="12" count="1" type="stmt"/>
         <line num="13" count="1" type="stmt"/>
-        <line num="32" count="0" type="stmt"/>
-        <line num="34" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="32" count="2" type="stmt"/>
+        <line num="34" count="2" type="cond" truecount="1" falsecount="1"/>
         <line num="35" count="0" type="stmt"/>
         <line num="36" count="0" type="stmt"/>
-        <line num="39" count="0" type="stmt"/>
-        <line num="41" count="0" type="stmt"/>
-        <line num="42" count="0" type="stmt"/>
+        <line num="39" count="2" type="stmt"/>
+        <line num="41" count="2" type="stmt"/>
+        <line num="42" count="2" type="stmt"/>
         <line num="45" count="1" type="stmt"/>
       </file>
-      <file name="update_handler.js" path="D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\handlers\update_handler.js">
-        <metrics statements="3" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <file name="update_handler.js" path="/home/runner/work/atom-backend/atom-backend/src/handlers/update_handler.js">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="7" count="1" type="stmt"/>
-        <line num="21" count="0" type="stmt"/>
+        <line num="21" count="2" type="stmt"/>
         <line num="24" count="1" type="stmt"/>
       </file>
-      <file name="user_handler.js" path="D:\Personal Documents\GitHub Repositories\atom-community-server-backend-JS\src\handlers\user_handler.js">
+      <file name="user_handler.js" path="/home/runner/work/atom-backend/atom-backend/src/handlers/user_handler.js">
         <metrics statements="21" coveredstatements="5" conditionals="6" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="6" count="1" type="stmt"/>
         <line num="7" count="1" type="stmt"/>
