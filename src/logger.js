@@ -66,7 +66,7 @@ function warningLog(req, res, err, num = 9999) {
   } else {
     let duration = Date.now() - req.start;
     let displayError;
-    if (Object.keys(err).includes("toString")) {
+    if (err !== undefined && Object.keys(err).includes("toString")) {
       displayError = err.toString();
     } else {
       displayError = err;

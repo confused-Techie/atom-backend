@@ -324,8 +324,8 @@ describe("POST /api/packages/:packageName/star", () => {
     // DESCRIBE: Returns same Package
     expect(res.body.name).toEqual("language-css");
     // DESCRIBE: Properly Decreases Star Count
-    expect(parseInt(res.body.stargazers_count)).toBeGreaterThan(
-      parseInt(prev.body.stargazers_count)
+    expect(parseInt(res.body.stargazers_count, 10)).toBeGreaterThan(
+      parseInt(prev.body.stargazers_count, 10)
     );
     // DESCRIBE: A duplicate Request Returns Error Status
     expect(dup).toHaveHTTPCode(500);
