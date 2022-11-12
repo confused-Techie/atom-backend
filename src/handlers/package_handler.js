@@ -94,7 +94,7 @@ async function getPackages(req, res) {
 async function postPackages(req, res) {
   let params = {
     repository: query.repo(req),
-    auth: req.get("Authorization"),
+    auth: req.get("Authorization")
   };
 
   let user = await database.verifyAuth(params.auth);
