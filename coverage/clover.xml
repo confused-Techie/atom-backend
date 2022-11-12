@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1668224418912" clover="3.2.0">
-  <project timestamp="1668224418912" name="All files">
-    <metrics statements="1142" coveredstatements="554" conditionals="543" coveredconditionals="232" methods="152" coveredmethods="95" elements="1837" coveredelements="881" complexity="0" loc="1142" ncloc="1142" packages="2" files="20" classes="20"/>
+<coverage generated="1668224691445" clover="3.2.0">
+  <project timestamp="1668224691445" name="All files">
+    <metrics statements="1142" coveredstatements="554" conditionals="545" coveredconditionals="234" methods="152" coveredmethods="95" elements="1839" coveredelements="883" complexity="0" loc="1142" ncloc="1142" packages="2" files="20" classes="20"/>
     <package name="src">
-      <metrics statements="823" coveredstatements="404" conditionals="432" coveredconditionals="198" methods="124" coveredmethods="77"/>
+      <metrics statements="823" coveredstatements="404" conditionals="434" coveredconditionals="200" methods="124" coveredmethods="77"/>
       <file name="cache.js" path="/home/runner/work/atom-backend/atom-backend/src/cache.js">
         <metrics statements="10" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="1"/>
         <line num="9" count="4" type="stmt"/>
@@ -521,16 +521,16 @@
         <line num="493" count="1" type="stmt"/>
       </file>
       <file name="logger.js" path="/home/runner/work/atom-backend/atom-backend/src/logger.js">
-        <metrics statements="20" coveredstatements="18" conditionals="14" coveredconditionals="11" methods="5" coveredmethods="5"/>
+        <metrics statements="20" coveredstatements="18" conditionals="16" coveredconditionals="13" methods="5" coveredmethods="5"/>
         <line num="7" count="6" type="stmt"/>
         <line num="18" count="57" type="stmt"/>
         <line num="19" count="57" type="stmt"/>
         <line num="20" count="57" type="stmt"/>
         <line num="39" count="4" type="stmt"/>
-        <line num="41" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="41" count="4" type="cond" truecount="3" falsecount="1"/>
         <line num="42" count="0" type="stmt"/>
-        <line num="44" count="3" type="stmt"/>
-        <line num="46" count="3" type="stmt"/>
+        <line num="44" count="4" type="stmt"/>
+        <line num="46" count="4" type="stmt"/>
         <line num="64" count="2" type="cond" truecount="6" falsecount="0"/>
         <line num="65" count="1" type="stmt"/>
         <line num="67" count="1" type="stmt"/>
