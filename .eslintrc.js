@@ -17,7 +17,7 @@ module.exports = {
       },
     ],
   },
-  plugins: ["node/recommended"],
+  plugins: [],
   globals: {
     jest: "readonly",
     test: "readonly",
