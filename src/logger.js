@@ -44,9 +44,7 @@ function errorLog(req, res, err, num = 9999) {
     displayError = err;
   }
   console.log(
-    `ERROR-${num}:: ${req.ip} "${req.method} ${req.url} ${req.protocol}" ${
-      res.statusCode
-    } ${duration}ms ! ${displayError}`
+    `ERROR-${num}:: ${req.ip} "${req.method} ${req.url} ${req.protocol}" ${res.statusCode} ${duration}ms ! ${displayError}`
   );
 }
 
@@ -74,9 +72,7 @@ function warningLog(req, res, err, num = 9999) {
       displayError = err;
     }
     console.log(
-      `WARNING-${num}:: ${req.ip} "${req.method} ${req.url} ${req.protocol}" ${
-        res.statusCode
-      } ${duration}ms ! ${displayError}`
+      `WARNING-${num}:: ${req.ip} "${req.method} ${req.url} ${req.protocol}" ${res.statusCode} ${duration}ms ! ${displayError}`
     );
   }
 }
