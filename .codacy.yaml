@@ -1,0 +1,6 @@
+---
+engines:
+  duplication:
+    minTokenMatch: 80
+exclude_paths:
+  - "./docs/*"

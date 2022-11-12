@@ -16,6 +16,7 @@ module.exports = {
         allowModules: ["supertest"],
       },
     ],
+    "no-process-exit": "off"
   },
   plugins: [],
   globals: {
