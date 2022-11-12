@@ -133,6 +133,22 @@ function engine(req) {
 }
 
 /**
+  * @function auth
+  * @desc Retreives Authorization Headers from Request, and Checks for Undefined.
+  * @param {object} req = The `Request` object inherited from the Express endpoint.
+  * @returns {string} Returning a valid Authorization Token, or '' if invalid/not found.
+  */
+function auth(req) {
+  let token = req.get("Authorization");
+
+  if (token === undefined || token === null || token === "") {
+    return "";
+  }
+
+  return token;
+}
+
+/**
  * @function repo
  * @desc Parses the 'repository' query parameter, returning it if valid, otherwise returning ''.
  * @param {object} req - The `Request` object inherited from the Express endpoint.
@@ -216,4 +232,4 @@ function pathTraversalAttempt(data) {
   return false; // if none of the matches are true.
 }
 
-module.exports = { page, sort, dir, query, engine, repo, tag, rename };
+module.exports = { page, sort, dir, query, engine, repo, tag, rename, auth };

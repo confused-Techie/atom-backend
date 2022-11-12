@@ -18,6 +18,10 @@ const msg = {
     "Requires authentication. Please update your token if you haven't done so recently.",
   notSupported: "While under development this feature is not supported.",
   publishPackageExists: "A Package by that name already exists.",
+  notFound: "Not Found",
+  notFoundSite: "This is a standin for the proper site wide 404 page.",
+  serverError: "Application Error",
+  badPackageJSON: "The package.json at owner/repo isn't valid."
 };
 
 beforeAll(async () => {
@@ -183,6 +187,7 @@ describe("Post /api/packages", () => {
       .set("Authorization", "valid-token");
     expect(res).toHaveHTTPCode(409);
   });
+  test.todo("Tests that actually modify data");
 });
 
 describe("GET /api/packages/search", () => {
@@ -201,6 +206,22 @@ describe("GET /api/packages/search", () => {
   test("Invalid Search Returns Empty Array", async () => {
     const res = await request(app).get("/api/packages/search?q=not-one-match");
     expect(res.body.length).toBeLessThan(1);
+  });
+  test("Has the correct default DESC listing", async () => {
+    const res = await request(app).get("/api/packages/search?q=language");
+    expect(res.body[0].name).toBe("language-cpp");
+  });
+  test("Sets ASC listing correctly", async () => {
+    const res = await request(app).get("/api/packages/search?q=language").query({ direction: "asc" });
+    expect(res.body[0].name).toBe("language-css");
+  });
+  test("Sets ASC listing correctly with internal param", async () => {
+    const res = await request(app).get("/api/packages/search?q=language").query({ order: "asc" });
+    expect(res.body[0].name).toBe("language-css");
+  });
+  test("Ignores invalid 'direction'", async () => {
+    const res = await request(app).get("/api/packages/search?q=language").query({ order: "this-should-not-work"});
+    expect(res.body[0].name).toBe("language-cpp");
   });
 });
 
@@ -224,11 +245,68 @@ describe("GET /api/packages/:packageName", () => {
 });
 
 describe("DELETE /api/packages/:packageName", () => {
-  // Since this attempts to delete a package, lets skip until we ensure
-  // not to comprimise SQL data.
-  test.skip("No Auth, fails", async () => {
-    const res = await request(app).remove("/api/packages/what-a-package");
+  test("No Auth, returns 401", async () => {
+    const res = await request(app).delete("/api/packages/language-css");
     expect(res).toHaveHTTPCode(401);
+  });
+  test("No Auth, returns 'Bad Auth' with no token", async () => {
+    const res = await request(app).delete("/api/packages/language-css");
+    expect(res.body.message).toEqual(msg.badAuth);
+  });
+  test("Returns 401 with Invalid Token", async () => {
+    const res = await request(app).delete("/api/packages/language-css").set("Authorization", "invalid");
+    expect(res).toHaveHTTPCode(401);
+  });
+  test("Returns Bad Auth Msg with Invalid Token", async () => {
+    const res = await request(app).delete("/api/packages/language-css").set("Authorization", "invalid");
+    expect(res.body.message).toEqual(msg.badAuth);
+  });
+  test.todo("Tests that actually modify this data");
+});
+
+describe("POST /api/packages/:packageName/star", () => {
+  test("Returns 401 with No Auth", async () => {
+    const res = await request(app).post("/api/packages/language-css/star");
+    expect(res).toHaveHTTPCode(401);
+  });
+  test("Returns Bad Auth Msg with No Auth", async () => {
+    const res = await request(app).post("/api/packages/langauge-css/star");
+    expect(res.body.message).toEqual(msg.badAuth);
+  });
+  test("Returns 401 with Bad Auth", async () => {
+    const res = await request(app).post("/api/packages/language-css/star").set("Authorization", "invalid");
+    expect(res).toHaveHTTPCode(401);
+  });
+  test("Returns Bad Auth Msg with Bad Auth", async () => {
+    const res = await request(app).post("/api/packages/language-css/star").set("Authorization", "invalid");
+    expect(res.body.message).toEqual(msg.badAuth);
+  });
+  test("Returns 404 with bad package", async () => {
+    const res = await request(app).post("/api/packages/language-golang/star").set("Authorization", "valid-token");
+    expect(res).toHaveHTTPCode(404);
+  });
+  test("Returns Not Found msg with bad package", async () => {
+    const res = await request(app).post("/api/packages/language-golang/star").set("Authorization", "valid-token");
+    expect(res.body.message).toEqual(msg.notFound);
+  });
+  test("Returns proper data on Success", async () => {
+    const prev = await request(app).get("/api/packages/language-css");
+    const res = await request(app).post("/api/packages/language-css/star").set("Authorization", "valid-token");
+    const dup = await request(app).post("/api/packages/language-css/star").set("Authorization", "valid-token");
+    // We are preforming multiple checks in the single check, because, as expected trying to star a package
+    // that you have already stared errors out.
+    // Unfortunately we can't nest another describe into the test, so we will use comments to make things clear.
+
+    // DESCRIBE: Returns Success Status Code
+    expect(res).toHaveHTTPCode(200);
+    // DESCRIBE: Returns same Package
+    expect(res.body.name).toEqual("language-css");
+    // DESCRIBE: Properly Decreases Star Count
+    expect(parseInt(res.body.stargazers_count)).toBeGreaterThan(parseInt(prev.body.stargazers_count));
+    // DESCRIBE: A duplicate Request Returns Error Status
+    expect(dup).toHaveHTTPCode(500);
+    // DESCRIBE: A duplicate Request Returns Error Message
+    expect(dup.body.message).toEqual(msg.serverError);
   });
 });
 

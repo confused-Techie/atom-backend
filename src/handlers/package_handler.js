@@ -94,7 +94,7 @@ async function getPackages(req, res) {
 async function postPackages(req, res) {
   let params = {
     repository: query.repo(req),
-    auth: req.get("Authorization"),
+    auth: query.auth(req)
   };
 
   let user = await database.verifyAuth(params.auth);
@@ -336,7 +336,7 @@ async function getPackagesDetails(req, res) {
  */
 async function deletePackagesName(req, res) {
   let params = {
-    auth: req.get("Authorization"),
+    auth: query.auth(req),
     packageName: decodeURIComponent(req.params.packageName),
   };
 
@@ -377,21 +377,30 @@ async function deletePackagesName(req, res) {
  */
 async function postPackagesStar(req, res) {
   let params = {
-    auth: req.get("Authorization"),
+    auth: query.auth(req),
     packageName: decodeURIComponent(req.params.packageName),
   };
 
   let user = await database.verifyAuth(params.auth);
 
   if (!user.ok) {
-    await common.handleError(req, res, user);
+    await common.handleError(req, res, user, 1008);
+    return;
+  }
+
+  const exists = await database.getPackageByName(params.packageName);
+
+  if (!exists.ok) {
+    // The package we are trying to star doesn't exist, resolve with a 404.
+    await common.handleError(req, res, { ok: false, short: "Not Found", content: exists.content}, 1012);
     return;
   }
 
   let star = await database.updateStars(user.content, params.packageName);
 
   if (!star.ok) {
-    await common.handleError(req, res, user);
+    console.log(star);
+    await common.handleError(req, res, user, 1009);
     return;
   }
 
@@ -400,7 +409,7 @@ async function postPackagesStar(req, res) {
   );
 
   if (!updatePack.ok) {
-    await common.handleError(req, res, updatePack);
+    await common.handleError(req, res, updatePack, 1010);
     return;
   }
 
@@ -408,7 +417,7 @@ async function postPackagesStar(req, res) {
   let pack = await database.getPackageByName(params.packageName);
 
   if (!pack.ok) {
-    await common.handleError(req, res, pack);
+    await common.handleError(req, res, pack, 1011);
     return;
   }
 

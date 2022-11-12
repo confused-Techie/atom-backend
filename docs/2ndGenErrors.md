@@ -34,6 +34,11 @@ Error codes within `1000-1999` are error codes that relate to an error originati
 - 1005 : `package_handler.deletePackagesName()` - The request `database.verifyAuth()` Returned `ok: false`.
 - 1006 : `package_handler.deletePackagesName()` - The Request `database.removePackageByName()` Returned `ok: false`.
 - 1007 : `package_handler.getPakcagesSearch()` - The Request `database.simpleSearch()` Returned `ok: false`.
+- 1008 : `package_handler.postPackagesStar()` - The Request `database.verifyAuth()` Returned `ok: false`.
+- 1009 : `package_handler.postPackagesStar()` - The Request `database.updateStars()` Returned `ok: false`.
+- 1010 : `package_handler.postPackagesStar()` - The Request `database.updatePackageIncrementStarByName()` Returned `ok: false`.
+- 1011 : `package_handler.postPackagesStar()` - The Request `database.getPackageByName()` Returned `ok: false`.
+- 1012 : `package_handler.postPackagesStar()` - The Request `database.getPackageByName()` Returned `ok: false`.
 
 ### 2000
 
