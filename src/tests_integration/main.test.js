@@ -271,7 +271,33 @@ describe("DELETE /api/packages/:packageName", () => {
       .set("Authorization", "invalid");
     expect(res.body.message).toEqual(msg.badAuth);
   });
-  test.todo("Tests that actually modify this data");
+  test("Returns Bad Auth Msg with Valid Token, but no repo access", async () => {
+    const res = await request(app).delete("/api/packages/language-css").set("Authorization", "no-valid-token");
+    expect(res.body.message).toEqual(msg.badAuth);
+  });
+  test("Returns Bad Auth Http with Valid Token, but no repo access", async () => {
+    const res = await request(app).delete("/api/packages/language-css").set("Authorization", "no-valid-token");
+    expect(res).toHaveHTTPCode(401);
+  });
+  test("Returns Success Message & HTTP with Valid Token", async () => {
+    const res = await request(app).delete("/api/packages/atom-material-ui").set("Authorization", "admin-token");
+    expect(res).toHaveHTTPCode(204);
+
+    const after = await request(app).get("/api/packages");
+    // This ensures our deleted package is no longer in the full package list.
+    expect(after.body).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: "atom-material-ui"
+        })
+      ])
+    );
+  });
+  // The ^^ above ^^ reads:
+  //  * Expect your Array does NOT Equal
+  //  * An Array that contains
+  //  * An Object that Contains
+  //  * The property { name: "atom-material-ui" }
 });
 
 describe("POST /api/packages/:packageName/star", () => {

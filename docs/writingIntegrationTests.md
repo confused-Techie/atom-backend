@@ -68,5 +68,10 @@ Now there is a certain set of test data that is available while testing, which w
 
 - dever
   * Token: "valid-token"
-- misc_test_user
+  * User with no specific permissions to resources, and can safely be used for misc.
+- no_perm_user
   * Token: "no-valid-token"
+  * Will by denied access no matter what during GitHub Authorization Steps.
+- admin_user
+  * Token: "admin-token"
+  * Will be granted access to every service, and should never be denied access.

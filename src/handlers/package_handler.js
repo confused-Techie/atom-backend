@@ -362,7 +362,7 @@ async function deletePackagesName(req, res) {
     return;
   }
 
-  res.status(204).json({ message: "Success" });
+  res.status(204).send();
   logger.httpLog(req, res);
 }
 

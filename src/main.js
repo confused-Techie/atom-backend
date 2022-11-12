@@ -247,8 +247,7 @@ app.get("/api/packages/:packageName", async (req, res) => {
  * @response
  *   @status 204
  *   @Rtype application/json
- *   @Rdesc Successfully deleted package.
- *   @Rexample { "message": "Success" }
+ *   @Rdesc Successfully deleted package. Returns No Content.
  * @response
  *   @status 400
  *   @Rtype application/json

@@ -555,12 +555,28 @@ async function removePackageByName(name) {
       };
     }
 
-    const command_pack = await sql_storage`
-      DELETE FROM packages
+    const command_name = await sql_storage`
+      DELETE FROM names
       WHERE pointer IN (
         SELECT pointer FROM names
         WHERE name = ${name}
       )
+      RETURNING *;
+    `;
+
+    if (command_name.count === 0) {
+      return {
+        ok: false,
+        content: `Failed to delete the name for: ${name}`,
+        short: "Server Error"
+      };
+    }
+
+    // We will have to use the pointer returning from this last command, since we
+    // can no longer preform the same lookup as before.
+    const command_pack = await sql_storage`
+      DELETE FROM packages
+      WHERE pointer = ${command_name[0].pointer}
       RETURNING *;
     `;
 
