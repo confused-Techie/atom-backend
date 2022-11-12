@@ -3,8 +3,8 @@
 * Mean per-function logical LOC: 10.36315789473684
 * Mean per-function parameter count: 0.4868421052631579
 * Mean per-function cyclomatic complexity: 2.6578947368421053
-* Mean per-function Halstead effort: 7379.620800986459
-* Mean per-module maintainability index: 75.52449339826963
+* Mean per-function Halstead effort: 7384.3704583341
+* Mean per-module maintainability index: 75.5120870221362
 * First-order density: 1.3850415512465373%
 * Change cost: 6.9252077562326875%
 * Core size: 100%
@@ -166,7 +166,7 @@
 * Mean parameter count: 2.4
 * Cyclomatic complexity: 8
 * Cyclomatic complexity density: 22.857142857142858%
-* Maintainability index: 72.26236063459783
+* Maintainability index: 72.02663948806276
 * Dependency count: 1
 * Function: **httpLog**
     * Line No.: 17
@@ -185,9 +185,9 @@
     * Parameter count: 4
     * Cyclomatic complexity: 2
     * Cyclomatic complexity density: 28.57142857142857%
-    * Halstead difficulty: 4.8125
-    * Halstead volume: 185.46604019833754
-    * Halstead effort: 892.5553184544995
+    * Halstead difficulty: 6.352941176470589
+    * Halstead volume: 211.51978731634918
+    * Halstead effort: 1343.772766480336
 * Function: **warningLog**
     * Line No.: 63
     * Physical LOC: 16
