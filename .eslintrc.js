@@ -1,4 +1,11 @@
 module.exports = {
+  extends: [
+    "eslint:recommended",
+    "node/recommended"
+  ],
+  plugins: [
+    "node/recommended"
+  ],
   globals: {
     jest: "readonly",
   },
