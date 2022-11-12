@@ -31,4 +31,13 @@ describe("Cache Objects Have the Functions and Variables Expected", () => {
   test("Cache Object contains Name as Instantiated", async () => {
     expect(newCache.name).toEqual("test-name");
   });
+
+  test("Cache Object Contains Function 'invalidate'", async () => {
+    expect(typeof newCache.invalidate === 'function').toBeTruthy();
+  });
+
+  test("Cache Object Returns Boolean for Expired", async () => {
+    let exp = newCache.Expired;
+    expect(typeof exp === "boolean").toBeTruthy();
+  });
 });

@@ -6,13 +6,11 @@
  * the backend API server as normal.
  */
 
-/* eslint-disable node/no-unpublished-require */
 /**
  * This is the recommended and only way to mock how Jest would use the module.
  */
 const dbSetup = require("../node_modules/@databases/pg-test/jest/globalSetup");
 const dbTeardown = require("../node_modules/@databases/pg-test/jest/globalTeardown");
-/* eslint-enable node/no-unpublished-require */
 
 async function test() {
   await dbSetup();

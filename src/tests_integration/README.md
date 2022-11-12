@@ -5,5 +5,3 @@ Every test file that needs to exist has been created at this point, now only nee
 It's recommended to run these tests with `npm run test:integration`
 
 Which will automatically, granted you have `docker` installed and running, create a PostgreSQL server to use for any and all database calls.
-
-This does have to be configured per test but hopefully that is only temporary.
