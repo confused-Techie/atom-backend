@@ -38,7 +38,7 @@ function errorLog(req, res, err, num = 9999) {
   // this will be a generic error logger to grab some stats about what happened, how the server handled it. And of course the error.
   let duration = Date.now() - req.start;
   let displayError;
-  if (Object.keys(err).includes("toString")) {
+  if (err !== undefined && Object.keys(err).includes("toString")) {
     displayError = err.toString();
   } else {
     displayError = err;
