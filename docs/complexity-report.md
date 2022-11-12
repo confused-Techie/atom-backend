@@ -1,12 +1,12 @@
 # Complexity report, 11/12/2022
 
-* Mean per-function logical LOC: 10.36315789473684
-* Mean per-function parameter count: 0.4868421052631579
-* Mean per-function cyclomatic complexity: 2.6578947368421053
-* Mean per-function Halstead effort: 7384.3704583341
-* Mean per-module maintainability index: 75.5120870221362
-* First-order density: 1.3850415512465373%
-* Change cost: 6.9252077562326875%
+* Mean per-function logical LOC: 14.76153846153846
+* Mean per-function parameter count: 0.7115384615384616
+* Mean per-function cyclomatic complexity: 3.423076923076923
+* Mean per-function Halstead effort: 10800.598059677473
+* Mean per-module maintainability index: 66.40056073019542
+* First-order density: 2.9585798816568047%
+* Change cost: 11.242603550295858%
 * Core size: 100%
 
 ## /home/runner/work/atom-backend/atom-backend/jest.config.js
@@ -166,7 +166,7 @@
 * Mean parameter count: 2.4
 * Cyclomatic complexity: 8
 * Cyclomatic complexity density: 22.857142857142858%
-* Maintainability index: 72.02663948806276
+* Maintainability index: 71.59701059662521
 * Dependency count: 1
 * Function: **httpLog**
     * Line No.: 17
@@ -195,9 +195,9 @@
     * Parameter count: 4
     * Cyclomatic complexity: 6
     * Cyclomatic complexity density: 60%
-    * Halstead difficulty: 8
-    * Halstead volume: 294.8030251341351
-    * Halstead effort: 2358.424201073081
+    * Halstead difficulty: 10.38888888888889
+    * Halstead volume: 320.6267456784198
+    * Halstead effort: 3330.9556356591393
 * Function: **infoLog**
     * Line No.: 87
     * Physical LOC: 3
@@ -481,71 +481,11 @@
 
 ## /home/runner/work/atom-backend/atom-backend/src/tests_integration/git.test.js
 
-* Physical LOC: 1
-* Logical LOC: 1
+* Physical LOC: 3
+* Logical LOC: 2
 * Mean parameter count: 0
 * Cyclomatic complexity: 1
-* Cyclomatic complexity density: 100%
-* Maintainability index: 93.70612884259891
-* Dependency count: 1
-
-## /home/runner/work/atom-backend/atom-backend/src/tests_integration/oauth_handler.test.js
-
-* Physical LOC: 1
-* Logical LOC: 1
-* Mean parameter count: 0
-* Cyclomatic complexity: 1
-* Cyclomatic complexity density: 100%
-* Maintainability index: 93.70612884259891
-* Dependency count: 1
-
-## /home/runner/work/atom-backend/atom-backend/src/tests_integration/package_handler.test.js
-
-* Physical LOC: 1
-* Logical LOC: 1
-* Mean parameter count: 0
-* Cyclomatic complexity: 1
-* Cyclomatic complexity density: 100%
-* Maintainability index: 93.70612884259891
-* Dependency count: 1
-
-## /home/runner/work/atom-backend/atom-backend/src/tests_integration/star_handler.test.js
-
-* Physical LOC: 1
-* Logical LOC: 1
-* Mean parameter count: 0
-* Cyclomatic complexity: 1
-* Cyclomatic complexity density: 100%
-* Maintainability index: 93.70612884259891
-* Dependency count: 1
-
-## /home/runner/work/atom-backend/atom-backend/src/tests_integration/theme_handler.test.js
-
-* Physical LOC: 1
-* Logical LOC: 1
-* Mean parameter count: 0
-* Cyclomatic complexity: 1
-* Cyclomatic complexity density: 100%
-* Maintainability index: 93.70612884259891
-* Dependency count: 1
-
-## /home/runner/work/atom-backend/atom-backend/src/tests_integration/update_handler.test.js
-
-* Physical LOC: 1
-* Logical LOC: 1
-* Mean parameter count: 0
-* Cyclomatic complexity: 1
-* Cyclomatic complexity density: 100%
-* Maintainability index: 93.70612884259891
-* Dependency count: 1
-
-## /home/runner/work/atom-backend/atom-backend/src/tests_integration/user_handler.test.js
-
-* Physical LOC: 1
-* Logical LOC: 1
-* Mean parameter count: 0
-* Cyclomatic complexity: 1
-* Cyclomatic complexity density: 100%
-* Maintainability index: 93.70612884259891
+* Cyclomatic complexity density: 50%
+* Maintainability index: 84.85016686158255
 * Dependency count: 1
 

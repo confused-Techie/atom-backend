@@ -3,8 +3,11 @@ module.exports = {
     jest: "readonly",
   },
   rules: {
-    "node/no-unpublished-require": ["error", {
-      allowModules: ["supertest"]
-    }]
-  }
+    "node/no-unpublished-require": [
+      "error",
+      {
+        allowModules: ["supertest"],
+      },
+    ],
+  },
 };
