@@ -568,7 +568,7 @@ async function removePackageByName(name) {
       return {
         ok: false,
         content: `Failed to delete the name for: ${name}`,
-        short: "Server Error"
+        short: "Server Error",
       };
     }
 

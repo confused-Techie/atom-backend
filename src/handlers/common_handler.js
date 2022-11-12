@@ -27,7 +27,7 @@ async function authFail(req, res, user, num) {
   switch (user.short) {
     case "Bad Auth":
     case "Auth Fail":
-    case "No Repo Access":// support for being passed a git return.
+    case "No Repo Access": // support for being passed a git return.
       error.missingAuthJSON(res);
       logger.httpLog(req, res);
       break;

@@ -272,15 +272,21 @@ describe("DELETE /api/packages/:packageName", () => {
     expect(res.body.message).toEqual(msg.badAuth);
   });
   test("Returns Bad Auth Msg with Valid Token, but no repo access", async () => {
-    const res = await request(app).delete("/api/packages/language-css").set("Authorization", "no-valid-token");
+    const res = await request(app)
+      .delete("/api/packages/language-css")
+      .set("Authorization", "no-valid-token");
     expect(res.body.message).toEqual(msg.badAuth);
   });
   test("Returns Bad Auth Http with Valid Token, but no repo access", async () => {
-    const res = await request(app).delete("/api/packages/language-css").set("Authorization", "no-valid-token");
+    const res = await request(app)
+      .delete("/api/packages/language-css")
+      .set("Authorization", "no-valid-token");
     expect(res).toHaveHTTPCode(401);
   });
   test("Returns Success Message & HTTP with Valid Token", async () => {
-    const res = await request(app).delete("/api/packages/atom-material-ui").set("Authorization", "admin-token");
+    const res = await request(app)
+      .delete("/api/packages/atom-material-ui")
+      .set("Authorization", "admin-token");
     expect(res).toHaveHTTPCode(204);
 
     const after = await request(app).get("/api/packages");
@@ -288,8 +294,8 @@ describe("DELETE /api/packages/:packageName", () => {
     expect(after.body).not.toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          name: "atom-material-ui"
-        })
+          name: "atom-material-ui",
+        }),
       ])
     );
   });

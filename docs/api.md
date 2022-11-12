@@ -183,11 +183,7 @@ Responses:
 
 **Type:** `[application/json]`
 
-Successfully deleted package.
-
-```json
-{ "message": "Success" }
-```
+Successfully deleted package. Returns No Content.
 
 
 ---

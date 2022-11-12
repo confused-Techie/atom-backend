@@ -28,18 +28,27 @@ async function ownership(user, repo) {
   // Since git auth is not setup, this will return positive.
 
   if (process.env.PULSAR_STATUS == "dev") {
-    console.log(`git.js.Ownership() Is returning Dev Only Permissions for ${user.username}`);
+    console.log(
+      `git.js.Ownership() Is returning Dev Only Permissions for ${user.username}`
+    );
     if (user.username == "admin_user") {
       // This is a special case that will allow unfettered access to all server resources, and global resources.
       // It must be ensured that the production instance doesn't run in dev mode, or risk Unauthorized access.
       return { ok: true, content: "Development Admin User" };
     }
     if (user.username == "no_perm_user") {
-      return { ok: false, content: "Development NoPerms User", short: "No Repo Access" };
+      return {
+        ok: false,
+        content: "Development NoPerms User",
+        short: "No Repo Access",
+      };
     }
 
-    return { ok: false, content: "Server in Dev Mode passed unhandled user", short: "Server Error" };
-
+    return {
+      ok: false,
+      content: "Server in Dev Mode passed unhandled user",
+      short: "Server Error",
+    };
   }
 
   let withinPackages = await doesUserHaveRepo(user, repo);
