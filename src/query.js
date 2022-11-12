@@ -82,7 +82,9 @@ function query(req) {
     let decodeProv = decodeURIComponent(prov); // this will undo any encoding done to get the request to us.
 
     // Then some basic checks to help prevent malicious queries.
-    return pathTraversalAttempt(decodeProv) ? "" : decodeProv.slice(0, max_length).trim();
+    return pathTraversalAttempt(decodeProv)
+      ? ""
+      : decodeProv.slice(0, max_length).trim();
   } catch (err) {
     // an error occured while decoding the URI component. Return an empty query.
     return "";
