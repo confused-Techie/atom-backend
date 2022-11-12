@@ -12,10 +12,12 @@ jest.setTimeout(300000);
 // This way we can easily reference them and update them as needed.
 
 const msg = {
-  badRepoJSON: "That repo does not exist, isn't an atom package, or atombot does not have access.",
-  badAuth: "Requires authentication. Please update your token if you haven't done so recently.",
+  badRepoJSON:
+    "That repo does not exist, isn't an atom package, or atombot does not have access.",
+  badAuth:
+    "Requires authentication. Please update your token if you haven't done so recently.",
   notSupported: "While under development this feature is not supported.",
-  publishPackageExists: "A Package by that name already exists."
+  publishPackageExists: "A Package by that name already exists.",
 };
 
 beforeAll(async () => {
@@ -76,7 +78,9 @@ expect.extend({
 describe("Get /", () => {
   test("Should Respond with Json Message of Server Running", async () => {
     const res = await request(app).get("/");
-    expect(res.body.message).toEqual(expect.stringContaining("Server is up and running Version"));
+    expect(res.body.message).toEqual(
+      expect.stringContaining("Server is up and running Version")
+    );
   });
   test("Should Return valid status code", async () => {
     const res = await request(app).get("/");
@@ -89,11 +93,15 @@ describe("Get /", () => {
 });
 
 describe("Get /api/login", () => {
-  test.todo("This whole section needs to be written once Authentication is fleshed out");
+  test.todo(
+    "This whole section needs to be written once Authentication is fleshed out"
+  );
 });
 
 describe("Get /api/oauth", () => {
-  test.todo("This whole section needs to be written once Authentication is fleshed out");
+  test.todo(
+    "This whole section needs to be written once Authentication is fleshed out"
+  );
 });
 
 describe("Get /api/packages", () => {
@@ -113,39 +121,66 @@ describe("Get /api/packages", () => {
 
 describe("Post /api/packages", () => {
   test("Fails with 'Bad Auth' when bad token is passed.", async () => {
-    const res = await request(app).post("/api/packages").query({ repository: "pulsar-edit/langauge-css"}).set("Authorization", "invalid");
+    const res = await request(app)
+      .post("/api/packages")
+      .query({ repository: "pulsar-edit/langauge-css" })
+      .set("Authorization", "invalid");
     expect(res.body.message).toEqual(msg.badAuth);
   });
   test("Fails with 401 with bad token", async () => {
-    const res = await request(app).post("/api/packages").query({ repository: "pulsar-edit/language-css"}).set("Authorization", "invalid");
+    const res = await request(app)
+      .post("/api/packages")
+      .query({ repository: "pulsar-edit/language-css" })
+      .set("Authorization", "invalid");
     expect(res).toHaveHTTPCode(401);
   });
   test("Fails with 'badRepoJSON' when no repo is passed.", async () => {
-    const res = await request(app).post("/api/packages").query({ repository: ""}).set("Authorization", "valid-token");
+    const res = await request(app)
+      .post("/api/packages")
+      .query({ repository: "" })
+      .set("Authorization", "valid-token");
     expect(res.body.message).toEqual(msg.badRepoJSON);
   });
   test("Fails with 400 when no repo is passed.", async () => {
-    const res = await request(app).post("/api/packages").query({ repository: ""}).set("Authorization", "valid-token");
+    const res = await request(app)
+      .post("/api/packages")
+      .query({ repository: "" })
+      .set("Authorization", "valid-token");
     expect(res).toHaveHTTPCode(400);
   });
   test("Fails with 'badRepoJSON' when bad repo is passed.", async () => {
-    const res = await request(app).post("/api/packages").query({ repository: "notARepo"}).set("Authorization", "valid-token");
+    const res = await request(app)
+      .post("/api/packages")
+      .query({ repository: "notARepo" })
+      .set("Authorization", "valid-token");
     expect(res.body.message).toEqual(msg.badRepoJSON);
   });
   test("Fails with 'badRepoJSON' when Repo with a space is passed", async () => {
-    const res = await request(app).post("/api/packages").query({ repository: "pulsar-edit/language CSS"}).set("Authorization", "valid-token");
+    const res = await request(app)
+      .post("/api/packages")
+      .query({ repository: "pulsar-edit/language CSS" })
+      .set("Authorization", "valid-token");
     expect(res.body.message).toEqual(msg.badRepoJSON);
   });
   test("Fails with 400 when bad repo is passed.", async () => {
-    const res = await request(app).post("/api/packages").query({ repository: "notARepo"}).set("Authorization", "valid-token");
+    const res = await request(app)
+      .post("/api/packages")
+      .query({ repository: "notARepo" })
+      .set("Authorization", "valid-token");
     expect(res).toHaveHTTPCode(400);
   });
   test("Fails with 'publishPackageExists' when existing package is passed", async () => {
-    const res = await request(app).post("/api/packages").query({ repository: "pulsar-edit/language-css"}).set("Authorization", "valid-token");
+    const res = await request(app)
+      .post("/api/packages")
+      .query({ repository: "pulsar-edit/language-css" })
+      .set("Authorization", "valid-token");
     expect(res.body.message).toEqual(msg.publishPackageExists);
   });
   test("Fails with 409 when existing package is passed.", async () => {
-    const res = await request(app).post("/api/packages").query({ repository: "pulsar-edit/language-css"}).set("Authorization", "valid-token");
+    const res = await request(app)
+      .post("/api/packages")
+      .query({ repository: "pulsar-edit/language-css" })
+      .set("Authorization", "valid-token");
     expect(res).toHaveHTTPCode(409);
   });
 });
