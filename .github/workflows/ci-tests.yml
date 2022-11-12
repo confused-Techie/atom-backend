@@ -3,8 +3,9 @@
 name: CI - Tests
 
 on:
+  workflow_dispatch:
   workflow_run:
-    workflows: [ "CI - Standards " ]
+    workflows: [ "CI - Standards" ]
     types:
       - completed
   # Using this to prevent simultaneous runs, outdating local git cache
