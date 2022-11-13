@@ -501,13 +501,13 @@ describe("GET /api/users/:login/stars", () => {
 });
 
 describe("GET /api/stars", () => {
-  test("Returns Unauthenticated Status Code", async () => {
+  test("Returns Unauthenticated Status Code for Invalid User", async () => {
     const res = await request(app)
       .get("/api/stars")
       .set("Authorization", "invalid");
     expect(res).toHaveHTTPCode(401);
   });
-  test("Returns Unauthenticated JSON", async () => {
+  test("Returns Unauthenticated JSON for Invalid User", async () => {
     const res = await request(app)
       .get("/api/stars")
       .set("Authorization", "invalid");
@@ -525,7 +525,7 @@ describe("GET /api/stars", () => {
       .set("Authorization", "no-star-token");
     expect(res.body.length).toEqual(0);
   });
-  test("Valid USer with No Stars Returns 200 Status Code", async () => {
+  test("Valid User with No Stars Returns 200 Status Code", async () => {
     const res = await request(app)
       .get("/api/stars")
       .set("Authorization", "no-star-token");
@@ -549,7 +549,6 @@ describe("GET /api/stars", () => {
       .set("Authorization", "all-star-token");
     expect(res.body.length).toBeGreaterThan(0);
   });
-  test.todo("Writing Tests");
 });
 
 describe("GET /api/updates", () => {
