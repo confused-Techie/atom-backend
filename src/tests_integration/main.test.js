@@ -504,13 +504,13 @@ describe("GET /api/stars", () => {
   test("Returns Unauthenticated Status Code", async () => {
     const res = await request(app)
       .get("/api/stars")
-      .set("Authorization", "no-valid-token");
+      .set("Authorization", "invalid");
     expect(res).toHaveHTTPCode(401);
   });
   test("Returns Unauthenticated JSON", async () => {
     const res = await request(app)
       .get("/api/stars")
-      .set("Authorization", "no-valid-token");
+      .set("Authorization", "invalid");
     expect(res.body.message).toEqual(msg.badAuth);
   });
   test.todo("Writing Tests");

@@ -75,3 +75,38 @@ Now there is a certain set of test data that is available while testing, which w
 - admin_user
   * Token: "admin-token"
   * Will be granted access to every service, and should never be denied access.
+
+## Conventions and Standards
+
+To make sure we don't have any odd interactions between tests, and to make sure that anyone looking at your tests knows what's going on, there are a few standards or conventions about the data used during tests, which are below.
+
+##### Invalid Token
+
+If you need to use a token that no user can have use the following:
+
+* `invalid`
+
+##### Non-Existant Package
+
+If you need to use a package that will never exist in the test suite use the following:
+
+* `language-golang`
+* `notARepo`
+
+##### Valid Package
+
+If you need a package that does exist, but will never be removed or modified:
+
+* `language-css`
+
+##### Valid Token without any Permissions
+
+If you need a token that a user does have, but has no permissions to any resources:
+
+* `valid-token`
+
+##### Valid Token WITH Permissions
+
+If you need a token that has permissions over all resources:
+
+* `admin-token`
