@@ -12,6 +12,8 @@ env:
   CACHETIME: 600000
   PAGINATE: 30
   SERVERURL: "http://localhost:8080"
+  NODE_ENV: "test"
+  PULSAR_STATUS: "dev"  # This helps some modules know they are in a test environment
 
 jobs:
   tests:
