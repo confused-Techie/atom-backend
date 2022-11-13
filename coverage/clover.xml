@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1668379074040" clover="3.2.0">
-  <project timestamp="1668379074040" name="All files">
-    <metrics statements="1148" coveredstatements="625" conditionals="553" coveredconditionals="260" methods="152" coveredmethods="107" elements="1853" coveredelements="992" complexity="0" loc="1148" ncloc="1148" packages="2" files="20" classes="20"/>
+<coverage generated="1668379938753" clover="3.2.0">
+  <project timestamp="1668379938753" name="All files">
+    <metrics statements="1157" coveredstatements="652" conditionals="553" coveredconditionals="267" methods="152" coveredmethods="110" elements="1862" coveredelements="1029" complexity="0" loc="1157" ncloc="1157" packages="2" files="20" classes="20"/>
     <package name="src">
-      <metrics statements="825" coveredstatements="436" conditionals="439" coveredconditionals="207" methods="124" coveredmethods="87"/>
+      <metrics statements="834" coveredstatements="463" conditionals="439" coveredconditionals="214" methods="124" coveredmethods="90"/>
       <file name="cache.js" path="/home/runner/work/atom-backend/atom-backend/src/cache.js">
         <metrics statements="10" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2"/>
         <line num="9" count="4" type="stmt"/>
-        <line num="19" count="2" type="stmt"/>
-        <line num="20" count="2" type="stmt"/>
-        <line num="21" count="2" type="stmt"/>
-        <line num="22" count="2" type="stmt"/>
-        <line num="23" count="2" type="stmt"/>
-        <line num="24" count="2" type="stmt"/>
-        <line num="27" count="1" type="stmt"/>
+        <line num="19" count="7" type="stmt"/>
+        <line num="20" count="7" type="stmt"/>
+        <line num="21" count="7" type="stmt"/>
+        <line num="22" count="7" type="stmt"/>
+        <line num="23" count="7" type="stmt"/>
+        <line num="24" count="7" type="stmt"/>
+        <line num="27" count="3" type="stmt"/>
         <line num="30" count="0" type="stmt"/>
         <line num="34" count="4" type="stmt"/>
       </file>
@@ -546,8 +546,8 @@
         <line num="72" count="0" type="stmt"/>
         <line num="74" count="2" type="stmt"/>
         <line num="88" count="1" type="stmt"/>
-        <line num="100" count="2" type="cond" truecount="1" falsecount="1"/>
-        <line num="101" count="2" type="stmt"/>
+        <line num="100" count="9" type="cond" truecount="1" falsecount="1"/>
+        <line num="101" count="9" type="stmt"/>
         <line num="105" count="6" type="stmt"/>
       </file>
       <file name="main.js" path="/home/runner/work/atom-backend/atom-backend/src/main.js">
@@ -726,7 +726,7 @@
         <line num="190" count="3" type="stmt"/>
       </file>
       <file name="storage.js" path="/home/runner/work/atom-backend/atom-backend/src/storage.js">
-        <metrics statements="64" coveredstatements="19" conditionals="29" coveredconditionals="8" methods="7" coveredmethods="4"/>
+        <metrics statements="73" coveredstatements="46" conditionals="29" coveredconditionals="15" methods="7" coveredmethods="7"/>
         <line num="8" count="3" type="stmt"/>
         <line num="9" count="3" type="stmt"/>
         <line num="10" count="3" type="stmt"/>
@@ -734,63 +734,72 @@
         <line num="22" count="7" type="cond" truecount="2" falsecount="0"/>
         <line num="23" count="2" type="stmt"/>
         <line num="39" count="1" type="stmt"/>
-        <line num="41" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="49" count="1" type="stmt"/>
+        <line num="41" count="1" type="stmt"/>
+        <line num="42" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="50" count="1" type="stmt"/>
         <line num="51" count="1" type="stmt"/>
+        <line num="52" count="1" type="stmt"/>
+        <line num="53" count="1" type="stmt"/>
+        <line num="54" count="1" type="stmt"/>
         <line num="56" count="0" type="stmt"/>
         <line num="57" count="0" type="stmt"/>
-        <line num="58" count="0" type="stmt"/>
+        <line num="61" count="0" type="stmt"/>
         <line num="62" count="0" type="stmt"/>
         <line num="63" count="0" type="stmt"/>
-        <line num="64" count="0" type="stmt"/>
-        <line num="66" count="0" type="stmt"/>
-        <line num="70" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="71" count="0" type="stmt"/>
-        <line num="72" count="0" type="stmt"/>
+        <line num="65" count="0" type="stmt"/>
+        <line num="70" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="71" count="1" type="stmt"/>
+        <line num="72" count="1" type="stmt"/>
         <line num="75" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="76" count="0" type="stmt"/>
         <line num="77" count="0" type="stmt"/>
         <line num="80" count="0" type="stmt"/>
         <line num="81" count="0" type="stmt"/>
         <line num="92" count="3" type="stmt"/>
-        <line num="94" count="3" type="cond" truecount="1" falsecount="1"/>
-        <line num="102" count="3" type="stmt"/>
-        <line num="106" count="3" type="stmt"/>
+        <line num="94" count="3" type="stmt"/>
+        <line num="95" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="103" count="2" type="stmt"/>
+        <line num="106" count="2" type="stmt"/>
+        <line num="107" count="2" type="stmt"/>
+        <line num="108" count="2" type="stmt"/>
+        <line num="109" count="2" type="stmt"/>
+        <line num="111" count="0" type="stmt"/>
         <line num="112" count="0" type="stmt"/>
-        <line num="113" count="0" type="stmt"/>
-        <line num="114" count="0" type="stmt"/>
+        <line num="116" count="0" type="stmt"/>
+        <line num="117" count="0" type="stmt"/>
         <line num="118" count="0" type="stmt"/>
-        <line num="119" count="0" type="stmt"/>
         <line num="120" count="0" type="stmt"/>
-        <line num="122" count="0" type="stmt"/>
-        <line num="126" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="127" count="0" type="stmt"/>
-        <line num="128" count="0" type="stmt"/>
-        <line num="131" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="132" count="0" type="stmt"/>
-        <line num="133" count="0" type="stmt"/>
+        <line num="125" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="126" count="2" type="stmt"/>
+        <line num="127" count="2" type="stmt"/>
+        <line num="130" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="131" count="1" type="stmt"/>
+        <line num="132" count="1" type="stmt"/>
+        <line num="135" count="0" type="stmt"/>
         <line num="136" count="0" type="stmt"/>
-        <line num="137" count="0" type="stmt"/>
-        <line num="147" count="3" type="stmt"/>
-        <line num="149" count="3" type="cond" truecount="1" falsecount="1"/>
-        <line num="157" count="3" type="stmt"/>
-        <line num="161" count="3" type="stmt"/>
-        <line num="167" count="0" type="stmt"/>
-        <line num="168" count="0" type="stmt"/>
-        <line num="169" count="0" type="stmt"/>
-        <line num="173" count="0" type="stmt"/>
+        <line num="146" count="3" type="stmt"/>
+        <line num="148" count="3" type="stmt"/>
+        <line num="149" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="157" count="2" type="stmt"/>
+        <line num="160" count="2" type="stmt"/>
+        <line num="161" count="2" type="stmt"/>
+        <line num="162" count="2" type="stmt"/>
+        <line num="163" count="2" type="stmt"/>
+        <line num="165" count="0" type="stmt"/>
+        <line num="166" count="0" type="stmt"/>
+        <line num="170" count="0" type="stmt"/>
+        <line num="171" count="0" type="stmt"/>
+        <line num="172" count="0" type="stmt"/>
         <line num="174" count="0" type="stmt"/>
-        <line num="175" count="0" type="stmt"/>
-        <line num="177" count="0" type="stmt"/>
-        <line num="181" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="182" count="0" type="stmt"/>
-        <line num="183" count="0" type="stmt"/>
-        <line num="186" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="187" count="0" type="stmt"/>
-        <line num="188" count="0" type="stmt"/>
-        <line num="191" count="0" type="stmt"/>
-        <line num="192" count="0" type="stmt"/>
-        <line num="195" count="3" type="stmt"/>
+        <line num="179" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="180" count="2" type="stmt"/>
+        <line num="181" count="2" type="stmt"/>
+        <line num="184" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="185" count="1" type="stmt"/>
+        <line num="186" count="1" type="stmt"/>
+        <line num="189" count="0" type="stmt"/>
+        <line num="190" count="0" type="stmt"/>
+        <line num="193" count="3" type="stmt"/>
       </file>
       <file name="utils.js" path="/home/runner/work/atom-backend/atom-backend/src/utils.js">
         <metrics statements="73" coveredstatements="45" conditionals="28" coveredconditionals="10" methods="8" coveredmethods="7"/>
