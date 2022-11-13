@@ -135,11 +135,32 @@ VALUES (
   '{"name": "atom-material-syntax", "dist": {"tarball":"https://www.atom/io/api/packages/atom-material-syntax/version/1.0.8/tarball"}}'
 );
 
-INSERT INTO users (username, token, avatar)
+INSERT INTO users (id, username, token, avatar)
 VALUES (
-  'dever', 'valid-token', 'https://roadtonowhere.com'
+  1, 'dever', 'valid-token', 'https://roadtonowhere.com'
 ), (
-  'no_perm_user', 'no-valid-token', 'https://roadtonowhere.com'
+  2, 'no_perm_user', 'no-valid-token', 'https://roadtonowhere.com'
 ), (
-  'admin_user', 'admin-token', 'https://roadtonowhere.com'
+  3, 'admin_user', 'admin-token', 'https://roadtonowhere.com'
+), (
+  4, 'has-no-stars', 'no-star-token', 'https://roadtonowhere.com'
+), (
+  5, 'has-all-stars', 'all-star-token', 'https://roadtonowhere.com'
+);
+
+INSERT INTO stars (package, userid)
+VALUES (
+  'd28c7ce5-c9c4-4fb6-a499-a7c6dcec355b', 5
+), (
+  'd27dbd37-e58e-4e02-b804-9e3e6ae02fb1', 5
+), (
+  'ee87223f-65ab-4a1d-8f45-09fcf8e64423', 5
+), (
+  'aea26882-8459-4725-82ad-41bf7aa608c3', 5
+), (
+  '1e19da12-322a-4b37-99ff-64f866cc0cfa', 5
+), (
+  'a0ef01cb-720e-4c0d-80c5-f0ed441f31fc', 5
+), (
+  '28952de5-ddbf-41a8-8d87-5d7e9d7ad7ac', 5
 );

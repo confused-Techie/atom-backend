@@ -37,6 +37,15 @@ async function getStars(req, res) {
     return;
   }
 
+  if (userStars.content.length == 0) {
+    // If we have a return with no items, means the user has no stars.
+    // And this will error out later when attempting to collect the data for the stars.
+    // So we will reutrn here
+    res.status(200).json([]);
+    logger.httpLog(req, res);
+    return;
+  }
+
   let packCol = await database.getPackageCollectionByID(userStars.content);
 
   if (!packCol.ok) {
