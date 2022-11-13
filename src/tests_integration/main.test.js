@@ -366,6 +366,33 @@ describe("POST /api/packages/:packageName/star", () => {
   });
 });
 
+describe("DELTE /api/packages/:packageName/star", () => {
+  test("Returns 401 with No Auth", async () => {
+    const res = await request(app).delete("/api/packages/langauge-css/star");
+    expect(res).toHaveHTTPCode(401);
+  });
+  test("Returns Bad Auth Message with No Auth", async () => {
+    const res = await request(app).delete("/api/packages/langauge-css/star");
+    expect(res.body.message).toEqual(msg.badAuth);
+  });
+  test("Returns 401 with Bad Auth", async () => {
+    const res = await request(app).delete("/api/packages/langauge-css/star").set("Authorization", "invalid");
+    expect(res).toHaveHTTPCode(401);
+  });
+  test("Returns Bad Auth Message with Bad Auth", async () => {
+    const res = await request(app).delete("/api/packages/langauge-css/star").set("Authorization", "invalid");
+    expect(res.body.message).toEqual(msg.badAuth);
+  });
+  test("Returns 404 with bad package", async () => {
+    const res = await request(app).delete("/api/packages/language-golang/star").set("Authorization", "valid-token");
+    expect(res).toHaveHTTPCode(404);
+  });
+  test("Returns Not Found Message with bad package", async () => {
+    const res = await request(app).delete("/api/packages/language-golang/star").set("Authorization", "valid-token");
+    expect(res.body.message).toEqual(msg.notFound);
+  });
+});
+
 describe("GET /api/updates", () => {
   test.todo("/api/updates currentlty returns Not Supported.");
   test("Returns NotSupported Status Code.", async () => {

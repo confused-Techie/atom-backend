@@ -443,7 +443,7 @@ async function postPackagesStar(req, res) {
  */
 async function deletePackagesStar(req, res) {
   let params = {
-    auth: req.get("Authorization"),
+    auth: query.auth(req),
     packageName: decodeURIComponent(req.params.packageName),
   };
 
