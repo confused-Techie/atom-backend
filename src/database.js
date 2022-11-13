@@ -31,26 +31,24 @@ let sql_storage; // SQL object, to interact with the DB.
  * @returns {object} PostgreSQL connection object.
  */
 function setupSQL() {
-  if (process.env.PULSAR_STATUS == "dev") {
-    return postgres({
-      host: DB_HOST,
-      username: DB_USER,
-      database: DB_DB,
-      port: DB_PORT,
-    });
-  } else {
-    return postgres({
-      host: DB_HOST,
-      username: DB_USER,
-      password: DB_PASS,
-      database: DB_DB,
-      port: DB_PORT,
-      ssl: {
-        rejectUnauthorized: true,
-        ca: fs.readFileSync(DB_SSL_CERT).toString(),
-      },
-    });
-  }
+  return process.env.PULSAR_STATUS === "dev"
+    ? postgres({
+        host: DB_HOST,
+        username: DB_USER,
+        database: DB_DB,
+        port: DB_PORT,
+      })
+    : postgres({
+        host: DB_HOST,
+        username: DB_USER,
+        password: DB_PASS,
+        database: DB_DB,
+        port: DB_PORT,
+        ssl: {
+          rejectUnauthorized: true,
+          ca: fs.readFileSync(DB_SSL_CERT).toString(),
+        },
+      });
 }
 
 /**
