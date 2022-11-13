@@ -39,7 +39,11 @@ async function getBanList() {
   checkGCS();
 
   const getNew = async function () {
-    if ( GCLOUD_STORAGE_BUCKET === undefined || GOOGLE_APPLICATION_CREDENTIALS === undefined || process.env.PULSAR_STATUS == "dev") {
+    if (
+      GCLOUD_STORAGE_BUCKET === undefined ||
+      GOOGLE_APPLICATION_CREDENTIALS === undefined ||
+      process.env.PULSAR_STATUS == "dev"
+    ) {
       // This catches the instance when tests are being run, without access
       // or good reason to reach to 3rd party servers.
       // We will log a warning, and return preset test data.
@@ -88,11 +92,17 @@ async function getFeaturedPackages() {
   checkGCS();
 
   const getNew = async function () {
-    if (GCLOUD_STORAGE_BUCKET === undefined || GOOGLE_APPLICATION_CREDENTIALS === undefined || process.env.PULSAR_STATUS == "dev") {
+    if (
+      GCLOUD_STORAGE_BUCKET === undefined ||
+      GOOGLE_APPLICATION_CREDENTIALS === undefined ||
+      process.env.PULSAR_STATUS == "dev"
+    ) {
       // This catches the instance when tests are being run, without access
       // or good reason to reach to 3rd party servers.
       // We will log a warning, and return preset test data.
-      console.log("storage.js.getFeaturedPackages() Returning Development Set of Data.");
+      console.log(
+        "storage.js.getFeaturedPackages() Returning Development Set of Data."
+      );
       let list = ["hydrogen", "atom-clock", "hey-pane"];
       cached_featuredlist = new CacheObject(list);
       cached_featuredlist.last_validate = Date.now();
@@ -136,11 +146,17 @@ async function getFeaturedThemes() {
   checkGCS();
 
   const getNew = async function () {
-    if (GCLOUD_STORAGE_BUCKET === undefined || GOOGLE_APPLICATION_CREDENTIALS === undefined || process.env.PULSAR_STATUS == "dev") {
+    if (
+      GCLOUD_STORAGE_BUCKET === undefined ||
+      GOOGLE_APPLICATION_CREDENTIALS === undefined ||
+      process.env.PULSAR_STATUS == "dev"
+    ) {
       // This catches the instance when tests are being run, without access
       // or good reason to reach to 3rd party servers.
       // We will log a warning, and return preset test data.
-      console.log("storage.js.getFeaturedThemes() Returning Development Set of Data.");
+      console.log(
+        "storage.js.getFeaturedThemes() Returning Development Set of Data."
+      );
       let list = ["atom-material-ui", "atom-material-syntax"];
       cached_themelist = new CacheObject(list);
       cached_themelist.last_validate = Date.now();
