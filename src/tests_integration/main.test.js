@@ -399,6 +399,46 @@ describe("DELTE /api/packages/:packageName/star", () => {
       .set("Authorization", "valid-token");
     expect(res.body.message).toEqual(msg.notFound);
   });
+  test.todo("Write Writable Tests for this endpoint");
+});
+
+describe("POST /api/packages/:packageName/versions", () => {
+  test.todo("Write all tests on this endpoint");
+});
+
+describe("GET /api/packages/:packageName/versions/:versionName", () => {
+  test("Returns 404 with Bad Package", async () => {
+    const res = await request(app).get("/api/packages/language-golang/versions/1.0.0");
+    expect(res).toHaveHTTPCode(404);
+  });
+  test("Returns Not Found Message with Bad Package", async () => {
+    const res = await request(app).get("/api/packages/language-golang/versions/1.0.0");
+    expect(res.body.message).toEqual(msg.notFound);
+  });
+  test("Returns 404 with Valid Package - Invalid Version", async () => {
+    const res = await request(app).get("/api/packages/language-css/versions/1.0.0");
+    expect(res).toHaveHTTPCode(404);
+  });
+  test("Returns Not Found Message with Valid Package = Invalid Version", async () => {
+    const res = await request(app).get("/api/packages/language-css/versions/1.0.0");
+    expect(res.body.message).toEqual(msg.notFound);
+  });
+  test("Returns 404 with Valid Package - Invalid Formated Version", async () => {
+    const res = await request(app).get("/api/packages/language-css/versions/ThisIsNotAVersion");
+    expect(res).toHaveHTTPCode(404);
+  });
+  test("Returns Not Found Message with Valid Package - Invalid Formatted Version", async () => {
+    const res = await request(app).get("/api/packages/language-css/versions/ThisIsNotAVersion");
+    expect(res.body.message).toEqual(msg.notFound);
+  });
+  test("Returns 200 with Valid Params", async () => {
+    const res = await request(app).get("/api/packages/language-css/versions/0.45.7");
+    expect(res).toHaveHTTPCode(200);
+  });
+  test("Returns Expected Package Name with Valid Params", async () => {
+    const res = await request(app).get("/api/packages/language-css/versions/0.45.7");
+    expect(res.body.name).toEqual("language-css");
+  });
 });
 
 describe("GET /api/updates", () => {

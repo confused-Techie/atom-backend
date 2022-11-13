@@ -140,7 +140,10 @@ async function constructPackageObjectShort(pack) {
 async function constructPackageObjectJSON(pack) {
   if (!Array.isArray(pack)) {
     let newPack = pack.meta;
-    delete newPack.sha;
+    if (newPack.sha) {
+      delete newPack.sha;
+    }
+    newPack.dist ??= {};
     newPack.dist.tarball = `${server_url}/api/packages/${pack.meta.name}/versions/${pack.semver}/tarball`;
     newPack.engines = pack.engine;
     return newPack;
@@ -149,7 +152,10 @@ async function constructPackageObjectJSON(pack) {
 
     for (let i = 0; i < pack.length; i++) {
       let newPack = pack[i].meta;
-      delete newPack.sha;
+      if (newPack.sha) {
+        delete newPack.sha;
+      }
+      newPack.dist ??= {};
       newPack.dist.tarball = `${server_url}/api/packages/${pack[i].meta.name}/versions/${pack[i].semver}/tarball`;
       newPack.engines = pack[i].engine;
       arrPack.push(newPack);
