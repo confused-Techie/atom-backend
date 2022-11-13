@@ -566,7 +566,7 @@ async function removePackageByName(name) {
       return {
         ok: false,
         content: `Failed to delete stars for: ${name}`,
-        short: "Server Error"
+        short: "Server Error",
       };
     }
 
