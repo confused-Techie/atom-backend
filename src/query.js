@@ -13,7 +13,11 @@
  */
 function page(req) {
   let def = 1;
-  let prov = req.query.page ?? def;
+  let prov = req.query.page;
+
+  if (prov === undefined) {
+    return def;
+  }
 
   // ensure it's a proper number
   return prov.match(/^\d+$/) !== null ? prov : def;
@@ -32,6 +36,7 @@ function sort(req, def = "downloads") {
   // it will default to downloads, but if we pass the default, such as during search we can provide
   // the default relevance
   let valid = ["downloads", "created_at", "updated_at", "stars", "relevance"];
+
   let prov = req.query.sort ?? def;
 
   return valid.includes(prov) ? prov : def;
@@ -81,10 +86,10 @@ function query(req) {
   try {
     let decodeProv = decodeURIComponent(prov); // this will undo any encoding done to get the request to us.
 
-    // Then some basic checks to help prevent malicious queries.
-    return pathTraversalAttempt(decodeProv)
-      ? ""
-      : decodeProv.slice(0, max_length).trim();
+    // If there is a path traversal attach detected return empty query.
+    // Additionally do not allow strings longer than `max_length`
+    return pathTraversalAttempt(decodeProv) ? "" : decodeProv.slice(0, max_length).trim();
+
   } catch (err) {
     // an error occured while decoding the URI component. Return an empty query.
     return "";
