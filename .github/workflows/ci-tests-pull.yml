@@ -3,7 +3,8 @@
 name: CI - Tests PR
 
 on:
-  - pull_request
+  pull_request:
+  workflow_dispatch:
 
 env:
   # Setup some basic Environment Variables
