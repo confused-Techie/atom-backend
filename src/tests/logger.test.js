@@ -46,6 +46,23 @@ describe("errorLog Call", () => {
     );
     expect(console.log).toBeCalledTimes(1);
   });
+  test("ErrorLog with Error Object", () => {
+    let err = new Error("No real error. Just test.");
+    logger.errorLog(
+      {
+        ip: "0.0.0.0",
+        start: "0",
+        method: "GET",
+        url: "https://pulsar-edit.dev",
+        protocol: "HTTP"
+      },
+      {
+        statusCode: "500"
+      },
+      err
+    );
+    expect(console.log).toBeCalledTimes(1);
+  });
 });
 
 describe("warningLog Call", () => {
@@ -67,6 +84,26 @@ describe("warningLog Call", () => {
       "No real error. Just test."
     );
     expect(console.log).toBeCalledTimes(1);
+  });
+  test("WarningLog Call with Error Object", () => {
+    let err = new Error("No real error. Just test");
+    logger.warningLog(
+      {
+        ip: "0.0.0.0",
+        start: "0",
+        method: "GET",
+        url: "https://pulsar-edit.dev",
+        protocol: "HTTP"
+      },
+      {
+        statusCode: "200",
+      },
+      err
+    );
+    expect(console.log).toBeCalledTimes(1);
+  });
+  test("WarningLog Call with no Req/Res", () => {
+    logger.warningLog(null, null, "No error. Just test.");
   });
 });
 
