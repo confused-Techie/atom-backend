@@ -404,7 +404,6 @@ async function postPackagesStar(req, res) {
   let star = await database.updateStars(user.content, params.packageName);
 
   if (!star.ok) {
-    console.log(star);
     await common.handleError(req, res, user, 1009);
     return;
   }

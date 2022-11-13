@@ -553,6 +553,23 @@ async function removePackageByName(name) {
       };
     }
 
+    const command_star = await sql_storage`
+      DELETE FROM stars
+      WHERE package IN (
+        SELECT pointer FROM names
+        WHERE name = ${name}
+      )
+      RETURNING *;
+    `;
+
+    if (command_star.count === 0) {
+      return {
+        ok: false,
+        content: `Failed to delete stars for: ${name}`,
+        short: "Server Error"
+      };
+    }
+
     const command_name = await sql_storage`
       DELETE FROM names
       WHERE pointer IN (
