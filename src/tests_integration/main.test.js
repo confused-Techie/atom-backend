@@ -514,27 +514,39 @@ describe("GET /api/stars", () => {
     expect(res.body.message).toEqual(msg.badAuth);
   });
   test("Valid User with No Stars Returns array", async () => {
-    const res = await request(app).get("/api/stars").set("Authorization", "no-star-token");
+    const res = await request(app)
+      .get("/api/stars")
+      .set("Authorization", "no-star-token");
     expect(Array.isArray(res.body)).toBeTruthy();
   });
   test("Valid User with No Stars Returns Empty Array", async () => {
-    const res = await request(app).get("/api/stars").set("Authorization", "no-star-token");
+    const res = await request(app)
+      .get("/api/stars")
+      .set("Authorization", "no-star-token");
     expect(res.body.length).toEqual(0);
   });
   test("Valid USer with No Stars Returns 200 Status Code", async () => {
-    const res = await request(app).get("/api/stars").set("Authorization", "no-star-token");
+    const res = await request(app)
+      .get("/api/stars")
+      .set("Authorization", "no-star-token");
     expect(res).toHaveHTTPCode(200);
   });
   test("Valid User with Stars Returns 200 Status Code", async () => {
-    const res = await request(app).get("/api/stars").set("Authorization", "all-star-token");
+    const res = await request(app)
+      .get("/api/stars")
+      .set("Authorization", "all-star-token");
     expect(res).toHaveHTTPCode(200);
   });
   test("Valid User with Stars Returns Array", async () => {
-    const res = await request(app).get("/api/stars").set("Authorization", "all-star-token");
+    const res = await request(app)
+      .get("/api/stars")
+      .set("Authorization", "all-star-token");
     expect(Array.isArray(res.body)).toBeTruthy();
   });
   test("Valid User with Stars Returns Non-Empty Array", async () => {
-    const res = await request(app).get("/api/stars").set("Authorization", "all-star-token");
+    const res = await request(app)
+      .get("/api/stars")
+      .set("Authorization", "all-star-token");
     expect(res.body.length).toBeGreaterThan(0);
   });
   test.todo("Writing Tests");
