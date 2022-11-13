@@ -4,7 +4,6 @@
  * @implements {common_handler}
  * @implements {users}
  * @implements {data}
- * @implements {collection}
  * @implements {query}
  * @implements {git}
  * @implements {logger}
@@ -13,7 +12,6 @@
  */
 
 const common = require("./common_handler.js");
-const collection = require("../collection.js");
 const query = require("../query.js");
 const git = require("../git.js");
 const logger = require("../logger.js");
@@ -318,7 +316,7 @@ async function getPackagesDetails(req, res) {
   if (params.engine) {
     // query.engine returns false if no valid query param is found.
     // before using engineFilter we need to check the truthiness of it.
-    pack = await collection.engineFilter(pack, params.engine);
+    pack = await utils.engineFilter(pack, params.engine);
   }
 
   res.status(200).json(pack);

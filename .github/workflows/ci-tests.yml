@@ -46,12 +46,6 @@ jobs:
       - name: Run Tests
         run: npm run test
 
-      - name: Commit Coverage
-        if: always() # Needed to ensure coverage is commit even on test failure.
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: GH Action Tests - Coverage Info
-
       - name: Codecov Upload
         if: always() # Needed to ensure coverage is commited even on test failure
         uses: codecov/codecov-action@v3
