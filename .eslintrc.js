@@ -13,7 +13,11 @@ module.exports = {
     "node/no-unpublished-require": [
       "error",
       {
-        allowModules: ["supertest"],
+        allowModules: [
+          "supertest",
+          "../node_modules/@databases/pg-test/jest/globalSetup",
+          "../node_modules/@databases/pg-test/jest/globalTeardown"
+        ],
       },
     ],
     "no-process-exit": "off",

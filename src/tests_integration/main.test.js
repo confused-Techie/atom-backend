@@ -121,6 +121,7 @@ describe("Get /api/packages", () => {
     const res = await request(app).patch("/api/packages");
     expect(res).toHaveHTTPCode(404);
   });
+  test.todo("Write tests that ensure functionality of query parameters");
 });
 
 describe("Post /api/packages", () => {
@@ -188,6 +189,17 @@ describe("Post /api/packages", () => {
     expect(res).toHaveHTTPCode(409);
   });
   test.todo("Tests that actually modify data");
+});
+
+describe("GET /api/packages/featured", () => {
+  test("Returns Successful Status Code", async () => {
+    const res = await request(app).get("/api/packages/featured");
+    expect(res).toHaveHTTPCode(200);
+  });
+  test("Returns Array", async () => {
+    const res = await request(app).get("/api/packages/featured");
+    expect(res.body).toBeArray();
+  });
 });
 
 describe("GET /api/packages/search", () => {
@@ -366,7 +378,7 @@ describe("POST /api/packages/:packageName/star", () => {
   });
 });
 
-describe("DELTE /api/packages/:packageName/star", () => {
+describe("DELETE /api/packages/:packageName/star", () => {
   test("Returns 401 with No Auth", async () => {
     const res = await request(app).delete("/api/packages/langauge-css/star");
     expect(res).toHaveHTTPCode(401);
@@ -400,6 +412,10 @@ describe("DELTE /api/packages/:packageName/star", () => {
     expect(res.body.message).toEqual(msg.notFound);
   });
   test.todo("Write Writable Tests for this endpoint");
+});
+
+describe("GET /api/packages/:packageName/stargazers", () => {
+  test.todo("Write all these");
 });
 
 describe("POST /api/packages/:packageName/versions", () => {
@@ -457,19 +473,19 @@ describe("GET /api/packages/:packageName/versions/:versionName", () => {
   });
 });
 
-describe("GET /api/updates", () => {
-  test.todo("/api/updates currentlty returns Not Supported.");
-  test("Returns NotSupported Status Code.", async () => {
-    const res = await request(app).get("/api/updates");
-    expect(res).toHaveHTTPCode(501);
-  });
-  test("Returns NotSupported Message", async () => {
-    const res = await request(app).get("/api/updates");
-    expect(res.body.message).toEqual(msg.notSupported);
-  });
+describe("GET /api/packages/:packageName/versions/:versionName/tarball", () => {
+  test.todo("Write all of these");
 });
 
-describe("GET Theme Featured", () => {
+describe("DELETE /api/packages/:packageName/versions/:versionName", () => {
+  test.todo("Write all of these");
+});
+
+describe("POST /api/packages/:packageName/versions/:versionName/events/uninstall", () => {
+  test.todo("Write all of these");
+});
+
+describe("GET /api/themes/featured", () => {
   test("Returns Successful Status Code", async () => {
     const res = await request(app).get("/api/themes/featured");
     expect(res).toHaveHTTPCode(200);
@@ -480,15 +496,8 @@ describe("GET Theme Featured", () => {
   });
 });
 
-describe("GET Packages Featured", () => {
-  test("Returns Successful Status Code", async () => {
-    const res = await request(app).get("/api/packages/featured");
-    expect(res).toHaveHTTPCode(200);
-  });
-  test("Returns Array", async () => {
-    const res = await request(app).get("/api/packages/featured");
-    expect(res.body).toBeArray();
-  });
+describe("GET /api/users/:login/stars", () => {
+  test.todo("Write these");
 });
 
 describe("GET /api/stars", () => {
@@ -503,5 +512,17 @@ describe("GET /api/stars", () => {
       .get("/api/stars")
       .set("Authorization", "invalid_key");
     expect(res.body.message).toEqual(msg.badAuth);
+  });
+});
+
+describe("GET /api/updates", () => {
+  test.todo("/api/updates currentlty returns Not Supported.");
+  test("Returns NotSupported Status Code.", async () => {
+    const res = await request(app).get("/api/updates");
+    expect(res).toHaveHTTPCode(501);
+  });
+  test("Returns NotSupported Message", async () => {
+    const res = await request(app).get("/api/updates");
+    expect(res.body.message).toEqual(msg.notSupported);
   });
 });
