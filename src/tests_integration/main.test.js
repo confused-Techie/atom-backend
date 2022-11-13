@@ -376,19 +376,27 @@ describe("DELTE /api/packages/:packageName/star", () => {
     expect(res.body.message).toEqual(msg.badAuth);
   });
   test("Returns 401 with Bad Auth", async () => {
-    const res = await request(app).delete("/api/packages/langauge-css/star").set("Authorization", "invalid");
+    const res = await request(app)
+      .delete("/api/packages/langauge-css/star")
+      .set("Authorization", "invalid");
     expect(res).toHaveHTTPCode(401);
   });
   test("Returns Bad Auth Message with Bad Auth", async () => {
-    const res = await request(app).delete("/api/packages/langauge-css/star").set("Authorization", "invalid");
+    const res = await request(app)
+      .delete("/api/packages/langauge-css/star")
+      .set("Authorization", "invalid");
     expect(res.body.message).toEqual(msg.badAuth);
   });
   test("Returns 404 with bad package", async () => {
-    const res = await request(app).delete("/api/packages/language-golang/star").set("Authorization", "valid-token");
+    const res = await request(app)
+      .delete("/api/packages/language-golang/star")
+      .set("Authorization", "valid-token");
     expect(res).toHaveHTTPCode(404);
   });
   test("Returns Not Found Message with bad package", async () => {
-    const res = await request(app).delete("/api/packages/language-golang/star").set("Authorization", "valid-token");
+    const res = await request(app)
+      .delete("/api/packages/language-golang/star")
+      .set("Authorization", "valid-token");
     expect(res.body.message).toEqual(msg.notFound);
   });
 });
