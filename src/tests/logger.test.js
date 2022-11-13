@@ -54,10 +54,10 @@ describe("errorLog Call", () => {
         start: "0",
         method: "GET",
         url: "https://pulsar-edit.dev",
-        protocol: "HTTP"
+        protocol: "HTTP",
       },
       {
-        statusCode: "500"
+        statusCode: "500",
       },
       err
     );
@@ -93,7 +93,7 @@ describe("warningLog Call", () => {
         start: "0",
         method: "GET",
         url: "https://pulsar-edit.dev",
-        protocol: "HTTP"
+        protocol: "HTTP",
       },
       {
         statusCode: "200",

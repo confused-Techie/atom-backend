@@ -351,7 +351,7 @@
 
 ## /home/runner/work/atom-backend/atom-backend/src/tests/logger.test.js
 
-* Physical LOC: 105
+* Physical LOC: 142
 * Logical LOC: 7
 * Mean parameter count: 0
 * Cyclomatic complexity: 1
