@@ -414,5 +414,5 @@ module.exports = {
   constructPackageObjectShort,
   constructPackageObjectJSON,
   deepCopy,
-  engineFilter
+  engineFilter,
 };

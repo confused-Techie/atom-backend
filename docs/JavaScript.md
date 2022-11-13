@@ -7,10 +7,6 @@ Originally created after some circular dependency issues arouse during
 rapid redevelopment of the entire storage system.
 But this does provide an opportunity to allow multiple caching systems.</p>
 </dd>
-<dt><a href="#module_collection">collection</a></dt>
-<dd><p>Endpoint of all features related to sorting, organizing, or pruning package
-collections, to be returned to the user.</p>
-</dd>
 <dt><a href="#module_config">config</a></dt>
 <dd><p>Module that access&#39; and returns the server wide configuration.</p>
 </dd>
@@ -50,11 +46,6 @@ all endpoints it listens on. With those endpoints being further documented in <c
 <dd><p>Home to parsing all query parameters from the <code>Request</code> object. Ensuring a valid response.
 While most values will just return their default there are some expecptions:
 engine(): Returns false if not defined, to allow a fast way to determine if results need to be pruned.</p>
-</dd>
-<dt><a href="#module_search">search</a></dt>
-<dd><p>This module is focused on implementing different search algorithms.
-Elsewhere in the code the choice is made of which functions to call, to actual
-execute a search function.</p>
 </dd>
 <dt><a href="#module_server">server</a></dt>
 <dd><p>The initializer of <code>main.js</code> starting up the Express Server, and setting the port
@@ -121,32 +112,6 @@ Allows simple interfaces to handle caching an object in memory. Used to cache da
 | [name] | <code>string</code> | Optional name to assign to the Cached Object. |
 | contents | <code>object</code> | The contents of this cached object. Intended to be a JavaScript object. But could be anything. |
 
-<a name="module_collection"></a>
-
-## collection
-Endpoint of all features related to sorting, organizing, or pruning package
-collections, to be returned to the user.
-
-
-* [collection](#module_collection)
-    * [~searchWithinPackages()](#module_collection..searchWithinPackages)
-    * [~engineFilter()](#module_collection..engineFilter)
-
-<a name="module_collection..searchWithinPackages"></a>
-
-### collection~searchWithinPackages()
-Previously used to preform searches against the built in search algorithm. But since the switch
-to native fuzzy matching this may be depreciated.
-
-**Kind**: inner method of [<code>collection</code>](#module_collection)  
-<a name="module_collection..engineFilter"></a>
-
-### collection~engineFilter()
-A complex function that provides filtering by Atom engine version.
-This should take a package with it's versions and retreive whatever matches
-that engine version as provided.
-
-**Kind**: inner method of [<code>collection</code>](#module_collection)  
 <a name="module_config"></a>
 
 ## config
@@ -1035,117 +1000,6 @@ exists in the data.
 | --- | --- | --- |
 | data | <code>string</code> | The data to check for possible malicious data. |
 
-<a name="module_search"></a>
-
-## search
-This module is focused on implementing different search algorithms.
-Elsewhere in the code the choice is made of which functions to call, to actual
-execute a search function.
-
-**Depreciated**: Since search now uses Fuzzy Finding built into PostgreSQL  
-
-* [search](#module_search)
-    * [~levenshtein(s1, s2)](#module_search..levenshtein) ⇒ <code>function</code>
-    * [~vlSimilarity(s1, s2)](#module_search..vlSimilarity) ⇒ <code>float</code>
-    * [~vlEditDistance(s1, s2)](#module_search..vlEditDistance) ⇒ <code>float</code>
-    * [~levenshteinWSDM(s1, s2)](#module_search..levenshteinWSDM) ⇒ <code>float</code>
-    * [~lcs(s1, s2)](#module_search..lcs) ⇒ <code>float</code>
-    * [~lcsTraceBack(matrix, s1, s2, height, width)](#module_search..lcsTraceBack)
-
-<a name="module_search..levenshtein"></a>
-
-### search~levenshtein(s1, s2) ⇒ <code>function</code>
-The top level exported function to call, to preform a search based on
-the Levenshtein Distance. Sibling functions denotated as vlFUNC, for its creator
-Vladimir Levenshtein.
-
-**Kind**: inner method of [<code>search</code>](#module_search)  
-**Implements**: <code>vlSimilarity</code>  
-**Returns**: <code>function</code> - vlSimilarity  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| s1 | <code>string</code> | The first string, generally inteded to be the actual typed search string. |
-| s2 | <code>string</code> | The second string, generally intended to be the string compared against the search. |
-
-<a name="module_search..vlSimilarity"></a>
-
-### search~vlSimilarity(s1, s2) ⇒ <code>float</code>
-The un-exported function called by `levenshtein`. Used to preform the actual search.
-
-**Kind**: inner method of [<code>search</code>](#module_search)  
-**Implements**: <code>vlEditDistance</code>  
-**Returns**: <code>float</code> - The numerical Edit Distance. 1.0 being the highest, and closest match, down to 0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| s1 | <code>string</code> | Intended to be the search string. |
-| s2 | <code>string</code> | Intended to be the string compared against the search string. |
-
-<a name="module_search..vlEditDistance"></a>
-
-### search~vlEditDistance(s1, s2) ⇒ <code>float</code>
-The un-exported function called by `vlSimilarity` to actually compute the Edit Distance
-between two strings.
-
-**Kind**: inner method of [<code>search</code>](#module_search)  
-**Returns**: <code>float</code> - A numerical Edit Distance, 1.0 being the highest and closest match, down to 0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| s1 | <code>string</code> | The longest string provided to vlSimilarity. |
-| s2 | <code>string</code> | The shortest string provided to vlSimilarity. |
-
-<a name="module_search..levenshteinWSDM"></a>
-
-### search~levenshteinWSDM(s1, s2) ⇒ <code>float</code>
-A custom implementation of Levenshtein's Edit Distance, intended to be
-better suited for sentences. Named: 'Levenshtein Distance w/ Word Seperators - Double Mean'.
-Still relies on base levenshtein functions to reduce duplication.
-
-**Kind**: inner method of [<code>search</code>](#module_search)  
-**Implements**: <code>vlSimilarity</code>  
-**Returns**: <code>float</code> - A numerical Edit Distance, 1.0 being the highest and closest match, down to 0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| s1 | <code>string</code> | Intended as the string being searched with. |
-| s2 | <code>string</code> | Intended as the string being search against. |
-
-<a name="module_search..lcs"></a>
-
-### search~lcs(s1, s2) ⇒ <code>float</code>
-An exported translation of Longest Common Subsequence Algorithm in JavaScript.
-With a custom twist, where instead of reporting the string of the LCS, reports
-a numerical float value of the similarity two its search string.
-With sibling functions denotated by lcsFUNC.
-
-**Kind**: inner method of [<code>search</code>](#module_search)  
-**Implements**: <code>lcsTraceBack</code>  
-**Returns**: <code>float</code> - A numerical float similarity index. For example if the string is
-5 characters long, and the LCS is 4 characters, it will return 0.8 for it's similarity score.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| s1 | <code>string</code> | Intended as the string being searched with. |
-| s2 | <code>string</code> | Intended as the string being searched against. |
-
-<a name="module_search..lcsTraceBack"></a>
-
-### search~lcsTraceBack(matrix, s1, s2, height, width)
-The non-exported recursive traceback function determining the actual Longest Common
-Subsequence.
-
-**Kind**: inner method of [<code>search</code>](#module_search)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| matrix | <code>Array.&lt;array&gt;</code> | A table storing the matrix of the LCS calculation. |
-| s1 | <code>string</code> | Intended as the string being searched with, or row's of the matrix. |
-| s2 | <code>string</code> | Intended as the string being searched against, or col's of the matrix. |
-| height | <code>int</code> | The numerical height of the matrix, as derived from s1. |
-| width | <code>int</code> | The numerical width of the matrix, as derived from s2. |
-
 <a name="module_server"></a>
 
 ## server
@@ -1221,6 +1075,7 @@ A helper for any functions that are agnostic in handlers.
     * [~constructPackageObjectShort(pack)](#module_utils..constructPackageObjectShort) ⇒ <code>object</code>
     * [~constructPackageObjectJSON(pack)](#module_utils..constructPackageObjectJSON) ⇒ <code>object</code>
     * [~deepCopy(obj)](#module_utils..deepCopy) ⇒ <code>object</code>
+    * [~engineFilter()](#module_utils..engineFilter)
 
 <a name="module_utils..isPackageNameBanned"></a>
 
@@ -1306,6 +1161,14 @@ Just in case it is needed again.
 | --- | --- | --- |
 | obj | <code>object</code> | The Object to Deep Copy. |
 
+<a name="module_utils..engineFilter"></a>
+
+### utils~engineFilter()
+A complex function that provides filtering by Atom engine version.
+This should take a package with it's versions and retreive whatever matches
+that engine version as provided.
+
+**Kind**: inner method of [<code>utils</code>](#module_utils)  
 <a name="module_common_handler"></a>
 
 ## common\_handler
@@ -1497,7 +1360,7 @@ Endpoint intended to use as the actual return from GitHub to login.
 ## package\_handler
 Endpoint Handlers in all relating to the packages themselves.
 
-**Implements**: <code>common\_handler</code>, <code>users</code>, <code>data</code>, <code>collection</code>, <code>query</code>, <code>git</code>, <code>logger</code>, <code>error</code>, <code>config</code>  
+**Implements**: <code>common\_handler</code>, <code>users</code>, <code>data</code>, <code>query</code>, <code>git</code>, <code>logger</code>, <code>error</code>, <code>config</code>  
 
 * [package_handler](#module_package_handler)
     * [~getPackages(req, res)](#module_package_handler..getPackages)

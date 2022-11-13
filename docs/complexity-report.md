@@ -219,7 +219,7 @@
     * Halstead volume: 19.651484454403228
     * Halstead effort: 29.47722668160484
 
-## /home/runner/work/atom-backend/atom-backend/src/search.js
+## /home/runner/work/atom-backend/atom-backend/scripts/deprecated/search.js
 
 * Physical LOC: 176
 * Logical LOC: 73
