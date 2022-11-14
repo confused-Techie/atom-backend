@@ -7,10 +7,32 @@ const superagent = require("superagent");
 const { GH_TOKEN, GH_USERNAME, GH_USERAGENT } =
   require("./config.js").getConfig();
 const logger = require("./logger.js");
+let GH_API_URL = "https://api.github.com";
+let GH_WEB_URL = "https://github.com";
 
 const encodedToken = Buffer.from(`${GH_USERNAME}:${GH_TOKEN}`).toString(
   "base64"
 );
+
+/**
+  * @function setGHWebURL
+  * @desc Allows this module to be more testable. Sets a single place to modify
+  * the URL to which all Web based outgoing requests are destined.
+  * @param {string} val - The new URL to set this to.
+  */
+function setGHWebURL(val) {
+  GH_WEB_URL = val;
+}
+
+/**
+  * @function setGHAPIURL
+  * @desc Allows this module to be more testable. Sets a single place to modify
+  * the URL to which all API based outgoing requests are destined.
+  * @param {string} val - The new URL to set this to.
+  */
+function setGHAPIURL(val) {
+  GH_API_URL = val;
+}
 
 /**
  * @async
@@ -29,7 +51,6 @@ const encodedToken = Buffer.from(`${GH_USERNAME}:${GH_TOKEN}`).toString(
 async function ownership(user, repo, dev_override = false) {
   // user here is a full fledged user object. And repo is a text representation of the repository.
   // Since git auth is not setup, this will return positive.
-
   if (process.env.PULSAR_STATUS == "dev" && !dev_override) {
     console.log(
       `git.js.Ownership() Is returning Dev Only Permissions for ${user.username}`
@@ -288,7 +309,7 @@ async function createPackage(repo) {
 async function doesUserHaveRepo(user, repo, page = 1) {
   try {
     const res = await superagent
-      .get(`https://api.github.com/user/repos?page=${page}`)
+      .get(`${GH_API_URL}/user/repos?page=${page}`)
       .set({
         Authorization:
           "Basic " +
@@ -309,7 +330,6 @@ async function doesUserHaveRepo(user, repo, page = 1) {
 
     // After going through every repo returned, we haven't found a repo
     // the user owns. Lets check if theres multiple pages of returns.
-    //console.log(res.headers);
     const nextpage = page + 1;
     if (res.headers.link.includes("?page=" + nextpage)) {
       // if the link headers on the page include the query parameter
@@ -524,4 +544,6 @@ async function getRepoTags(repo) {
 module.exports = {
   ownership,
   createPackage,
+  setGHAPIURL,
+  setGHWebURL
 };

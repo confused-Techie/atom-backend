@@ -1,0 +1,46 @@
+
+/**
+  * @module github_mock
+  * @desc This module is only used during testing. It exists to attempt to fully test
+  * the ./src/git.js module by allowing it to carry out API requests and respond accordingly,
+  * but without having to hammer GitHub Servers or have to worry about credential managment
+  * in CI environments.
+  */
+  
+const express = require("express");
+const app = express();
+
+app.get("/user/repos", (req, res) => {
+  let param = {
+    page: req.params.page,
+    auth: req.get("Authorization")
+  };
+
+  // Then we choose what to do depending on which user is requesting access.
+
+  switch(param.auth) {
+    case "Basic YWRtaW5fdXNlcjphZG1pbi10b2tlbg==":
+      // user: admin_user token: admin-token
+      res.status(200).json(
+        [
+          {
+            "id": 123456,
+            "full_name": "admin_user/atom-backend"
+          }
+        ]
+      );
+      break;
+    case "Basic bm8tUGVybV91c2VyOm5vLXZhbGlkLXRva2Vu":
+      // user: no_perm_user token: no-valid-token
+      res.status(401).json({
+        message: "Requires authentication",
+        documentation_url: "https://docs.github.com/rest/reference/repo#list-repositories-for-the-authenticated-user"
+      });
+      break;
+    default:
+      res.status(500).json({message:"huh??"});
+      break;
+  }
+});
+
+module.exports = app;

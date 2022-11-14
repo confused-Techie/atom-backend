@@ -75,6 +75,7 @@ Now there is a certain set of test data that is available while testing, which w
 - admin_user
   * Token: "admin-token"
   * Will be granted access to every service, and should never be denied access.
+  * On 'GitHub' has access to `admin_user/atom-backend`
 
 ## Conventions and Standards
 
@@ -86,7 +87,7 @@ If you need to use a token that no user can have use the following:
 
 * `invalid`
 
-##### Non-Existant Package
+##### Non-Existent Package
 
 If you need to use a package that will never exist in the test suite use the following:
 
