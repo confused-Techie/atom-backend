@@ -340,9 +340,9 @@ async function doesUserHaveRepo(user, repo, page = 1) {
     // if there are no increasing pages, return no access
     return { ok: false, short: "No Access" };
   } catch (err) {
-    console.log(err);
-    console.log(err.response.request.header);
-    if (err.status === 401) {
+    console.log("Catching err");
+    console.log(err.status);
+    if (err.status == 401) {
       return { ok: false, short: "No Auth" };
     }
 

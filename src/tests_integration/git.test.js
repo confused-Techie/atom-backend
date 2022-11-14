@@ -30,7 +30,7 @@ describe("git.ownership() Tests", () => {
     );
     expect(res.ok).toBeTruthy();
   });
-  test("Returns false for invalid ownership", async () => {
+  test("Returns false for bad token", async () => {
     let res = await git.ownership(
       {
         username: "no_perm_user",
@@ -40,5 +40,18 @@ describe("git.ownership() Tests", () => {
       true
     );
     expect(res.ok).toBeFalsy();
+    expect(res.content).toEqual("Unrefreshed token.");
+  });
+  test("Returns false for invalid ownership", async () => {
+    let res = await git.ownership(
+      {
+        username: "admin_user",
+        token: "admin-token"
+      },
+      "admin_user/atom-frontend",
+      true
+    );
+    expect(res.ok).toBeFalsy();
+    expect(res.short).toEqual("No Repo Access");
   });
 });

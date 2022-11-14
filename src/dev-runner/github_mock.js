@@ -20,16 +20,24 @@ app.get("/user/repos", (req, res) => {
   switch (param.auth) {
     case "Basic YWRtaW5fdXNlcjphZG1pbi10b2tlbg==":
       // user: admin_user token: admin-token
-      res.status(200).json([
+      res.status(200).set({
+        "Authorization": req.get("Authorization"),
+        "User-Agent": req.get("User-Agent"),
+        "Link": '<localhost:9999/user/repos?page=1>; rel="first", <localhost:9999/user/repos?page=1>; rel="last"'
+      }).json([
         {
           id: 123456,
           full_name: "admin_user/atom-backend",
         },
       ]);
       break;
-    case "Basic bm8tUGVybV91c2VyOm5vLXZhbGlkLXRva2Vu":
+    case "Basic bm9fcGVybV91c2VyOm5vLXZhbGlkLXRva2Vu":
       // user: no_perm_user token: no-valid-token
-      res.status(401).json({
+      res.status(401).set({
+        "Authorization": req.get("Authorization"),
+        "User-Agent": req.get("User-Agent"),
+        "Link": '<localhost:9999/user/repos?page=1>; rel="first", <localhost:9999/user/repos?page=1>; rel="last"'
+      }).json({
         message: "Requires authentication",
         documentation_url:
           "https://docs.github.com/rest/reference/repo#list-repositories-for-the-authenticated-user",
