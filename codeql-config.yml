@@ -1,6 +1,8 @@
 name: "CodeQL Config"
 
-queries: security-extended,security-and-quality
+queries:
+  - security-extended
+  - security-and-quality
 
 paths-ignore:
   - ./src/tests
