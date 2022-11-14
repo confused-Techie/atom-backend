@@ -635,7 +635,7 @@ Assists in interactions between the backend and GitHub.
 
 
 * [git](#module_git)
-    * [~ownership(user, repo)](#module_git..ownership)
+    * [~ownership(user, repo, [dev_override])](#module_git..ownership)
     * [~createPackage(repo)](#module_git..createPackage) ⇒ <code>object</code>
     * [~doesUserHaveRepo(user, repo, [page])](#module_git..doesUserHaveRepo) ⇒ <code>object</code>
     * [~getRepoExistance(repo)](#module_git..getRepoExistance) ⇒ <code>boolean</code>
@@ -645,7 +645,7 @@ Assists in interactions between the backend and GitHub.
 
 <a name="module_git..ownership"></a>
 
-### git~ownership(user, repo)
+### git~ownership(user, repo, [dev_override])
 Allows the ability to check if a user has permissions to write to a repo.
 <b>MUST</b> Be provided `owner/repo` to successfully function, and expects the
 full `user` object. Returns `ok: true` where content is the repo data from GitHub
@@ -654,10 +654,11 @@ to affect said repo or `short: "Server Error"` if any other error has occured.
 
 **Kind**: inner method of [<code>git</code>](#module_git)  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| user | <code>object</code> | The Full User object, including `name`, `github_token`. |
-| repo | <code>string</code> | The `owner/repo` of the repo changes are intended to affect. |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| user | <code>object</code> |  | The Full User object, including `name`, `github_token`. |
+| repo | <code>string</code> |  | The `owner/repo` of the repo changes are intended to affect. |
+| [dev_override] | <code>boolean</code> | <code>false</code> | A Dangerous optional parameter, that is intended to be used during tests that overrides the default safe static returns, and lets the function run as intended in a development environment. |
 
 <a name="module_git..createPackage"></a>
 
