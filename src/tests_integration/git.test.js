@@ -46,7 +46,7 @@ describe("git.ownership() Tests", () => {
     let res = await git.ownership(
       {
         username: "admin_user",
-        token: "admin-token"
+        token: "admin-token",
       },
       "admin_user/atom-frontend",
       true

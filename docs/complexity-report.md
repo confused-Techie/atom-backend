@@ -341,7 +341,7 @@
 
 ## /home/runner/work/atom-backend/atom-backend/src/dev-runner/github_mock.js
 
-* Physical LOC: 36
+* Physical LOC: 50
 * Logical LOC: 4
 * Mean parameter count: 0
 * Cyclomatic complexity: 1
