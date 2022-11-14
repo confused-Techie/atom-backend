@@ -7,7 +7,7 @@ const config = {
       globalSetup: "<rootDir>/node_modules/@databases/pg-test/jest/globalSetup",
       globalTeardown:
         "<rootDir>/node_modules/@databases/pg-test/jest/globalTeardown",
-      testMatch: ["<rootDir>/src/tests_integration/main.test.js"],
+      testMatch: ["<rootDir>/src/tests_integration/git.test.js"],
     },
     {
       displayName: "Unit-Tests",

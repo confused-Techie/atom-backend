@@ -22,12 +22,15 @@ const encodedToken = Buffer.from(`${GH_USERNAME}:${GH_TOKEN}`).toString(
  * to affect said repo or `short: "Server Error"` if any other error has occured.
  * @param {object} user - The Full User object, including `name`, `github_token`.
  * @param {string} repo - The `owner/repo` of the repo changes are intended to affect.
+ * @param {boolean} [dev_override=false] - A Dangerous optional parameter, that is
+ * intended to be used during tests that overrides the default safe static returns, and
+ * lets the function run as intended in a development environment.
  */
-async function ownership(user, repo) {
+async function ownership(user, repo, dev_override = false) {
   // user here is a full fledged user object. And repo is a text representation of the repository.
   // Since git auth is not setup, this will return positive.
 
-  if (process.env.PULSAR_STATUS == "dev") {
+  if (process.env.PULSAR_STATUS == "dev" && !dev_override) {
     console.log(
       `git.js.Ownership() Is returning Dev Only Permissions for ${user.username}`
     );
@@ -59,7 +62,6 @@ async function ownership(user, repo) {
   let withinPackages = await doesUserHaveRepo(user, repo);
 
   // doesUserHaveRepo returns several different results, which need to be checked for
-
   if (withinPackages.ok) {
     // if the user has access directly return withinPackages
     return withinPackages;

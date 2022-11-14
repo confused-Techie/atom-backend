@@ -19,6 +19,12 @@ env:
   SERVERURL: "http://localhost:8080"
   NODE_ENV: "test"
   PULSAR_STATUS: "dev"  # This helps some modules know they are in a test environment
+  # The following are useful to be able to test the git module
+  # But ideally there could be found a better solution than this.
+  # The same isn't done in the PR tests so that users don't have bad access to token during runs.
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GH_USERNAME: "confused-Techie"
+  GH_USERAGENT: "Pulsar GHAction Tester Bot"
 
 jobs:
   tests:
