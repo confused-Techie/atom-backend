@@ -1,12 +1,12 @@
 # Complexity report, 11/14/2022
 
-* Mean per-function logical LOC: 16.69090909090909
-* Mean per-function parameter count: 0.740909090909091
-* Mean per-function cyclomatic complexity: 3.627272727272727
-* Mean per-function Halstead effort: 12648.542999505384
-* Mean per-module maintainability index: 64.5584531218294
-* First-order density: 3.3057851239669422%
-* Change cost: 13.223140495867769%
+* Mean per-function logical LOC: 15.633333333333333
+* Mean per-function parameter count: 0.6791666666666667
+* Mean per-function cyclomatic complexity: 3.408333333333333
+* Mean per-function Halstead effort: 11611.75038158132
+* Mean per-module maintainability index: 65.52866055111187
+* First-order density: 2.7777777777777777%
+* Change cost: 11.805555555555555%
 * Core size: 100%
 
 ## /home/runner/work/atom-backend/atom-backend/jest.config.js
@@ -338,6 +338,16 @@
     * Halstead difficulty: 2.0454545454545454
     * Halstead volume: 91.37651812938249
     * Halstead effort: 186.9065143555551
+
+## /home/runner/work/atom-backend/atom-backend/src/dev-runner/github_mock.js
+
+* Physical LOC: 36
+* Logical LOC: 4
+* Mean parameter count: 0
+* Cyclomatic complexity: 1
+* Cyclomatic complexity density: 25%
+* Maintainability index: 76.20094227321904
+* Dependency count: 1
 
 ## /home/runner/work/atom-backend/atom-backend/src/tests/debug_utils.test.js
 

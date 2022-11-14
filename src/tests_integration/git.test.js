@@ -23,7 +23,7 @@ describe("git.ownership() Tests", () => {
     let res = await git.ownership(
       {
         username: "admin_user",
-        token: "admin-token"
+        token: "admin-token",
       },
       "admin_user/atom-backend",
       true
@@ -34,7 +34,7 @@ describe("git.ownership() Tests", () => {
     let res = await git.ownership(
       {
         username: "no_perm_user",
-        token: "no-valid-token"
+        token: "no-valid-token",
       },
       "no_perm_user/atom-backend",
       true

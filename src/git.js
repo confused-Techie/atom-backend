@@ -15,21 +15,21 @@ const encodedToken = Buffer.from(`${GH_USERNAME}:${GH_TOKEN}`).toString(
 );
 
 /**
-  * @function setGHWebURL
-  * @desc Allows this module to be more testable. Sets a single place to modify
-  * the URL to which all Web based outgoing requests are destined.
-  * @param {string} val - The new URL to set this to.
-  */
+ * @function setGHWebURL
+ * @desc Allows this module to be more testable. Sets a single place to modify
+ * the URL to which all Web based outgoing requests are destined.
+ * @param {string} val - The new URL to set this to.
+ */
 function setGHWebURL(val) {
   GH_WEB_URL = val;
 }
 
 /**
-  * @function setGHAPIURL
-  * @desc Allows this module to be more testable. Sets a single place to modify
-  * the URL to which all API based outgoing requests are destined.
-  * @param {string} val - The new URL to set this to.
-  */
+ * @function setGHAPIURL
+ * @desc Allows this module to be more testable. Sets a single place to modify
+ * the URL to which all API based outgoing requests are destined.
+ * @param {string} val - The new URL to set this to.
+ */
 function setGHAPIURL(val) {
   GH_API_URL = val;
 }
@@ -545,5 +545,5 @@ module.exports = {
   ownership,
   createPackage,
   setGHAPIURL,
-  setGHWebURL
+  setGHWebURL,
 };

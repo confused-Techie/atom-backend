@@ -635,6 +635,8 @@ Assists in interactions between the backend and GitHub.
 
 
 * [git](#module_git)
+    * [~setGHWebURL(val)](#module_git..setGHWebURL)
+    * [~setGHAPIURL(val)](#module_git..setGHAPIURL)
     * [~ownership(user, repo, [dev_override])](#module_git..ownership)
     * [~createPackage(repo)](#module_git..createPackage) ⇒ <code>object</code>
     * [~doesUserHaveRepo(user, repo, [page])](#module_git..doesUserHaveRepo) ⇒ <code>object</code>
@@ -642,6 +644,30 @@ Assists in interactions between the backend and GitHub.
     * [~getPackageJSON(repo)](#module_git..getPackageJSON) ⇒ <code>string</code> \| <code>undefined</code>
     * [~getRepoReadMe(repo)](#module_git..getRepoReadMe) ⇒ <code>string</code> \| <code>undefined</code>
     * [~getRepoTags(repo)](#module_git..getRepoTags) ⇒ <code>object</code> \| <code>undefined</code>
+
+<a name="module_git..setGHWebURL"></a>
+
+### git~setGHWebURL(val)
+Allows this module to be more testable. Sets a single place to modify
+the URL to which all Web based outgoing requests are destined.
+
+**Kind**: inner method of [<code>git</code>](#module_git)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| val | <code>string</code> | The new URL to set this to. |
+
+<a name="module_git..setGHAPIURL"></a>
+
+### git~setGHAPIURL(val)
+Allows this module to be more testable. Sets a single place to modify
+the URL to which all API based outgoing requests are destined.
+
+**Kind**: inner method of [<code>git</code>](#module_git)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| val | <code>string</code> | The new URL to set this to. |
 
 <a name="module_git..ownership"></a>
 
