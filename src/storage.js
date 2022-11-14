@@ -56,9 +56,9 @@ async function getBanList() {
 
     try {
       let contents = await gcs_storage
-      .bucket(GCLOUD_STORAGE_BUCKET)
-      .file("name_ban_list.json")
-      .download();
+        .bucket(GCLOUD_STORAGE_BUCKET)
+        .file("name_ban_list.json")
+        .download();
       cached_banlist = new CacheObject(JSON.parse(contents));
       cached_banlist.last_validate = Date.now();
       return { ok: true, content: cached_banlist.data };
@@ -111,9 +111,9 @@ async function getFeaturedPackages() {
 
     try {
       let contents = await gcs_storage
-      .bucket(GCLOUD_STORAGE_BUCKET)
-      .file("featured_packages.json")
-      .download();
+        .bucket(GCLOUD_STORAGE_BUCKET)
+        .file("featured_packages.json")
+        .download();
       cached_featuredlist = new CacheObject(JSON.parse(contents));
       cached_featuredlist.last_validate = Date.now();
       return { ok: true, content: cached_featuredlist.data };
@@ -165,9 +165,9 @@ async function getFeaturedThemes() {
 
     try {
       let contents = await gcs_storage
-      .bucket(GCLOUD_STORAGE_BUCKET)
-      .file("featured_themes.json")
-      .download();
+        .bucket(GCLOUD_STORAGE_BUCKET)
+        .file("featured_themes.json")
+        .download();
       cached_themelist = new CacheObject(JSON.parse(contents));
       cached_themelist.last_validate = Date.now();
       return { ok: true, content: cached_themelist.data };
