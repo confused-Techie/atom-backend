@@ -52,18 +52,18 @@ async function getBanList() {
       cached_banlist = new CacheObject(list);
       cached_banlist.last_validate = Date.now();
       return { ok: true, content: cached_banlist.data };
-    } else {
-      try {
-        let contents = await gcs_storage
-          .bucket(GCLOUD_STORAGE_BUCKET)
-          .file("name_ban_list.json")
-          .download();
-        cached_banlist = new CacheObject(JSON.parse(contents));
-        cached_banlist.last_validate = Date.now();
-        return { ok: true, content: cached_banlist.data };
-      } catch (err) {
-        return { ok: false, content: err, short: "Server Error" };
-      }
+    }
+
+    try {
+      let contents = await gcs_storage
+      .bucket(GCLOUD_STORAGE_BUCKET)
+      .file("name_ban_list.json")
+      .download();
+      cached_banlist = new CacheObject(JSON.parse(contents));
+      cached_banlist.last_validate = Date.now();
+      return { ok: true, content: cached_banlist.data };
+    } catch (err) {
+      return { ok: false, content: err, short: "Server Error" };
     }
   };
 
@@ -107,18 +107,18 @@ async function getFeaturedPackages() {
       cached_featuredlist = new CacheObject(list);
       cached_featuredlist.last_validate = Date.now();
       return { ok: true, content: cached_featuredlist.data };
-    } else {
-      try {
-        let contents = await gcs_storage
-          .bucket(GCLOUD_STORAGE_BUCKET)
-          .file("featured_packages.json")
-          .download();
-        cached_featuredlist = new CacheObject(JSON.parse(contents));
-        cached_featuredlist.last_validate = Date.now();
-        return { ok: true, content: cached_featuredlist.data };
-      } catch (err) {
-        return { ok: false, content: err, short: "Server Error" };
-      }
+    }
+
+    try {
+      let contents = await gcs_storage
+      .bucket(GCLOUD_STORAGE_BUCKET)
+      .file("featured_packages.json")
+      .download();
+      cached_featuredlist = new CacheObject(JSON.parse(contents));
+      cached_featuredlist.last_validate = Date.now();
+      return { ok: true, content: cached_featuredlist.data };
+    } catch (err) {
+      return { ok: false, content: err, short: "Server Error" };
     }
   };
 
@@ -161,18 +161,18 @@ async function getFeaturedThemes() {
       cached_themelist = new CacheObject(list);
       cached_themelist.last_validate = Date.now();
       return { ok: true, content: cached_themelist.data };
-    } else {
-      try {
-        let contents = await gcs_storage
-          .bucket(GCLOUD_STORAGE_BUCKET)
-          .file("featured_themes.json")
-          .download();
-        cached_themelist = new CacheObject(JSON.parse(contents));
-        cached_themelist.last_validate = Date.now();
-        return { ok: true, content: cached_themelist.data };
-      } catch (err) {
-        return { ok: false, content: err, short: "Server Error" };
-      }
+    }
+
+    try {
+      let contents = await gcs_storage
+      .bucket(GCLOUD_STORAGE_BUCKET)
+      .file("featured_themes.json")
+      .download();
+      cached_themelist = new CacheObject(JSON.parse(contents));
+      cached_themelist.last_validate = Date.now();
+      return { ok: true, content: cached_themelist.data };
+    } catch (err) {
+      return { ok: false, content: err, short: "Server Error" };
     }
   };
 
