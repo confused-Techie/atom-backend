@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/confused-Techie/atom-backend/discussions
+    about: Please feel free to ask a question to the community here!
+  - name: Pulsar Discord
+    url: https://discord.gg/7aEbB9dGRT
+    about: Please feel free to contact the community faster here!
