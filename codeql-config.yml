@@ -1,0 +1,9 @@
+name: "CodeQL Config"
+
+queries: security-extended,security-and-quality
+
+paths-ignore:
+  - ./src/tests
+  - ./src/tests_integration
+
+# https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors
