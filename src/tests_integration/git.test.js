@@ -8,7 +8,7 @@ describe("git.Ownership", () => {
     let res = await git.ownership(
       {
         username: config.GH_USERNAME,
-        token: config.GH_TOKEN
+        token: config.GH_TOKEN,
       },
       "confused-Techie/atom-backend",
       true
@@ -19,7 +19,7 @@ describe("git.Ownership", () => {
     let res = await git.ownership(
       {
         username: config.GH_USERNAME,
-        token: config.GH_TOKEN
+        token: config.GH_TOKEN,
       },
       "confused-Techie/atom-backend-thisDoesntExist",
       true
@@ -31,7 +31,7 @@ describe("git.Ownership", () => {
     let res = await git.ownership(
       {
         username: config.GH_USERNAME,
-        token: "badtoken"
+        token: "badtoken",
       },
       "confused-Techie/atom-backend",
       true
