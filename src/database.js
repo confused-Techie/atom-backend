@@ -141,7 +141,11 @@ async function insertNewPackage(pack) {
       return { ok: true, content: pointer };
     })
     .catch((err) => {
-      return { ok: false, content: err, short: "Server Error" };
+      const msg = (typeof err === "string")
+        ? err
+        : `A generic error occurred while inserting ${pack.name} package`
+
+      return { ok: false, content: msg, short: "Server Error" };
     });
 }
 
@@ -533,87 +537,79 @@ async function updatePackageByName(name, data) {
 }
 
 async function removePackageByName(name) {
-  try {
-    sql_storage ??= setupSQL();
+  sql_storage ??= setupSQL();
 
-    const command_vers = await sql_storage`
-      DELETE FROM versions
-      WHERE package IN (
-        SELECT pointer FROM names
-        WHERE name = ${name}
-      )
-      RETURNING *;
-    `;
+  return await sql_storage
+    .begin(async () => {
+      // Remove versions of the package
+      const command_vers = await sql_storage`
+        DELETE FROM versions
+        WHERE package IN (
+          SELECT pointer FROM names
+          WHERE name = ${name}
+        )
+        RETURNING *;
+      `;
 
-    if (command_vers.count === 0) {
-      return {
-        ok: false,
-        content: `Failed to delete any Versions for: ${name}`,
-        short: "Server Error",
-      };
-    }
+      if (command_vers.count === 0) {
+        throw `Failed to delete any versions for: ${name}`;
+      }
 
-    const command_star = await sql_storage`
-      DELETE FROM stars
-      WHERE package IN (
-        SELECT pointer FROM names
-        WHERE name = ${name}
-      )
-      RETURNING *;
-    `;
+      // Remove stars assigned to the package
+      const command_star = await sql_storage`
+        DELETE FROM stars
+        WHERE package IN (
+          SELECT pointer FROM names
+          WHERE name = ${name}
+        )
+        RETURNING *;
+      `;
 
-    if (command_star.count === 0) {
-      return {
-        ok: false,
-        content: `Failed to delete stars for: ${name}`,
-        short: "Server Error",
-      };
-    }
+      if (command_star.count === 0) {
+        throw `Failed to delete stars for: ${name}`;
+      }
 
-    const command_name = await sql_storage`
-      DELETE FROM names
-      WHERE pointer IN (
-        SELECT pointer FROM names
-        WHERE name = ${name}
-      )
-      RETURNING *;
-    `;
+      // Remove names related to the package
+      const command_name = await sql_storage`
+        DELETE FROM names
+        WHERE pointer IN (
+          SELECT pointer FROM names
+          WHERE name = ${name}
+        )
+        RETURNING *;
+      `;
 
-    if (command_name.count === 0) {
-      return {
-        ok: false,
-        content: `Failed to delete the name for: ${name}`,
-        short: "Server Error",
-      };
-    }
+      if (command_name.count === 0) {
+        throw `Failed to delete names for: ${name}`;
+      }
 
-    // We will have to use the pointer returning from this last command, since we
-    // can no longer preform the same lookup as before.
-    const command_pack = await sql_storage`
-      DELETE FROM packages
-      WHERE pointer = ${command_name[0].pointer}
-      RETURNING *;
-    `;
+      // Remove the package itself.
+      // We will have to use the pointer returning from this last command, since we
+      // can no longer preform the same lookup as before.
+      const command_pack = await sql_storage`
+        DELETE FROM packages
+        WHERE pointer = ${command_name[0].pointer}
+        RETURNING *;
+      `;
 
-    if (command_pack.count === 0) {
-      // nothing was returning, the delete probably failed
-      return {
-        ok: false,
-        content: `Failed to Delete Package for: ${name}`,
-        short: "Server Errror",
-      };
-    }
+      if (command_pack.count === 0) {
+        // nothing was returning, the delete probably failed
+        throw `Failed to Delete Package for: ${name}`;
+      }
 
-    return command_pack[0].name === name
-      ? { ok: true, content: `Successfully Deleted Package: ${name}` }
-      : {
-          ok: false,
-          content: `Deleted unkown Package ${command_pack[0].name} during Deletion of ${name}`,
-          short: "Server Error",
-        };
-  } catch (err) {
-    return { ok: false, content: err, short: "Server Error" };
-  }
+      if (command_pack[0].name !== name) {
+        throw `Attempted to delete ${command_pack[0].name} rather than ${name}`
+      }
+
+      return { ok: true, content: `Successfully Deleted Package: ${name}` };
+    })
+    .catch((err) => {
+      const msg = (typeof err === "string")
+        ? err
+        : `A generic error occurred while inserting ${pack.name} package`
+
+      return { ok: false, content: msg, short: "Server Error" };
+    });
 }
 
 async function removePackageByID(id) {
