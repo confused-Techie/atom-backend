@@ -15,6 +15,7 @@ env:
   SERVERURL: "http://localhost:8080"
   NODE_ENV: "test"
   PULSAR_STATUS: "dev"  # This helps some modules know they are in a test environment
+  GH_USERAGENT: "Pulsar-Edit Tester Bot"
 
 jobs:
   tests:
