@@ -106,25 +106,26 @@ async function constructPackageObjectShort(pack) {
       retPacks.push(newPack);
     }
     return retPacks;
-  } else {
-    // not an array
-    if (
-      pack.data === undefined ||
-      pack.downloads === undefined ||
-      pack.stargazers_count === undefined ||
-      pack.semver === undefined
-    ) {
-      return {};
-    }
-    let newPack = pack.data;
-    newPack.downloads = pack.downloads;
-    newPack.stargazers_count = pack.stargazers_count;
-    newPack.releases = {
-      latest: pack.semver,
-    };
-
-    return newPack;
   }
+
+  // not an array
+  if (
+    pack.data === undefined ||
+    pack.downloads === undefined ||
+    pack.stargazers_count === undefined ||
+    pack.semver === undefined
+  ) {
+    return {};
+  }
+
+  let newPack = pack.data;
+  newPack.downloads = pack.downloads;
+  newPack.stargazers_count = pack.stargazers_count;
+  newPack.releases = {
+    latest: pack.semver,
+  };
+
+  return newPack;
 }
 
 /**
@@ -147,22 +148,22 @@ async function constructPackageObjectJSON(pack) {
     newPack.dist.tarball = `${server_url}/api/packages/${pack.meta.name}/versions/${pack.semver}/tarball`;
     newPack.engines = pack.engine;
     return newPack;
-  } else {
-    let arrPack = [];
-
-    for (let i = 0; i < pack.length; i++) {
-      let newPack = pack[i].meta;
-      if (newPack.sha) {
-        delete newPack.sha;
-      }
-      newPack.dist ??= {};
-      newPack.dist.tarball = `${server_url}/api/packages/${pack[i].meta.name}/versions/${pack[i].semver}/tarball`;
-      newPack.engines = pack[i].engine;
-      arrPack.push(newPack);
-    }
-
-    return arrPack;
   }
+
+  let arrPack = [];
+
+  for (let i = 0; i < pack.length; i++) {
+    let newPack = pack[i].meta;
+    if (newPack.sha) {
+      delete newPack.sha;
+    }
+    newPack.dist ??= {};
+    newPack.dist.tarball = `${server_url}/api/packages/${pack[i].meta.name}/versions/${pack[i].semver}/tarball`;
+    newPack.engines = pack[i].engine;
+    arrPack.push(newPack);
+  }
+
+  return arrPack;
 }
 
 /**
