@@ -141,9 +141,10 @@ async function insertNewPackage(pack) {
       return { ok: true, content: pointer };
     })
     .catch((err) => {
-      const msg = (typeof err === "string")
-        ? err
-        : `A generic error occurred while inserting ${pack.name} package`
+      const msg =
+        typeof err === "string"
+          ? err
+          : `A generic error occurred while inserting ${pack.name} package`;
 
       return { ok: false, content: msg, short: "Server Error" };
     });
@@ -598,15 +599,16 @@ async function removePackageByName(name) {
       }
 
       if (command_pack[0].name !== name) {
-        throw `Attempted to delete ${command_pack[0].name} rather than ${name}`
+        throw `Attempted to delete ${command_pack[0].name} rather than ${name}`;
       }
 
       return { ok: true, content: `Successfully Deleted Package: ${name}` };
     })
     .catch((err) => {
-      const msg = (typeof err === "string")
-        ? err
-        : `A generic error occurred while inserting ${pack.name} package`
+      const msg =
+        typeof err === "string"
+          ? err
+          : `A generic error occurred while inserting ${pack.name} package`;
 
       return { ok: false, content: msg, short: "Server Error" };
     });
