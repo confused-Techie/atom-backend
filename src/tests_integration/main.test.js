@@ -548,54 +548,78 @@ describe("DELETE /api/packages/:packageName/versions/:versionName", () => {
 describe("POST /api/packages/:packageName/versions/:versionName/events/uninstall", () => {
   test.todo("Write all of these");
   test("Returns 401 with No Auth", async () => {
-    const res = await request(app).post("/api/packages/language-css/versions/0.45.7/events/uninstall");
+    const res = await request(app).post(
+      "/api/packages/language-css/versions/0.45.7/events/uninstall"
+    );
     expect(res).toHaveHTTPCode(401);
   });
   test("Returns Bad Auth Message with No Auth", async () => {
-    const res = await request(app).post("/api/packages/langauge-css/versions/0.45.7/events/uninstall");
+    const res = await request(app).post(
+      "/api/packages/langauge-css/versions/0.45.7/events/uninstall"
+    );
     expect(res.body.message).toEqual(msg.badAuth);
   });
   test("Returns 401 with Bad Auth", async () => {
-    const res = await request(app).post("/api/packages/language-css/versions/0.45.7/events/uninstall").set("Authorization", "invalid");
+    const res = await request(app)
+      .post("/api/packages/language-css/versions/0.45.7/events/uninstall")
+      .set("Authorization", "invalid");
     expect(res).toHaveHTTPCode(401);
   });
   test("Returns Bad Auth Message with No Auth", async () => {
-    const res = await request(app).post("/api/packages/langauge-css/versions/0.45.7/events/uninstall").set("Authorization", "invalid");
+    const res = await request(app)
+      .post("/api/packages/langauge-css/versions/0.45.7/events/uninstall")
+      .set("Authorization", "invalid");
     expect(res.body.message).toEqual(msg.badAuth);
   });
   test("Returns 404 with Bad Package", async () => {
-    const res = await request(app).post("/api/packages/language-golang/versions/1.0.0/events/uninstall").set("Authorization", "valid-token");
+    const res = await request(app)
+      .post("/api/packages/language-golang/versions/1.0.0/events/uninstall")
+      .set("Authorization", "valid-token");
     expect(res).toHaveHTTPCode(404);
   });
   test("Returns Not Found Message with Bad Package", async () => {
-    const res = await request(app).post("/api/packages/language-golang/versions/1.0.0/events/uninstall").set("Authorization", "valid-token");
+    const res = await request(app)
+      .post("/api/packages/language-golang/versions/1.0.0/events/uninstall")
+      .set("Authorization", "valid-token");
     expect(res.body.message).toEqual(msg.notFound);
   });
   test("Returns 200 with Valid Package, Bad Version", async () => {
-    const res = await request(app).post("/api/packages/language-css/versions/1.0.0/events/uninstall").set("Authorization", "valid-token");
+    const res = await request(app)
+      .post("/api/packages/language-css/versions/1.0.0/events/uninstall")
+      .set("Authorization", "valid-token");
     expect(res).toHaveHTTPCode(200);
     // Please not on Atom.io this would result in a 404. But the Pulsar Backend intentionally ignores the `version`
     // of the query. This is due to changes in the database structure.
   });
   test("Returns Json {ok: true } with Valid Package, Bad Version", async () => {
-    const res = await request(app).post("/api/packages/language-css/versions/1.0.0/events/uninstall").set("Authorization", "valid-token");
+    const res = await request(app)
+      .post("/api/packages/language-css/versions/1.0.0/events/uninstall")
+      .set("Authorization", "valid-token");
     expect(res.body.ok).toBeTruthy();
     // Please not on Atom.io this would result in a 404. But the Pulsar Backend intentionally ignores the `version`
     // of the query. This is due to changes in the database structure.
   });
   test("Returns 200 on Success", async () => {
-    const res = await request(app).post("/api/packages/language-css/versions/0.45.7/events/uninstall").set("Authorization", "valid-token");
+    const res = await request(app)
+      .post("/api/packages/language-css/versions/0.45.7/events/uninstall")
+      .set("Authorization", "valid-token");
     expect(res).toHaveHTTPCode(200);
   });
   test("Returns Json { ok: true } on Success", async () => {
-    const res = await request(app).post("/api/packages/language-css/versions/0.45.7/events/uninstall").set("Authorization", "valid-token");
+    const res = await request(app)
+      .post("/api/packages/language-css/versions/0.45.7/events/uninstall")
+      .set("Authorization", "valid-token");
     expect(res.body.ok).toBeTruthy();
   });
   test("Properly decrements the download count", async () => {
     const orig = await request(app).get("/api/packages/language-css");
-    const res = await request(app).post("/api/packages/language-css/versions/0.45.7/events/uninstall").set("Authorization", "valid-token");
+    const res = await request(app)
+      .post("/api/packages/language-css/versions/0.45.7/events/uninstall")
+      .set("Authorization", "valid-token");
     const after = await request(app).get("/api/packages/language-css");
-    expect(parseInt(orig.body.downloads, 10)).toBeGreaterThan(parseInt(after.body.downloads, 10));
+    expect(parseInt(orig.body.downloads, 10)).toBeGreaterThan(
+      parseInt(after.body.downloads, 10)
+    );
   });
 });
 

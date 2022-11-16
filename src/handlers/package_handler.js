@@ -753,7 +753,6 @@ async function postPackagesEventUninstall(req, res) {
     params.packageName
   );
 
-
   if (!write.ok) {
     await common.handleError(req, res, write);
     return;
