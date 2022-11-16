@@ -417,11 +417,15 @@ describe("DELETE /api/packages/:packageName/star", () => {
 
 describe.only("GET /api/packages/:packageName/stargazers", () => {
   test("Returns 404 with Bad Package", async () => {
-    const res = await request(app).get("/api/packages/language-golang/stargazers");
+    const res = await request(app).get(
+      "/api/packages/language-golang/stargazers"
+    );
     expect(res).toHaveHTTPCode(404);
   });
   test("Returns Not Found Message with Bad Packages", async () => {
-    const res = await request(app).get("/api/packages/language-golang/stargazers");
+    const res = await request(app).get(
+      "/api/packages/language-golang/stargazers"
+    );
     expect(res.body.message).toEqual(msg.notFound);
   });
   test("Returns 200 with Valid Packages", async () => {
