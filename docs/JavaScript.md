@@ -785,6 +785,7 @@ logging methods if a log server is ever implemented.
     * [~warningLog([req], [res], err)](#module_logger..warningLog)
     * [~infoLog(value)](#module_logger..infoLog)
     * [~debugLog(value)](#module_logger..debugLog)
+    * [~sanitizeLogs(val)](#module_logger..sanitizeLogs) ⇒ <code>string</code>
 
 <a name="module_logger..httpLog"></a>
 
@@ -873,6 +874,22 @@ That is if the `app.yaml` file has DEBUG as true.
 ```js
 DEBUG:: VALUE
 ```
+<a name="module_logger..sanitizeLogs"></a>
+
+### logger~sanitizeLogs(val) ⇒ <code>string</code>
+This function intends to assist in sanitizing values from users that
+are input into the logs. Ensuring log forgery does not occur.
+And to help ensure that other malicious actions are unable to take place to
+admins reviewing the logs.
+
+**Kind**: inner method of [<code>logger</code>](#module_logger)  
+**Returns**: <code>string</code> - A sanitized log from the provided value.  
+**See**: [https://cwe.mitre.org/data/definitions/117.html](https://cwe.mitre.org/data/definitions/117.html)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| val | <code>string</code> | The user provided value to sanitize. |
+
 <a name="module_main"></a>
 
 ## main
@@ -1102,7 +1119,6 @@ A helper for any functions that are agnostic in handlers.
     * [~constructPackageObjectShort(pack)](#module_utils..constructPackageObjectShort) ⇒ <code>object</code>
     * [~constructPackageObjectJSON(pack)](#module_utils..constructPackageObjectJSON) ⇒ <code>object</code>
     * [~deepCopy(obj)](#module_utils..deepCopy) ⇒ <code>object</code>
-    * [~sanitizeLogs(val)](#module_utils..sanitizeLogs) ⇒ <code>string</code>
     * [~engineFilter()](#module_utils..engineFilter)
 
 <a name="module_utils..isPackageNameBanned"></a>
@@ -1188,22 +1204,6 @@ Just in case it is needed again.
 | Param | Type | Description |
 | --- | --- | --- |
 | obj | <code>object</code> | The Object to Deep Copy. |
-
-<a name="module_utils..sanitizeLogs"></a>
-
-### utils~sanitizeLogs(val) ⇒ <code>string</code>
-This function intends to assist in sanitizing values from users that
-are input into the logs. Ensuring log forgery does not occur.
-And to help ensure that other malicious actions are unable to take place to
-admins reviewing the logs.
-
-**Kind**: inner method of [<code>utils</code>](#module_utils)  
-**Returns**: <code>string</code> - A sanitized log from the provided value.  
-**See**: [https://cwe.mitre.org/data/definitions/117.html](https://cwe.mitre.org/data/definitions/117.html)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| val | <code>string</code> | The user provided value to sanitize. |
 
 <a name="module_utils..engineFilter"></a>
 

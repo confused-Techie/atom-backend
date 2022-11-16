@@ -20,9 +20,9 @@ function httpLog(req, res) {
   console.log(
     `HTTP:: ${req.ip ?? "NO_IP"} [${date.toISOString() ?? "NO_DATE"}] "${
       req.method ?? "NO_METHOD"
-    } ${sanitizeLogs(req.url) ?? "NO_URL"} ${
-      req.protocol ?? "NO_PROT"
-    }" ${res.statusCode ?? "NO_STATUS"} ${duration}ms`
+    } ${sanitizeLogs(req.url) ?? "NO_URL"} ${req.protocol ?? "NO_PROT"}" ${
+      res.statusCode ?? "NO_STATUS"
+    } ${duration}ms`
   );
 }
 
