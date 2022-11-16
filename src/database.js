@@ -1013,7 +1013,7 @@ async function simpleSearch(term, page, dir, sort) {
     let limit = paginated_amount;
 
     if (page !== 1) {
-      offset = page * paginated_amount;
+      offset = (page - 1) * paginated_amount;
     }
 
     const command = await sql_storage`
@@ -1089,7 +1089,7 @@ async function getSortedPackages(page, dir, method) {
   let limit = paginated_amount;
 
   if (page !== 1) {
-    offset = page * paginated_amount;
+    offset = (page - 1) * paginated_amount;
   }
 
   try {

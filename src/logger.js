@@ -5,6 +5,7 @@
  */
 
 const { debug } = require("./config.js").getConfig();
+const utils = require("./utils.js");
 
 /**
  * @function httpLog
@@ -16,11 +17,11 @@ const { debug } = require("./config.js").getConfig();
  */
 function httpLog(req, res) {
   let date = new Date();
-  let duration = Date.now() - req.start;
+  let duration = Date.now() - (req.start ?? Date.now());
   console.log(
-    `HTTP:: ${req.ip} [${date.toISOString()}] "${req.method} ${req.url} ${
-      req.protocol
-    }" ${res.statusCode} ${duration}ms`
+    `HTTP:: ${req.ip ?? 'NO_IP'} [${date.toISOString() ?? 'NO_DATE'}] "${req.method ?? 'NO_METHOD'} ${utils.santizieLogs(req.url) ?? 'NO_URL'} ${
+      req.protocol ?? 'NO_PROT'
+    }" ${res.statusCode ?? 'NO_STATUS'} ${duration}ms`
   );
 }
 
@@ -36,15 +37,9 @@ function httpLog(req, res) {
  */
 function errorLog(req, res, err, num = 9999) {
   // this will be a generic error logger to grab some stats about what happened, how the server handled it. And of course the error.
-  let duration = Date.now() - req.start;
-  let displayError;
-  if (err !== undefined && err.toString()) {
-    displayError = err.toString();
-  } else {
-    displayError = err;
-  }
+  let duration = Date.now() - (req.start ?? Date.now());
   console.log(
-    `ERROR-${num}:: ${req.ip} "${req.method} ${req.url} ${req.protocol}" ${res.statusCode} ${duration}ms ! ${displayError}`
+    `ERROR-${num}:: ${req.ip ?? 'NO_IP'} "${req.method ?? 'NO_METHOD'} ${utils.sanitizeLogs(req.url) ?? 'NO_URL'} ${req.protocol ?? 'NO_PROT'}" ${res.statusCode ?? 'NO_STATUS'} ${duration}ms ! ${dutils.sanitizeLogs(err?.toString()) ?? 'NO_ERR'}`
   );
 }
 
@@ -61,20 +56,10 @@ function errorLog(req, res, err, num = 9999) {
  * WARNING:: ERROR
  */
 function warningLog(req, res, err, num = 9999) {
-  if (req === undefined || res === undefined || req === null || res === null) {
-    console.log(`WARNING-${num}:: ${err}`);
-  } else {
-    let duration = Date.now() - req.start;
-    let displayError;
-    if (err !== undefined && err.toString()) {
-      displayError = err.toString();
-    } else {
-      displayError = err;
-    }
-    console.log(
-      `WARNING-${num}:: ${req.ip} "${req.method} ${req.url} ${req.protocol}" ${res.statusCode} ${duration}ms ! ${displayError}`
-    );
-  }
+  let duration = Date.now() - (req.start ?? Date.now());
+  console.log(
+    `WARNING-${num}:: ${req.ip ?? 'NO_IP'} "${req.method ?? 'NO_METHOD'} ${utils.sanitizeLogs(req.url) ?? 'NO_URL'} ${req.protocol ?? 'NO_PROT'}" ${res.statusCode ?? 'NO_STATUS'} ${duration}ms ! ${utils.sanitizeLogs(err?.toString()) ?? 'NO_ERR'}`
+  );
 }
 
 /**
@@ -85,7 +70,7 @@ function warningLog(req, res, err, num = 9999) {
  * INFO:: VALUE
  */
 function infoLog(value) {
-  console.log(`INFO:: ${value}`);
+  console.log(`INFO:: ${utils.sanitizeLogs(value) ?? 'NO_LOG_VALUE'}`);
 }
 
 /**
@@ -98,7 +83,7 @@ function infoLog(value) {
  */
 function debugLog(value) {
   if (debug) {
-    console.log(`DEBUG:: ${value}`);
+    console.log(`DEBUG:: ${utils.sanitizeLogs(value) ?? 'NO_LOG_VALUE'}`);
   }
 }
 
