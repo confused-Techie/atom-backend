@@ -42,8 +42,11 @@ async function getLoginStars(req, res) {
   // has no stars. This is okay, but getPackageCollectionByID will fail, and result
   // in a not found when discovering no packages by the ids passed, which is none.
   // So we will catch the exception of pointerCollection being an empty array.
-  
-  if (Array.isArray(pointerCollection.content) && pointerCollection.content.length === 0) {
+
+  if (
+    Array.isArray(pointerCollection.content) &&
+    pointerCollection.content.length === 0
+  ) {
     // Check for array to protect from an unexpected return
     res.status(200).json([]);
     logger.httpLog(req, res);
