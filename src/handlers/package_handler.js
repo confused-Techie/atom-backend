@@ -728,7 +728,7 @@ async function deletePackageVersion(req, res) {
  */
 async function postPackagesEventUninstall(req, res) {
   let params = {
-    auth: req.get("Authorization"),
+    auth: query.auth(req),
     packageName: decodeURIComponent(req.params.packageName),
     versionName: req.params.versionName,
   };
@@ -736,7 +736,16 @@ async function postPackagesEventUninstall(req, res) {
   let user = await database.verifyAuth(params.auth);
 
   if (!user.ok) {
-    await common.handleError(req, res);
+    await common.handleError(req, res, user);
+    return;
+  }
+
+  // TODO: How does this impact performance? Wonder if we could return
+  // the next command with more intelligence to know the pack doesn't exist.
+  let packExists = await database.getPackageByName(params.packageName);
+
+  if (!packExists.ok) {
+    await common.handleError(req, res, packExists);
     return;
   }
 
@@ -744,12 +753,13 @@ async function postPackagesEventUninstall(req, res) {
     params.packageName
   );
 
+
   if (!write.ok) {
     await common.handleError(req, res, write);
     return;
   }
 
-  res.status(201).json({ ok: true });
+  res.status(200).json({ ok: true });
   logger.httpLog(req, res);
 }
 
