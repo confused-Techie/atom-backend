@@ -53,7 +53,9 @@ async function ownership(user, repo, dev_override = false) {
   // Since git auth is not setup, this will return positive.
   if (process.env.PULSAR_STATUS == "dev" && !dev_override) {
     console.log(
-      `git.js.Ownership() Is returning Dev Only Permissions for ${logger.sanitizeLogs(user.username)}`
+      `git.js.Ownership() Is returning Dev Only Permissions for ${logger.sanitizeLogs(
+        user.username
+      )}`
     );
 
     switch (user.username) {
