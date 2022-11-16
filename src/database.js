@@ -726,7 +726,7 @@ async function getUserByName(username) {
       : {
           ok: false,
           content: `Unable to query for user: ${username}`,
-          short: "Server Error",
+          short: "Not Found",
         };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };

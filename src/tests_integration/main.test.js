@@ -415,7 +415,7 @@ describe("DELETE /api/packages/:packageName/star", () => {
   test.todo("Write Writable Tests for this endpoint");
 });
 
-describe.only("GET /api/packages/:packageName/stargazers", () => {
+describe("GET /api/packages/:packageName/stargazers", () => {
   test("Returns 404 with Bad Package", async () => {
     const res = await request(app).get(
       "/api/packages/language-golang/stargazers"
@@ -434,7 +434,7 @@ describe.only("GET /api/packages/:packageName/stargazers", () => {
   });
   test("Returns an Array with Valid Package", async () => {
     const res = await request(app).get("/api/packages/language-css/stargazers");
-    expect(Array.isArray(res.body)).toBeTruthy();
+    expect(res.body).toBeArray();
   });
   test("Returns a Non Empty Array", async () => {
     const res = await request(app).get("/api/packages/language-css/stargazers");
@@ -526,7 +526,26 @@ describe("GET /api/themes/featured", () => {
 });
 
 describe("GET /api/users/:login/stars", () => {
-  test.todo("Write these");
+  test("Returns 404 for Bad User", async () => {
+    const res = await request(app).get("/api/users/not-a-user/stars");
+    expect(res).toHaveHTTPCode(404);
+  });
+  test("Returns Not Found for Bad User", async () => {
+    const res = await request(app).get("/api/users/not-a-user/stars");
+    expect(res.body.message).toEqual(msg.notFound);
+  });
+  test("Returns an Array for Valid User with Stars", async () => {
+    const res = await request(app).get("/api/users/has-all-stars/stars");
+    expect(res.body).toBeArray();
+  });
+  test("Returns an Array for Valid User without Stars", async () => {
+    const res = await request(app).get("/api/users/has-no-stars/stars");
+    expect(res.body).toBeArray();
+  });
+  test("Returns an Empty Array for Valid User without Stars", async () => {
+    const res = await request(app).get("/api/users/has-no-stars/stars");
+    expect(res.body.length).toEqual(0);
+  });
 });
 
 describe("GET /api/stars", () => {
@@ -546,7 +565,7 @@ describe("GET /api/stars", () => {
     const res = await request(app)
       .get("/api/stars")
       .set("Authorization", "no-star-token");
-    expect(Array.isArray(res.body)).toBeTruthy();
+    expect(res.body).toBeArray();
   });
   test("Valid User with No Stars Returns Empty Array", async () => {
     const res = await request(app)
@@ -570,7 +589,7 @@ describe("GET /api/stars", () => {
     const res = await request(app)
       .get("/api/stars")
       .set("Authorization", "all-star-token");
-    expect(Array.isArray(res.body)).toBeTruthy();
+    expect(res.body).toBeArray();
   });
   test("Valid User with Stars Returns Non-Empty Array", async () => {
     const res = await request(app)
