@@ -503,7 +503,30 @@ describe("GET /api/packages/:packageName/versions/:versionName", () => {
 });
 
 describe("GET /api/packages/:packageName/versions/:versionName/tarball", () => {
-  test.todo("Write all of these");
+  test("Returns 404 with Invalid Package", async () => {
+    const res = await request(app).get("/api/packages/language-golang/versions/1.0.0/tarball");
+    expect(res).toHaveHTTPCode(404);
+  });
+  test("Returns Not Found with Invalid Package", async () => {
+    const res = await request(app).get("/api/packages/language-golang/versions/1.0.0/tarball");
+    expect(res.body.message).toEqual(msg.notFound);
+  });
+  test("Returns 404 with Valid Package, Invalid Version", async () => {
+    const res = await request(app).get("/api/packages/language-css/versions/1.0.0/tarball");
+    expect(res).toHaveHTTPCode(404);
+  });
+  test("Returns Not Found with Valid Package, Invalid Versions", async () => {
+    const res = await request(app).get("/api/packages/language-css/versions/1.0.0/tarball");
+    expect(res.body.message).toEqual(msg.notFound);
+  });
+  test("Returns 302 with Valid Package, Valid Version", async () => {
+    const res = await request(app).get("/api/packages/language-css/versions/0.45.7/tarball");
+    expect(res).toHaveHTTPCode(302);
+  });
+  test("Returns Redirect True with Valid Package, Valid Version", async () => {
+    const res = await request(app).get("/api/packages/language-css/versions/0.45.7/tarball");
+    expect(res.redirect).toBeTruthy();
+  });
 });
 
 describe("DELETE /api/packages/:packageName/versions/:versionName", () => {
