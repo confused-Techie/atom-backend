@@ -5,7 +5,6 @@
  */
 
 const { debug } = require("./config.js").getConfig();
-const utils = require("./utils.js");
 
 /**
  * @function httpLog
@@ -21,7 +20,7 @@ function httpLog(req, res) {
   console.log(
     `HTTP:: ${req.ip ?? "NO_IP"} [${date.toISOString() ?? "NO_DATE"}] "${
       req.method ?? "NO_METHOD"
-    } ${utils.sanitizeLogs(req.url) ?? "NO_URL"} ${
+    } ${sanitizeLogs(req.url) ?? "NO_URL"} ${
       req.protocol ?? "NO_PROT"
     }" ${res.statusCode ?? "NO_STATUS"} ${duration}ms`
   );
@@ -42,10 +41,10 @@ function errorLog(req, res, err, num = 9999) {
   let duration = Date.now() - (req.start ?? Date.now());
   console.log(
     `ERROR-${num}:: ${req.ip ?? "NO_IP"} "${req.method ?? "NO_METHOD"} ${
-      utils.sanitizeLogs(req.url) ?? "NO_URL"
+      sanitizeLogs(req.url) ?? "NO_URL"
     } ${req.protocol ?? "NO_PROT"}" ${
       res.statusCode ?? "NO_STATUS"
-    } ${duration}ms ! ${dutils.sanitizeLogs(err?.toString()) ?? "NO_ERR"}`
+    } ${duration}ms ! ${sanitizeLogs(err?.toString()) ?? "NO_ERR"}`
   );
 }
 
@@ -62,13 +61,15 @@ function errorLog(req, res, err, num = 9999) {
  * WARNING:: ERROR
  */
 function warningLog(req, res, err, num = 9999) {
-  let duration = Date.now() - (req.start ?? Date.now());
+  // We must remember that in many instances warningLog is used to log generic warnings,
+  // without ever being passed req or res. So these values cannot be relied on.
+  let duration = Date.now() - (req?.start ?? Date.now());
   console.log(
-    `WARNING-${num}:: ${req.ip ?? "NO_IP"} "${req.method ?? "NO_METHOD"} ${
-      utils.sanitizeLogs(req.url) ?? "NO_URL"
-    } ${req.protocol ?? "NO_PROT"}" ${
-      res.statusCode ?? "NO_STATUS"
-    } ${duration}ms ! ${utils.sanitizeLogs(err?.toString()) ?? "NO_ERR"}`
+    `WARNING-${num}:: ${req?.ip ?? "NO_IP"} "${req?.method ?? "NO_METHOD"} ${
+      sanitizeLogs(req?.url) ?? "NO_URL"
+    } ${req?.protocol ?? "NO_PROT"}" ${
+      res?.statusCode ?? "NO_STATUS"
+    } ${duration}ms ! ${sanitizeLogs(err?.toString()) ?? "NO_ERR"}`
   );
 }
 
@@ -80,7 +81,7 @@ function warningLog(req, res, err, num = 9999) {
  * INFO:: VALUE
  */
 function infoLog(value) {
-  console.log(`INFO:: ${utils.sanitizeLogs(value) ?? "NO_LOG_VALUE"}`);
+  console.log(`INFO:: ${sanitizeLogs(value) ?? "NO_LOG_VALUE"}`);
 }
 
 /**
@@ -93,8 +94,24 @@ function infoLog(value) {
  */
 function debugLog(value) {
   if (debug) {
-    console.log(`DEBUG:: ${utils.sanitizeLogs(value) ?? "NO_LOG_VALUE"}`);
+    console.log(`DEBUG:: ${sanitizeLogs(value) ?? "NO_LOG_VALUE"}`);
   }
+}
+
+/**
+ * @function sanitizeLogs
+ * @desc This function intends to assist in sanitizing values from users that
+ * are input into the logs. Ensuring log forgery does not occur.
+ * And to help ensure that other malicious actions are unable to take place to
+ * admins reviewing the logs.
+ * @param {string} val - The user provided value to sanitize.
+ * @returns {string} A sanitized log from the provided value.
+ * @see {@link https://cwe.mitre.org/data/definitions/117.html}
+ */
+function sanitizeLogs(val) {
+  // Removes New Line, Carriage Return, Tabs,
+  // TODO: Should probably also defend against links within this.
+  return val?.replace(/\n|\r/g, "")?.replace(/\t/g, "");
 }
 
 module.exports = {
