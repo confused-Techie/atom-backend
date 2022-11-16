@@ -19,9 +19,11 @@ function httpLog(req, res) {
   let date = new Date();
   let duration = Date.now() - (req.start ?? Date.now());
   console.log(
-    `HTTP:: ${req.ip ?? 'NO_IP'} [${date.toISOString() ?? 'NO_DATE'}] "${req.method ?? 'NO_METHOD'} ${utils.santizieLogs(req.url) ?? 'NO_URL'} ${
-      req.protocol ?? 'NO_PROT'
-    }" ${res.statusCode ?? 'NO_STATUS'} ${duration}ms`
+    `HTTP:: ${req.ip ?? "NO_IP"} [${date.toISOString() ?? "NO_DATE"}] "${
+      req.method ?? "NO_METHOD"
+    } ${utils.santizieLogs(req.url) ?? "NO_URL"} ${
+      req.protocol ?? "NO_PROT"
+    }" ${res.statusCode ?? "NO_STATUS"} ${duration}ms`
   );
 }
 
@@ -39,7 +41,11 @@ function errorLog(req, res, err, num = 9999) {
   // this will be a generic error logger to grab some stats about what happened, how the server handled it. And of course the error.
   let duration = Date.now() - (req.start ?? Date.now());
   console.log(
-    `ERROR-${num}:: ${req.ip ?? 'NO_IP'} "${req.method ?? 'NO_METHOD'} ${utils.sanitizeLogs(req.url) ?? 'NO_URL'} ${req.protocol ?? 'NO_PROT'}" ${res.statusCode ?? 'NO_STATUS'} ${duration}ms ! ${dutils.sanitizeLogs(err?.toString()) ?? 'NO_ERR'}`
+    `ERROR-${num}:: ${req.ip ?? "NO_IP"} "${req.method ?? "NO_METHOD"} ${
+      utils.sanitizeLogs(req.url) ?? "NO_URL"
+    } ${req.protocol ?? "NO_PROT"}" ${
+      res.statusCode ?? "NO_STATUS"
+    } ${duration}ms ! ${dutils.sanitizeLogs(err?.toString()) ?? "NO_ERR"}`
   );
 }
 
@@ -58,7 +64,11 @@ function errorLog(req, res, err, num = 9999) {
 function warningLog(req, res, err, num = 9999) {
   let duration = Date.now() - (req.start ?? Date.now());
   console.log(
-    `WARNING-${num}:: ${req.ip ?? 'NO_IP'} "${req.method ?? 'NO_METHOD'} ${utils.sanitizeLogs(req.url) ?? 'NO_URL'} ${req.protocol ?? 'NO_PROT'}" ${res.statusCode ?? 'NO_STATUS'} ${duration}ms ! ${utils.sanitizeLogs(err?.toString()) ?? 'NO_ERR'}`
+    `WARNING-${num}:: ${req.ip ?? "NO_IP"} "${req.method ?? "NO_METHOD"} ${
+      utils.sanitizeLogs(req.url) ?? "NO_URL"
+    } ${req.protocol ?? "NO_PROT"}" ${
+      res.statusCode ?? "NO_STATUS"
+    } ${duration}ms ! ${utils.sanitizeLogs(err?.toString()) ?? "NO_ERR"}`
   );
 }
 
@@ -70,7 +80,7 @@ function warningLog(req, res, err, num = 9999) {
  * INFO:: VALUE
  */
 function infoLog(value) {
-  console.log(`INFO:: ${utils.sanitizeLogs(value) ?? 'NO_LOG_VALUE'}`);
+  console.log(`INFO:: ${utils.sanitizeLogs(value) ?? "NO_LOG_VALUE"}`);
 }
 
 /**
@@ -83,7 +93,7 @@ function infoLog(value) {
  */
 function debugLog(value) {
   if (debug) {
-    console.log(`DEBUG:: ${utils.sanitizeLogs(value) ?? 'NO_LOG_VALUE'}`);
+    console.log(`DEBUG:: ${utils.sanitizeLogs(value) ?? "NO_LOG_VALUE"}`);
   }
 }
 

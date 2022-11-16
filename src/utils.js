@@ -205,15 +205,15 @@ async function deepCopy(obj) {
 }
 
 /**
-  * @function sanitizeLogs
-  * @desc This function intends to assist in sanitizing values from users that
-  * are input into the logs. Ensuring log forgery does not occur.
-  * And to help ensure that other malicious actions are unable to take place to
-  * admins reviewing the logs.
-  * @param {string} val - The user provided value to sanitize.
-  * @returns {string} A sanitized log from the provided value.
-  * @see {@link https://cwe.mitre.org/data/definitions/117.html}
-  */
+ * @function sanitizeLogs
+ * @desc This function intends to assist in sanitizing values from users that
+ * are input into the logs. Ensuring log forgery does not occur.
+ * And to help ensure that other malicious actions are unable to take place to
+ * admins reviewing the logs.
+ * @param {string} val - The user provided value to sanitize.
+ * @returns {string} A sanitized log from the provided value.
+ * @see {@link https://cwe.mitre.org/data/definitions/117.html}
+ */
 function sanitizeLogs(val) {
   // Removes New Line, Carriage Return, Tabs,
   // TODO: Should probably also defend against links within this.
