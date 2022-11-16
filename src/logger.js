@@ -120,4 +120,5 @@ module.exports = {
   warningLog,
   infoLog,
   debugLog,
+  sanitizeLogs,
 };
