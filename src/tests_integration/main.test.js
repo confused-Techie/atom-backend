@@ -415,8 +415,32 @@ describe("DELETE /api/packages/:packageName/star", () => {
   test.todo("Write Writable Tests for this endpoint");
 });
 
-describe("GET /api/packages/:packageName/stargazers", () => {
-  test.todo("Write all these");
+describe.only("GET /api/packages/:packageName/stargazers", () => {
+  test("Returns 404 with Bad Package", async () => {
+    const res = await request(app).get("/api/packages/language-golang/stargazers");
+    expect(res).toHaveHTTPCode(404);
+  });
+  test("Returns Not Found Message with Bad Packages", async () => {
+    const res = await request(app).get("/api/packages/language-golang/stargazers");
+    expect(res.body.message).toEqual(msg.notFound);
+  });
+  test("Returns 200 with Valid Packages", async () => {
+    const res = await request(app).get("/api/packages/language-css/stargazers");
+    expect(res).toHaveHTTPCode(200);
+  });
+  test("Returns an Array with Valid Package", async () => {
+    const res = await request(app).get("/api/packages/language-css/stargazers");
+    expect(Array.isArray(res.body)).toBeTruthy();
+  });
+  test("Returns a Non Empty Array", async () => {
+    const res = await request(app).get("/api/packages/language-css/stargazers");
+    expect(res.body.length).toBeGreaterThan(0);
+  });
+  test("Returns Array, containing Objects with login and string", async () => {
+    const res = await request(app).get("/api/packages/language-css/stargazers");
+    expect(res.body[0].login).toBeTruthy();
+    expect(typeof res.body[0].login === "string").toBeTruthy();
+  });
 });
 
 describe("POST /api/packages/:packageName/versions", () => {
