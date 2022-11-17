@@ -410,11 +410,11 @@ async function engineFilter(pack, engine) {
 }
 
 /**
-  * @class StateStore
-  * @desc This simple state store acts as a hash map, allowing authentication request
-  * to quickly add a new state related to an IP, and retrieve it later on.
-  * These states are used during the authentication flow to help ensure against malicious activity.
-  */
+ * @class StateStore
+ * @desc This simple state store acts as a hash map, allowing authentication request
+ * to quickly add a new state related to an IP, and retrieve it later on.
+ * These states are used during the authentication flow to help ensure against malicious activity.
+ */
 class StateStore {
   constructor() {
     this.hashmap = {};
@@ -425,7 +425,11 @@ class StateStore {
     if (this.hashmap[ip]) {
       return { ok: true, content: this.hashmap[ip] };
     } else {
-      return { ok: false, short: "Not Found", content: "Couldn't find IP within StateStore" };
+      return {
+        ok: false,
+        short: "Not Found",
+        content: "Couldn't find IP within StateStore",
+      };
     }
   }
   setState(ip) {
@@ -434,11 +438,15 @@ class StateStore {
     return { ok: true, content: state };
   }
   createState() {
-    crypto.generateKey('aes', { length: 128 }, (err, key) => {
+    crypto.generateKey("aes", { length: 128 }, (err, key) => {
       if (err) {
-        return { ok: false, short: "Server Error", content: `Failed to generate AES State: ${err}` };
+        return {
+          ok: false,
+          short: "Server Error",
+          content: `Failed to generate AES State: ${err}`,
+        };
       }
-      return { ok: true, content: key.export().toString('hex') };
+      return { ok: true, content: key.export().toString("hex") };
     });
   }
 }

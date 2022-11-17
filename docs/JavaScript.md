@@ -1114,12 +1114,25 @@ A helper for any functions that are agnostic in handlers.
 
 
 * [utils](#module_utils)
+    * [~StateStore](#module_utils..StateStore)
+        * [new StateStore()](#new_module_utils..StateStore_new)
     * [~isPackageNameBanned(name)](#module_utils..isPackageNameBanned) ⇒ <code>boolean</code>
     * [~constructPackageObjectFull(pack)](#module_utils..constructPackageObjectFull) ⇒ <code>object</code>
     * [~constructPackageObjectShort(pack)](#module_utils..constructPackageObjectShort) ⇒ <code>object</code>
     * [~constructPackageObjectJSON(pack)](#module_utils..constructPackageObjectJSON) ⇒ <code>object</code>
     * [~deepCopy(obj)](#module_utils..deepCopy) ⇒ <code>object</code>
     * [~engineFilter()](#module_utils..engineFilter)
+
+<a name="module_utils..StateStore"></a>
+
+### utils~StateStore
+**Kind**: inner class of [<code>utils</code>](#module_utils)  
+<a name="new_module_utils..StateStore_new"></a>
+
+#### new StateStore()
+This simple state store acts as a hash map, allowing authentication request
+to quickly add a new state related to an IP, and retrieve it later on.
+These states are used during the authentication flow to help ensure against malicious activity.
 
 <a name="module_utils..isPackageNameBanned"></a>
 

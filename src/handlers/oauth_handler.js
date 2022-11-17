@@ -59,8 +59,8 @@ async function getLogin(req, res) {
  */
 async function getOauth(req, res) {
   let params = {
-    state: req.params.state ?? '',
-    code: req.params.code ?? ''
+    state: req.params.state ?? "",
+    code: req.params.code ?? "",
   };
 
   // First we want to ensure that our state is still the same.
