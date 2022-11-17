@@ -412,7 +412,14 @@ describe("DELETE /api/packages/:packageName/star", () => {
       .set("Authorization", "valid-token");
     expect(res.body.message).toEqual(msg.notFound);
   });
-  test.todo("Write Writable Tests for this endpoint");
+  test("Returns Not Found when not a starred package", async () => {
+    const res = await request(app).delete("/api/packages/language-css/star").set("Authorization", "no-star-token");
+    expect(res).toHaveHTTPCode(404);
+  });
+  test("Returns 201 on Success", async () => {
+    const res = await request(app).delete("/api/packages/language-css/star").set("Authorization", "all-star-token");
+    expect(res).toHaveHTTPCode(201);
+  });
 });
 
 describe("GET /api/packages/:packageName/stargazers", () => {
