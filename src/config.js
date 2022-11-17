@@ -78,6 +78,9 @@ function getConfig() {
       GH_USERAGENT: process.env.GH_USERAGENT
         ? process.env.GH_USERAGENT
         : data.env_variables.GH_USERAGENT,
+      GH_REDIRECTURI: process.env.GH_REDIRECTURI
+        ? process.env.GH_REDIRECTURI
+        : data.env_variables.GH_REDIRECTURI,
       DB_HOST: process.env.DB_HOST
         ? process.env.DB_HOST
         : data.env_variables.DB_HOST,

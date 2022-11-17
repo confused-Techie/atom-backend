@@ -409,6 +409,40 @@ async function engineFilter(pack, engine) {
   return pack;
 }
 
+/**
+  * @class StateStore
+  * @desc This simple state store acts as a hash map, allowing authentication request
+  * to quickly add a new state related to an IP, and retrieve it later on.
+  * These states are used during the authentication flow to help ensure against malicious activity.
+  */
+class StateStore {
+  constructor() {
+    this.hashmap = {};
+    // In the future ideally we could allow the choice of how to generate the state
+    // But in this case it'll currently be hard coded
+  }
+  getState(ip, state) {
+    if (this.hashmap[ip]) {
+      return { ok: true, content: this.hashmap[ip] };
+    } else {
+      return { ok: false, short: "Not Found", content: "Couldn't find IP within StateStore" };
+    }
+  }
+  setState(ip) {
+    let state = this.createState();
+    this.hashmap[ip] = state;
+    return { ok: true, content: state };
+  }
+  createState() {
+    crypto.generateKey('aes', { length: 128 }, (err, key) => {
+      if (err) {
+        return { ok: false, short: "Server Error", content: `Failed to generate AES State: ${err}` };
+      }
+      return { ok: true, content: key.export().toString('hex') };
+    });
+  }
+}
+
 module.exports = {
   isPackageNameBanned,
   constructPackageObjectFull,
@@ -416,4 +450,5 @@ module.exports = {
   constructPackageObjectJSON,
   deepCopy,
   engineFilter,
+  StateStore,
 };

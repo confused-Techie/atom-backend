@@ -34,6 +34,8 @@ env_variables:
   GH_USERNAME: ""
   # The User Agent thats used to communicate with GitHub
   GH_USERAGENT: "Pulsar-Edit Bot"
+  # The URI that the OAuth instance should redirect to. Should end in `/api/oauth`
+  GH_REDIRECTURI: "https://api.pulsar-edit.dev/api/oauth"
   # The following are Database settings that should be pretty self-explainitory.
   DB_HOST: ""
   DB_USER: ""

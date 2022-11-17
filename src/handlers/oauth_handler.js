@@ -7,6 +7,9 @@
 
 const { GH_CLIENTID } = require("../config.js").getConfig();
 const common = require("./common_handler.js");
+const utils = require("../utils.js");
+
+const stateStore = new utils.StateStore();
 
 /**
  * @async
@@ -27,11 +30,21 @@ async function getLogin(req, res) {
   // since this will be the endpoint for a user to login, we need to redirect to GH.
   // @see https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps
   // need to setup callback_uri, and state.
+
+  // So lets go ahead and get our state
+  let state = stateStore.setState(req.ip);
+
+  if (!state.ok) {
+    await common.handleError(req, res, state);
+    return;
+  }
+
   res
     .status(301)
     .redirect(
-      `https://github.com/login/oauth/authorize?client_id=${GH_CLIENTID}`
+      `https://github.com/login/oauth/authorize?client_id=${GH_CLIENTID}&redirect_uri=${GH_REDIRECTURI}&state=${state.content}`
     );
+  logger.httpLog(req, res);
 }
 
 /**
@@ -45,6 +58,21 @@ async function getLogin(req, res) {
  * @todo Just about everything here.
  */
 async function getOauth(req, res) {
+  let params = {
+    state: req.params.state ?? '',
+    code: req.params.code ?? ''
+  };
+
+  // First we want to ensure that our state is still the same.
+  let stateCheck = stateStore.getState(req.ip, params.state);
+
+  if (!stateCheck.ok) {
+    await common.handleError(req, res, stateCheck);
+    return;
+  }
+
+  // TODO - Finish this feature
+
   await common.notSupported(req, res);
 }
 
