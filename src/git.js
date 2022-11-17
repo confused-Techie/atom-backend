@@ -342,8 +342,6 @@ async function doesUserHaveRepo(user, repo, page = 1) {
     // if there are no increasing pages, return no access
     return { ok: false, short: "No Access" };
   } catch (err) {
-    console.log("Catching err");
-    console.log(err.status);
     if (err.status == 401) {
       return { ok: false, short: "No Auth" };
     }
@@ -471,7 +469,6 @@ async function getRepoReadMe(repo) {
 
     // then this is not found, and we should try again for the lowercase readme.md
     try {
-      console.log(`https://api.github.com/repos/${repo}/contents/readme.md`);
       const resLower = await superagent
         .get(`https://api.github.com/repos/${repo}/contents/readme.md`)
         .set({ Authorization: "Basic " + encodedToken })

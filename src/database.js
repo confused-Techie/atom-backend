@@ -1064,7 +1064,7 @@ async function getUserCollectionById(ids) {
       );
       continue;
     }
-    console.log(user);
+
     user_array.push({ login: user.content.username });
   }
 
