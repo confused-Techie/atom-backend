@@ -4,7 +4,9 @@
  */
 const logger = require("./logger.js");
 const storage = require("./storage.js");
-const { server_url } = require("./config.js").getConfig();
+const { server_url, SALT_ROUNDS } = require("./config.js").getConfig();
+const crypto = require("crypto");
+const bcrypt = require("bcrypt");
 
 /**
  * @async
@@ -433,21 +435,31 @@ class StateStore {
     }
   }
   setState(ip) {
-    let state = this.createState();
-    this.hashmap[ip] = state;
-    return { ok: true, content: state };
-  }
-  createState() {
-    crypto.generateKey("aes", { length: 128 }, (err, key) => {
-      if (err) {
-        return {
-          ok: false,
-          short: "Server Error",
-          content: `Failed to generate AES State: ${err}`,
-        };
-      }
-      return { ok: true, content: key.export().toString("hex") };
+    return new Promise((resolve, reject) => {
+      crypto.generateKey("aes", { length: 128 }, (err, key) => {
+        if (err) {
+          reject({ ok: false, short: "Server Error", content: `Failed to generate AES State: ${err}`});
+        }
+        let state = key.export().toString("hex");
+        this.hashmap[ip] = state;
+        resolve({ ok: true, content: state });
+      });
     });
+  }
+}
+
+/**
+  * @function hashData
+  * @desc Takes data and returns the hashed form, according to the hashing settings.
+  */
+async function hashData(val) {
+  try {
+
+    let hash = await bcrypt.hash(val, SALT_ROUNDS);
+
+    return { ok: true, content: hash };
+  } catch(err) {
+    return { ok: false, content: err, short: "Server Error" };
   }
 }
 
@@ -459,4 +471,5 @@ module.exports = {
   deepCopy,
   engineFilter,
   StateStore,
+  hashData,
 };

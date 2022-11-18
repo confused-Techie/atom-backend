@@ -5,9 +5,12 @@
  * @implements {common_handler}
  */
 
-const { GH_CLIENTID } = require("../config.js").getConfig();
+const { GH_CLIENTID, GH_REDIRECTURI, GH_CLIENTSECRET, GH_USERAGENT } = require("../config.js").getConfig();
 const common = require("./common_handler.js");
 const utils = require("../utils.js");
+const logger = require("../logger.js");
+const superagent = require("superagent");
+const database = require("../database.js");
 
 const stateStore = new utils.StateStore();
 
@@ -32,19 +35,18 @@ async function getLogin(req, res) {
   // need to setup callback_uri, and state.
 
   // So lets go ahead and get our state
-  let state = stateStore.setState(req.ip);
+  // Please note that because of the usage of the crypto module, this is one of the only functions that
+  // return a promise
 
-  if (!state.ok) {
-    await common.handleError(req, res, state);
-    return;
-  }
-
-  res
-    .status(301)
-    .redirect(
-      `https://github.com/login/oauth/authorize?client_id=${GH_CLIENTID}&redirect_uri=${GH_REDIRECTURI}&state=${state.content}`
-    );
-  logger.httpLog(req, res);
+  stateStore.setState(req.ip)
+    .then((state) => {
+      console.log(state);
+      res.status(301).redirect(`https://github.com/login/oauth/authorize?client_id=${GH_CLIENTID}&redirect_uri=${GH_REDIRECTURI}&state=${state.content}`);
+      logger.httpLog(req, res);
+    })
+    .catch((err) => {
+      common.handleError(req, res, err);
+    });
 }
 
 /**
@@ -59,8 +61,8 @@ async function getLogin(req, res) {
  */
 async function getOauth(req, res) {
   let params = {
-    state: req.params.state ?? "",
-    code: req.params.code ?? "",
+    state: req.query.state ?? "",
+    code: req.query.code ?? "",
   };
 
   // First we want to ensure that our state is still the same.
@@ -71,9 +73,82 @@ async function getOauth(req, res) {
     return;
   }
 
-  // TODO - Finish this feature
+  const initial_auth = await superagent.post(`https://github.com/login/oauth/access_token`).query({ code: params.code, redirect_uri: GH_REDIRECTURI, client_id: GH_CLIENTID, client_secret: GH_CLIENTSECRET });
 
-  await common.notSupported(req, res);
+  if (initial_auth.body.access_token === null || initial_auth.body.token_type === null) {
+    await common.handleError(req, res, { ok: false, short: "Server Error", content: initial_auth });
+    return;
+  }
+
+  try {
+
+    const user_data = await superagent.get("https://api.github.com/user").set({ Authorization: `Bearer ${initial_auth.body.access_token}` }).set({ "User-Agent": GH_USERAGENT });
+
+
+    if (user_data.status !== 200) {
+      await common.handleError(req, res, { ok: false, short: "Server Error", content: user_data });
+      return;
+    }
+
+    // now to get a hashed form of their token.
+    let access_token = initial_auth.body.access_token;
+    let hash_token = await utils.hashData(access_token);
+
+    if (!hash_token.ok) {
+      await common.handleError(req, res, hash_token);
+      return;
+    }
+
+    // Now we have a valid user object, and other data from authentication that we want to put into the DB.
+    let userObj = {
+      username: user_data.body.login,
+      token: hash_token.content,
+      avatar: user_data.body.avatar_url
+    };
+
+    let check_user_existance = await database.getUserByName(userObj.username);
+
+    if (check_user_existance.ok) {
+      // This means that the user does in fact already exist.
+      // And from there they are likely reauthenticating, and we should refresh their token.
+
+      let update_user = await database.updateUser(userObj);
+
+      if (!update_user.ok) {
+        await common.handleError(req, res, update_user);
+        return;
+      }
+
+      // before returning lets append their proper access token to the object.
+      update_user.content.access_token = access_token;
+
+      res.status(200).json(update_user.content);
+      logger.httpLog(req, res);
+      return;
+    }
+
+    let create_user = await database.insertNewUser(userObj);
+
+    if (!create_user.ok) {
+      await common.handleError(req, res, create_user);
+      return;
+    }
+
+    // TODO: For now we will just return the user data as JSON.
+    // In the future this should redirect to `package-frontend` passing the user token as a query param.
+    // Once passed package-frontend should save it to the browser, logging the user in.
+    // And should be redirected to a user page, where they can view their user details.
+
+    // Before returning, lets append their access token
+    create_user.content.access_token = access_token;
+    res.status(200).json(create_user.content);
+    logger.httpLog(req, res);
+
+  } catch(err) {
+    await common.handleError(req, res, err);
+    return;
+  }
+
 }
 
 module.exports = {

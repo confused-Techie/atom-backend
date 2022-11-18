@@ -151,6 +151,62 @@ async function insertNewPackage(pack) {
 }
 
 /**
+  * @function insertNewUser
+  * @desc Used to create a new user on the db.
+  * @todo Write a better doc here.
+  */
+async function insertNewUser(user) {
+  try {
+    sql_storage ??= setupSQL();
+
+    const command = await sql_storage`
+      INSERT INTO users (username, token, avatar)
+      VALUES (${user.username}, ${user.token}, ${user.avatar})
+      RETURNING *;
+    `;
+
+    return command.count !== 0
+      ? { ok: true, content: command[0] }
+      : {
+          ok: false,
+          content: `Unable to create user: ${user}`,
+          short: "Server Error"
+        };
+  } catch(err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+/**
+  * @function updateUser
+  * @desc Updates the user table with new data. Matched by username.
+  * @todo Write better doc here.
+  */
+async function updateUser(user) {
+  try {
+    sql_storage ??= setupSQL();
+
+    const command = await sql_storage`
+      UPDATE users
+      SET token = ${user.token},
+      avatar = ${user.avatar}
+      WHERE username = ${user.username}
+      RETURNING *;
+    `;
+
+    return command.count !== 0
+      ? { ok: true, content: command[0] }
+      : {
+          ok: false,
+          content: `Unable to update user: ${user}`,
+          short: "Server Error"
+        };
+  } catch(err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+/**
  * @function getPackageByID
  * @desc Takes a package pointer UUID, and returns the package object within
  * a Server Status Object.
@@ -1184,4 +1240,6 @@ module.exports = {
   simpleSearch,
   updateStars,
   updateDeleteStar,
+  insertNewUser,
+  updateUser,
 };

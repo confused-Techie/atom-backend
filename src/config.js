@@ -81,6 +81,9 @@ function getConfig() {
       GH_REDIRECTURI: process.env.GH_REDIRECTURI
         ? process.env.GH_REDIRECTURI
         : data.env_variables.GH_REDIRECTURI,
+      GH_CLIENTSECRET: process.env.GH_CLIENTSECRET
+        ? process.env.GH_CLIENTSECRET
+        : data.env_variables.GH_CLIENTSECRET,
       DB_HOST: process.env.DB_HOST
         ? process.env.DB_HOST
         : data.env_variables.DB_HOST,
@@ -97,6 +100,9 @@ function getConfig() {
       DB_SSL_CERT: process.env.DB_SSL_CERT
         ? process.env.DB_SSL_CERT
         : data.env_variables.DB_SSL_CERT,
+      SALT_ROUNDS: process.env.SALT_ROUNDS
+        ? process.env.SALT_ROUNDS
+        : data.env_variables.SALT_ROUNDS,
     };
   } catch (err) {
     // since this is necessary for the server to startup, we can throw an error here and exit the process.

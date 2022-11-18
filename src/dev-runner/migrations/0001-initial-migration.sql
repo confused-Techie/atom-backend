@@ -135,17 +135,17 @@ VALUES (
   '{"name": "atom-material-syntax", "dist": {"tarball":"https://www.atom/io/api/packages/atom-material-syntax/version/1.0.8/tarball"}}'
 );
 
-INSERT INTO users (id, username, token, avatar)
+INSERT INTO users (username, token, avatar)
 VALUES (
-  1, 'dever', 'valid-token', 'https://roadtonowhere.com'
+  'dever', 'valid-token', 'https://roadtonowhere.com'
 ), (
-  2, 'no_perm_user', 'no-valid-token', 'https://roadtonowhere.com'
+  'no_perm_user', 'no-valid-token', 'https://roadtonowhere.com'
 ), (
-  3, 'admin_user', 'admin-token', 'https://roadtonowhere.com'
+  'admin_user', 'admin-token', 'https://roadtonowhere.com'
 ), (
-  4, 'has-no-stars', 'no-star-token', 'https://roadtonowhere.com'
+  'has-no-stars', 'no-star-token', 'https://roadtonowhere.com'
 ), (
-  5, 'has-all-stars', 'all-star-token', 'https://roadtonowhere.com'
+  'has-all-stars', 'all-star-token', 'https://roadtonowhere.com'
 );
 
 INSERT INTO stars (package, userid)
