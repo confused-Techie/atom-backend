@@ -15,7 +15,6 @@ const common = require("./common_handler.js");
 const query = require("../query.js");
 const git = require("../git.js");
 const logger = require("../logger.js");
-const error = require("../error.js");
 const { server_url } = require("../config.js").getConfig();
 const utils = require("../utils.js");
 const database = require("../database.js");
@@ -128,8 +127,7 @@ async function postPackages(req, res) {
 
   if (exists.ok) {
     // The package exists.
-    error.publishPackageExists(res);
-    logger.httpLog(req, res);
+    common.packageExists(req, res);
     return;
   }
 

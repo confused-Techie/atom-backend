@@ -127,6 +127,19 @@ async function badPackageJSON(req, res, num) {
 }
 
 /**
+ * @function packageExists
+ * @desc Returns the PackageExist message to the user.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ * @implements {error.publishPackageExists}
+ * @implements {logger.HTTPLog}
+ */
+async function packageExists(req, res) {
+  error.publishPackageExists(res);
+  logger.httpLog(req, res);
+}
+
+/**
  * @async
  * @function handleError
  * @desc Generic error handler mostly used to reduce the duplication of error handling in other modules.
