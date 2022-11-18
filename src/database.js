@@ -694,6 +694,42 @@ async function removePackageByID(id) {
 
 /**
  * @async
+ * @function removePackageVersion
+ * @description Mark a version of a specific package as removed. This does not delete the record,
+ * just mark the status as removed.
+ * @param {string} packName - The package name.
+ * @param {string} semVer - The version to remove.
+ * @returns {object} A server status object.
+ */
+async function removePackageVersion(packName, semVer) {
+  try {
+     sql_storage ??= setupSQL();
+
+     const command = await sql_storage`
+       UPDATE versions
+       SET status = 'removed'
+       WHERE semver == ${semVer} AND pointer IN (
+         SELECT pointer
+         FROM names
+         WHERE name = ${packName}
+       )
+       RETURNING *;
+     `;
+
+     return command.count !== 0
+       ? { ok: true, content: `Successfully removed ${semVer} version of ${packName} package.` }
+       : {
+           ok: false,
+           content: `Unable to remove ${semVer} version of ${packName} package.`,
+           short: "Not Found",
+         };
+   } catch (err) {
+     return { ok: false, content: err, short: "Server Error" };
+   }
+}
+
+/**
+ * @async
  * @function getFeaturedPackages
  * @desc Collects the hardcoded featured packages array from the storage.js
  * module. Then uses this.getPackageCollectionByName to retreive details of the
@@ -1220,6 +1256,7 @@ module.exports = {
   updatePackageByName,
   removePackageByName,
   removePackageByID,
+  removePackageVersion,
   getFeaturedPackages,
   getTotalPackageEstimate,
   getSortedPackages,
