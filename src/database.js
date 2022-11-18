@@ -711,9 +711,9 @@ async function removePackageByName(name) {
  */
 async function removePackageVersion(packName, semVer) {
   try {
-     sql_storage ??= setupSQL();
+    sql_storage ??= setupSQL();
 
-     const command = await sql_storage`
+    const command = await sql_storage`
        UPDATE versions
        SET status = 'removed'
        WHERE semver == ${semVer} AND pointer IN (
@@ -724,16 +724,19 @@ async function removePackageVersion(packName, semVer) {
        RETURNING *;
      `;
 
-     return command.count !== 0
-       ? { ok: true, content: `Successfully removed ${semVer} version of ${packName} package.` }
-       : {
-           ok: false,
-           content: `Unable to remove ${semVer} version of ${packName} package.`,
-           short: "Not Found",
-         };
-   } catch (err) {
-     return { ok: false, content: err, short: "Server Error" };
-   }
+    return command.count !== 0
+      ? {
+          ok: true,
+          content: `Successfully removed ${semVer} version of ${packName} package.`,
+        }
+      : {
+          ok: false,
+          content: `Unable to remove ${semVer} version of ${packName} package.`,
+          short: "Not Found",
+        };
+  } catch (err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
 }
 
 /**

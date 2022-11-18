@@ -676,7 +676,10 @@ async function deletePackageVersion(req, res) {
   }
 
   // Mark the specified version for deletion, if version is valid
-  let removeVersion = database.removePackageVersion(params.packageName, params.versionName);
+  let removeVersion = database.removePackageVersion(
+    params.packageName,
+    params.versionName
+  );
 
   if (!removeVersion.ok) {
     await common.handleError(req, res, removeVersion);
