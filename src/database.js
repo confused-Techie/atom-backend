@@ -151,10 +151,10 @@ async function insertNewPackage(pack) {
 }
 
 /**
-  * @function insertNewUser
-  * @desc Used to create a new user on the db.
-  * @todo Write a better doc here.
-  */
+ * @function insertNewUser
+ * @desc Used to create a new user on the db.
+ * @todo Write a better doc here.
+ */
 async function insertNewUser(user) {
   try {
     sql_storage ??= setupSQL();
@@ -170,18 +170,18 @@ async function insertNewUser(user) {
       : {
           ok: false,
           content: `Unable to create user: ${user}`,
-          short: "Server Error"
+          short: "Server Error",
         };
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
 
 /**
-  * @function updateUser
-  * @desc Updates the user table with new data. Matched by username.
-  * @todo Write better doc here.
-  */
+ * @function updateUser
+ * @desc Updates the user table with new data. Matched by username.
+ * @todo Write better doc here.
+ */
 async function updateUser(user) {
   try {
     sql_storage ??= setupSQL();
@@ -199,9 +199,9 @@ async function updateUser(user) {
       : {
           ok: false,
           content: `Unable to update user: ${user}`,
-          short: "Server Error"
+          short: "Server Error",
         };
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }

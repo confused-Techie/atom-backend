@@ -438,7 +438,11 @@ class StateStore {
     return new Promise((resolve, reject) => {
       crypto.generateKey("aes", { length: 128 }, (err, key) => {
         if (err) {
-          reject({ ok: false, short: "Server Error", content: `Failed to generate AES State: ${err}`});
+          reject({
+            ok: false,
+            short: "Server Error",
+            content: `Failed to generate AES State: ${err}`,
+          });
         }
         let state = key.export().toString("hex");
         this.hashmap[ip] = state;
@@ -449,16 +453,15 @@ class StateStore {
 }
 
 /**
-  * @function hashData
-  * @desc Takes data and returns the hashed form, according to the hashing settings.
-  */
+ * @function hashData
+ * @desc Takes data and returns the hashed form, according to the hashing settings.
+ */
 async function hashData(val) {
   try {
-
     let hash = await bcrypt.hash(val, SALT_ROUNDS);
 
     return { ok: true, content: hash };
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }

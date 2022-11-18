@@ -140,6 +140,8 @@ with and retreive data from the cloud hosted database instance.
     * [~setupSQL()](#module_database..setupSQL) ⇒ <code>object</code>
     * [~shutdownSQL()](#module_database..shutdownSQL)
     * [~insertNewPackage(pack)](#module_database..insertNewPackage) ⇒ <code>object</code>
+    * [~insertNewUser()](#module_database..insertNewUser)
+    * [~updateUser()](#module_database..updateUser)
     * [~getPackageByID()](#module_database..getPackageByID)
     * [~getPackageByName(name, user)](#module_database..getPackageByName)
     * [~getPackageVersionByNameAndVersion(name, version)](#module_database..getPackageVersionByNameAndVersion) ⇒ <code>object</code>
@@ -194,6 +196,26 @@ Insert a new package inside the DB taking a `Server Object Full` as argument.
 | Param | Type | Description |
 | --- | --- | --- |
 | pack | <code>object</code> | The `Server Object Full` package. |
+
+<a name="module_database..insertNewUser"></a>
+
+### database~insertNewUser()
+Used to create a new user on the db.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Todo**
+
+- [ ] Write a better doc here.
+
+<a name="module_database..updateUser"></a>
+
+### database~updateUser()
+Updates the user table with new data. Matched by username.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Todo**
+
+- [ ] Write better doc here.
 
 <a name="module_database..getPackageByID"></a>
 
@@ -1122,6 +1144,7 @@ A helper for any functions that are agnostic in handlers.
     * [~constructPackageObjectJSON(pack)](#module_utils..constructPackageObjectJSON) ⇒ <code>object</code>
     * [~deepCopy(obj)](#module_utils..deepCopy) ⇒ <code>object</code>
     * [~engineFilter()](#module_utils..engineFilter)
+    * [~hashData()](#module_utils..hashData)
 
 <a name="module_utils..StateStore"></a>
 
@@ -1224,6 +1247,12 @@ Just in case it is needed again.
 A complex function that provides filtering by Atom engine version.
 This should take a package with it's versions and retreive whatever matches
 that engine version as provided.
+
+**Kind**: inner method of [<code>utils</code>](#module_utils)  
+<a name="module_utils..hashData"></a>
+
+### utils~hashData()
+Takes data and returns the hashed form, according to the hashing settings.
 
 **Kind**: inner method of [<code>utils</code>](#module_utils)  
 <a name="module_common_handler"></a>

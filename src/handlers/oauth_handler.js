@@ -5,7 +5,8 @@
  * @implements {common_handler}
  */
 
-const { GH_CLIENTID, GH_REDIRECTURI, GH_CLIENTSECRET, GH_USERAGENT } = require("../config.js").getConfig();
+const { GH_CLIENTID, GH_REDIRECTURI, GH_CLIENTSECRET, GH_USERAGENT } =
+  require("../config.js").getConfig();
 const common = require("./common_handler.js");
 const utils = require("../utils.js");
 const logger = require("../logger.js");
@@ -38,10 +39,15 @@ async function getLogin(req, res) {
   // Please note that because of the usage of the crypto module, this is one of the only functions that
   // return a promise
 
-  stateStore.setState(req.ip)
+  stateStore
+    .setState(req.ip)
     .then((state) => {
       console.log(state);
-      res.status(301).redirect(`https://github.com/login/oauth/authorize?client_id=${GH_CLIENTID}&redirect_uri=${GH_REDIRECTURI}&state=${state.content}`);
+      res
+        .status(301)
+        .redirect(
+          `https://github.com/login/oauth/authorize?client_id=${GH_CLIENTID}&redirect_uri=${GH_REDIRECTURI}&state=${state.content}`
+        );
       logger.httpLog(req, res);
     })
     .catch((err) => {
@@ -73,20 +79,39 @@ async function getOauth(req, res) {
     return;
   }
 
-  const initial_auth = await superagent.post(`https://github.com/login/oauth/access_token`).query({ code: params.code, redirect_uri: GH_REDIRECTURI, client_id: GH_CLIENTID, client_secret: GH_CLIENTSECRET });
+  const initial_auth = await superagent
+    .post(`https://github.com/login/oauth/access_token`)
+    .query({
+      code: params.code,
+      redirect_uri: GH_REDIRECTURI,
+      client_id: GH_CLIENTID,
+      client_secret: GH_CLIENTSECRET,
+    });
 
-  if (initial_auth.body.access_token === null || initial_auth.body.token_type === null) {
-    await common.handleError(req, res, { ok: false, short: "Server Error", content: initial_auth });
+  if (
+    initial_auth.body.access_token === null ||
+    initial_auth.body.token_type === null
+  ) {
+    await common.handleError(req, res, {
+      ok: false,
+      short: "Server Error",
+      content: initial_auth,
+    });
     return;
   }
 
   try {
-
-    const user_data = await superagent.get("https://api.github.com/user").set({ Authorization: `Bearer ${initial_auth.body.access_token}` }).set({ "User-Agent": GH_USERAGENT });
-
+    const user_data = await superagent
+      .get("https://api.github.com/user")
+      .set({ Authorization: `Bearer ${initial_auth.body.access_token}` })
+      .set({ "User-Agent": GH_USERAGENT });
 
     if (user_data.status !== 200) {
-      await common.handleError(req, res, { ok: false, short: "Server Error", content: user_data });
+      await common.handleError(req, res, {
+        ok: false,
+        short: "Server Error",
+        content: user_data,
+      });
       return;
     }
 
@@ -103,7 +128,7 @@ async function getOauth(req, res) {
     let userObj = {
       username: user_data.body.login,
       token: hash_token.content,
-      avatar: user_data.body.avatar_url
+      avatar: user_data.body.avatar_url,
     };
 
     let check_user_existance = await database.getUserByName(userObj.username);
@@ -143,12 +168,10 @@ async function getOauth(req, res) {
     create_user.content.access_token = access_token;
     res.status(200).json(create_user.content);
     logger.httpLog(req, res);
-
-  } catch(err) {
+  } catch (err) {
     await common.handleError(req, res, err);
     return;
   }
-
 }
 
 module.exports = {
