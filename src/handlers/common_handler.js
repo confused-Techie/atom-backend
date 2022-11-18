@@ -178,11 +178,12 @@ async function handleError(req, res, obj, num) {
 
 module.exports = {
   authFail,
-  serverError,
-  notFound,
-  siteWideNotFound,
-  notSupported,
   badRepoJSON,
   badPackageJSON,
   handleError,
+  notFound,
+  notSupported,
+  packageExists,
+  serverError,
+  siteWideNotFound,
 };
