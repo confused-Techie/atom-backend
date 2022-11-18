@@ -670,28 +670,6 @@ async function removePackageByName(name) {
     });
 }
 
-async function removePackageByID(id) {
-  try {
-    sql_storage ??= setupSQL();
-
-    const command = await sql_storage`
-      UPDATE versions
-      SET status = "removed"
-      WHERE package = id;
-    `;
-
-    return command.count !== 0
-      ? { ok: true, content: `${id} package successfully removed.` }
-      : {
-          ok: false,
-          content: `Unable remove the ${id} package.`,
-          short: "Server Error",
-        };
-  } catch (err) {
-    return { ok: false, content: err, short: "Server Error" };
-  }
-}
-
 /**
  * @async
  * @function removePackageVersion
@@ -1255,7 +1233,6 @@ module.exports = {
   updatePackageByID,
   updatePackageByName,
   removePackageByName,
-  removePackageByID,
   removePackageVersion,
   getFeaturedPackages,
   getTotalPackageEstimate,
