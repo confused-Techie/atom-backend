@@ -250,10 +250,10 @@ async function getPackagesSearch(req, res) {
       res.status(200).json([]);
       logger.httpLog(req, res);
       return;
-    } else {
-      await common.handleError(req, res, packs, 1007);
-      return;
     }
+
+    await common.handleError(req, res, packs, 1007);
+    return;
   }
 
   let newPacks = await utils.constructPackageObjectShort(packs.content);
