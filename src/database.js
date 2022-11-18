@@ -151,9 +151,11 @@ async function insertNewPackage(pack) {
 }
 
 /**
+ * @async
  * @function insertNewUser
- * @desc Used to create a new user on the db.
- * @todo Write a better doc here.
+ * @desc Insert a new user into the database.
+ * @param {object} user - An object containing information related to the user.
+ * @returns {object} A server status object.
  */
 async function insertNewUser(user) {
   try {
@@ -178,9 +180,12 @@ async function insertNewUser(user) {
 }
 
 /**
+ * @async
  * @function updateUser
- * @desc Updates the user table with new data. Matched by username.
- * @todo Write better doc here.
+ * @desc Given the username, the record of the user is updated with the new token and the avatar.
+ * a Server Status Object.
+ * @param {object} user - An object containing information related to the user.
+ * @returns {object} A server status object.
  */
 async function updateUser(user) {
   try {
@@ -188,8 +193,7 @@ async function updateUser(user) {
 
     const command = await sql_storage`
       UPDATE users
-      SET token = ${user.token},
-      avatar = ${user.avatar}
+      SET token = ${user.token}, avatar = ${user.avatar}
       WHERE username = ${user.username}
       RETURNING *;
     `;
@@ -207,9 +211,12 @@ async function updateUser(user) {
 }
 
 /**
+ * @async
  * @function getPackageByID
  * @desc Takes a package pointer UUID, and returns the package object within
  * a Server Status Object.
+ * @param {string} id - Package UUID.
+ * @returns {object} A server status object.
  */
 async function getPackageByID(id) {
   try {
@@ -233,6 +240,7 @@ async function getPackageByID(id) {
 }
 
 /**
+ * @async
  * @function getPackageByName
  * @desc Takes a package name and returns the raw SQL package with all its versions.
  * This module is also used to get the data to be sent to utils.constructPackageObjectFull()
@@ -243,6 +251,7 @@ async function getPackageByID(id) {
  * If true, all sensitive data like primary and foreign keys are not selected.
  * Even if the keys are ignored by utils.constructPackageObjectFull(), it's still
  * safe to not inclue them in case, by mistake, we publish the return of this module.
+ * @returns {object} A server status object.
  */
 async function getPackageByName(name, user = false) {
   try {
@@ -291,6 +300,7 @@ async function getPackageByName(name, user = false) {
 }
 
 /**
+ * @async
  * @function getPackageVersionByNameAndVersion
  * @desc Uses the name of a package and it's version to return the version info.
  * @param {string} name - The name of the package to query.
@@ -325,9 +335,12 @@ async function getPackageVersionByNameAndVersion(name, version) {
 }
 
 /**
+ * @async
  * @function getPackageCollectionByName
  * @desc Takes a package name array, and returns an array of the package objects.
  * You must ensure that the packArray passed is compatible. This function does not coerce compatibility.
+ * @param {string[]} packArray - An array of package name strings.
+ * @returns {object} A server status object.
  */
 async function getPackageCollectionByName(packArray) {
   try {
@@ -351,8 +364,11 @@ async function getPackageCollectionByName(packArray) {
 }
 
 /**
+ * @async
  * @function getPackageCollectionByID
  * @desc Takes a package pointer array, and returns an array of the package objects.
+ * @param {int[]} packArray - An array of package id.
+ * @returns {object} A server status object.
  */
 async function getPackageCollectionByID(packArray) {
   try {
@@ -372,6 +388,7 @@ async function getPackageCollectionByID(packArray) {
 }
 
 /**
+ * @async
  * @function getPointerTable
  * @desc Returns a full package pointer table, allowing the full reference of package names
  * to package pointer UUIDs.
@@ -397,6 +414,7 @@ async function getPointerTable() {
 }
 
 /**
+ * @async
  * @function updatePackageIncrementStarByName
  * @description Uses the package name to increment it's stargazers count by one.
  * @param {string} name - The package name.
@@ -429,6 +447,7 @@ async function updatePackageIncrementStarByName(name) {
 }
 
 /**
+ * @async
  * @function updatePackageDecrementStarByName
  * @description Uses the package name to decrement it's stargazers count by one.
  * @param {string} name - The package name.
@@ -461,6 +480,7 @@ async function updatePackageDecrementStarByName(name) {
 }
 
 /**
+ * @async
  * @function updatePackageIncrementDownloadByName
  * @description Uses the package name to increment the download count by one.
  * @param {string} name - The package name.
@@ -493,6 +513,7 @@ async function updatePackageIncrementDownloadByName(name) {
 }
 
 /**
+ * @async
  * @function updatePackageDecrementDownloadByName
  * @description Uses the package name to decrement the download count by one.
  * @param {string} name - The package name.
@@ -525,6 +546,7 @@ async function updatePackageDecrementDownloadByName(name) {
 }
 
 /**
+ * @async
  * @function updatePackageByID
  * @todo This is one of the original functions migrated to SQL, and should be reviewed for accuracy.
  * @description Updates a Packages content, with new data.
@@ -558,6 +580,7 @@ async function updatePackageByID(id, data) {
 }
 
 /**
+ * @async
  * @function updatePackageByName
  * @todo This is one of the original functions migrated to SQL, and should be reviewed for accuracy.
  * @description Updates the packages content, with new data.
@@ -593,6 +616,13 @@ async function updatePackageByName(name, data) {
   }
 }
 
+/**
+ * @async
+ * @function removePackageByName
+ * @description Given a package name, removes its record alongside its names, versions, stars.
+ * @param {string} name - The package name.
+ * @returns {object} A server status object.
+ */
 async function removePackageByName(name) {
   sql_storage ??= setupSQL();
 
@@ -712,6 +742,7 @@ async function removePackageVersion(packName, semVer) {
  * @desc Collects the hardcoded featured packages array from the storage.js
  * module. Then uses this.getPackageCollectionByName to retreive details of the
  * package.
+ * @returns {object} A server status object.
  */
 async function getFeaturedPackages() {
   let featuredArray = await storage.getFeaturedPackages();
@@ -733,6 +764,7 @@ async function getFeaturedPackages() {
  * @desc Collects the hardcoded featured themes array from the sotrage.js
  * module. Then uses this.getPackageCollectionByName to retreive details of the
  * package.
+ * @returns {object} A server status object.
  */
 async function getFeaturedThemes() {
   let featuredThemeArray = await storage.getFeaturedThemes();
@@ -755,6 +787,7 @@ async function getFeaturedThemes() {
  * @function getTotalPackageEstimate
  * @desc Returns an estimate of how many rows are included in the packages SQL table.
  * Used to aid in trunication and page generation of Link headers for large requests.
+ * @returns {object} A server status object.
  */
 async function getTotalPackageEstimate() {
   try {
@@ -779,8 +812,11 @@ async function getTotalPackageEstimate() {
 }
 
 /**
+ * @async
  * @function getUserByName
  * @description Get a users details providing their username.
+ * @param {string} username - User name string.
+ * @returns {object} A server status object.
  */
 async function getUserByName(username) {
   try {
@@ -804,8 +840,11 @@ async function getUserByName(username) {
 }
 
 /**
+ * @async
  * @function getUserByID
  * @description Get user details providing their ID.
+ * @param {int} id - User id.
+ * @returns {object} A server status object.
  */
 async function getUserByID(id) {
   try {
@@ -837,9 +876,12 @@ async function getUserByID(id) {
 }
 
 /**
+ * @async
  * @function verifyAuth
  * @description Verify if an auth token matches a user, and get that user back if it does.
  * @todo Early write, should be reviewed.
+ * @param {string} token - Token.
+ * @returns {object} A server status object.
  */
 async function verifyAuth(token) {
   try {
@@ -866,6 +908,7 @@ async function verifyAuth(token) {
 }
 
 /**
+ * @async
  * @function updateStars
  * @description TODO Not sure at this point.
  */
@@ -918,6 +961,7 @@ async function updateStars(user, pack) {
 }
 
 /**
+ * @async
  * @function updateDeleteStar
  * @description Needs verification.
  * @todo Write these documents when possible.
@@ -993,6 +1037,7 @@ async function updateDeleteStar(user, pack) {
 }
 
 /**
+ * @async
  * @function getStarredPointersByUserID
  * @description Get all stars of a user by their user id.
  */
@@ -1021,6 +1066,7 @@ async function getStarredPointersByUserID(userid) {
 }
 
 /**
+ * @async
  * @function getStarringUsersByUserName
  * @description Get all starred pointers by a username.
  */
@@ -1039,6 +1085,7 @@ async function getStarredPointersByUserName(username) {
 }
 
 /**
+ * @async
  * @function getStarringUsersByPointer
  * @description Use the pointer of a package to collect all users that have starred it.
  */
@@ -1071,6 +1118,7 @@ async function getStarringUsersByPointer(pointer) {
 }
 
 /**
+ * @async
  * @function simpleSearch
  * @description The current Fuzzy-Finder implementation of search. Ideally eventually
  * will use a more advanced search method.
@@ -1110,10 +1158,11 @@ async function simpleSearch(term, page, dir, sort) {
 }
 
 /**
+ * @async
  * @function getUserCollectionById
  * @description Returns an array of Users and their associated data via the ids.
  * @param {array} ids - The IDs of users to collect the data of.
- * @returns {array} The array of users collected.
+ * @returns {object} A server status object with the array of users collected.
  */
 async function getUserCollectionById(ids) {
   let user_array = [];
@@ -1148,6 +1197,11 @@ async function getUserCollectionById(ids) {
  * data for each. This monolithic function handles trunication of the packages,
  * and sorting, aiming to provide back the raw data, and allow later functions to
  * then reconstruct the JSON as needed.
+ * @param {int} page - Page number.
+ * @param {string} dir - String flag for asc/desc order.
+ * @param {string} dir - String flag for asc/desc order.
+ * @param {string} method - The column name the results have to be sorted by.
+ * @returns {object} A server status object.
  */
 async function getSortedPackages(page, dir, method) {
   // Here will be a monolithic function for returning sortable packages arrays.
