@@ -162,8 +162,8 @@ async function insertNewUser(user) {
     sql_storage ??= setupSQL();
 
     const command = await sql_storage`
-      INSERT INTO users (username, token, avatar)
-      VALUES (${user.username}, ${user.token}, ${user.avatar})
+      INSERT INTO users (username, node_id, avatar)
+      VALUES (${user.username}, ${user.node_id}, ${user.avatar})
       RETURNING *;
     `;
 
@@ -844,11 +844,47 @@ async function getUserByName(username) {
 
 /**
  * @async
- * @function getUserByID
- * @description Get user details providing their ID.
- * @param {int} id - User id.
+ * @function getUserByNodeID
+ * @description Get user details providing their Node ID.
+ * @param {string} id - Users Node ID.
  * @returns {object} A server status object.
  */
+async function getUserByNodeID(id) {
+  try {
+    sql_storage ??= setupSQL();
+
+    const command = await sql_storage`
+      SELECT * FROM users
+      WHERE node_id = ${id};
+    `;
+
+    if (command.count === 0) {
+      return {
+        ok: false,
+        content: `Unable to get User By NODE_ID: ${id}`,
+        short: "Server Error",
+      };
+    }
+
+    return command.count !== 0
+      ? { ok: true, content: command[0] }
+      : {
+          ok: false,
+          content: `Unable to get User By NODE_ID: ${id}`,
+          short: "Server Error",
+        };
+  } catch (err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+/**
+  * @async
+  * @function getUserByID
+  * @desc Get user details providing their ID.
+  * @param {int} id - User ID
+  * @returns {object} A Server status Object.
+  */
 async function getUserByID(id) {
   try {
     sql_storage ??= setupSQL();
@@ -861,8 +897,8 @@ async function getUserByID(id) {
     if (command.count === 0) {
       return {
         ok: false,
-        content: `Unable to get User By ID: ${id}`,
-        short: "Server Error",
+        content: `Unable to get user by ID: ${id}`,
+        short: "Server Error"
       };
     }
 
@@ -870,14 +906,13 @@ async function getUserByID(id) {
       ? { ok: true, content: command[0] }
       : {
           ok: false,
-          content: `Unable to get User By ID: ${id}`,
-          short: "Server Error",
+          content: `Unable to get user by ID: ${id}`,
+          short: "Server Error"
         };
-  } catch (err) {
-    return { ok: false, content: err, short: "Server Error" };
+  } catch(err) {
+    return { ok: false, content: err, short: "Server Error"};
   }
 }
-
 /**
  * @async
  * @function verifyAuth
@@ -1295,6 +1330,7 @@ module.exports = {
   getTotalPackageEstimate,
   getSortedPackages,
   getUserByName,
+  getUserByNodeID,
   getUserByID,
   verifyAuth,
   getStarredPointersByUserID,

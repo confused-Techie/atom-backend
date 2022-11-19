@@ -4,9 +4,8 @@
  */
 const logger = require("./logger.js");
 const storage = require("./storage.js");
-const { server_url, SALT_ROUNDS } = require("./config.js").getConfig();
+const { server_url } = require("./config.js").getConfig();
 const crypto = require("crypto");
-const bcrypt = require("bcrypt");
 
 /**
  * @async
@@ -452,20 +451,6 @@ class StateStore {
   }
 }
 
-/**
- * @function hashData
- * @desc Takes data and returns the hashed form, according to the hashing settings.
- */
-async function hashData(val) {
-  try {
-    let hash = await bcrypt.hash(val, SALT_ROUNDS);
-
-    return { ok: true, content: hash };
-  } catch (err) {
-    return { ok: false, content: err, short: "Server Error" };
-  }
-}
-
 module.exports = {
   isPackageNameBanned,
   constructPackageObjectFull,
@@ -474,5 +459,4 @@ module.exports = {
   deepCopy,
   engineFilter,
   StateStore,
-  hashData,
 };

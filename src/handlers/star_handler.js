@@ -7,6 +7,8 @@ const logger = require("../logger.js");
 const database = require("../database.js");
 const common = require("./common_handler.js");
 const utils = require("../utils.js");
+const auth = require("../auth.js");
+const query = require("../query.js");
 
 /**
  * @async
@@ -20,10 +22,10 @@ const utils = require("../utils.js");
  */
 async function getStars(req, res) {
   let params = {
-    auth: req.get("Authorization"),
+    auth: query.auth(req)
   };
 
-  let user = await database.verifyAuth(params.auth);
+  let user = await auth.verifyAuth(params.auth);
 
   if (!user.ok) {
     await common.handleError(req, res, user);

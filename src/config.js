@@ -100,9 +100,6 @@ function getConfig() {
       DB_SSL_CERT: process.env.DB_SSL_CERT
         ? process.env.DB_SSL_CERT
         : data.env_variables.DB_SSL_CERT,
-      SALT_ROUNDS: process.env.SALT_ROUNDS
-        ? process.env.SALT_ROUNDS
-        : data.env_variables.SALT_ROUNDS,
     };
   } catch (err) {
     // since this is necessary for the server to startup, we can throw an error here and exit the process.

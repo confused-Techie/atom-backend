@@ -18,6 +18,7 @@ const logger = require("../logger.js");
 const { server_url } = require("../config.js").getConfig();
 const utils = require("../utils.js");
 const database = require("../database.js");
+const auth = require("../auth.js");
 
 /**
  * @async
@@ -94,7 +95,7 @@ async function postPackages(req, res) {
     auth: query.auth(req),
   };
 
-  let user = await database.verifyAuth(params.auth);
+  let user = await auth.verifyAuth(params.auth);
 
   // Check authentication.
   if (!user.ok) {
@@ -336,7 +337,7 @@ async function deletePackagesName(req, res) {
     packageName: decodeURIComponent(req.params.packageName),
   };
 
-  let user = await database.verifyAuth(params.auth);
+  let user = await auth.verifyAuth(params.auth);
 
   if (!user.ok) {
     await common.handleError(req, res, user, 1005);
@@ -377,7 +378,7 @@ async function postPackagesStar(req, res) {
     packageName: decodeURIComponent(req.params.packageName),
   };
 
-  let user = await database.verifyAuth(params.auth);
+  let user = await auth.verifyAuth(params.auth);
 
   if (!user.ok) {
     await common.handleError(req, res, user, 1008);
@@ -442,7 +443,7 @@ async function deletePackagesStar(req, res) {
     packageName: decodeURIComponent(req.params.packageName),
   };
 
-  let user = await database.verifyAuth(params.auth);
+  let user = await auth.verifyAuth(params.auth);
 
   if (!user.ok) {
     await common.handleError(req, res, user);
@@ -527,11 +528,11 @@ async function postPackagesVersion(req, res) {
   let params = {
     tag: query.tag(req),
     rename: query.rename(req),
-    auth: req.get("Authorization"),
+    auth: query.auth(req),
     packageName: decodeURIComponent(req.params.packageName),
   };
 
-  let user = await database.verifyAuth(params.auth);
+  let user = await auth.verifyAuth(params.auth);
 
   if (!user.ok) {
     await common.handleError(req, res, user);
@@ -653,13 +654,13 @@ async function getPackagesVersionTarball(req, res) {
  */
 async function deletePackageVersion(req, res) {
   let params = {
-    auth: req.get("Authorization"),
+    auth: query.auth(req),
     packageName: decodeURIComponent(req.params.packageName),
     versionName: req.params.versionName,
   };
 
   // Verify the user has local and remote permissions
-  let user = await database.verifyAuth(params.auth);
+  let user = await auth.verifyAuth(params.auth);
 
   if (!user.ok) {
     await common.handleError(req, res, user);
@@ -708,7 +709,7 @@ async function postPackagesEventUninstall(req, res) {
     versionName: req.params.versionName,
   };
 
-  let user = await database.verifyAuth(params.auth);
+  let user = await auth.verifyAuth(params.auth);
 
   if (!user.ok) {
     await common.handleError(req, res, user);

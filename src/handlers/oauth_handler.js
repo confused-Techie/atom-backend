@@ -117,37 +117,27 @@ async function getOauth(req, res) {
 
     // now to get a hashed form of their token.
     let access_token = initial_auth.body.access_token;
-    let hash_token = await utils.hashData(access_token);
-
-    if (!hash_token.ok) {
-      await common.handleError(req, res, hash_token);
-      return;
-    }
 
     // Now we have a valid user object, and other data from authentication that we want to put into the DB.
     let userObj = {
       username: user_data.body.login,
-      token: hash_token.content,
+      node_id: user_data.body.node_id,
       avatar: user_data.body.avatar_url,
     };
 
-    let check_user_existance = await database.getUserByName(userObj.username);
+    let check_user_existance = await database.getUserByNodeID(userObj.node_id);
 
     if (check_user_existance.ok) {
       // This means that the user does in fact already exist.
-      // And from there they are likely reauthenticating, and we should refresh their token.
+      // And from there they are likely reauthenticating,
+      // But since we don't save any type of auth tokens, the user just needs a new one
+      // and we should return their new one to them.
 
-      let update_user = await database.updateUser(userObj);
-
-      if (!update_user.ok) {
-        await common.handleError(req, res, update_user);
-        return;
-      }
 
       // before returning lets append their proper access token to the object.
-      update_user.content.access_token = access_token;
+      userObj.token = access_token;
 
-      res.status(200).json(update_user.content);
+      res.status(200).json(userObj);
       logger.httpLog(req, res);
       return;
     }
@@ -165,7 +155,7 @@ async function getOauth(req, res) {
     // And should be redirected to a user page, where they can view their user details.
 
     // Before returning, lets append their access token
-    create_user.content.access_token = access_token;
+    create_user.content.token = access_token;
     res.status(200).json(create_user.content);
     logger.httpLog(req, res);
   } catch (err) {

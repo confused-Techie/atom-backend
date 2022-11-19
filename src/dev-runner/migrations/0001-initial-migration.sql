@@ -27,7 +27,7 @@ CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
   username VARCHAR(256) NOT NULL UNIQUE,
-  token VARCHAR(256) UNIQUE,
+  node_id VARCHAR(256) UNIQUE,
   avatar VARCHAR(100),
   data JSONB
 );
@@ -135,17 +135,17 @@ VALUES (
   '{"name": "atom-material-syntax", "dist": {"tarball":"https://www.atom/io/api/packages/atom-material-syntax/version/1.0.8/tarball"}}'
 );
 
-INSERT INTO users (username, token, avatar)
+INSERT INTO users (username, node_id, avatar)
 VALUES (
-  'dever', 'valid-token', 'https://roadtonowhere.com'
+  'dever', 'dever-nodeid', 'https://roadtonowhere.com'
 ), (
-  'no_perm_user', 'no-valid-token', 'https://roadtonowhere.com'
+  'no_perm_user', 'no-perm-user-nodeid', 'https://roadtonowhere.com'
 ), (
-  'admin_user', 'admin-token', 'https://roadtonowhere.com'
+  'admin_user', 'admin-user-nodeid', 'https://roadtonowhere.com'
 ), (
-  'has-no-stars', 'no-star-token', 'https://roadtonowhere.com'
+  'has-no-stars', 'has-no-stars-nodeid', 'https://roadtonowhere.com'
 ), (
-  'has-all-stars', 'all-star-token', 'https://roadtonowhere.com'
+  'has-all-stars', 'has-all-stars-nodeid', 'https://roadtonowhere.com'
 );
 
 INSERT INTO stars (package, userid)
