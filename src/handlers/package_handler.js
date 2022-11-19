@@ -15,7 +15,6 @@ const common = require("./common_handler.js");
 const query = require("../query.js");
 const git = require("../git.js");
 const logger = require("../logger.js");
-const error = require("../error.js");
 const { server_url } = require("../config.js").getConfig();
 const utils = require("../utils.js");
 const database = require("../database.js");
@@ -128,8 +127,7 @@ async function postPackages(req, res) {
 
   if (exists.ok) {
     // The package exists.
-    error.publishPackageExists(res);
-    logger.httpLog(req, res);
+    await common.packageExists(req, res);
     return;
   }
 
@@ -250,10 +248,10 @@ async function getPackagesSearch(req, res) {
       res.status(200).json([]);
       logger.httpLog(req, res);
       return;
-    } else {
-      await common.handleError(req, res, packs, 1007);
-      return;
     }
+
+    await common.handleError(req, res, packs, 1007);
+    return;
   }
 
   let newPacks = await utils.constructPackageObjectShort(packs.content);
@@ -660,14 +658,7 @@ async function deletePackageVersion(req, res) {
     versionName: req.params.versionName,
   };
 
-  // STEPS:
-
-  /**
-   * - verify the user has local and remote permissions
-   * - mark the specified version for deletion, if version is valid
-   * return res.status(204).send()
-   */
-
+  // Verify the user has local and remote permissions
   let user = await database.verifyAuth(params.auth);
 
   if (!user.ok) {
@@ -682,34 +673,18 @@ async function deletePackageVersion(req, res) {
     return;
   }
 
-  //let pack = await database.getPackageByName(params.packageName);
+  // Mark the specified version for deletion, if version is valid
+  let removeVersion = database.removePackageVersion(
+    params.packageName,
+    params.versionName
+  );
 
-  //if (!pack.ok) {
-  // getting package returned error.
-  //  await common.handleError(req, res, pack);
-  //  return;
-  //}
+  if (!removeVersion.ok) {
+    await common.handleError(req, res, removeVersion);
+    return;
+  }
 
-  //if (!pack.content[params.versionName]) {
-  // the version does not exist.
-  // we will return not found for a non-existant version deletion.
-  //  await common.notFound(req, res);
-  //}
-
-  // the version exists
-  //delete pack.content[params.versionName];
-
-  // now to write back the modified data
-  //let write = database.updatePackageByName(params.packageName, pack.content);
-
-  //if (!write.ok) {
-  //  await common.handleError(req, res, write);
-  //  return;
-  //}
-
-  // successfully wrote the modified data
-  //res.status(204).send();
-  await common.notSupported(req, res);
+  res.status(204).send();
   logger.httpLog(req, res);
 }
 

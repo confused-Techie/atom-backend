@@ -25,12 +25,6 @@ Server. This uses pg-test to set up a database hosted on local Docker. Migrating
 to allow the real server feel, without having access or the risk of the production database. But otherwise runs
 the backend API server as normal.</p>
 </dd>
-<dt><a href="#module_error">error</a></dt>
-<dd><p>Contains different error messages that can be returned, adding them and their
-respective HTTP Status Codes to the <code>Response</code> object provided to them.
-Letting them all be defined in one place for ease of modification, and easily route
-to them from different handlers.</p>
-</dd>
 <dt><a href="#module_git">git</a></dt>
 <dd><p>Assists in interactions between the backend and GitHub.</p>
 </dd>
@@ -140,13 +134,13 @@ with and retreive data from the cloud hosted database instance.
     * [~setupSQL()](#module_database..setupSQL) ⇒ <code>object</code>
     * [~shutdownSQL()](#module_database..shutdownSQL)
     * [~insertNewPackage(pack)](#module_database..insertNewPackage) ⇒ <code>object</code>
-    * [~insertNewUser()](#module_database..insertNewUser)
-    * [~updateUser()](#module_database..updateUser)
-    * [~getPackageByID()](#module_database..getPackageByID)
-    * [~getPackageByName(name, user)](#module_database..getPackageByName)
+    * [~insertNewUser(user)](#module_database..insertNewUser) ⇒ <code>object</code>
+    * [~updateUser(user)](#module_database..updateUser) ⇒ <code>object</code>
+    * [~getPackageByID(id)](#module_database..getPackageByID) ⇒ <code>object</code>
+    * [~getPackageByName(name, user)](#module_database..getPackageByName) ⇒ <code>object</code>
     * [~getPackageVersionByNameAndVersion(name, version)](#module_database..getPackageVersionByNameAndVersion) ⇒ <code>object</code>
-    * [~getPackageCollectionByName()](#module_database..getPackageCollectionByName)
-    * [~getPackageCollectionByID()](#module_database..getPackageCollectionByID)
+    * [~getPackageCollectionByName(packArray)](#module_database..getPackageCollectionByName) ⇒ <code>object</code>
+    * [~getPackageCollectionByID(packArray)](#module_database..getPackageCollectionByID) ⇒ <code>object</code>
     * [~getPointerTable()](#module_database..getPointerTable)
     * [~updatePackageIncrementStarByName(name)](#module_database..updatePackageIncrementStarByName) ⇒ <code>object</code>
     * [~updatePackageDecrementStarByName(name)](#module_database..updatePackageDecrementStarByName) ⇒ <code>object</code>
@@ -154,20 +148,22 @@ with and retreive data from the cloud hosted database instance.
     * [~updatePackageDecrementDownloadByName(name)](#module_database..updatePackageDecrementDownloadByName) ⇒ <code>object</code>
     * [~updatePackageByID(id, data)](#module_database..updatePackageByID) ⇒ <code>object</code>
     * [~updatePackageByName(name, data)](#module_database..updatePackageByName) ⇒ <code>object</code>
-    * [~getFeaturedPackages()](#module_database..getFeaturedPackages)
-    * [~getFeaturedThemes()](#module_database..getFeaturedThemes)
-    * [~getTotalPackageEstimate()](#module_database..getTotalPackageEstimate)
-    * [~getUserByName()](#module_database..getUserByName)
-    * [~getUserByID()](#module_database..getUserByID)
-    * [~verifyAuth()](#module_database..verifyAuth)
+    * [~removePackageByName(name)](#module_database..removePackageByName) ⇒ <code>object</code>
+    * [~removePackageVersion(packName, semVer)](#module_database..removePackageVersion) ⇒ <code>object</code>
+    * [~getFeaturedPackages()](#module_database..getFeaturedPackages) ⇒ <code>object</code>
+    * [~getFeaturedThemes()](#module_database..getFeaturedThemes) ⇒ <code>object</code>
+    * [~getTotalPackageEstimate()](#module_database..getTotalPackageEstimate) ⇒ <code>object</code>
+    * [~getUserByName(username)](#module_database..getUserByName) ⇒ <code>object</code>
+    * [~getUserByID(id)](#module_database..getUserByID) ⇒ <code>object</code>
+    * [~verifyAuth(token)](#module_database..verifyAuth) ⇒ <code>object</code>
     * [~updateStars()](#module_database..updateStars)
     * [~updateDeleteStar()](#module_database..updateDeleteStar)
     * [~getStarredPointersByUserID()](#module_database..getStarredPointersByUserID)
     * [~getStarringUsersByUserName()](#module_database..getStarringUsersByUserName)
     * [~getStarringUsersByPointer()](#module_database..getStarringUsersByPointer)
     * [~simpleSearch()](#module_database..simpleSearch)
-    * [~getUserCollectionById(ids)](#module_database..getUserCollectionById) ⇒ <code>array</code>
-    * [~getSortedPackages()](#module_database..getSortedPackages)
+    * [~getUserCollectionById(ids)](#module_database..getUserCollectionById) ⇒ <code>object</code>
+    * [~getSortedPackages(page, dir, dir, method)](#module_database..getSortedPackages) ⇒ <code>object</code>
 
 <a name="module_database..setupSQL"></a>
 
@@ -199,40 +195,52 @@ Insert a new package inside the DB taking a `Server Object Full` as argument.
 
 <a name="module_database..insertNewUser"></a>
 
-### database~insertNewUser()
-Used to create a new user on the db.
+### database~insertNewUser(user) ⇒ <code>object</code>
+Insert a new user into the database.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
-**Todo**
+**Returns**: <code>object</code> - A server status object.  
 
-- [ ] Write a better doc here.
+| Param | Type | Description |
+| --- | --- | --- |
+| user | <code>object</code> | An object containing information related to the user. |
 
 <a name="module_database..updateUser"></a>
 
-### database~updateUser()
-Updates the user table with new data. Matched by username.
+### database~updateUser(user) ⇒ <code>object</code>
+Given the username, the record of the user is updated with the new token and the avatar.
+a Server Status Object.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
-**Todo**
+**Returns**: <code>object</code> - A server status object.  
 
-- [ ] Write better doc here.
+| Param | Type | Description |
+| --- | --- | --- |
+| user | <code>object</code> | An object containing information related to the user. |
 
 <a name="module_database..getPackageByID"></a>
 
-### database~getPackageByID()
+### database~getPackageByID(id) ⇒ <code>object</code>
 Takes a package pointer UUID, and returns the package object within
 a Server Status Object.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>string</code> | Package UUID. |
+
 <a name="module_database..getPackageByName"></a>
 
-### database~getPackageByName(name, user)
+### database~getPackageByName(name, user) ⇒ <code>object</code>
 Takes a package name and returns the raw SQL package with all its versions.
 This module is also used to get the data to be sent to utils.constructPackageObjectFull()
 in order to convert the query result in Package Object Full format.
 In that case it's recommended to set the user flag as true for security reasons.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -254,17 +262,29 @@ Uses the name of a package and it's version to return the version info.
 
 <a name="module_database..getPackageCollectionByName"></a>
 
-### database~getPackageCollectionByName()
+### database~getPackageCollectionByName(packArray) ⇒ <code>object</code>
 Takes a package name array, and returns an array of the package objects.
 You must ensure that the packArray passed is compatible. This function does not coerce compatibility.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| packArray | <code>Array.&lt;string&gt;</code> | An array of package name strings. |
+
 <a name="module_database..getPackageCollectionByID"></a>
 
-### database~getPackageCollectionByID()
+### database~getPackageCollectionByID(packArray) ⇒ <code>object</code>
 Takes a package pointer array, and returns an array of the package objects.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| packArray | <code>Array.&lt;int&gt;</code> | An array of package id. |
+
 <a name="module_database..getPointerTable"></a>
 
 ### database~getPointerTable()
@@ -354,50 +374,97 @@ Updates the packages content, with new data.
 | name | <code>string</code> | The packages name. |
 | data | <code>object</code> | The object data to update it with. |
 
+<a name="module_database..removePackageByName"></a>
+
+### database~removePackageByName(name) ⇒ <code>object</code>
+Given a package name, removes its record alongside its names, versions, stars.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The package name. |
+
+<a name="module_database..removePackageVersion"></a>
+
+### database~removePackageVersion(packName, semVer) ⇒ <code>object</code>
+Mark a version of a specific package as removed. This does not delete the record,
+just mark the status as removed.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| packName | <code>string</code> | The package name. |
+| semVer | <code>string</code> | The version to remove. |
+
 <a name="module_database..getFeaturedPackages"></a>
 
-### database~getFeaturedPackages()
+### database~getFeaturedPackages() ⇒ <code>object</code>
 Collects the hardcoded featured packages array from the storage.js
 module. Then uses this.getPackageCollectionByName to retreive details of the
 package.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
 <a name="module_database..getFeaturedThemes"></a>
 
-### database~getFeaturedThemes()
+### database~getFeaturedThemes() ⇒ <code>object</code>
 Collects the hardcoded featured themes array from the sotrage.js
 module. Then uses this.getPackageCollectionByName to retreive details of the
 package.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
 <a name="module_database..getTotalPackageEstimate"></a>
 
-### database~getTotalPackageEstimate()
+### database~getTotalPackageEstimate() ⇒ <code>object</code>
 Returns an estimate of how many rows are included in the packages SQL table.
 Used to aid in trunication and page generation of Link headers for large requests.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
 <a name="module_database..getUserByName"></a>
 
-### database~getUserByName()
+### database~getUserByName(username) ⇒ <code>object</code>
 Get a users details providing their username.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| username | <code>string</code> | User name string. |
+
 <a name="module_database..getUserByID"></a>
 
-### database~getUserByID()
+### database~getUserByID(id) ⇒ <code>object</code>
 Get user details providing their ID.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>int</code> | User id. |
+
 <a name="module_database..verifyAuth"></a>
 
-### database~verifyAuth()
+### database~verifyAuth(token) ⇒ <code>object</code>
 Verify if an auth token matches a user, and get that user back if it does.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
 **Todo**
 
 - [ ] Early write, should be reviewed.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| token | <code>string</code> | Token. |
 
 <a name="module_database..updateStars"></a>
 
@@ -442,11 +509,11 @@ will use a more advanced search method.
 **Kind**: inner method of [<code>database</code>](#module_database)  
 <a name="module_database..getUserCollectionById"></a>
 
-### database~getUserCollectionById(ids) ⇒ <code>array</code>
+### database~getUserCollectionById(ids) ⇒ <code>object</code>
 Returns an array of Users and their associated data via the ids.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
-**Returns**: <code>array</code> - The array of users collected.  
+**Returns**: <code>object</code> - A server status object with the array of users collected.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -454,13 +521,22 @@ Returns an array of Users and their associated data via the ids.
 
 <a name="module_database..getSortedPackages"></a>
 
-### database~getSortedPackages()
+### database~getSortedPackages(page, dir, dir, method) ⇒ <code>object</code>
 Takes the page, direction, and sort method returning the raw sql package
 data for each. This monolithic function handles trunication of the packages,
 and sorting, aiming to provide back the raw data, and allow later functions to
 then reconstruct the JSON as needed.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| page | <code>int</code> | Page number. |
+| dir | <code>string</code> | String flag for asc/desc order. |
+| dir | <code>string</code> | String flag for asc/desc order. |
+| method | <code>string</code> | The column name the results have to be sorted by. |
+
 <a name="module_debug_util"></a>
 
 ## debug\_util
@@ -512,143 +588,6 @@ Similar to `server.js` exterminate(), except used for the `dev_server.js` instan
 | callee | <code>string</code> | Simply a way to better log what called the server to shutdown. |
 | serve | <code>object</code> | The instance of the ExpressJS `app` that has started listening and can be called to shutdown. |
 | db | <code>object</code> | The instance of the `database.js` module, used to properly close its connections during a graceful shutdown. |
-
-<a name="module_error"></a>
-
-## error
-Contains different error messages that can be returned, adding them and their
-respective HTTP Status Codes to the `Response` object provided to them.
-Letting them all be defined in one place for ease of modification, and easily route
-to them from different handlers.
-
-
-* [error](#module_error)
-    * [~notFoundJSON(res)](#module_error..notFoundJSON)
-    * [~siteWide404(res)](#module_error..siteWide404)
-    * [~missingAuthJSON(res)](#module_error..missingAuthJSON)
-    * [~serverErrorJSON(res)](#module_error..serverErrorJSON)
-    * [~publishPackageExists(res)](#module_error..publishPackageExists)
-    * [~badRepoJSON(res)](#module_error..badRepoJSON)
-    * [~badPackageJSON(res)](#module_error..badPackageJSON)
-    * [~unsupportedJSON(res)](#module_error..unsupportedJSON)
-
-<a name="module_error..notFoundJSON"></a>
-
-### error~notFoundJSON(res)
-The Standard JSON Handling when an object is not found.
-###### Setting:
-* Status Code: 404
-* JSON Respone Body: message: "Not Found"
-
-**Kind**: inner method of [<code>error</code>](#module_error)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
-
-<a name="module_error..siteWide404"></a>
-
-### error~siteWide404(res)
-The standard Website Page 404 not found handler.
-
-**Kind**: inner method of [<code>error</code>](#module_error)  
-**Todo**
-
-- [ ] Currently this returns a JSON object, but in the future should return an HTML Not Found page.
-###### Setting Currently:
-* Status Code: 404
-* JSON Response Body: message: "This is a standin for the proper site wide 404 page."
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
-
-<a name="module_error..missingAuthJSON"></a>
-
-### error~missingAuthJSON(res)
-JSON Handling when authentication fails.
-###### Setting:
-* Status Code: 401
-* JSON Response Body: message: "Requires authentication. Please update your token if you haven't done so recently."
-
-**Kind**: inner method of [<code>error</code>](#module_error)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
-
-<a name="module_error..serverErrorJSON"></a>
-
-### error~serverErrorJSON(res)
-The Standard Server Error JSON Endpoint.
-###### Setting:
-* Status Code: 500
-* JSON Response Body: message: "Application Error"
-
-**Kind**: inner method of [<code>error</code>](#module_error)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
-
-<a name="module_error..publishPackageExists"></a>
-
-### error~publishPackageExists(res)
-JSON Response announcing a package already exists.
-###### Setting:
-* Status Code: 409
-* JSON Response Body: message: "A Package by that name already exists."
-
-**Kind**: inner method of [<code>error</code>](#module_error)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
-
-<a name="module_error..badRepoJSON"></a>
-
-### error~badRepoJSON(res)
-JSON Response announcing that the repo doesn't exist, or is inaccessible.
-###### Setting:
-* Status Code: 400
-* JSON Response Body: message: That repo does not exist, isn't an atom package, or atombot does not have access.
-
-**Kind**: inner method of [<code>error</code>](#module_error)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
-
-<a name="module_error..badPackageJSON"></a>
-
-### error~badPackageJSON(res)
-JSON Response annoucning that the package.json of a repo is invalid.
-###### Setting:
-* Status Code: 400
-* JSON Response Body: message: The package.json at owner/repo isn't valid.
-
-**Kind**: inner method of [<code>error</code>](#module_error)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
-
-<a name="module_error..unsupportedJSON"></a>
-
-### error~unsupportedJSON(res)
-This is a standard JSON endpoint to define an endpoint that is currently not supported.
-Used currently to delineate which endpoints have not been fully implemented. Or a specific error endpoint
-that has not been written yet.
-###### Setting:
-* Status Code: 501
-* JSON Response Body: message: "While under development this feature is not supported."
-
-**Kind**: inner method of [<code>error</code>](#module_error)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
 <a name="module_git"></a>
 
@@ -1262,9 +1201,10 @@ Provides a simplistic way to refer to implement common endpoint returns.
 So these can be called as an async function without more complex functions, reducing
 verbosity, and duplication within the codebase.
 
-**Implements**: <code>error</code>, <code>logger</code>  
+**Implements**: <code>logger</code>  
 
 * [common_handler](#module_common_handler)
+    * [~handleError(req, res, obj)](#module_common_handler..handleError)
     * [~authFail(req, res, user)](#module_common_handler..authFail)
     * [~serverError(req, res, err)](#module_common_handler..serverError)
     * [~notFound(req, res)](#module_common_handler..notFound)
@@ -1272,101 +1212,8 @@ verbosity, and duplication within the codebase.
     * [~siteWideNotFound(req, res)](#module_common_handler..siteWideNotFound)
     * [~badRepoJSON(req, res)](#module_common_handler..badRepoJSON)
     * [~badPackageJSON(req, res)](#module_common_handler..badPackageJSON)
-    * [~handleError(req, res, obj)](#module_common_handler..handleError)
-
-<a name="module_common_handler..authFail"></a>
-
-### common_handler~authFail(req, res, user)
-Will take the <b>failed</b> user object from VerifyAuth, and respond for the endpoint as
-either a "Server Error" or a "Bad Auth", whichever is correct based on the Error bubbled from VerifyAuth.
-
-**Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
-**Implements**: <code>error.MissingAuthJSON</code>, <code>error.ServerErrorJSON</code>, <code>logger.HTTPLog</code>, <code>logger.ErrorLog</code>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
-| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
-| user | <code>object</code> | The Raw Status Object of the User, expected to return from `VerifyAuth`. |
-
-<a name="module_common_handler..serverError"></a>
-
-### common_handler~serverError(req, res, err)
-Returns a standard Server Error to the user as JSON. Logging the detailed error message to the server.
-
-**Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
-**Implements**: <code>error.ServerErrorJSON</code>, <code>logger.HTTPLog</code>, <code>logger.ErrorLog</code>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
-| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
-| err | <code>string</code> | The detailed error message to log server side. |
-
-<a name="module_common_handler..notFound"></a>
-
-### common_handler~notFound(req, res)
-Standard endpoint to return the JSON Not Found error to the user.
-
-**Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
-**Implements**: <code>error.NotFoundJSON</code>, <code>logger.HTTPLog</code>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
-| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
-
-<a name="module_common_handler..notSupported"></a>
-
-### common_handler~notSupported(req, res)
-Returns a Not Supported message to the user.
-
-**Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
-**Implements**: <code>error.UnsupportedJSON</code>, <code>logger.HTTPLog</code>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
-| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
-
-<a name="module_common_handler..siteWideNotFound"></a>
-
-### common_handler~siteWideNotFound(req, res)
-Returns the SiteWide 404 page to the end user.
-
-**Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
-**Implements**: <code>error.SiteWide404</code>, <code>logger.HTTPLog</code>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
-| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
-
-<a name="module_common_handler..badRepoJSON"></a>
-
-### common_handler~badRepoJSON(req, res)
-Returns the BadRepoJSON message to the user.
-
-**Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
-**Implements**: <code>error.BadRepoJSON</code>, <code>logger.HTTPLog</code>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
-| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
-
-<a name="module_common_handler..badPackageJSON"></a>
-
-### common_handler~badPackageJSON(req, res)
-Returns the BadPackageJSON message to the user.
-
-**Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
-**Implements**: <code>error.BadPackageJSON</code>, <code>logger.HTTPLog</code>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
-| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+    * [~packageExists(req, res)](#module_common_handler..packageExists)
+    * [~missingAuthJSON(req, res)](#module_common_handler..missingAuthJSON)
 
 <a name="module_common_handler..handleError"></a>
 
@@ -1382,6 +1229,150 @@ Note that it's designed to be called as the last async function before the retur
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 | res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 | obj | <code>object</code> | the Raw Status Object of the User, expected to return from `VerifyAuth`. |
+
+<a name="module_common_handler..authFail"></a>
+
+### common_handler~authFail(req, res, user)
+Will take the <b>failed</b> user object from VerifyAuth, and respond for the endpoint as
+either a "Server Error" or a "Bad Auth", whichever is correct based on the Error bubbled from VerifyAuth.
+
+**Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
+**Implements**: <code>MissingAuthJSON</code>, <code>ServerErrorJSON</code>, <code>logger.HTTPLog</code>, <code>logger.ErrorLog</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+| user | <code>object</code> | The Raw Status Object of the User, expected to return from `VerifyAuth`. |
+
+<a name="module_common_handler..serverError"></a>
+
+### common_handler~serverError(req, res, err)
+Returns a standard Server Error to the user as JSON. Logging the detailed error message to the server.
+###### Setting:
+* Status Code: 500
+* JSON Response Body: message: "Application Error"
+
+**Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
+**Implements**: <code>logger.HTTPLog</code>, <code>logger.ErrorLog</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+| err | <code>string</code> | The detailed error message to log server side. |
+
+<a name="module_common_handler..notFound"></a>
+
+### common_handler~notFound(req, res)
+Standard endpoint to return the JSON Not Found error to the user.
+###### Setting:
+* Status Code: 404
+* JSON Respone Body: message: "Not Found"
+
+**Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
+**Implements**: <code>logger.HTTPLog</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_common_handler..notSupported"></a>
+
+### common_handler~notSupported(req, res)
+Returns a Not Supported message to the user.
+###### Setting:
+* Status Code: 501
+* JSON Response Body: message: "While under development this feature is not supported."
+
+**Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
+**Implements**: <code>logger.HTTPLog</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_common_handler..siteWideNotFound"></a>
+
+### common_handler~siteWideNotFound(req, res)
+Returns the SiteWide 404 page to the end user.
+###### Setting Currently:
+* Status Code: 404
+* JSON Response Body: message: "This is a standin for the proper site wide 404 page."
+
+**Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
+**Implements**: <code>logger.HTTPLog</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_common_handler..badRepoJSON"></a>
+
+### common_handler~badRepoJSON(req, res)
+Returns the BadRepoJSON message to the user.
+###### Setting:
+* Status Code: 400
+* JSON Response Body: message: That repo does not exist, isn't an atom package, or atombot does not have access.
+
+**Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
+**Implements**: <code>logger.HTTPLog</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_common_handler..badPackageJSON"></a>
+
+### common_handler~badPackageJSON(req, res)
+Returns the BadPackageJSON message to the user.
+###### Setting:
+* Status Code: 400
+* JSON Response Body: message: The package.json at owner/repo isn't valid.
+
+**Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
+**Implements**: <code>logger.HTTPLog</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_common_handler..packageExists"></a>
+
+### common_handler~packageExists(req, res)
+Returns the PackageExist message to the user.
+###### Setting:
+* Status Code: 409
+* JSON Response Body: message: "A Package by that name already exists."
+
+**Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
+**Implements**: <code>logger.HTTPLog</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+<a name="module_common_handler..missingAuthJSON"></a>
+
+### common_handler~missingAuthJSON(req, res)
+Returns the MissingAuth message to the user.
+###### Setting:
+* Status Code: 401
+* JSON Response Body: message: "Requires authentication. Please update your token if you haven't done so recently."
+
+**Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
+**Implements**: <code>logger.HTTPLog</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
 
 <a name="module_oauth_handler"></a>
 
@@ -1462,7 +1453,6 @@ Endpoint Handlers in all relating to the packages themselves.
     * [~getPackagesVersion(req, res)](#module_package_handler..getPackagesVersion)
     * [~getPackagesVersionTarball(req, res)](#module_package_handler..getPackagesVersionTarball)
     * [~deletePackageVersion(req, res)](#module_package_handler..deletePackageVersion)
-        * [~user](#module_package_handler..deletePackageVersion..user)
     * [~postPackagesEventUninstall(req, res)](#module_package_handler..postPackagesEventUninstall)
 
 <a name="module_package_handler..getPackages"></a>
@@ -1744,14 +1734,6 @@ Allows a user to delete a specific version of their package.
 | <code>http\_method</code> | DELETE |
 | <code>http\_endpoint</code> | /api/packages/:packageName/versions/:versionName |
 
-<a name="module_package_handler..deletePackageVersion..user"></a>
-
-#### deletePackageVersion~user
-- verify the user has local and remote permissions
-- mark the specified version for deletion, if version is valid
-return res.status(204).send()
-
-**Kind**: inner property of [<code>deletePackageVersion</code>](#module_package_handler..deletePackageVersion)  
 <a name="module_package_handler..postPackagesEventUninstall"></a>
 
 ### package_handler~postPackagesEventUninstall(req, res)
