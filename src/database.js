@@ -716,7 +716,7 @@ async function removePackageVersion(packName, semVer) {
     const command = await sql_storage`
        UPDATE versions
        SET status = 'removed'
-       WHERE semver == ${semVer} AND pointer IN (
+       WHERE semver = ${semVer} AND package IN (
          SELECT pointer
          FROM names
          WHERE name = ${packName}

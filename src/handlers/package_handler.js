@@ -650,7 +650,6 @@ async function getPackagesVersionTarball(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @property {http_method} - DELETE
  * @property {http_endpoint} - /api/packages/:packageName/versions/:versionName
- * @todo Migrate to new Database Schema
  */
 async function deletePackageVersion(req, res) {
   let params = {
@@ -674,8 +673,16 @@ async function deletePackageVersion(req, res) {
     return;
   }
 
+  // Lets also first check to make sure the package exists.
+  let packageExists = await database.getPackageByName(params.packageName);
+
+  if (!packageExists.ok) {
+    await common.handleError(req, res, packageExists);
+    return;
+  }
+
   // Mark the specified version for deletion, if version is valid
-  let removeVersion = database.removePackageVersion(
+  let removeVersion = await database.removePackageVersion(
     params.packageName,
     params.versionName
   );

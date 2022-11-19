@@ -553,7 +553,35 @@ describe("GET /api/packages/:packageName/versions/:versionName/tarball", () => {
 });
 
 describe("DELETE /api/packages/:packageName/versions/:versionName", () => {
-  test.todo("Write all of these");
+  test.todo("Finish these tests");
+  test("Returns 401 with No Auth", async () => {
+    const res = await request(app).delete("/api/packages/langauge-css/versions/0.45.7");
+    expect(res).toHaveHTTPCode(401);
+  });
+  test("Returns Bad Auth Message with No Auth", async () => {
+    const res = await request(app).delete("/api/packages/langauge-css/versions/0.45.7");
+    expect(res.body.message).toEqual(msg.badAuth);
+  });
+  test("Returns 401 with Bad Auth", async () => {
+    const res = await request(app).delete("/api/packages/language-css/versions/0.45.7").set("Authorization", "invalid");
+    expect(res).toHaveHTTPCode(401);
+  });
+  test("Returns Bad Auth Message with Bad Auth", async () => {
+    const res = await request(app).delete("/api/packages/langauge-css/versions/0.45.7").set("Authorization", "invalid");
+    expect(res.body.message).toEqual(msg.badAuth);
+  });
+  test("Returns 404 with Bad Package", async () => {
+    const res = await request(app).delete("/api/packages/language-golang/versions/1.0.0").set("Authorization", "admin-token");
+    expect(res).toHaveHTTPCode(404);
+  });
+  test("Returns Not Found Msg with Bad Package", async () => {
+    const res = await request(app).delete("/api/packages/langauge-golang/versions/1.0.0").set("Authorization", "admin-token");
+    expect(res.body.message).toEqual(msg.notFound);
+  });
+  test("Returns 404 with Valid Package & Bad Version", async () => {
+    const res = await request(app).delete("/api/packages/language-css/versions/1.0.0").set("Authorization", "admin-token");
+    expect(res).toHaveHTTPCode(404);
+  });
 });
 
 describe("POST /api/packages/:packageName/versions/:versionName/events/uninstall", () => {
