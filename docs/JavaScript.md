@@ -140,13 +140,13 @@ with and retreive data from the cloud hosted database instance.
     * [~setupSQL()](#module_database..setupSQL) ⇒ <code>object</code>
     * [~shutdownSQL()](#module_database..shutdownSQL)
     * [~insertNewPackage(pack)](#module_database..insertNewPackage) ⇒ <code>object</code>
-    * [~insertNewUser()](#module_database..insertNewUser)
-    * [~updateUser()](#module_database..updateUser)
-    * [~getPackageByID()](#module_database..getPackageByID)
-    * [~getPackageByName(name, user)](#module_database..getPackageByName)
+    * [~insertNewUser(user)](#module_database..insertNewUser) ⇒ <code>object</code>
+    * [~updateUser(user)](#module_database..updateUser) ⇒ <code>object</code>
+    * [~getPackageByID(id)](#module_database..getPackageByID) ⇒ <code>object</code>
+    * [~getPackageByName(name, user)](#module_database..getPackageByName) ⇒ <code>object</code>
     * [~getPackageVersionByNameAndVersion(name, version)](#module_database..getPackageVersionByNameAndVersion) ⇒ <code>object</code>
-    * [~getPackageCollectionByName()](#module_database..getPackageCollectionByName)
-    * [~getPackageCollectionByID()](#module_database..getPackageCollectionByID)
+    * [~getPackageCollectionByName(packArray)](#module_database..getPackageCollectionByName) ⇒ <code>object</code>
+    * [~getPackageCollectionByID(packArray)](#module_database..getPackageCollectionByID) ⇒ <code>object</code>
     * [~getPointerTable()](#module_database..getPointerTable)
     * [~updatePackageIncrementStarByName(name)](#module_database..updatePackageIncrementStarByName) ⇒ <code>object</code>
     * [~updatePackageDecrementStarByName(name)](#module_database..updatePackageDecrementStarByName) ⇒ <code>object</code>
@@ -154,20 +154,22 @@ with and retreive data from the cloud hosted database instance.
     * [~updatePackageDecrementDownloadByName(name)](#module_database..updatePackageDecrementDownloadByName) ⇒ <code>object</code>
     * [~updatePackageByID(id, data)](#module_database..updatePackageByID) ⇒ <code>object</code>
     * [~updatePackageByName(name, data)](#module_database..updatePackageByName) ⇒ <code>object</code>
-    * [~getFeaturedPackages()](#module_database..getFeaturedPackages)
-    * [~getFeaturedThemes()](#module_database..getFeaturedThemes)
-    * [~getTotalPackageEstimate()](#module_database..getTotalPackageEstimate)
-    * [~getUserByName()](#module_database..getUserByName)
-    * [~getUserByID()](#module_database..getUserByID)
-    * [~verifyAuth()](#module_database..verifyAuth)
+    * [~removePackageByName(name)](#module_database..removePackageByName) ⇒ <code>object</code>
+    * [~removePackageVersion(packName, semVer)](#module_database..removePackageVersion) ⇒ <code>object</code>
+    * [~getFeaturedPackages()](#module_database..getFeaturedPackages) ⇒ <code>object</code>
+    * [~getFeaturedThemes()](#module_database..getFeaturedThemes) ⇒ <code>object</code>
+    * [~getTotalPackageEstimate()](#module_database..getTotalPackageEstimate) ⇒ <code>object</code>
+    * [~getUserByName(username)](#module_database..getUserByName) ⇒ <code>object</code>
+    * [~getUserByID(id)](#module_database..getUserByID) ⇒ <code>object</code>
+    * [~verifyAuth(token)](#module_database..verifyAuth) ⇒ <code>object</code>
     * [~updateStars()](#module_database..updateStars)
     * [~updateDeleteStar()](#module_database..updateDeleteStar)
     * [~getStarredPointersByUserID()](#module_database..getStarredPointersByUserID)
     * [~getStarringUsersByUserName()](#module_database..getStarringUsersByUserName)
     * [~getStarringUsersByPointer()](#module_database..getStarringUsersByPointer)
     * [~simpleSearch()](#module_database..simpleSearch)
-    * [~getUserCollectionById(ids)](#module_database..getUserCollectionById) ⇒ <code>array</code>
-    * [~getSortedPackages()](#module_database..getSortedPackages)
+    * [~getUserCollectionById(ids)](#module_database..getUserCollectionById) ⇒ <code>object</code>
+    * [~getSortedPackages(page, dir, dir, method)](#module_database..getSortedPackages) ⇒ <code>object</code>
 
 <a name="module_database..setupSQL"></a>
 
@@ -199,40 +201,52 @@ Insert a new package inside the DB taking a `Server Object Full` as argument.
 
 <a name="module_database..insertNewUser"></a>
 
-### database~insertNewUser()
-Used to create a new user on the db.
+### database~insertNewUser(user) ⇒ <code>object</code>
+Insert a new user into the database.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
-**Todo**
+**Returns**: <code>object</code> - A server status object.  
 
-- [ ] Write a better doc here.
+| Param | Type | Description |
+| --- | --- | --- |
+| user | <code>object</code> | An object containing information related to the user. |
 
 <a name="module_database..updateUser"></a>
 
-### database~updateUser()
-Updates the user table with new data. Matched by username.
+### database~updateUser(user) ⇒ <code>object</code>
+Given the username, the record of the user is updated with the new token and the avatar.
+a Server Status Object.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
-**Todo**
+**Returns**: <code>object</code> - A server status object.  
 
-- [ ] Write better doc here.
+| Param | Type | Description |
+| --- | --- | --- |
+| user | <code>object</code> | An object containing information related to the user. |
 
 <a name="module_database..getPackageByID"></a>
 
-### database~getPackageByID()
+### database~getPackageByID(id) ⇒ <code>object</code>
 Takes a package pointer UUID, and returns the package object within
 a Server Status Object.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>string</code> | Package UUID. |
+
 <a name="module_database..getPackageByName"></a>
 
-### database~getPackageByName(name, user)
+### database~getPackageByName(name, user) ⇒ <code>object</code>
 Takes a package name and returns the raw SQL package with all its versions.
 This module is also used to get the data to be sent to utils.constructPackageObjectFull()
 in order to convert the query result in Package Object Full format.
 In that case it's recommended to set the user flag as true for security reasons.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -254,17 +268,29 @@ Uses the name of a package and it's version to return the version info.
 
 <a name="module_database..getPackageCollectionByName"></a>
 
-### database~getPackageCollectionByName()
+### database~getPackageCollectionByName(packArray) ⇒ <code>object</code>
 Takes a package name array, and returns an array of the package objects.
 You must ensure that the packArray passed is compatible. This function does not coerce compatibility.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| packArray | <code>Array.&lt;string&gt;</code> | An array of package name strings. |
+
 <a name="module_database..getPackageCollectionByID"></a>
 
-### database~getPackageCollectionByID()
+### database~getPackageCollectionByID(packArray) ⇒ <code>object</code>
 Takes a package pointer array, and returns an array of the package objects.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| packArray | <code>Array.&lt;int&gt;</code> | An array of package id. |
+
 <a name="module_database..getPointerTable"></a>
 
 ### database~getPointerTable()
@@ -354,50 +380,97 @@ Updates the packages content, with new data.
 | name | <code>string</code> | The packages name. |
 | data | <code>object</code> | The object data to update it with. |
 
+<a name="module_database..removePackageByName"></a>
+
+### database~removePackageByName(name) ⇒ <code>object</code>
+Given a package name, removes its record alongside its names, versions, stars.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The package name. |
+
+<a name="module_database..removePackageVersion"></a>
+
+### database~removePackageVersion(packName, semVer) ⇒ <code>object</code>
+Mark a version of a specific package as removed. This does not delete the record,
+just mark the status as removed.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| packName | <code>string</code> | The package name. |
+| semVer | <code>string</code> | The version to remove. |
+
 <a name="module_database..getFeaturedPackages"></a>
 
-### database~getFeaturedPackages()
+### database~getFeaturedPackages() ⇒ <code>object</code>
 Collects the hardcoded featured packages array from the storage.js
 module. Then uses this.getPackageCollectionByName to retreive details of the
 package.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
 <a name="module_database..getFeaturedThemes"></a>
 
-### database~getFeaturedThemes()
+### database~getFeaturedThemes() ⇒ <code>object</code>
 Collects the hardcoded featured themes array from the sotrage.js
 module. Then uses this.getPackageCollectionByName to retreive details of the
 package.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
 <a name="module_database..getTotalPackageEstimate"></a>
 
-### database~getTotalPackageEstimate()
+### database~getTotalPackageEstimate() ⇒ <code>object</code>
 Returns an estimate of how many rows are included in the packages SQL table.
 Used to aid in trunication and page generation of Link headers for large requests.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
 <a name="module_database..getUserByName"></a>
 
-### database~getUserByName()
+### database~getUserByName(username) ⇒ <code>object</code>
 Get a users details providing their username.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| username | <code>string</code> | User name string. |
+
 <a name="module_database..getUserByID"></a>
 
-### database~getUserByID()
+### database~getUserByID(id) ⇒ <code>object</code>
 Get user details providing their ID.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>int</code> | User id. |
+
 <a name="module_database..verifyAuth"></a>
 
-### database~verifyAuth()
+### database~verifyAuth(token) ⇒ <code>object</code>
 Verify if an auth token matches a user, and get that user back if it does.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
 **Todo**
 
 - [ ] Early write, should be reviewed.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| token | <code>string</code> | Token. |
 
 <a name="module_database..updateStars"></a>
 
@@ -442,11 +515,11 @@ will use a more advanced search method.
 **Kind**: inner method of [<code>database</code>](#module_database)  
 <a name="module_database..getUserCollectionById"></a>
 
-### database~getUserCollectionById(ids) ⇒ <code>array</code>
+### database~getUserCollectionById(ids) ⇒ <code>object</code>
 Returns an array of Users and their associated data via the ids.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
-**Returns**: <code>array</code> - The array of users collected.  
+**Returns**: <code>object</code> - A server status object with the array of users collected.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -454,13 +527,22 @@ Returns an array of Users and their associated data via the ids.
 
 <a name="module_database..getSortedPackages"></a>
 
-### database~getSortedPackages()
+### database~getSortedPackages(page, dir, dir, method) ⇒ <code>object</code>
 Takes the page, direction, and sort method returning the raw sql package
 data for each. This monolithic function handles trunication of the packages,
 and sorting, aiming to provide back the raw data, and allow later functions to
 then reconstruct the JSON as needed.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| page | <code>int</code> | Page number. |
+| dir | <code>string</code> | String flag for asc/desc order. |
+| dir | <code>string</code> | String flag for asc/desc order. |
+| method | <code>string</code> | The column name the results have to be sorted by. |
+
 <a name="module_debug_util"></a>
 
 ## debug\_util
@@ -1462,7 +1544,6 @@ Endpoint Handlers in all relating to the packages themselves.
     * [~getPackagesVersion(req, res)](#module_package_handler..getPackagesVersion)
     * [~getPackagesVersionTarball(req, res)](#module_package_handler..getPackagesVersionTarball)
     * [~deletePackageVersion(req, res)](#module_package_handler..deletePackageVersion)
-        * [~user](#module_package_handler..deletePackageVersion..user)
     * [~postPackagesEventUninstall(req, res)](#module_package_handler..postPackagesEventUninstall)
 
 <a name="module_package_handler..getPackages"></a>
@@ -1744,14 +1825,6 @@ Allows a user to delete a specific version of their package.
 | <code>http\_method</code> | DELETE |
 | <code>http\_endpoint</code> | /api/packages/:packageName/versions/:versionName |
 
-<a name="module_package_handler..deletePackageVersion..user"></a>
-
-#### deletePackageVersion~user
-- verify the user has local and remote permissions
-- mark the specified version for deletion, if version is valid
-return res.status(204).send()
-
-**Kind**: inner property of [<code>deletePackageVersion</code>](#module_package_handler..deletePackageVersion)  
 <a name="module_package_handler..postPackagesEventUninstall"></a>
 
 ### package_handler~postPackagesEventUninstall(req, res)
