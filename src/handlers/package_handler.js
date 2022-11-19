@@ -127,7 +127,7 @@ async function postPackages(req, res) {
 
   if (exists.ok) {
     // The package exists.
-    common.packageExists(req, res);
+    await common.packageExists(req, res);
     return;
   }
 
