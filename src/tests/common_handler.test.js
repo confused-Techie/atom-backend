@@ -52,7 +52,7 @@ test("AuthFail Modifies 'Bad Auth' HTTP Status and Body", async () => {
   };
 
   await common.authFail(req, res, user);
-  
+
   expect(res.statusCode).toBe(401);
   expect(res.JSONObj).toStrictEqual({
     message:
@@ -64,7 +64,7 @@ test("ServerError Modifies HTTP Status and Body", async () => {
   let res = new NewRes();
   let req = new NewReq();
   let err = "DEV Error";
-  
+
   await common.serverError(req, res, err);
 
   expect(res.statusCode).toBe(500);
@@ -74,7 +74,7 @@ test("ServerError Modifies HTTP Status and Body", async () => {
 test("NotFound Modifies HTTP Status and body", async () => {
   let res = new NewRes();
   let req = new NewReq();
-  
+
   await common.notFound(req, res);
 
   expect(res.statusCode).toBe(404);
@@ -108,7 +108,7 @@ test("SiteWideNotFound Modifies HTTP Status and Body", async () => {
 test("BadRepoJSON Modifies HTTP Status", async () => {
   let res = new NewRes();
   let req = new NewReq();
- 
+
   await common.badRepoJSON(req, res);
 
   expect(res.statusCode).toBe(400);
@@ -128,7 +128,7 @@ test("BadRepoJSON Modifies JSON", async () => {
 test("BadPackageJSON Modifies HTTP Status and Body", async () => {
   let res = new NewRes();
   let req = new NewReq();
-  
+
   await common.badPackageJSON(req, res);
 
   expect(res.statusCode).toBe(400);
@@ -140,11 +140,9 @@ test("BadPackageJSON Modifies HTTP Status and Body", async () => {
 test("PackageExists Modifies HTTP Status and Body", async () => {
   let res = new NewRes();
   let req = new NewReq();
-  
+
   await common.packageExists(req, res);
 
   expect(res.statusCode).toBe(409);
-  expect(res.JSONObj.message).toBe(
-    "A Package by that name already exists.",
-  );
+  expect(res.JSONObj.message).toBe("A Package by that name already exists.");
 });

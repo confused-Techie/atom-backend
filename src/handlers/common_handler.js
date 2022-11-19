@@ -18,7 +18,7 @@ const logger = require("../logger.js");
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @param {object} obj - the Raw Status Object of the User, expected to return from `VerifyAuth`.
  */
- async function handleError(req, res, obj, num) {
+async function handleError(req, res, obj, num) {
   switch (obj.short) {
     case "Not Found":
       await notFound(req, res);
@@ -63,7 +63,7 @@ async function authFail(req, res, user, num) {
     case "Bad Auth":
     case "Auth Fail":
     case "No Repo Access": // support for being passed a git return.
-      await missingAuthJSON(req, res);      
+      await missingAuthJSON(req, res);
       break;
     default:
       await serverError(req, res, user.content, num);
@@ -118,7 +118,7 @@ async function notFound(req, res) {
  * @implements {logger.HTTPLog}
  */
 async function notSupported(req, res) {
-  const message = "While under development this feature is not supported."
+  const message = "While under development this feature is not supported.";
   res.status(501).json({ message });
   logger.httpLog(req, res);
 }
@@ -153,7 +153,8 @@ async function siteWideNotFound(req, res) {
  * @implements {logger.HTTPLog}
  */
 async function badRepoJSON(req, res) {
-  const message = "That repo does not exist, isn't an atom package, or atombot does not have access.";
+  const message =
+    "That repo does not exist, isn't an atom package, or atombot does not have access.";
   res.status(400).json({ message });
   logger.httpLog(req, res);
 }
@@ -200,8 +201,9 @@ async function packageExists(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @implements {logger.HTTPLog}
  */
- async function missingAuthJSON(req, res) {
-  const message = "Requires authentication. Please update your token if you haven't done so recently.";
+async function missingAuthJSON(req, res) {
+  const message =
+    "Requires authentication. Please update your token if you haven't done so recently.";
   res.status(401).json({ message });
   logger.httpLog(req, res);
 }
