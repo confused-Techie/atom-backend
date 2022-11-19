@@ -76,6 +76,10 @@ Now there is a certain set of test data that is available while testing, which w
   * Token: "admin-token"
   * Will be granted access to every service, and should never be denied access.
   * On 'GitHub' has access to `admin_user/atom-backend`
+- has-no-stars
+  * Token: "no-star-token"
+- has-all-stars
+  * Token: "all-star-token"
 
 ## Conventions and Standards
 
