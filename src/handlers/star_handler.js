@@ -22,7 +22,7 @@ const query = require("../query.js");
  */
 async function getStars(req, res) {
   let params = {
-    auth: query.auth(req)
+    auth: query.auth(req),
   };
 
   let user = await auth.verifyAuth(params.auth);

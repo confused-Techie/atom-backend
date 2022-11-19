@@ -879,12 +879,12 @@ async function getUserByNodeID(id) {
 }
 
 /**
-  * @async
-  * @function getUserByID
-  * @desc Get user details providing their ID.
-  * @param {int} id - User ID
-  * @returns {object} A Server status Object.
-  */
+ * @async
+ * @function getUserByID
+ * @desc Get user details providing their ID.
+ * @param {int} id - User ID
+ * @returns {object} A Server status Object.
+ */
 async function getUserByID(id) {
   try {
     sql_storage ??= setupSQL();
@@ -898,7 +898,7 @@ async function getUserByID(id) {
       return {
         ok: false,
         content: `Unable to get user by ID: ${id}`,
-        short: "Server Error"
+        short: "Server Error",
       };
     }
 
@@ -907,10 +907,10 @@ async function getUserByID(id) {
       : {
           ok: false,
           content: `Unable to get user by ID: ${id}`,
-          short: "Server Error"
+          short: "Server Error",
         };
-  } catch(err) {
-    return { ok: false, content: err, short: "Server Error"};
+  } catch (err) {
+    return { ok: false, content: err, short: "Server Error" };
   }
 }
 /**

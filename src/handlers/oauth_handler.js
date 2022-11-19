@@ -133,7 +133,6 @@ async function getOauth(req, res) {
       // But since we don't save any type of auth tokens, the user just needs a new one
       // and we should return their new one to them.
 
-
       // before returning lets append their proper access token to the object.
       userObj.token = access_token;
 

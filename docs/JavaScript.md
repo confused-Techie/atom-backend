@@ -78,6 +78,19 @@ verbosity, and duplication within the codebase.</p>
 </dd>
 </dl>
 
+## Functions
+
+<dl>
+<dt><a href="#verifyAuth">verifyAuth()</a></dt>
+<dd><p>This will be the major function to determine, confirm, and provide user
+details of an authenticated user. This will take a users provided token,
+and use it to check GitHub for the details of whoever owns this token.
+Once that is done, we can go ahead and search for said user within the database.
+If the user exists, then we can confirm that they are both locally and globally
+authenticated, and execute whatever action it is they wanted to.</p>
+</dd>
+</dl>
+
 <a name="module_cache"></a>
 
 ## cache
@@ -154,6 +167,7 @@ with and retreive data from the cloud hosted database instance.
     * [~getFeaturedThemes()](#module_database..getFeaturedThemes) ⇒ <code>object</code>
     * [~getTotalPackageEstimate()](#module_database..getTotalPackageEstimate) ⇒ <code>object</code>
     * [~getUserByName(username)](#module_database..getUserByName) ⇒ <code>object</code>
+    * [~getUserByNodeID(id)](#module_database..getUserByNodeID) ⇒ <code>object</code>
     * [~getUserByID(id)](#module_database..getUserByID) ⇒ <code>object</code>
     * [~verifyAuth(token)](#module_database..verifyAuth) ⇒ <code>object</code>
     * [~updateStars()](#module_database..updateStars)
@@ -438,17 +452,29 @@ Get a users details providing their username.
 | --- | --- | --- |
 | username | <code>string</code> | User name string. |
 
-<a name="module_database..getUserByID"></a>
+<a name="module_database..getUserByNodeID"></a>
 
-### database~getUserByID(id) ⇒ <code>object</code>
-Get user details providing their ID.
+### database~getUserByNodeID(id) ⇒ <code>object</code>
+Get user details providing their Node ID.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
 **Returns**: <code>object</code> - A server status object.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| id | <code>int</code> | User id. |
+| id | <code>string</code> | Users Node ID. |
+
+<a name="module_database..getUserByID"></a>
+
+### database~getUserByID(id) ⇒ <code>object</code>
+Get user details providing their ID.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A Server status Object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>int</code> | User ID |
 
 <a name="module_database..verifyAuth"></a>
 
@@ -1083,7 +1109,6 @@ A helper for any functions that are agnostic in handlers.
     * [~constructPackageObjectJSON(pack)](#module_utils..constructPackageObjectJSON) ⇒ <code>object</code>
     * [~deepCopy(obj)](#module_utils..deepCopy) ⇒ <code>object</code>
     * [~engineFilter()](#module_utils..engineFilter)
-    * [~hashData()](#module_utils..hashData)
 
 <a name="module_utils..StateStore"></a>
 
@@ -1186,12 +1211,6 @@ Just in case it is needed again.
 A complex function that provides filtering by Atom engine version.
 This should take a package with it's versions and retreive whatever matches
 that engine version as provided.
-
-**Kind**: inner method of [<code>utils</code>](#module_utils)  
-<a name="module_utils..hashData"></a>
-
-### utils~hashData()
-Takes data and returns the hashed form, according to the hashing settings.
 
 **Kind**: inner method of [<code>utils</code>](#module_utils)  
 <a name="module_common_handler"></a>
@@ -1869,3 +1888,15 @@ Endpoint that returns another users Star Gazers List.
 | <code>http\_method</code> | GET |
 | <code>http\_endpoint</code> | /api/users/:login/stars |
 
+<a name="verifyAuth"></a>
+
+## verifyAuth()
+This will be the major function to determine, confirm, and provide user
+details of an authenticated user. This will take a users provided token,
+and use it to check GitHub for the details of whoever owns this token.
+Once that is done, we can go ahead and search for said user within the database.
+If the user exists, then we can confirm that they are both locally and globally
+authenticated, and execute whatever action it is they wanted to.
+
+**Kind**: global function  
+**Params**: <code>object</code> token - The token the user provided.  

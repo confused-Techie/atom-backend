@@ -3,16 +3,16 @@ const superagent = require("superagent");
 const { GH_USERAGENT } = require("./config.js").getConfig();
 
 /**
-  * @async
-  * @function verifyAuth
-  * @desc This will be the major function to determine, confirm, and provide user
-  * details of an authenticated user. This will take a users provided token,
-  * and use it to check GitHub for the details of whoever owns this token.
-  * Once that is done, we can go ahead and search for said user within the database.
-  * If the user exists, then we can confirm that they are both locally and globally
-  * authenticated, and execute whatever action it is they wanted to.
-  * @params {object} token - The token the user provided.
-  */
+ * @async
+ * @function verifyAuth
+ * @desc This will be the major function to determine, confirm, and provide user
+ * details of an authenticated user. This will take a users provided token,
+ * and use it to check GitHub for the details of whoever owns this token.
+ * Once that is done, we can go ahead and search for said user within the database.
+ * If the user exists, then we can confirm that they are both locally and globally
+ * authenticated, and execute whatever action it is they wanted to.
+ * @params {object} token - The token the user provided.
+ */
 async function verifyAuth(token) {
   if (token === null || token === undefined) {
     return { ok: false, short: "Bad Auth", content: "User Token not valid" };
@@ -25,36 +25,42 @@ async function verifyAuth(token) {
       // Server is in developer mode.
       console.log("auth.js is returning Dev Only Permissions");
 
-      switch(token) {
+      switch (token) {
         case "valid-token":
-          user_data = { status: 200, body: {node_id: "dever-nodeid"}};
+          user_data = { status: 200, body: { node_id: "dever-nodeid" } };
           break;
         case "no-valid-token":
-          user_data = { status: 200, body: {node_id: "no-perm-user-nodeid"}};
+          user_data = { status: 200, body: { node_id: "no-perm-user-nodeid" } };
           break;
         case "admin-token":
-          user_data = { status: 200, body: {node_id: "admin-user-nodeid"}};
+          user_data = { status: 200, body: { node_id: "admin-user-nodeid" } };
           break;
         case "no-star-token":
-          user_data = { status: 200, body: {node_id: "has-no-stars-nodeid"}};
+          user_data = { status: 200, body: { node_id: "has-no-stars-nodeid" } };
           break;
         case "all-star-token":
-          user_data = { status: 200, body: {node_id: "has-all-stars-nodeid"}};
+          user_data = {
+            status: 200,
+            body: { node_id: "has-all-stars-nodeid" },
+          };
           break;
         default:
           console.log("No valid dev user found!");
-          user_data = { status: 401, body: {message: "No Valid dev user found!"}};
+          user_data = {
+            status: 401,
+            body: { message: "No Valid dev user found!" },
+          };
           break;
       }
     } else {
       user_data = await superagent
         .get("https://api.github.com/user")
-        .set({ Authorization: `Bearer ${token}`})
+        .set({ Authorization: `Bearer ${token}` })
         .set({ "User-Agent": GH_USERAGENT });
     }
 
     if (user_data.status !== 200) {
-      switch(user_data.status) {
+      switch (user_data.status) {
         case 403:
         case 401:
           // When the user provides bad authentication, lets tell them it's bad auth.
@@ -84,16 +90,15 @@ async function verifyAuth(token) {
       created_at: db_user.content.created_at,
       username: db_user.content.username,
       avatar: db_user.content.avatar,
-      data: db_user.content.data
+      data: db_user.content.data,
     };
 
     console.log(auth_user_object);
     return {
       ok: true,
-      content: auth_user_object
+      content: auth_user_object,
     };
-
-  } catch(err) {
+  } catch (err) {
     return { ok: false, short: "Server Error", content: err };
   }
 }
