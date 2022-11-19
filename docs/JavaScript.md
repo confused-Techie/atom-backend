@@ -1736,10 +1736,6 @@ Which should initiate a download of said tarball on their end.
 Allows a user to delete a specific version of their package.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
-**Todo**
-
-- [ ] Migrate to new Database Schema
-
 
 | Param | Type | Description |
 | --- | --- | --- |
