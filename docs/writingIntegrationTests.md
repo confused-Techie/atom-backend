@@ -81,6 +81,35 @@ Now there is a certain set of test data that is available while testing, which w
 - has-all-stars
   * Token: "all-star-token"
 
+## GitHub Pages avialable on 'GitHub'
+
+For the `git.js` tests, because those interact with GitHub exclusively, the solution to mock these tests is to startup a mock
+GitHub API server when running tests in that file exclusively. It's important to note, that when running other integration tests that rely on `git.js`
+It will only return it's predefined responses. Only the tests on `git.js` will actually startup this Mock GitHub Server.
+
+But with that said, here are the endpoints and the expected returns based on values passed or users token provided.
+
+- /user/repos
+  This endpoint returns based on the `Authorization` token passed. Which can be used directly from a user.
+  * admin_user Token: Status - 200 | Repo: "admin_user/atom-backend"
+  * no_perm_user Token: Status - 401 | Response: Requires Authentication
+  * Other: Status - 500 | Response "huh??" (Because why not)
+
+- /git-test/atom-backend
+  This endpoint can be used for testing the GetRepoExistance as this endpoint will always send a 200 status code.
+
+- /git-test/does-not-exist
+  This endpoint should be used for testing GetRepoExistance against a non-existing endpoint, as it will always return a 404 status code.
+
+- /repos/git-test/atom-backend/contents/package.json
+  This endpoint will always return a valid package.json response modeled after the response of `pulsar-edit/find-and-replace`
+
+- /repos/git-test/atom-backend/contents/README.md
+  This endpoint will always return a valid README.md response modeled after the response of `pulsar-edit/find-and-replace`
+
+- /repos/git-test/atom-backend/tags
+  This endpoint will always return a valid array of tags, according to the first few tags returned from `pulsar-edit/find-and-replace`
+
 ## Conventions and Standards
 
 To make sure we don't have any odd interactions between tests, and to make sure that anyone looking at your tests knows what's going on, there are a few standards or conventions about the data used during tests, which are below.

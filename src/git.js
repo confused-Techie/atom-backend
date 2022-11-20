@@ -354,14 +354,14 @@ async function doesUserHaveRepo(user, repo, page = 1) {
 async function getRepoExistance(repo, user) {
   try {
     const res = await superagent
-      .get(`https://github.com/${repo}`)
+      .get(`${GH_WEB_URL}/${repo}`)
       .set({ Authorization: `Bearer ${user.token}` })
       .set({ "User-Agent": GH_USERAGENT });
 
     switch (res.status) {
       case 200:
         return true;
-      case 400:
+      case 404:
       default:
         return false;
     }
@@ -386,7 +386,7 @@ async function getRepoExistance(repo, user) {
 async function getPackageJSON(repo, user) {
   try {
     const res = await superagent
-      .get(`https://api.github.com/repos/${repo}/contents/package.json`)
+      .get(`${GH_API_URL}/repos/${repo}/contents/package.json`)
       .set({ Authorization: `Bearer ${user.token}` })
       .set({ "User-Agent": GH_USERAGENT });
 
@@ -426,7 +426,7 @@ async function getPackageJSON(repo, user) {
 async function getRepoReadMe(repo, user) {
   try {
     const res = await superagent
-      .get(`https://api.github.com/repos/${repo}/contents/README.md`)
+      .get(`${GH_API_URL}/repos/${repo}/contents/README.md`)
       .set({ Authorization: `Bearer ${user.token}` })
       .set({ "User-Agent": GH_USERAGENT });
 
@@ -463,7 +463,7 @@ async function getRepoReadMe(repo, user) {
     // then this is not found, and we should try again for the lowercase readme.md
     try {
       const resLower = await superagent
-        .get(`https://api.github.com/repos/${repo}/contents/readme.md`)
+        .get(`${GH_API_URL}/repos/${repo}/contents/readme.md`)
         .set({ Authorization: `Bearer ${user.token}` })
         .set({ "User-Agent": GH_USERAGENT });
 
@@ -507,7 +507,7 @@ async function getRepoReadMe(repo, user) {
 async function getRepoTags(repo, user) {
   try {
     const res = await superagent
-      .get(`https://api.github.com/repos/${repo}/tags`)
+      .get(`${GH_API_URL}/repos/${repo}/tags`)
       .set({ Authorization: `Bearer ${user.token}` })
       .set({ "User-Agent": GH_USERAGENT });
 

@@ -40,4 +40,9 @@ describe("Cache Objects Have the Functions and Variables Expected", () => {
     let exp = newCache.Expired;
     expect(typeof exp === "boolean").toBeTruthy();
   });
+
+  test("Cache Object Changes variable when calling 'invalidate'", async () => {
+    newCache.invalidate();
+    expect(newCache.invalidated).toBeTruthy();
+  });
 });
