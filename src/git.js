@@ -4,15 +4,11 @@
  */
 
 const superagent = require("superagent");
-const { GH_TOKEN, GH_USERNAME, GH_USERAGENT } =
+const { GH_CLIENTSECRET, GH_USERAGENT } =
   require("./config.js").getConfig();
 const logger = require("./logger.js");
 let GH_API_URL = "https://api.github.com";
 let GH_WEB_URL = "https://github.com";
-
-const encodedToken = Buffer.from(`${GH_USERNAME}:${GH_TOKEN}`).toString(
-  "base64"
-);
 
 /**
  * @function setGHWebURL
@@ -140,11 +136,11 @@ async function ownership(user, repo, dev_override = false) {
  * @param {string} repo - The Repo to use in the form `owner/repo`.
  * @returns {object} A `Server Status` Object where `content` is the `Server Package Full` object.
  */
-async function createPackage(repo) {
+async function createPackage(repo, user) {
   try {
     let newPack = {};
     // this ^^^ will be what we append all data to.
-    let exists = await getRepoExistance(repo);
+    let exists = await getRepoExistance(repo, user);
 
     if (!exists) {
       // this could be because of an error, or it truly doesn't exist.
@@ -155,7 +151,7 @@ async function createPackage(repo) {
       };
     }
 
-    let pack = await getPackageJSON(repo);
+    let pack = await getPackageJSON(repo, user);
 
     if (pack === undefined) {
       return {
@@ -165,7 +161,7 @@ async function createPackage(repo) {
       };
     }
 
-    let repoTag = await getRepoTags(repo);
+    let repoTag = await getRepoTags(repo, user);
 
     if (repoTag === undefined) {
       return {
@@ -176,7 +172,7 @@ async function createPackage(repo) {
     }
 
     // now to get our readme
-    let readme = await getRepoReadMe(repo);
+    let readme = await getRepoReadMe(repo, user);
 
     if (readme === undefined) {
       return {
@@ -313,9 +309,7 @@ async function doesUserHaveRepo(user, repo, page = 1) {
     const res = await superagent
       .get(`${GH_API_URL}/user/repos?page=${page}`)
       .set({
-        Authorization:
-          "Basic " +
-          Buffer.from(`${user.username}:${user.token}`).toString("base64"),
+        Authorization: `Bearer ${user.token}`
       })
       .set({ "User-Agent": GH_USERAGENT });
 
@@ -358,11 +352,11 @@ async function doesUserHaveRepo(user, repo, page = 1) {
  * @param {string} repo - A repo in the format `owner/repo`.
  * @returns {boolean} A true if the repo exists, false otherwise. Including an error.
  */
-async function getRepoExistance(repo) {
+async function getRepoExistance(repo, user) {
   try {
     const res = await superagent
       .get(`https://github.com/${repo}`)
-      .set({ Authorization: "Basic " + encodedToken })
+      .set({ Authorization: `Bearer ${user.token}` })
       .set({ "User-Agent": GH_USERAGENT });
 
     switch (res.status) {
@@ -390,11 +384,11 @@ async function getRepoExistance(repo) {
  * @returns {string|undefined} Returns a proper string of the readme if successful.
  * And returns `undefined` otherwise.
  */
-async function getPackageJSON(repo) {
+async function getPackageJSON(repo, user) {
   try {
     const res = await superagent
       .get(`https://api.github.com/repos/${repo}/contents/package.json`)
-      .set({ Authorization: "Basic " + encodedToken })
+      .set({ Authorization: `Bearer ${user.token}` })
       .set({ "User-Agent": GH_USERAGENT });
 
     switch (res.status) {
@@ -430,11 +424,11 @@ async function getPackageJSON(repo) {
  * @returns {string|undefined} Returns the raw string of the readme if available,
  * otherwise returns undefined.
  */
-async function getRepoReadMe(repo) {
+async function getRepoReadMe(repo, user) {
   try {
     const res = await superagent
       .get(`https://api.github.com/repos/${repo}/contents/README.md`)
-      .set({ Authorization: "Basic " + encodedToken })
+      .set({ Authorization: `Bearer ${user.token}` })
       .set({ "User-Agent": GH_USERAGENT });
 
     switch (res.status) {
@@ -471,7 +465,7 @@ async function getRepoReadMe(repo) {
     try {
       const resLower = await superagent
         .get(`https://api.github.com/repos/${repo}/contents/readme.md`)
-        .set({ Authorization: "Basic " + encodedToken })
+        .set({ Authorization: `Bearer ${user.token}` })
         .set({ "User-Agent": GH_USERAGENT });
 
       switch (resLower.status) {
@@ -511,11 +505,11 @@ async function getRepoReadMe(repo) {
  * and returns undefined otherwise.
  * @see https://docs.github.com/en/rest/repos/repos#list-repository-tags
  */
-async function getRepoTags(repo) {
+async function getRepoTags(repo, user) {
   try {
     const res = await superagent
       .get(`https://api.github.com/repos/${repo}/tags`)
-      .set({ Authorization: "Basic " + encodedToken })
+      .set({ Authorization: `Bearer ${user.token}` })
       .set({ "User-Agent": GH_USERAGENT });
 
     switch (res.status) {

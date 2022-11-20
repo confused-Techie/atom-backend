@@ -69,12 +69,6 @@ function getConfig() {
       GH_CLIENTID: process.env.GH_CLIENTID
         ? process.env.GH_CLIENTID
         : data.env_variables.GH_CLIENTID,
-      GH_TOKEN: process.env.GH_TOKEN
-        ? process.env.GH_TOKEN
-        : data.env_variables.GH_TOKEN,
-      GH_USERNAME: process.env.GH_USERNAME
-        ? process.env.GH_USERNAME
-        : data.env_variables.GH_USERNAME,
       GH_USERAGENT: process.env.GH_USERAGENT
         ? process.env.GH_USERAGENT
         : data.env_variables.GH_USERAGENT,

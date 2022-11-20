@@ -192,7 +192,6 @@ describe("Post /api/packages", () => {
 
 describe("GET /api/packages/featured", () => {
   test("Returns Successful Status Code", async () => {
-    console.log("Help");
     const res = await request(app).get("/api/packages/featured");
     expect(res).toHaveHTTPCode(200);
   });

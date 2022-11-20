@@ -148,7 +148,7 @@ async function postPackages(req, res) {
   }
 
   // Now knowing they own the git repo, and it doesn't exist here, lets publish.
-  let new_pack = await git.createPackage(params.repository);
+  let new_pack = await git.createPackage(params.repository, user.content);
 
   if (!new_pack.ok) {
     await common.handleError(req, res, new_pack);
@@ -156,7 +156,7 @@ async function postPackages(req, res) {
   }
 
   // Now with valid package data, we can insert them into the DB.
-  let inserted_new_pack = await database.insertNewPackage(new_pack);
+  let inserted_new_pack = await database.insertNewPackage(new_pack.content);
 
   if (!inserted_new_pack.ok) {
     await common.handleError(req, res, inserted_new_pack);

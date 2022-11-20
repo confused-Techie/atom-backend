@@ -105,36 +105,36 @@ VALUES (
   'atom-material-syntax', '28952de5-ddbf-41a8-8d87-5d7e9d7ad7ac'
 );
 
-INSERT INTO versions (id, package, status, semver, license, engine, meta)
+INSERT INTO versions (package, status, semver, license, engine, meta)
 VALUES (
-  1, 'd28c7ce5-c9c4-4fb6-a499-a7c6dcec355b', 'published', '0.45.7', 'MIT', '{"atom": "*", "node": "*"}',
+  'd28c7ce5-c9c4-4fb6-a499-a7c6dcec355b', 'published', '0.45.7', 'MIT', '{"atom": "*", "node": "*"}',
   '{"name": "language-css", "description": "CSS Support in Atom", "keywords": ["tree-sitter"]}'
 ), (
-  2, 'd28c7ce5-c9c4-4fb6-a499-a7c6dcec355b', 'latest', '0.46.0', 'MIT', '{"atom": "*", "node": "*"}',
+  'd28c7ce5-c9c4-4fb6-a499-a7c6dcec355b', 'latest', '0.46.0', 'MIT', '{"atom": "*", "node": "*"}',
   '{"name": "language-css", "description": "CSS Support in Atom", "keywords": ["tree-sitter"]}'
 ), (
-  3, 'd28c7ce5-c9c4-4fb6-a499-a7c6dcec355b', 'published', '0.45.0', 'MIT', '{"atom": "*", "node": "*"}',
+  'd28c7ce5-c9c4-4fb6-a499-a7c6dcec355b', 'published', '0.45.0', 'MIT', '{"atom": "*", "node": "*"}',
   '{"name":"language-css", "description": "CSS Support in Atom", "keywords": ["tree-sitter"]}'
 ), (
-  4, 'd27dbd37-e58e-4e02-b804-9e3e6ae02fb1', 'published', '0.11.8', 'MIT', '{"atom": "*", "node": "*"}',
+  'd27dbd37-e58e-4e02-b804-9e3e6ae02fb1', 'published', '0.11.8', 'MIT', '{"atom": "*", "node": "*"}',
   '{"name": "language-cpp", "description": "C++ Support in Atom", "keywords": ["tree-sitter"]}'
 ), (
-  5, 'd27dbd37-e58e-4e02-b804-9e3e6ae02fb1', 'latest', '0.11.9', 'MIT', '{"atom": "*", "node": "*"}',
+  'd27dbd37-e58e-4e02-b804-9e3e6ae02fb1', 'latest', '0.11.9', 'MIT', '{"atom": "*", "node": "*"}',
   '{"name": "language-cpp", "description": "C++ Support in Atom", "keywords": ["tree-sitter"]}'
 ), (
-  11248, 'ee87223f-65ab-4a1d-8f45-09fcf8e64423', 'latest', '2.16.3', 'MIT', '{"atom": "*"}',
+  'ee87223f-65ab-4a1d-8f45-09fcf8e64423', 'latest', '2.16.3', 'MIT', '{"atom": "*"}',
   '{"name": "Hydrogen", "dist": {"tarball": "https://www.atom.io/api/packages/hydrogen/version/2.16.3/tarball"}}'
 ), (
-  171338, 'aea26882-8459-4725-82ad-41bf7aa608c3', 'latest', '0.1.18', 'MIT', '{"atom": "*"}',
+  'aea26882-8459-4725-82ad-41bf7aa608c3', 'latest', '0.1.18', 'MIT', '{"atom": "*"}',
   '{"name": "atom-clock", "dist": {"tarball": "https://www.atom.io/api/packages/atom-clock/version/1.18.0/tarball"}}'
 ), (
-  152901, '1e19da12-322a-4b37-99ff-64f866cc0cfa', 'latest', '1.2.0', 'MIT', '{"atom": "*"}',
+  '1e19da12-322a-4b37-99ff-64f866cc0cfa', 'latest', '1.2.0', 'MIT', '{"atom": "*"}',
   '{"name":"hey-pane", "dist": {"tarball": "https://www.atom.io/api/packages/hydrogen/version/1.2.0/tarball"}}'
 ), (
-  135512, 'a0ef01cb-720e-4c0d-80c5-f0ed441f31fc', 'latest', '2.1.3', 'MIT', '{"atom": "*"}',
+  'a0ef01cb-720e-4c0d-80c5-f0ed441f31fc', 'latest', '2.1.3', 'MIT', '{"atom": "*"}',
   '{"name": "atom-material-ui", "dist": {"tarball": "https://www.atom.io/api/packages/atom-material-ui/version/2.1.3/tarball"}}'
 ), (
-  169370, '28952de5-ddbf-41a8-8d87-5d7e9d7ad7ac', 'latest', '1.0.8', 'MIT', '{"atom":"*"}',
+  '28952de5-ddbf-41a8-8d87-5d7e9d7ad7ac', 'latest', '1.0.8', 'MIT', '{"atom":"*"}',
   '{"name": "atom-material-syntax", "dist": {"tarball":"https://www.atom/io/api/packages/atom-material-syntax/version/1.0.8/tarball"}}'
 );
 
