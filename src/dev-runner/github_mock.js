@@ -18,7 +18,7 @@ app.get("/user/repos", (req, res) => {
   // Then we choose what to do depending on which user is requesting access.
 
   switch (param.auth) {
-    case "Basic YWRtaW5fdXNlcjphZG1pbi10b2tlbg==":
+    case "Bearer admin-token":
       // user: admin_user token: admin-token
       res
         .status(200)
@@ -34,7 +34,7 @@ app.get("/user/repos", (req, res) => {
           },
         ]);
       break;
-    case "Basic bm9fcGVybV91c2VyOm5vLXZhbGlkLXRva2Vu":
+    case "Bearer no-valid-token":
       // user: no_perm_user token: no-valid-token
       res
         .status(401)
