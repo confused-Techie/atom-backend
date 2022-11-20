@@ -596,11 +596,15 @@ describe("DELETE /api/packages/:packageName/versions/:versionName", () => {
     expect(res).toHaveHTTPCode(404);
   });
   test("Returns Not Found Msg with Valid Package & Bad Version", async () => {
-    const res = await request(app).delete("/api/packages/language-css/versions/1.0.0").set("Authorization", "admin-token");
+    const res = await request(app)
+      .delete("/api/packages/language-css/versions/1.0.0")
+      .set("Authorization", "admin-token");
     expect(res.body.message).toEqual(msg.notFound);
   });
   test("Returns 204 on Success", async () => {
-    const res = await request(app).delete("/api/packages/language-css/versions/0.45.0").set("Authorization", "admin-token");
+    const res = await request(app)
+      .delete("/api/packages/language-css/versions/0.45.0")
+      .set("Authorization", "admin-token");
     expect(res).toHaveHTTPCode(204);
   });
 });
