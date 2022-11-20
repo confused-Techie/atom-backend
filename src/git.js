@@ -4,8 +4,7 @@
  */
 
 const superagent = require("superagent");
-const { GH_CLIENTSECRET, GH_USERAGENT } =
-  require("./config.js").getConfig();
+const { GH_CLIENTSECRET, GH_USERAGENT } = require("./config.js").getConfig();
 const logger = require("./logger.js");
 let GH_API_URL = "https://api.github.com";
 let GH_WEB_URL = "https://github.com";
@@ -309,7 +308,7 @@ async function doesUserHaveRepo(user, repo, page = 1) {
     const res = await superagent
       .get(`${GH_API_URL}/user/repos?page=${page}`)
       .set({
-        Authorization: `Bearer ${user.token}`
+        Authorization: `Bearer ${user.token}`,
       })
       .set({ "User-Agent": GH_USERAGENT });
 
