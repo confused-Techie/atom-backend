@@ -42,9 +42,8 @@ async function getLogin(req, res) {
   stateStore
     .setState(req.ip)
     .then((state) => {
-      console.log(state);
       res
-        .status(301)
+        .status(302)
         .redirect(
           `https://github.com/login/oauth/authorize?client_id=${GH_CLIENTID}&redirect_uri=${GH_REDIRECTURI}&state=${state.content}`
         );

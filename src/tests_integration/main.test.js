@@ -44,10 +44,6 @@ beforeAll(async () => {
   app = require("../main.js");
 });
 
-console.log(
-  "This is in development, integration tests may not function as expected."
-);
-
 expect.extend({
   toBeArray(value) {
     if (Array.isArray(value)) {
@@ -97,14 +93,17 @@ describe("Get /", () => {
 });
 
 describe("Get /api/login", () => {
-  test.todo(
-    "This whole section needs to be written once Authentication is fleshed out"
-  );
+  test("Returns proper Status Code", async () => {
+    const res = await request(app).get("/api/login");
+    expect(res).toHaveHTTPCode(302);
+  });
+  // As for testing the rest of the behavior is near impossible.
+  // Since it relies so heavily on GitHub.
 });
 
 describe("Get /api/oauth", () => {
   test.todo(
-    "This whole section needs to be written once Authentication is fleshed out"
+    "Can we test? This section has been tested manually. But beyond that seems impossible to truly test."
   );
 });
 
@@ -596,6 +595,14 @@ describe("DELETE /api/packages/:packageName/versions/:versionName", () => {
       .set("Authorization", "admin-token");
     expect(res).toHaveHTTPCode(404);
   });
+  test("Returns Not Found Msg with Valid Package & Bad Version", async () => {
+    const res = await request(app).delete("/api/packages/language-css/versions/1.0.0").set("Authorization", "admin-token");
+    expect(res.body.message).toEqual(msg.notFound);
+  });
+  test("Returns 204 on Success", async () => {
+    const res = await request(app).delete("/api/packages/language-css/versions/0.45.0").set("Authorization", "admin-token");
+    expect(res).toHaveHTTPCode(204);
+  });
 });
 
 describe("POST /api/packages/:packageName/versions/:versionName/events/uninstall", () => {
@@ -641,7 +648,7 @@ describe("POST /api/packages/:packageName/versions/:versionName/events/uninstall
       .post("/api/packages/language-css/versions/1.0.0/events/uninstall")
       .set("Authorization", "valid-token");
     expect(res).toHaveHTTPCode(200);
-    // Please not on Atom.io this would result in a 404. But the Pulsar Backend intentionally ignores the `version`
+    // Please note on Atom.io this would result in a 404. But the Pulsar Backend intentionally ignores the `version`
     // of the query. This is due to changes in the database structure.
   });
   test("Returns Json {ok: true } with Valid Package, Bad Version", async () => {
@@ -649,7 +656,7 @@ describe("POST /api/packages/:packageName/versions/:versionName/events/uninstall
       .post("/api/packages/language-css/versions/1.0.0/events/uninstall")
       .set("Authorization", "valid-token");
     expect(res.body.ok).toBeTruthy();
-    // Please not on Atom.io this would result in a 404. But the Pulsar Backend intentionally ignores the `version`
+    // Please note on Atom.io this would result in a 404. But the Pulsar Backend intentionally ignores the `version`
     // of the query. This is due to changes in the database structure.
   });
   test("Returns 200 on Success", async () => {

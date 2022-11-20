@@ -113,10 +113,13 @@ VALUES (
   2, 'd28c7ce5-c9c4-4fb6-a499-a7c6dcec355b', 'latest', '0.46.0', 'MIT', '{"atom": "*", "node": "*"}',
   '{"name": "language-css", "description": "CSS Support in Atom", "keywords": ["tree-sitter"]}'
 ), (
-  3, 'd27dbd37-e58e-4e02-b804-9e3e6ae02fb1', 'published', '0.11.8', 'MIT', '{"atom": "*", "node": "*"}',
+  3, 'd28c7ce5-c9c4-4fb6-a499-a7c6dcec355b', 'published', '0.45.0', 'MIT', '{"atom": "*", "node": "*"}',
+  '{"name":"language-css", "description": "CSS Support in Atom", "keywords": ["tree-sitter"]}'
+), (
+  4, 'd27dbd37-e58e-4e02-b804-9e3e6ae02fb1', 'published', '0.11.8', 'MIT', '{"atom": "*", "node": "*"}',
   '{"name": "language-cpp", "description": "C++ Support in Atom", "keywords": ["tree-sitter"]}'
 ), (
-  4, 'd27dbd37-e58e-4e02-b804-9e3e6ae02fb1', 'latest', '0.11.9', 'MIT', '{"atom": "*", "node": "*"}',
+  5, 'd27dbd37-e58e-4e02-b804-9e3e6ae02fb1', 'latest', '0.11.9', 'MIT', '{"atom": "*", "node": "*"}',
   '{"name": "language-cpp", "description": "C++ Support in Atom", "keywords": ["tree-sitter"]}'
 ), (
   11248, 'ee87223f-65ab-4a1d-8f45-09fcf8e64423', 'latest', '2.16.3', 'MIT', '{"atom": "*"}',
