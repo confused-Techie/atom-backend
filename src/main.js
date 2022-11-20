@@ -15,6 +15,34 @@ const package_handler = require("./handlers/package_handler.js");
 const common_handler = require("./handlers/common_handler.js");
 const oauth_handler = require("./handlers/oauth_handler.js");
 const server_version = require("../package.json").version;
+const rateLimit = require("express-rate-limit");
+const { MemoryStore } = require("express-rate-limit");
+
+// Define our Basic Rate Limiters
+const genericLimit = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 0, // Limit each IP per window, 0 disables rate limit.
+  standardHeaders: true, // Return rate limit info in headers
+  legacyHeaders: true, // Legacy rate limit info in headers
+  store: new MemoryStore(), // Use default memory store
+  message: "Too many requests, please try again later.", // Message once limit is reached.
+  statusCode: 429, // HTTP Status Code once limit is reached.
+});
+
+const authLimit = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 0, // Limit each IP per window, 0 disables rate limit.
+  standardHeaders: true, // Return rate limit info on headers
+  legacyHeaders: true, // Legacy rate limit info in headers
+  store: new MemoryStore(), // use default memory store
+  message: "Too many requests, please try again later.", // message once limit is reached
+  statusCode: 429, // HTTP Status code once limit is reached.
+});
+
+// ^^ Our two Rate Limiters ^^ these are essentially currently disabled.
+// The reason being, the original API spec made no mention of rate limiting, so nor will we.
+// But once we have surpassed feature parity, we will instead enable these limits, to help
+// prevent overusage of the api server. With Auth having a lower limit, then non-authed requests.
 
 app.use((req, res, next) => {
   // This adds a start to the request, logging the exact time a request was received.
@@ -30,7 +58,7 @@ app.use((req, res, next) => {
  * @method GET
  * @auth FALSE
  */
-app.get("/", (req, res) => {
+app.get("/", genericLimit, (req, res) => {
   // While originally here in case this became the endpoint to host the
   // frontend website, now that that is no longer planned, it can be used
   // as a way to check the version of the server. Not needed, but may become helpful.
@@ -47,7 +75,7 @@ app.get("/", (req, res) => {
  * @method GET
  * @auth FALSE
  */
-app.get("/api/login", async (req, res) => {
+app.get("/api/login", authLimit, async (req, res) => {
   await oauth_handler.getLogin(req, res);
 });
 
@@ -59,7 +87,7 @@ app.get("/api/login", async (req, res) => {
  * @method GET
  * @auth FALSE
  */
-app.get("/api/oauth", async (req, res) => {
+app.get("/api/oauth", authLimit, async (req, res) => {
   await oauth_handler.getOauth(req, res);
 });
 
@@ -97,7 +125,7 @@ app.get("/api/oauth", async (req, res) => {
  *   @Rtype application/json
  *   @Rdesc Returns a list of all packages. Paginated 30 at a time. Links to the next and last pages are in the 'Link' Header.
  */
-app.get("/api/packages", async (req, res) => {
+app.get("/api/packages", genericLimit, async (req, res) => {
   await package_handler.getPackages(req, res);
 });
 
@@ -134,7 +162,7 @@ app.get("/api/packages", async (req, res) => {
  *   @Rtype application/json
  *   @Rdesc A package by that name already exists.
  */
-app.post("/api/packages", async (req, res) => {
+app.post("/api/packages", authLimit, async (req, res) => {
   await package_handler.postPackages(req, res);
 });
 
@@ -149,7 +177,7 @@ app.post("/api/packages", async (req, res) => {
  *   @status 200
  *   @Rdesc An array of packages similar to /api/packages endpoint.
  */
-app.get("/api/packages/featured", async (req, res) => {
+app.get("/api/packages/featured", genericLimit, async (req, res) => {
   await package_handler.getPackagesFeatured(req, res);
 });
 
@@ -193,7 +221,7 @@ app.get("/api/packages/featured", async (req, res) => {
  *   @Rtype application/json
  *   @Rdesc Same format as listing packages, additionally paginated at 30 items.
  */
-app.get("/api/packages/search", async (req, res) => {
+app.get("/api/packages/search", genericLimit, async (req, res) => {
   await package_handler.getPackagesSearch(req, res);
 });
 
@@ -221,7 +249,7 @@ app.get("/api/packages/search", async (req, res) => {
  *   @Rtype application/json
  *   @Rdesc Returns package details and versions for a single package.
  */
-app.get("/api/packages/:packageName", async (req, res) => {
+app.get("/api/packages/:packageName", genericLimit, async (req, res) => {
   await package_handler.getPackagesDetails(req, res);
 });
 
@@ -258,7 +286,7 @@ app.get("/api/packages/:packageName", async (req, res) => {
  *   @Rtype application/json
  *   @Rdesc Unauthorized.
  */
-app.delete("/api/packages/:packageName", async (req, res) => {
+app.delete("/api/packages/:packageName", authLimit, async (req, res) => {
   await package_handler.deletePackagesName(req, res);
 });
 
@@ -286,7 +314,7 @@ app.delete("/api/packages/:packageName", async (req, res) => {
  *    @Rtype application/json
  *    @Rdesc Returns the package that was stared.
  */
-app.post("/api/packages/:packageName/star", async (req, res) => {
+app.post("/api/packages/:packageName/star", authLimit, async (req, res) => {
   await package_handler.postPackagesStar(req, res);
 });
 
@@ -313,7 +341,7 @@ app.post("/api/packages/:packageName/star", async (req, res) => {
  *  @status 201
  *  @Rdesc An empty response to convey successfully unstaring a package.
  */
-app.delete("/api/packages/:packageName/star", async (req, res) => {
+app.delete("/api/packages/:packageName/star", authLimit, async (req, res) => {
   await package_handler.deletePackagesStar(req, res);
 });
 
@@ -333,7 +361,7 @@ app.delete("/api/packages/:packageName/star", async (req, res) => {
  *  @Rdesc A list of user Objects.
  *  @Rexample [ { "login": "aperson" }, { "login": "anotherperson" } ]
  */
-app.get("/api/packages/:packageName/stargazers", async (req, res) => {
+app.get("/api/packages/:packageName/stargazers", genericLimit, async (req, res) => {
   await package_handler.getPackagesStargazers(req, res);
 });
 
@@ -374,7 +402,7 @@ app.get("/api/packages/:packageName/stargazers", async (req, res) => {
  *  @status 409
  *  @Rdesc Version exists.
  */
-app.post("/api/packages/:packageName/versions", async (req, res) => {
+app.post("/api/packages/:packageName/versions", authLimit, async (req, res) => {
   await package_handler.postPackagesVersion(req, res);
 });
 
@@ -400,7 +428,7 @@ app.post("/api/packages/:packageName/versions", async (req, res) => {
  *  @Rdesc The `package.json` modified as explainged in the endpoint description.
  */
 app.get(
-  "/api/packages/:packageName/versions/:versionName",
+  "/api/packages/:packageName/versions/:versionName", genericLimit,
   async (req, res) => {
     await package_handler.getPackagesVersion(req, res);
   }
@@ -431,7 +459,7 @@ app.get(
  *   @Rdesc The tarball data for the user to then be able to install.
  */
 app.get(
-  "/api/packages/:packageName/versions/:versionName/tarball",
+  "/api/packages/:packageName/versions/:versionName/tarball", genericLimit,
   async (req, res) => {
     await package_handler.getPackagesVersionTarball(req, res);
   }
@@ -464,7 +492,7 @@ app.get(
  *  @Rdesc Indicates a successful deletion.
  */
 app.delete(
-  "/api/packages/:packageName/versions/:versionName",
+  "/api/packages/:packageName/versions/:versionName", authLimit,
   async (req, res) => {
     await package_handler.deletePackageVersion(req, res);
   }
@@ -497,7 +525,7 @@ app.delete(
  *   @Rdesc Returns JSON ok: true
  */
 app.post(
-  "/api/packages/:packageName/versions/:versionName/events/uninstall",
+  "/api/packages/:packageName/versions/:versionName/events/uninstall", authLimit,
   async (req, res) => {
     await package_handler.postPackagesEventUninstall(req, res);
   }
@@ -514,7 +542,7 @@ app.post(
  *   @status 200
  *   @Rdesc Returns an array of Theme Packages. Similar to the /api/packages Endpoint.
  */
-app.get("/api/themes/featured", async (req, res) => {
+app.get("/api/themes/featured", genericLimit, async (req, res) => {
   await theme_handler.getThemeFeatured(req, res);
 });
 
@@ -537,7 +565,7 @@ app.get("/api/themes/featured", async (req, res) => {
  *  @status 404
  *  @Rdesc If the login does not exist, a 404 is returned.
  */
-app.get("/api/users/:login/stars", async (req, res) => {
+app.get("/api/users/:login/stars", genericLimit, async (req, res) => {
   await user_handler.getLoginStars(req, res);
 });
 
@@ -559,7 +587,7 @@ app.get("/api/users/:login/stars", async (req, res) => {
  *   @Rdesc Return value similar to GET /api/packages, an array of package objects.
  *   @Rtype application/json
  */
-app.get("/api/stars", async (req, res) => {
+app.get("/api/stars", authLimit, async (req, res) => {
   await star_handler.getStars(req, res);
 });
 
@@ -574,7 +602,7 @@ app.get("/api/stars", async (req, res) => {
  *   @Rtype application/json
  *   @Rdesc Atom update feed, following the format expected by Squirrel.
  */
-app.get("/api/updates", async (req, res) => {
+app.get("/api/updates", genericLimit, async (req, res) => {
   await update_handler.getUpdates(req, res);
 });
 
