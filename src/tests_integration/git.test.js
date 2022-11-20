@@ -59,16 +59,31 @@ describe("git.ownership() Tests", () => {
 describe("git.createPackage Tests", () => {
   test.todo("Write all of these");
   test("Returns Bad Repo Short when provided a bad repo", async () => {
-    let res = await git.createPackage("git-test/does-not-exist", { token: "valid-token", id: "xxx", node_id: "xxx", username: "xxx" });
+    let res = await git.createPackage("git-test/does-not-exist", {
+      token: "valid-token",
+      id: "xxx",
+      node_id: "xxx",
+      username: "xxx",
+    });
     expect(res.ok).toBeFalsy();
     expect(res.short).toEqual("Bad Repo");
   });
   test("Returns OK Status when provided a valid repo", async () => {
-    let res = await git.createPackage("git-test/atom-backend", { token: "valid-token", id: "xxx", node_id: "xxx", username: "xxx" });
+    let res = await git.createPackage("git-test/atom-backend", {
+      token: "valid-token",
+      id: "xxx",
+      node_id: "xxx",
+      username: "xxx",
+    });
     expect(res.ok).toBeTruthy();
   });
   test("Returns Expected Package when provided a valid repo", async () => {
-    let res = await git.createPackage("git-test/atom-backend", { token: "valid-token", id: "xxx", node_id: "xxx", username: "xxx" });
+    let res = await git.createPackage("git-test/atom-backend", {
+      token: "valid-token",
+      id: "xxx",
+      node_id: "xxx",
+      username: "xxx",
+    });
     expect(res.content.name).toEqual("find-and-replace");
     expect(res.content.creation_method).toEqual("User Made Package");
     expect(res.content.downloads).toEqual(0);
