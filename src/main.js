@@ -361,9 +361,13 @@ app.delete("/api/packages/:packageName/star", authLimit, async (req, res) => {
  *  @Rdesc A list of user Objects.
  *  @Rexample [ { "login": "aperson" }, { "login": "anotherperson" } ]
  */
-app.get("/api/packages/:packageName/stargazers", genericLimit, async (req, res) => {
-  await package_handler.getPackagesStargazers(req, res);
-});
+app.get(
+  "/api/packages/:packageName/stargazers",
+  genericLimit,
+  async (req, res) => {
+    await package_handler.getPackagesStargazers(req, res);
+  }
+);
 
 /**
  * @web
@@ -428,7 +432,8 @@ app.post("/api/packages/:packageName/versions", authLimit, async (req, res) => {
  *  @Rdesc The `package.json` modified as explainged in the endpoint description.
  */
 app.get(
-  "/api/packages/:packageName/versions/:versionName", genericLimit,
+  "/api/packages/:packageName/versions/:versionName",
+  genericLimit,
   async (req, res) => {
     await package_handler.getPackagesVersion(req, res);
   }
@@ -459,7 +464,8 @@ app.get(
  *   @Rdesc The tarball data for the user to then be able to install.
  */
 app.get(
-  "/api/packages/:packageName/versions/:versionName/tarball", genericLimit,
+  "/api/packages/:packageName/versions/:versionName/tarball",
+  genericLimit,
   async (req, res) => {
     await package_handler.getPackagesVersionTarball(req, res);
   }
@@ -492,7 +498,8 @@ app.get(
  *  @Rdesc Indicates a successful deletion.
  */
 app.delete(
-  "/api/packages/:packageName/versions/:versionName", authLimit,
+  "/api/packages/:packageName/versions/:versionName",
+  authLimit,
   async (req, res) => {
     await package_handler.deletePackageVersion(req, res);
   }
@@ -525,7 +532,8 @@ app.delete(
  *   @Rdesc Returns JSON ok: true
  */
 app.post(
-  "/api/packages/:packageName/versions/:versionName/events/uninstall", authLimit,
+  "/api/packages/:packageName/versions/:versionName/events/uninstall",
+  authLimit,
   async (req, res) => {
     await package_handler.postPackagesEventUninstall(req, res);
   }
