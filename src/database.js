@@ -154,44 +154,65 @@ async function insertNewPackage(pack) {
  * @async
  * @function insertNewPackageName
  * @desc Insert a new package name with the same pointer as the old name.
+ * This essentially renames an existing package.
  * @param {string} newName - The new name to create in the DB.
  * @param {string} oldName - The original name of which to use the pointer of.
  * @returns {object} A server status object.
  */
 async function insertNewPackageName(newName, oldName) {
-  try {
-    sql_storage ??= setupSQL();
+  sql_storage ??= setupSQL();
 
-    const getID = await sql_storage`
-      SELECT pointer FROM names WHERE name = ${oldName}
-    `;
+  return await sql_storage
+    .begin(async () => {
+      // Retrieve the package pointer
+      const getID = await sql_storage`
+        SELECT pointer
+        FROM names
+        WHERE name = ${oldName};
+      `;
 
-    if (command.count === 0) {
-      return {
-        ok: false,
-        content: `Unable to find original pointer ${oldName}`,
-        short: "Server Error",
-      };
-    }
+      if (getID.count === 0) {
+        throw `Unable to find the original pointer of ${oldName}`;
+      }
 
-    const newName = await sql_storage`
-      INSERT INTO names (name, pointer)
-      VALUES (
-        ${newName}, ${getID[0].pointer}
-      )
-      RETURNING *;
-    `;
+      const pointer = getID[0].pointer;
 
-    return command.count !== 0
-      ? { ok: true, content: command[0] }
-      : {
-          ok: false,
-          content: `Unable to create name: ${newName}`,
-          short: "Server Error",
-        };
-  } catch (err) {
-    return { ok: false, content: err, short: "Server Error" };
-  }
+      // Before inserting the new name, we try to update it into the `packages` table
+      // since we want that column to contain the current name.
+      const updateNewName = await sql_storage`
+        UPDATE packages
+        SET name = ${newName}
+        WHERE pointer = ${pointer}
+        RETURNING *;
+      `;
+
+      if (updateNewName.count === 0) {
+        throw `Unable to update the package name. ${newName} is already used.`;
+      }
+
+      // Now we can finally insert the new name inside the `names` table.
+      const newInsertedName = await sql_storage`
+        INSERT INTO names (name, pointer)
+        VALUES (
+          ${newName}, ${pointer}
+        )
+        RETURNING *;
+      `;
+
+      if (newInsertedName.count === 0) {
+        throw `Unable to add the new name: ${newName}`;
+      }
+
+      return { ok: true, content: `Successfully inserted ${newName}.` };
+    })
+    .catch((err) => {
+      const msg =
+        typeof err === "string"
+          ? err
+          : `A generic error occurred while inserting the new package name ${newName}`;
+
+      return { ok: false, content: msg, short: "Server Error" };
+    });
 }
 
 /**
