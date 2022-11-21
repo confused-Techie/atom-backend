@@ -559,7 +559,7 @@ async function postPackagesVersion(req, res) {
   let packJSON = await git.getPackageJSON(`${user.content.username}/${packExists.name}`, user.content);
 
   if (packJSON === undefined) {
-    await common.handleError(req, res { ok: false, short: "Bad Package", content: `Failed to get Package: ${params.packageName}`});
+    await common.handleError(req, res, { ok: false, short: "Bad Package", content: `Failed to get Package: ${params.packageName}`});
     return;
   }
 
