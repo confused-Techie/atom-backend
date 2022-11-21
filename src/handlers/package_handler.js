@@ -556,16 +556,27 @@ async function postPackagesVersion(req, res) {
 
   // Now it's important to note, that getPackageJSON was intended to be an internal function.
   // As such does not return a Server Status Object. This may change later, but for now, we will expect `undefined` to not be success.
-  let packJSON = await git.getPackageJSON(`${user.content.username}/${packExists.name}`, user.content);
+  let packJSON = await git.getPackageJSON(
+    `${user.content.username}/${packExists.name}`,
+    user.content
+  );
 
   if (packJSON === undefined) {
-    await common.handleError(req, res, { ok: false, short: "Bad Package", content: `Failed to get Package: ${params.packageName}`});
+    await common.handleError(req, res, {
+      ok: false,
+      short: "Bad Package",
+      content: `Failed to get Package: ${params.packageName}`,
+    });
     return;
   }
 
   if (pack.name !== params.packageName && !params.rename) {
     // Only return error if the names don't match, and rename isn't enabled.
-    await common.handleError(req, res, { ok: false, short: "Bad Repo", content: "Package name doesn't match local name, with rename false" });
+    await common.handleError(req, res, {
+      ok: false,
+      short: "Bad Repo",
+      content: "Package name doesn't match local name, with rename false",
+    });
     return;
   }
 
@@ -584,7 +595,10 @@ async function postPackagesVersion(req, res) {
 
   if (pack.name !== params.packageName && params.rename) {
     // The flow for creating a new package name.
-    let newName = await database.insertNewPackageName(pack.name, params.packageName);
+    let newName = await database.insertNewPackageName(
+      pack.name,
+      params.packageName
+    );
 
     if (!newName.ok) {
       await common.handleError(req, res, newName);

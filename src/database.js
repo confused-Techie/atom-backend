@@ -167,7 +167,11 @@ async function insertNewPackageName(newName, oldName) {
     `;
 
     if (command.count === 0) {
-      return { ok: false, content: `Unable to find original pointer ${oldName}`, short: "Server Error" };
+      return {
+        ok: false,
+        content: `Unable to find original pointer ${oldName}`,
+        short: "Server Error",
+      };
     }
 
     const newName = await sql_storage`
@@ -183,9 +187,9 @@ async function insertNewPackageName(newName, oldName) {
       : {
           ok: false,
           content: `Unable to create name: ${newName}`,
-          short: "Server Error"
+          short: "Server Error",
         };
-  } catch(err) {
+  } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }

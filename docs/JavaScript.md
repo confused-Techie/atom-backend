@@ -147,6 +147,7 @@ with and retreive data from the cloud hosted database instance.
     * [~setupSQL()](#module_database..setupSQL) ⇒ <code>object</code>
     * [~shutdownSQL()](#module_database..shutdownSQL)
     * [~insertNewPackage(pack)](#module_database..insertNewPackage) ⇒ <code>object</code>
+    * [~insertNewPackageName(newName, oldName)](#module_database..insertNewPackageName) ⇒ <code>object</code>
     * [~insertNewUser(user)](#module_database..insertNewUser) ⇒ <code>object</code>
     * [~updateUser(user)](#module_database..updateUser) ⇒ <code>object</code>
     * [~getPackageByID(id)](#module_database..getPackageByID) ⇒ <code>object</code>
@@ -206,6 +207,19 @@ Insert a new package inside the DB taking a `Server Object Full` as argument.
 | Param | Type | Description |
 | --- | --- | --- |
 | pack | <code>object</code> | The `Server Object Full` package. |
+
+<a name="module_database..insertNewPackageName"></a>
+
+### database~insertNewPackageName(newName, oldName) ⇒ <code>object</code>
+Insert a new package name with the same pointer as the old name.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| newName | <code>string</code> | The new name to create in the DB. |
+| oldName | <code>string</code> | The original name of which to use the pointer of. |
 
 <a name="module_database..insertNewUser"></a>
 

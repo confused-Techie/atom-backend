@@ -147,12 +147,10 @@ app.get("/repos/git-test/atom-backend/tags", (req, res) => {
 });
 
 app.use((req, res) => {
-  res
-    .status(404)
-    .json({
-      message: "Not Found",
-      documentation_url: "https://docs.github.com/rest",
-    });
+  res.status(404).json({
+    message: "Not Found",
+    documentation_url: "https://docs.github.com/rest",
+  });
 });
 
 module.exports = app;
