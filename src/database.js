@@ -1209,12 +1209,8 @@ async function simpleSearch(term, page, dir, sort) {
   try {
     sql_storage ??= setupSQL();
 
-    let offset = 0;
     let limit = paginated_amount;
-
-    if (page !== 1) {
-      offset = (page - 1) * paginated_amount;
-    }
+    let offset = (page > 1) ? ((page - 1) * limit) : 0;
 
     const command = await sql_storage`
       SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
