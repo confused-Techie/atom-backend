@@ -1308,12 +1308,8 @@ async function getSortedPackages(page, dir, method) {
   // page, sort method, and direction. We must figure out the rest here.
   // only knowing we have a valid sort method provided.
 
-  let offset = 0;
   let limit = paginated_amount;
-
-  if (page !== 1) {
-    offset = (page - 1) * paginated_amount;
-  }
+  let offset = (page > 1) ? ((page - 1) * limit) : 0;
 
   try {
     sqlStorage ??= setupSQL();
