@@ -532,6 +532,11 @@ async function postPackagesVersion(req, res) {
     packageName: decodeURIComponent(req.params.packageName),
   };
 
+  // On renaming:
+  // When a package is being renamed, we will expect that packageName will match a previously published package.
+  // But then the `name` of their `package.json` will be different. And if they are, we expect that `auth` is true.
+  // Because otherwise it will fail. That's the methodology, the logic here just needs to catch up.
+
   let user = await auth.verifyAuth(params.auth);
 
   if (!user.ok) {
@@ -539,12 +544,57 @@ async function postPackagesVersion(req, res) {
     return;
   }
 
-  let gitowner = await git.ownership(user.content, params.packageName);
+  // To support a rename, we need to check if they have permissions over this packages new name.
+  // Which means we have to check if they have ownership AFTER we collect it's data.
+
+  let packExists = await database.getPackageByName(params.packageName);
+
+  if (!packExists.ok) {
+    await common.handleError(req, res, packExists);
+    return;
+  }
+
+  // Now it's important to note, that getPackageJSON was intended to be an internal function.
+  // As such does not return a Server Status Object. This may change later, but for now, we will expect `undefined` to not be success.
+  let packJSON = await git.getPackageJSON(`${user.content.username}/${packExists.name}`, user.content);
+
+  if (packJSON === undefined) {
+    await common.handleError(req, res { ok: false, short: "Bad Package", content: `Failed to get Package: ${params.packageName}`});
+    return;
+  }
+
+  if (pack.name !== params.packageName && !params.rename) {
+    // Only return error if the names don't match, and rename isn't enabled.
+    await common.handleError(req, res, { ok: false, short: "Bad Repo", content: "Package name doesn't match local name, with rename false" });
+    return;
+  }
+
+  // Else we will continue, and trust the name provided from the package as being accurate. And now we can ensure the user
+  // actually owns this repo, with our updated name.
+
+  let gitowner = await git.ownership(user.content, packJSON.name);
 
   if (!gitowner.ok) {
     await common.handleError(req, res, gitowner);
     return;
   }
+
+  // Now the only thing left to do, is add this new version with the name from the package. And check again if the name is incorrect, since it'll
+  // need a new entry onto the names.
+
+  if (pack.name !== params.packageName && params.rename) {
+    // The flow for creating a new package name.
+    let newName = await database.insertNewPackageName(pack.name, params.packageName);
+
+    if (!newName.ok) {
+      await common.handleError(req, res, newName);
+      return;
+    }
+
+    // Now add the new version key.
+  }
+
+  // Now add the new Version key.
 
   // TODO: Unkown how to handle a rename, so it must be planned before completion.
   await common.notSupported(req, res);

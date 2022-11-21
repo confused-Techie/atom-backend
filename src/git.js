@@ -536,6 +536,7 @@ async function getRepoTags(repo, user) {
 module.exports = {
   ownership,
   createPackage,
+  getPackageJSON,
   setGHAPIURL,
   setGHWebURL,
 };

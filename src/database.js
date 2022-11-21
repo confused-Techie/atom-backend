@@ -152,6 +152,46 @@ async function insertNewPackage(pack) {
 
 /**
  * @async
+ * @function insertNewPackageName
+ * @desc Insert a new package name with the same pointer as the old name.
+ * @param {string} newName - The new name to create in the DB.
+ * @param {string} oldName - The original name of which to use the pointer of.
+ * @returns {object} A server status object.
+ */
+async function insertNewPackageName(newName, oldName) {
+  try {
+    sql_storage ??= setupSQL();
+
+    const getID = await sql_storage`
+      SELECT pointer FROM names WHERE name = ${oldName}
+    `;
+
+    if (command.count === 0) {
+      return { ok: false, content: `Unable to find original pointer ${oldName}`, short: "Server Error" };
+    }
+
+    const newName = await sql_storage`
+      INSERT INTO names (name, pointer)
+      VALUES (
+        ${newName}, ${getID[0].pointer}
+      )
+      RETURNING *;
+    `;
+
+    return command.count !== 0
+      ? { ok: true, content: command[0] }
+      : {
+          ok: false,
+          content: `Unable to create name: ${newName}`,
+          short: "Server Error"
+        };
+  } catch(err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+/**
+ * @async
  * @function insertNewUser
  * @desc Insert a new user into the database.
  * @param {object} user - An object containing information related to the user.
@@ -1349,4 +1389,5 @@ module.exports = {
   updateDeleteStar,
   insertNewUser,
   updateUser,
+  insertNewPackageName,
 };
