@@ -339,9 +339,7 @@ async function getPackageByName(name, user = false) {
         p.downloads, p.stargazers_count, p.original_stargazers, p.data,
         JSONB_AGG(JSON_BUILD_OBJECT(
           ${
-            user
-              ? sqlStorage``
-              : sqlStorage`'id', v.id, 'package', v.package,`
+            user ? sqlStorage`` : sqlStorage`'id', v.id, 'package', v.package,`
           } 'status', v.status, 'semver', v.semver,
           'license', v.license, 'engine', v.engine, 'meta', v.meta
         )) AS versions
@@ -1231,7 +1229,7 @@ async function simpleSearch(term, page, dir, sort) {
     sqlStorage ??= setupSQL();
 
     let limit = paginated_amount;
-    let offset = (page > 1) ? ((page - 1) * limit) : 0;
+    let offset = page > 1 ? (page - 1) * limit : 0;
 
     const command = await sqlStorage`
       SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
@@ -1309,7 +1307,7 @@ async function getSortedPackages(page, dir, method) {
   // only knowing we have a valid sort method provided.
 
   let limit = paginated_amount;
-  let offset = (page > 1) ? ((page - 1) * limit) : 0;
+  let offset = page > 1 ? (page - 1) * limit : 0;
 
   try {
     sqlStorage ??= setupSQL();

@@ -212,6 +212,7 @@ Insert a new package inside the DB taking a `Server Object Full` as argument.
 
 ### database~insertNewPackageName(newName, oldName) ⇒ <code>object</code>
 Insert a new package name with the same pointer as the old name.
+This essentially renames an existing package.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
 **Returns**: <code>object</code> - A server status object.  
