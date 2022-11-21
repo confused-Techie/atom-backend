@@ -18,7 +18,7 @@ const {
   paginated_amount,
 } = require("./config.js").getConfig();
 
-let sql_storage; // SQL object, to interact with the DB.
+let sqlStorage; // SQL object, to interact with the DB.
 // It is set after the first call with logical nullish assignment
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_nullish_assignment
 
@@ -56,8 +56,8 @@ function setupSQL() {
  * @desc Ensures any Database connection is properly, and safely closed before exiting.
  */
 function shutdownSQL() {
-  if (sql_storage !== undefined) {
-    sql_storage.end();
+  if (sqlStorage !== undefined) {
+    sqlStorage.end();
   }
 }
 
@@ -69,14 +69,14 @@ function shutdownSQL() {
  * @returns {object} A Server Status Object.
  */
 async function insertNewPackage(pack) {
-  sql_storage ??= setupSQL();
+  sqlStorage ??= setupSQL();
 
   // Since this operation involves multiple queries, we perform a
   // PostgreSQL transaction executing a callback on begin().
   // All data is committed into the database only if no errors occur.
-  return await sql_storage
+  return await sqlStorage
     .begin(async () => {
-      const pack_data = {
+      const packData = {
         name: pack.name,
         repository: pack.repository,
         readme: pack.readme,
@@ -84,9 +84,9 @@ async function insertNewPackage(pack) {
       };
 
       // No need to specify downloads and stargazers. They default at 0 on creation.
-      let command = await sql_storage`
+      let command = await sqlStorage`
       INSERT INTO packages (name, creation_method, data)
-      VALUES (${pack.name}, ${pack.creation_method}, ${pack_data})
+      VALUES (${pack.name}, ${pack.creation_method}, ${packData})
       RETURNING pointer;
     `;
 
@@ -96,7 +96,7 @@ async function insertNewPackage(pack) {
       }
 
       // Populate names table
-      command = await sql_storage`
+      command = await sqlStorage`
       INSERT INTO names (name, pointer)
       VALUES (${pack.name}, ${pointer});
     `;
@@ -127,7 +127,7 @@ async function insertNewPackage(pack) {
         delete meta.engines;
         delete meta.license;
 
-        command = await sql_storage`
+        command = await sqlStorage`
         INSERT INTO versions (package, status, semver, license, engine, meta)
         VALUES (${pointer}, ${status}, ${ver}, ${license}, ${engine}, ${meta})
         RETURNING id;
@@ -160,12 +160,12 @@ async function insertNewPackage(pack) {
  * @returns {object} A server status object.
  */
 async function insertNewPackageName(newName, oldName) {
-  sql_storage ??= setupSQL();
+  sqlStorage ??= setupSQL();
 
-  return await sql_storage
+  return await sqlStorage
     .begin(async () => {
       // Retrieve the package pointer
-      const getID = await sql_storage`
+      const getID = await sqlStorage`
         SELECT pointer
         FROM names
         WHERE name = ${oldName};
@@ -179,7 +179,7 @@ async function insertNewPackageName(newName, oldName) {
 
       // Before inserting the new name, we try to update it into the `packages` table
       // since we want that column to contain the current name.
-      const updateNewName = await sql_storage`
+      const updateNewName = await sqlStorage`
         UPDATE packages
         SET name = ${newName}
         WHERE pointer = ${pointer}
@@ -191,7 +191,7 @@ async function insertNewPackageName(newName, oldName) {
       }
 
       // Now we can finally insert the new name inside the `names` table.
-      const newInsertedName = await sql_storage`
+      const newInsertedName = await sqlStorage`
         INSERT INTO names (name, pointer)
         VALUES (
           ${newName}, ${pointer}
@@ -224,9 +224,9 @@ async function insertNewPackageName(newName, oldName) {
  */
 async function insertNewUser(user) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       INSERT INTO users (username, node_id, avatar)
       VALUES (${user.username}, ${user.node_id}, ${user.avatar})
       RETURNING *;
@@ -254,9 +254,9 @@ async function insertNewUser(user) {
  */
 async function updateUser(user) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       UPDATE users
       SET token = ${user.token}, avatar = ${user.avatar}
       WHERE username = ${user.username}
@@ -285,9 +285,9 @@ async function updateUser(user) {
  */
 async function getPackageByID(id) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       SELECT data FROM packages
       WHERE pointer = ${id};
     `;
@@ -320,10 +320,10 @@ async function getPackageByID(id) {
  */
 async function getPackageByName(name, user = false) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
     // While this query achieves the same as the one below it, there is about .1ms saved.
-    //const command = await sql_storage`
+    //const command = await sqlStorage`
     //  SELECT p.*, JSON_AGG(v.*) FROM packages p JOIN versions v ON p.pointer = v.package
     //  WHERE pointer IN (
     //    SELECT pointer FROM names WHERE name = ${name}
@@ -331,17 +331,17 @@ async function getPackageByName(name, user = false) {
     //  GROUP BY p.pointer, v.package;
     //`;
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       SELECT
         ${
-          user ? sql_storage`` : sql_storage`p.pointer,`
+          user ? sqlStorage`` : sqlStorage`p.pointer,`
         } p.name, p.created, p.updated, p.creation_method,
         p.downloads, p.stargazers_count, p.original_stargazers, p.data,
         JSONB_AGG(JSON_BUILD_OBJECT(
           ${
             user
-              ? sql_storage``
-              : sql_storage`'id', v.id, 'package', v.package,`
+              ? sqlStorage``
+              : sqlStorage`'id', v.id, 'package', v.package,`
           } 'status', v.status, 'semver', v.semver,
           'license', v.license, 'engine', v.engine, 'meta', v.meta
         )) AS versions
@@ -374,9 +374,9 @@ async function getPackageByName(name, user = false) {
  */
 async function getPackageVersionByNameAndVersion(name, version) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       SELECT *
       FROM versions
       WHERE package IN (
@@ -409,14 +409,14 @@ async function getPackageVersionByNameAndVersion(name, version) {
  */
 async function getPackageCollectionByName(packArray) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       SELECT *
       FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
       WHERE pointer IN (
         SELECT pointer FROM names
-        WHERE name IN ${sql_storage(packArray)}
+        WHERE name IN ${sqlStorage(packArray)}
       )
     `;
 
@@ -437,11 +437,11 @@ async function getPackageCollectionByName(packArray) {
  */
 async function getPackageCollectionByID(packArray) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       SELECT data FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
-      WHERE pointer IN ${sql_storage(packArray)}
+      WHERE pointer IN ${sqlStorage(packArray)}
     `;
 
     return command.count !== 0
@@ -460,9 +460,9 @@ async function getPackageCollectionByID(packArray) {
  */
 async function getPointerTable() {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       SELECT * FROM names;
     `;
 
@@ -487,9 +487,9 @@ async function getPointerTable() {
  */
 async function updatePackageIncrementStarByName(name) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       UPDATE packages
       SET stargazers_count = stargazers_count + 1
       WHERE pointer IN (
@@ -520,9 +520,9 @@ async function updatePackageIncrementStarByName(name) {
  */
 async function updatePackageDecrementStarByName(name) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       UPDATE packages
       SET stargazers_count = stargazers_count - 1
       WHERE pointer IN (
@@ -553,9 +553,9 @@ async function updatePackageDecrementStarByName(name) {
  */
 async function updatePackageIncrementDownloadByName(name) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       UPDATE packages
       SET downloads = downloads + 1
       WHERE pointer IN (
@@ -586,9 +586,9 @@ async function updatePackageIncrementDownloadByName(name) {
  */
 async function updatePackageDecrementDownloadByName(name) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       UPDATE packages
       SET downloads = downloads - 1
       WHERE pointer IN (
@@ -621,11 +621,11 @@ async function updatePackageDecrementDownloadByName(name) {
  */
 async function updatePackageByID(id, data) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
     const jsonData = JSON.stringify(data);
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       UPDATE packages
       SET data = ${jsonData}, updated = CURRENT_TIMESTAMP
       WHERE pointer = ${id}
@@ -655,11 +655,11 @@ async function updatePackageByID(id, data) {
  */
 async function updatePackageByName(name, data) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
     const jsonData = JSON.stringify(data);
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       UPDATE packages
       SET data = ${jsonData}, updated = CURRENT_TIMESTAMP
       WHERE pointer IN (
@@ -689,12 +689,12 @@ async function updatePackageByName(name, data) {
  * @returns {object} A server status object.
  */
 async function removePackageByName(name) {
-  sql_storage ??= setupSQL();
+  sqlStorage ??= setupSQL();
 
-  return await sql_storage
+  return await sqlStorage
     .begin(async () => {
       // Remove versions of the package
-      const command_vers = await sql_storage`
+      const commandVers = await sqlStorage`
         DELETE FROM versions
         WHERE package IN (
           SELECT pointer FROM names
@@ -703,12 +703,12 @@ async function removePackageByName(name) {
         RETURNING *;
       `;
 
-      if (command_vers.count === 0) {
+      if (commandVers.count === 0) {
         throw `Failed to delete any versions for: ${name}`;
       }
 
       // Remove stars assigned to the package
-      const command_star = await sql_storage`
+      const commandStar = await sqlStorage`
         DELETE FROM stars
         WHERE package IN (
           SELECT pointer FROM names
@@ -717,12 +717,12 @@ async function removePackageByName(name) {
         RETURNING *;
       `;
 
-      if (command_star.count === 0) {
+      if (commandStar.count === 0) {
         throw `Failed to delete stars for: ${name}`;
       }
 
       // Remove names related to the package
-      const command_name = await sql_storage`
+      const commandName = await sqlStorage`
         DELETE FROM names
         WHERE pointer IN (
           SELECT pointer FROM names
@@ -731,26 +731,26 @@ async function removePackageByName(name) {
         RETURNING *;
       `;
 
-      if (command_name.count === 0) {
+      if (commandName.count === 0) {
         throw `Failed to delete names for: ${name}`;
       }
 
       // Remove the package itself.
       // We will have to use the pointer returning from this last command, since we
       // can no longer preform the same lookup as before.
-      const command_pack = await sql_storage`
+      const commandPack = await sqlStorage`
         DELETE FROM packages
-        WHERE pointer = ${command_name[0].pointer}
+        WHERE pointer = ${commandName[0].pointer}
         RETURNING *;
       `;
 
-      if (command_pack.count === 0) {
+      if (commandPack.count === 0) {
         // nothing was returning, the delete probably failed
         throw `Failed to Delete Package for: ${name}`;
       }
 
-      if (command_pack[0].name !== name) {
-        throw `Attempted to delete ${command_pack[0].name} rather than ${name}`;
+      if (commandPack[0].name !== name) {
+        throw `Attempted to delete ${commandPack[0].name} rather than ${name}`;
       }
 
       return { ok: true, content: `Successfully Deleted Package: ${name}` };
@@ -776,9 +776,9 @@ async function removePackageByName(name) {
  */
 async function removePackageVersion(packName, semVer) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
        UPDATE versions
        SET status = 'removed'
        WHERE semver = ${semVer} AND package IN (
@@ -859,9 +859,9 @@ async function getFeaturedThemes() {
  */
 async function getTotalPackageEstimate() {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       SELECT reltuples AS estimate FROM pg_class WHERE relname='packages';
     `;
 
@@ -888,9 +888,9 @@ async function getTotalPackageEstimate() {
  */
 async function getUserByName(username) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       SELECT * FROM users
       WHERE username = ${username};
     `;
@@ -916,9 +916,9 @@ async function getUserByName(username) {
  */
 async function getUserByNodeID(id) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       SELECT * FROM users
       WHERE node_id = ${id};
     `;
@@ -952,9 +952,9 @@ async function getUserByNodeID(id) {
  */
 async function getUserByID(id) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       SELECT * FROM users
       WHERE id = ${id};
     `;
@@ -988,9 +988,9 @@ async function getUserByID(id) {
  */
 async function verifyAuth(token) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       SELECT * FROM users
       WHERE token = ${token};
     `;
@@ -1017,14 +1017,14 @@ async function verifyAuth(token) {
  */
 async function updateStars(user, pack) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command_pointer = await sql_storage`
+    const commandPointer = await sqlStorage`
       SELECT pointer FROM names
       WHERE name = ${pack};
     `;
 
-    if (command_pointer.count === 0) {
+    if (commandPointer.count === 0) {
       return {
         ok: false,
         content: `Unable to find package ${pack} to star.`,
@@ -1034,27 +1034,27 @@ async function updateStars(user, pack) {
 
     // else the command is a value, lets keep going
 
-    const command_star = await sql_storage`
+    const commandStar = await sqlStorage`
       INSERT INTO stars
       (package, userid) VALUES
-      (${command_pointer[0].pointer}, ${user.id})
+      (${commandPointer[0].pointer}, ${user.id})
       RETURNING *;
     `;
 
     // Now we expect to get our data right back, and can check the
     // validity to know if this happened successfully or not.
     if (
-      command_pointer[0].pointer == command_star[0].package &&
-      user.id == command_star[0].userid
+      commandPointer[0].pointer == commandStar[0].package &&
+      user.id == commandStar[0].userid
     ) {
       return {
         ok: true,
-        content: `Successfully Stared ${command_pointer[0].pointer} with ${user.id}`,
+        content: `Successfully Stared ${commandPointer[0].pointer} with ${user.id}`,
       };
     } else {
       return {
         ok: false,
-        content: `Failed to Star ${command_pointer[0].pointer} with ${user.id}`,
+        content: `Failed to Star ${commandPointer[0].pointer} with ${user.id}`,
         short: "Server Error",
       };
     }
@@ -1071,14 +1071,14 @@ async function updateStars(user, pack) {
  */
 async function updateDeleteStar(user, pack) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command_pointer = await sql_storage`
+    const commandPointer = await sqlStorage`
       SELECT pointer FROM names
       WHERE name = ${pack};
     `;
 
-    if (command_pointer.count === 0) {
+    if (commandPointer.count === 0) {
       return {
         ok: false,
         content: `Unable to find package ${pack} to star.`,
@@ -1086,23 +1086,23 @@ async function updateDeleteStar(user, pack) {
       };
     }
 
-    const command_unstar = await sql_storage`
+    const commandUnstar = await sqlStorage`
       DELETE FROM stars
-      WHERE (package = ${command_pointer[0].pointer}) AND (userid = ${user.id})
+      WHERE (package = ${commandPointer[0].pointer}) AND (userid = ${user.id})
       RETURNING *;
     `;
 
-    if (command_unstar.length === 0) {
+    if (commandUnstar.length === 0) {
       // The command failed, let see if its because the data doesn't exist.
 
-      const does_exist = await sql_storage`
+      const doesExist = await sqlStorage`
         SELECT EXISTS (
           SELECT 1 FROM stars
-          WHERE (package = ${command_pointer[0].pointer}) AND (userid = ${user.id})
+          WHERE (package = ${commandPointer[0].pointer}) AND (userid = ${user.id})
         );
       `;
 
-      if (does_exist[0].exists) {
+      if (doesExist[0].exists) {
         // Exists is true, so it failed for some other reason
         return {
           ok: false,
@@ -1120,17 +1120,17 @@ async function updateDeleteStar(user, pack) {
 
     // if the return matches our input we know it was successful
     if (
-      user.id == command_unstar[0].userid &&
-      command_pointer[0].pointer == command_unstar[0].package
+      user.id == commandUnstar[0].userid &&
+      commandPointer[0].pointer == commandUnstar[0].package
     ) {
       return {
         ok: true,
-        content: `Successfully Unstarred ${command_pointer[0].pointer} with ${user.id}`,
+        content: `Successfully Unstarred ${commandPointer[0].pointer} with ${user.id}`,
       };
     } else {
       return {
         ok: false,
-        content: `Failed to Unstar ${command_pointer[0].pointer} with ${user.id}`,
+        content: `Failed to Unstar ${commandPointer[0].pointer} with ${user.id}`,
         short: "Server Error",
       };
     }
@@ -1146,9 +1146,9 @@ async function updateDeleteStar(user, pack) {
  */
 async function getStarredPointersByUserID(userid) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       SELECT ARRAY (
         SELECT package FROM stars WHERE userid=${userid}
       );
@@ -1194,9 +1194,9 @@ async function getStarredPointersByUserName(username) {
  */
 async function getStarringUsersByPointer(pointer) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       SELECT ARRAY (
         SELECT userid FROM stars WHERE package=${pointer.pointer}
       );
@@ -1228,22 +1228,22 @@ async function getStarringUsersByPointer(pointer) {
  */
 async function simpleSearch(term, page, dir, sort) {
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
     let limit = paginated_amount;
     let offset = (page > 1) ? ((page - 1) * limit) : 0;
 
-    const command = await sql_storage`
+    const command = await sqlStorage`
       SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
       WHERE pointer IN (
         SELECT pointer
         FROM names
-        ${sql_storage`WHERE name ILIKE ${"%" + term + "%"}`}
+        ${sqlStorage`WHERE name ILIKE ${"%" + term + "%"}`}
       )
       ORDER BY ${
-        sort === "relevance" ? sql_storage`downloads` : sql_storage`${term}`
+        sort === "relevance" ? sqlStorage`downloads` : sqlStorage`${term}`
       }
-      ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
+      ${dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`}
       LIMIT ${limit}
       OFFSET ${offset}
     `;
@@ -1264,7 +1264,7 @@ async function simpleSearch(term, page, dir, sort) {
  * @returns {object} A server status object with the array of users collected.
  */
 async function getUserCollectionById(ids) {
-  let user_array = [];
+  let userArray = [];
 
   for (let i = 0; i < ids.length; i++) {
     let user = await getUserByID(ids[i]);
@@ -1283,10 +1283,10 @@ async function getUserCollectionById(ids) {
       continue;
     }
 
-    user_array.push({ login: user.content.username });
+    userArray.push({ login: user.content.username });
   }
 
-  return { ok: true, content: user_array };
+  return { ok: true, content: userArray };
 }
 
 /**
@@ -1316,43 +1316,43 @@ async function getSortedPackages(page, dir, method) {
   }
 
   try {
-    sql_storage ??= setupSQL();
+    sqlStorage ??= setupSQL();
 
     let command = null;
 
     switch (method) {
       case "downloads":
-        command = await sql_storage`
+        command = await sqlStorage`
           SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
           ORDER BY downloads
-          ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
+          ${dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`}
           LIMIT ${limit}
           OFFSET ${offset};
         `;
         break;
       case "created_at":
-        command = await sql_storage`
+        command = await sqlStorage`
           SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
           ORDER BY created
-          ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
+          ${dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`}
           LIMIT ${limit}
           OFFSET ${offset};
         `;
         break;
       case "updated_at":
-        command = await sql_storage`
+        command = await sqlStorage`
           SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
           ORDER BY updated
-          ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
+          ${dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`}
           LIMIT ${limit}
           OFFSET ${offset};
         `;
         break;
       case "stars":
-        command = await sql_storage`
+        command = await sqlStorage`
           SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
           ORDER BY stargazers_count
-          ${dir === "desc" ? sql_storage`DESC` : sql_storage`ASC`}
+          ${dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`}
           LIMIT ${limit}
           OFFSET ${offset};
         `;
