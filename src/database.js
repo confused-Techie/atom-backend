@@ -452,32 +452,6 @@ async function getPackageCollectionByID(packArray) {
 
 /**
  * @async
- * @function getPointerTable
- * @desc Returns a full package pointer table, allowing the full reference of package names
- * to package pointer UUIDs.
- */
-async function getPointerTable() {
-  try {
-    sqlStorage ??= setupSQL();
-
-    const command = await sqlStorage`
-      SELECT * FROM names;
-    `;
-
-    return command.count !== 0
-      ? { ok: true, content: command }
-      : {
-          ok: false,
-          content: "Unable to get Package Pointers.",
-          short: "Server Error",
-        };
-  } catch (err) {
-    return { ok: false, content: err, short: "Server Error" };
-  }
-}
-
-/**
- * @async
  * @function updatePackageIncrementStarByName
  * @description Uses the package name to increment it's stargazers count by one.
  * @param {string} name - The package name.
@@ -1391,7 +1365,6 @@ module.exports = {
   getStarredPointersByUserID,
   getStarredPointersByUserName,
   getStarringUsersByPointer,
-  getPointerTable,
   getUserCollectionById,
   getPackageVersionByNameAndVersion,
   updatePackageIncrementDownloadByName,
