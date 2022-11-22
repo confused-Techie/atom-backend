@@ -1143,25 +1143,6 @@ async function getStarredPointersByUserID(userid) {
 
 /**
  * @async
- * @function getStarringUsersByUserName
- * @description Get all starred pointers by a username.
- */
-async function getStarredPointersByUserName(username) {
-  let user = await getUserByName(username);
-
-  if (!user.ok) {
-    return user;
-  }
-
-  let userid = user.content.id;
-
-  let starred = await getStarredPointersByUserID(userid);
-
-  return starred;
-}
-
-/**
- * @async
  * @function getStarringUsersByPointer
  * @description Use the pointer of a package to collect all users that have starred it.
  * @param {string} pointer - The ID of the package.
@@ -1369,7 +1350,6 @@ module.exports = {
   getUserByID,
   verifyAuth,
   getStarredPointersByUserID,
-  getStarredPointersByUserName,
   getStarringUsersByPointer,
   getUserCollectionById,
   getPackageVersionByNameAndVersion,
