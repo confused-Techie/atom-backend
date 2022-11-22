@@ -1127,15 +1127,16 @@ async function getStarredPointersByUserID(userid) {
       );
     `;
 
+    let packArray = command[0].array;
+
     if (command.count === 0) {
-      return {
-        ok: false,
-        content: `Unable to Get Starred Pointers for ${userid}`,
-        short: "Server Error",
-      };
+      // It is likely safe to assume that if nothing matches the userid,
+      // then the user hasn't given any star. So instead of server error
+      // here we will non-traditionally return an empty array.
+      packArray = [];
     }
 
-    return { ok: true, content: command[0].array };
+    return { ok: true, content: packArray };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
