@@ -1018,18 +1018,17 @@ async function updateStars(user, pack) {
 
     // Now we expect to get our data right back, and can check the
     // validity to know if this happened successfully or not.
-    return (
-      commandPointer[0].pointer == commandStar[0].package &&
+    return commandPointer[0].pointer == commandStar[0].package &&
       user.id == commandStar[0].userid
-    )
       ? {
-        ok: true,
-        content: `Successfully Stared ${commandPointer[0].pointer} with ${user.id}` }
+          ok: true,
+          content: `Successfully Stared ${commandPointer[0].pointer} with ${user.id}`,
+        }
       : {
-        ok: false,
-        content: `Failed to Star ${commandPointer[0].pointer} with ${user.id}`,
-        short: "Server Error" }
-    ;
+          ok: false,
+          content: `Failed to Star ${commandPointer[0].pointer} with ${user.id}`,
+          short: "Server Error",
+        };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -1093,18 +1092,17 @@ async function updateDeleteStar(user, pack) {
     }
 
     // if the return matches our input we know it was successful
-    return (
-      user.id == commandUnstar[0].userid &&
+    return user.id == commandUnstar[0].userid &&
       commandPointer[0].pointer == commandUnstar[0].package
-    )
       ? {
-        ok: true,
-        content: `Successfully Unstarred ${commandPointer[0].pointer} with ${user.id}` }
+          ok: true,
+          content: `Successfully Unstarred ${commandPointer[0].pointer} with ${user.id}`,
+        }
       : {
-        ok: false,
-        content: `Failed to Unstar ${commandPointer[0].pointer} with ${user.id}`,
-        short: "Server Error" }
-    ;
+          ok: false,
+          content: `Failed to Unstar ${commandPointer[0].pointer} with ${user.id}`,
+          short: "Server Error",
+        };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
