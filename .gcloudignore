@@ -7,7 +7,12 @@ node_modules/
 .gitignore
 README.md
 LICENSE
-# Other repo data not needed 
+CODE_OF_CONDUCT.md
+codeql-config.yml
+FUNDING.yml
+PULL_REQUEST_TEMPLATE.md
+SECURITY.md
+# Other repo data not needed
 .all-contributorsrc
 .complexrc
 .prettierignore
@@ -17,3 +22,6 @@ coverage/
 docs/
 scripts/
 coverage/
+.codacy.yaml
+.eslint.js
+jest.config.js

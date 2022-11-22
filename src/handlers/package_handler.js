@@ -570,7 +570,7 @@ async function postPackagesVersion(req, res) {
     return;
   }
 
-  if (pack.name !== params.packageName && !params.rename) {
+  if (packJSON.name !== params.packageName && !params.rename) {
     // Only return error if the names don't match, and rename isn't enabled.
     await common.handleError(req, res, {
       ok: false,
@@ -593,10 +593,10 @@ async function postPackagesVersion(req, res) {
   // Now the only thing left to do, is add this new version with the name from the package. And check again if the name is incorrect, since it'll
   // need a new entry onto the names.
 
-  if (pack.name !== params.packageName && params.rename) {
+  if (packJSON.name !== params.packageName && params.rename) {
     // The flow for creating a new package name.
     let newName = await database.insertNewPackageName(
-      pack.name,
+      packJSON.name,
       params.packageName
     );
 
@@ -606,6 +606,10 @@ async function postPackagesVersion(req, res) {
     }
 
     // Now add the new version key.
+
+    // Temp return as this is pushed out.
+    await common.notSupported(req, res);
+    logger.httpLog(req, res);
   }
 
   // Now add the new Version key.
