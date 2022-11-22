@@ -50,10 +50,10 @@ async function getPackages(req, res) {
 
   packages = await utils.constructPackageObjectShort(packages.content);
 
-  let total_pages = await database.getTotalPackageEstimate();
+  let totalPages = await database.getTotalPackageEstimate();
 
-  if (!total_pages.ok) {
-    await common.handleError(req, res, total_pages, 1002);
+  if (!totalPages.ok) {
+    await common.handleError(req, res, totalPages, 1002);
     return;
   }
 
@@ -63,7 +63,7 @@ async function getPackages(req, res) {
       params.sort
     }&order=${
       params.direction
-    }>; rel="self", <${server_url}/api/packages?page=${total_pages}&sort=${
+    }>; rel="self", <${server_url}/api/packages?page=${totalPages}&sort=${
       params.sort
     }&order=${
       params.direction
@@ -148,31 +148,31 @@ async function postPackages(req, res) {
   }
 
   // Now knowing they own the git repo, and it doesn't exist here, lets publish.
-  let new_pack = await git.createPackage(params.repository, user.content);
+  let newPack = await git.createPackage(params.repository, user.content);
 
-  if (!new_pack.ok) {
-    await common.handleError(req, res, new_pack);
+  if (!newPack.ok) {
+    await common.handleError(req, res, newPack);
     return;
   }
 
   // Now with valid package data, we can insert them into the DB.
-  let inserted_new_pack = await database.insertNewPackage(new_pack.content);
+  let insertedNewPack = await database.insertNewPackage(newPack.content);
 
-  if (!inserted_new_pack.ok) {
-    await common.handleError(req, res, inserted_new_pack);
+  if (!insertedNewPack.ok) {
+    await common.handleError(req, res, insertedNewPack);
     return;
   }
 
   // Finally we can return what was actually put into the database.
   // Retrieve the data from database.getPackageByName() and
   // convert it into Package Object Full format.
-  let new_db_pack = await database.getPackageByName(repo, true);
+  let newDbPack = await database.getPackageByName(repo, true);
 
-  if (new_db_pack.ok) {
-    const package_object_full = await utils.constructPackageObjectFull(
-      new_db_pack.content
+  if (newDbPack.ok) {
+    const packageObjectFull = await utils.constructPackageObjectFull(
+      newDbPack.content
     );
-    res.status(201).json(package_object_full);
+    res.status(201).json(packageObjectFull);
   } else {
     common.serverError(req, res, "Cannot retrieve new package from DB");
   }
@@ -266,7 +266,7 @@ async function getPackagesSearch(req, res) {
 
   let totalPageEstimate = await database.getTotalPackageEstimate();
 
-  let total_pages = !totalPageEstimate.ok ? 1 : totalPageEstimate.content;
+  let totalPages = !totalPageEstimate.ok ? 1 : totalPageEstimate.content;
 
   // now to get headers.
   res.append(
@@ -277,7 +277,7 @@ async function getPackagesSearch(req, res) {
       params.direction
     }>; rel="self", <${server_url}/api/packages?q=${
       params.query
-    }&page=${total_pages}&sort=${params.sort}&order=${
+    }&page=${totalPages}&sort=${params.sort}&order=${
       params.direction
     }>; rel="last", <${server_url}/api/packages/search?q=${params.query}&page=${
       params.page + 1
