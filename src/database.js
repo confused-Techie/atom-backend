@@ -985,7 +985,10 @@ async function verifyAuth(token) {
 /**
  * @async
  * @function updateStars
- * @description TODO Not sure at this point.
+ * @description Register the star given by a user to a package.
+ * @param {int} user - ID of the user who give the star.
+ * @param {string} pack - Package name that get the new star.
+ * @returns {object} A server status object.
  */
 async function updateStars(user, pack) {
   try {
@@ -1015,21 +1018,18 @@ async function updateStars(user, pack) {
 
     // Now we expect to get our data right back, and can check the
     // validity to know if this happened successfully or not.
-    if (
+    return (
       commandPointer[0].pointer == commandStar[0].package &&
       user.id == commandStar[0].userid
-    ) {
-      return {
+    )
+      ? {
         ok: true,
-        content: `Successfully Stared ${commandPointer[0].pointer} with ${user.id}`,
-      };
-    } else {
-      return {
+        content: `Successfully Stared ${commandPointer[0].pointer} with ${user.id}` }
+      : {
         ok: false,
         content: `Failed to Star ${commandPointer[0].pointer} with ${user.id}`,
-        short: "Server Error",
-      };
-    }
+        short: "Server Error" }
+    ;
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -1038,8 +1038,10 @@ async function updateStars(user, pack) {
 /**
  * @async
  * @function updateDeleteStar
- * @description Needs verification.
- * @todo Write these documents when possible.
+ * @description Register the removal of the star on a package by a user.
+ * @param {int} user - ID of the user who remove the star.
+ * @param {string} pack - Package name that get the star removed.
+ * @returns {object} A server status object.
  */
 async function updateDeleteStar(user, pack) {
   try {
@@ -1091,21 +1093,18 @@ async function updateDeleteStar(user, pack) {
     }
 
     // if the return matches our input we know it was successful
-    if (
+    return (
       user.id == commandUnstar[0].userid &&
       commandPointer[0].pointer == commandUnstar[0].package
-    ) {
-      return {
+    )
+      ? {
         ok: true,
-        content: `Successfully Unstarred ${commandPointer[0].pointer} with ${user.id}`,
-      };
-    } else {
-      return {
+        content: `Successfully Unstarred ${commandPointer[0].pointer} with ${user.id}` }
+      : {
         ok: false,
         content: `Failed to Unstar ${commandPointer[0].pointer} with ${user.id}`,
-        short: "Server Error",
-      };
-    }
+        short: "Server Error" }
+    ;
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -1114,7 +1113,9 @@ async function updateDeleteStar(user, pack) {
 /**
  * @async
  * @function getStarredPointersByUserID
- * @description Get all stars of a user by their user id.
+ * @description Get all packages which the user gave the star.
+ * @param {int} userid - ID of the user.
+ * @returns {object} A server status object.
  */
 async function getStarredPointersByUserID(userid) {
   try {
@@ -1163,6 +1164,8 @@ async function getStarredPointersByUserName(username) {
  * @async
  * @function getStarringUsersByPointer
  * @description Use the pointer of a package to collect all users that have starred it.
+ * @param {string} pointer - The ID of the package.
+ * @returns {object} A server status object.
  */
 async function getStarringUsersByPointer(pointer) {
   try {
@@ -1174,6 +1177,8 @@ async function getStarringUsersByPointer(pointer) {
       );
     `;
 
+    let userArray = command[0].array;
+
     if (command.count === 0) {
       // It is likely safe to assume that if nothing matches the packagepointer,
       // then the package pointer has no stars. So instead of server error
@@ -1183,10 +1188,10 @@ async function getStarringUsersByPointer(pointer) {
         null,
         `No Stars for ${pointer} found, assuming 0 star value.`
       );
-      return { ok: true, content: [] };
+      userArray = [];
     }
 
-    return { ok: true, content: command[0].array };
+    return { ok: true, content: userArray };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -1197,6 +1202,7 @@ async function getStarringUsersByPointer(pointer) {
  * @function simpleSearch
  * @description The current Fuzzy-Finder implementation of search. Ideally eventually
  * will use a more advanced search method.
+ * @returns {object} A server status object.
  */
 async function simpleSearch(term, page, dir, sort) {
   try {
