@@ -647,77 +647,6 @@ async function updatePackageDecrementDownloadByName(name) {
 
 /**
  * @async
- * @function updatePackageByID
- * @todo This is one of the original functions migrated to SQL, and should be reviewed for accuracy.
- * @description Updates a Packages content, with new data.
- * @param {string} id - The packages ID.
- * @param {object} data - The Object data to update it with.
- * @returns {object} The modified Server Status Object.
- */
-async function updatePackageByID(id, data) {
-  try {
-    sqlStorage ??= setupSQL();
-
-    const jsonData = JSON.stringify(data);
-
-    const command = await sqlStorage`
-      UPDATE packages
-      SET data = ${jsonData}, updated = CURRENT_TIMESTAMP
-      WHERE pointer = ${id}
-      RETURNING updated;
-    `;
-
-    return command[0].updated !== undefined
-      ? { ok: true, content: command[0].updated }
-      : {
-          ok: false,
-          content: `Unable to update the ${id} package.`,
-          short: "Server Error",
-        };
-  } catch (err) {
-    return { ok: false, content: err, short: "Server Error" };
-  }
-}
-
-/**
- * @async
- * @function updatePackageByName
- * @todo This is one of the original functions migrated to SQL, and should be reviewed for accuracy.
- * @description Updates the packages content, with new data.
- * @param {string} name - The packages name.
- * @param {object} data - The object data to update it with.
- * @returns {object} A server status object.
- */
-async function updatePackageByName(name, data) {
-  try {
-    sqlStorage ??= setupSQL();
-
-    const jsonData = JSON.stringify(data);
-
-    const command = await sqlStorage`
-      UPDATE packages
-      SET data = ${jsonData}, updated = CURRENT_TIMESTAMP
-      WHERE pointer IN (
-        SELECT pointer FROM names
-        WHERE name = ${name}
-      )
-      RETURNING updated;
-    `;
-
-    return command[0].updated !== undefined
-      ? { ok: true, content: command[0].updated }
-      : {
-          ok: false,
-          content: `Unable to update the ${name} package.`,
-          short: "Server Error",
-        };
-  } catch (err) {
-    return { ok: false, content: err, short: "Server Error" };
-  }
-}
-
-/**
- * @async
  * @function removePackageByName
  * @description Given a package name, removes its record alongside its names, versions, stars.
  * @param {string} name - The package name.
@@ -1369,8 +1298,6 @@ module.exports = {
   getPackageByName,
   getPackageCollectionByName,
   getPackageCollectionByID,
-  updatePackageByID,
-  updatePackageByName,
   removePackageByName,
   removePackageVersion,
   getFeaturedPackages,
