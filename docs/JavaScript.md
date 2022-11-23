@@ -155,7 +155,6 @@ with and retreive data from the cloud hosted database instance.
     * [~getPackageVersionByNameAndVersion(name, version)](#module_database..getPackageVersionByNameAndVersion) ⇒ <code>object</code>
     * [~getPackageCollectionByName(packArray)](#module_database..getPackageCollectionByName) ⇒ <code>object</code>
     * [~getPackageCollectionByID(packArray)](#module_database..getPackageCollectionByID) ⇒ <code>object</code>
-    * [~getPointerTable()](#module_database..getPointerTable)
     * [~updatePackageIncrementStarByName(name)](#module_database..updatePackageIncrementStarByName) ⇒ <code>object</code>
     * [~updatePackageDecrementStarByName(name)](#module_database..updatePackageDecrementStarByName) ⇒ <code>object</code>
     * [~updatePackageIncrementDownloadByName(name)](#module_database..updatePackageIncrementDownloadByName) ⇒ <code>object</code>
@@ -171,12 +170,11 @@ with and retreive data from the cloud hosted database instance.
     * [~getUserByNodeID(id)](#module_database..getUserByNodeID) ⇒ <code>object</code>
     * [~getUserByID(id)](#module_database..getUserByID) ⇒ <code>object</code>
     * [~verifyAuth(token)](#module_database..verifyAuth) ⇒ <code>object</code>
-    * [~updateStars()](#module_database..updateStars)
-    * [~updateDeleteStar()](#module_database..updateDeleteStar)
-    * [~getStarredPointersByUserID()](#module_database..getStarredPointersByUserID)
-    * [~getStarringUsersByUserName()](#module_database..getStarringUsersByUserName)
-    * [~getStarringUsersByPointer()](#module_database..getStarringUsersByPointer)
-    * [~simpleSearch()](#module_database..simpleSearch)
+    * [~updateStars(user, pack)](#module_database..updateStars) ⇒ <code>object</code>
+    * [~updateDeleteStar(user, pack)](#module_database..updateDeleteStar) ⇒ <code>object</code>
+    * [~getStarredPointersByUserID(userid)](#module_database..getStarredPointersByUserID) ⇒ <code>object</code>
+    * [~getStarringUsersByPointer(pointer)](#module_database..getStarringUsersByPointer) ⇒ <code>object</code>
+    * [~simpleSearch()](#module_database..simpleSearch) ⇒ <code>object</code>
     * [~getUserCollectionById(ids)](#module_database..getUserCollectionById) ⇒ <code>object</code>
     * [~getSortedPackages(page, dir, dir, method)](#module_database..getSortedPackages) ⇒ <code>object</code>
 
@@ -314,13 +312,6 @@ Takes a package pointer array, and returns an array of the package objects.
 | --- | --- | --- |
 | packArray | <code>Array.&lt;int&gt;</code> | An array of package id. |
 
-<a name="module_database..getPointerTable"></a>
-
-### database~getPointerTable()
-Returns a full package pointer table, allowing the full reference of package names
-to package pointer UUIDs.
-
-**Kind**: inner method of [<code>database</code>](#module_database)  
 <a name="module_database..updatePackageIncrementStarByName"></a>
 
 ### database~updatePackageIncrementStarByName(name) ⇒ <code>object</code>
@@ -509,45 +500,62 @@ Verify if an auth token matches a user, and get that user back if it does.
 
 <a name="module_database..updateStars"></a>
 
-### database~updateStars()
-TODO Not sure at this point.
+### database~updateStars(user, pack) ⇒ <code>object</code>
+Register the star given by a user to a package.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| user | <code>int</code> | ID of the user who give the star. |
+| pack | <code>string</code> | Package name that get the new star. |
+
 <a name="module_database..updateDeleteStar"></a>
 
-### database~updateDeleteStar()
-Needs verification.
+### database~updateDeleteStar(user, pack) ⇒ <code>object</code>
+Register the removal of the star on a package by a user.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
-**Todo**
+**Returns**: <code>object</code> - A server status object.  
 
-- [ ] Write these documents when possible.
+| Param | Type | Description |
+| --- | --- | --- |
+| user | <code>int</code> | ID of the user who remove the star. |
+| pack | <code>string</code> | Package name that get the star removed. |
 
 <a name="module_database..getStarredPointersByUserID"></a>
 
-### database~getStarredPointersByUserID()
-Get all stars of a user by their user id.
+### database~getStarredPointersByUserID(userid) ⇒ <code>object</code>
+Get all packages which the user gave the star.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
-<a name="module_database..getStarringUsersByUserName"></a>
+**Returns**: <code>object</code> - A server status object.  
 
-### database~getStarringUsersByUserName()
-Get all starred pointers by a username.
+| Param | Type | Description |
+| --- | --- | --- |
+| userid | <code>int</code> | ID of the user. |
 
-**Kind**: inner method of [<code>database</code>](#module_database)  
 <a name="module_database..getStarringUsersByPointer"></a>
 
-### database~getStarringUsersByPointer()
+### database~getStarringUsersByPointer(pointer) ⇒ <code>object</code>
 Use the pointer of a package to collect all users that have starred it.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| pointer | <code>string</code> | The ID of the package. |
+
 <a name="module_database..simpleSearch"></a>
 
-### database~simpleSearch()
+### database~simpleSearch() ⇒ <code>object</code>
 The current Fuzzy-Finder implementation of search. Ideally eventually
 will use a more advanced search method.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
 <a name="module_database..getUserCollectionById"></a>
 
 ### database~getUserCollectionById(ids) ⇒ <code>object</code>
