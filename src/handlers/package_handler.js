@@ -607,15 +607,27 @@ async function postPackagesVersion(req, res) {
 
     // Now add the new version key.
 
-    // Temp return as this is pushed out.
-    await common.notSupported(req, res);
+    let addVer = await database.insertNewPackageVersion(packJSON);
+
+    if (!addVer.ok) {
+      await common.handleError(req, res, addVer);
+      return;
+    }
+
+    res.status(201).json(addVer.content);
     logger.httpLog(req, res);
   }
 
   // Now add the new Version key.
 
-  // TODO: Unkown how to handle a rename, so it must be planned before completion.
-  await common.notSupported(req, res);
+  let addVer = await database.insertNewPackageVersion(packJSON);
+
+  if (!addVer.ok) {
+    await common.handleError(req, res, addVer);
+    return;
+  }
+
+  res.status(201).json(addVer.content);
   logger.httpLog(req, res);
 }
 

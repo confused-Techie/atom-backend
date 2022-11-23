@@ -23,12 +23,9 @@ const stateStore = new utils.StateStore();
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @property {http_method} - GET
- * @property {http_endpoint} - /api/oauth
- * @todo Finish Implementation.
+ * @property {http_endpoint} - /api/lgoin
  */
 async function getLogin(req, res) {
-  // GET /api/oauth
-
   // the first point of contact to log into the app.
 
   // since this will be the endpoint for a user to login, we need to redirect to GH.
@@ -61,8 +58,7 @@ async function getLogin(req, res) {
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @property {http_method} - GET
- * @property {http_endpoint} - ?
- * @todo Just about everything here.
+ * @property {http_endpoint} - /api/oath
  */
 async function getOauth(req, res) {
   let params = {

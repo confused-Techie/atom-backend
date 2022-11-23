@@ -151,6 +151,66 @@ async function insertNewPackage(pack) {
 }
 
 /**
+  * @async
+  * @function insertNewPackageVersion
+  * @desc Adds a new package version to the db.
+  * @param {object} packJSON - A full `package.json` file for the wanted version.
+  * @returns {object} A server status object.
+  */
+async function insertNewPackageVersion(packJSON) {
+  sqlStorage ??= setupSQL();
+
+  // We first need to collect the needed values to insert into the DB.
+  // The pointer, status, semver, license, engine, meta. We are expected to receive
+  // a standard `package.json` file.
+
+  let packID = await getPackageByName(packJSON.name);
+
+  if (!packID.ok) {
+    return packID;
+  }
+
+  return await sqlStorage
+    .begin(async () => {
+      // First we need to change the last 'latest' version, to now just published.
+      const updateLastVer = await sqlStorage`
+        UPDATE versions
+        SET status = "published"
+        WHERE pointer = ${packID.pointer}
+        AND status = "latest"
+        RETURNING *;
+      `;
+
+      if (updateLastVer.count === 0) {
+        throw `Unable to modify last published version ${packJSON.name}`;
+      }
+
+      const license = packJSON.license ?? "NONE";
+      const engine = packJSON.engines ?? { atom: "*" };
+
+      let addVer = await sqlStorage`
+        INSERT INTO version (package, status, semver, license, engine, meta)
+        VALUES(${packID.pointer}, "published", ${packJSON.version}, ${license}, ${engine}, ${packJSON})
+        RETURNING *;
+      `;
+
+      if (addVer.count === 0) {
+        throw `Unable to create new version: ${packJSON.name}`;
+      }
+
+      return { ok: true, content: `Successfully added new version: ${packJSON.name}@${packJSON.version}` };
+    })
+    .catch((err) => {
+      const msg =
+        typeof err === "string"
+        ? err
+        : `A generic error occured while inserting the new package version ${packJSON.name}`;
+
+      return { ok: false, content: msg, short: "Server Error" };
+    });
+}
+
+/**
  * @async
  * @function insertNewPackageName
  * @desc Insert a new package name with the same pointer as the old name.
@@ -1363,4 +1423,5 @@ module.exports = {
   insertNewUser,
   updateUser,
   insertNewPackageName,
+  insertNewPackageVersion
 };
