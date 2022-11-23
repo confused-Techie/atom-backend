@@ -340,35 +340,6 @@ async function updateUser(user) {
 
 /**
  * @async
- * @function getPackageByID
- * @desc Takes a package pointer UUID, and returns the package object within
- * a Server Status Object.
- * @param {string} id - Package UUID.
- * @returns {object} A server status object.
- */
-async function getPackageByID(id) {
-  try {
-    sqlStorage ??= setupSQL();
-
-    const command = await sqlStorage`
-      SELECT data FROM packages
-      WHERE pointer = ${id};
-    `;
-
-    return command.count !== 0
-      ? { ok: true, content: command[0].data }
-      : {
-          ok: false,
-          content: `package ${id} does not exist.`,
-          short: "Not Found",
-        };
-  } catch (err) {
-    return { ok: false, content: err, short: "Server Error" };
-  }
-}
-
-/**
- * @async
  * @function getPackageByName
  * @desc Takes a package name and returns the raw SQL package with all its versions.
  * This module is also used to get the data to be sent to utils.constructPackageObjectFull()
@@ -1294,7 +1265,6 @@ async function getSortedPackages(page, dir, method) {
 module.exports = {
   shutdownSQL,
   insertNewPackage,
-  getPackageByID,
   getPackageByName,
   getPackageCollectionByName,
   getPackageCollectionByID,
