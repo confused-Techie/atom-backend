@@ -151,12 +151,12 @@ async function insertNewPackage(pack) {
 }
 
 /**
-  * @async
-  * @function insertNewPackageVersion
-  * @desc Adds a new package version to the db.
-  * @param {object} packJSON - A full `package.json` file for the wanted version.
-  * @returns {object} A server status object.
-  */
+ * @async
+ * @function insertNewPackageVersion
+ * @desc Adds a new package version to the db.
+ * @param {object} packJSON - A full `package.json` file for the wanted version.
+ * @returns {object} A server status object.
+ */
 async function insertNewPackageVersion(packJSON) {
   sqlStorage ??= setupSQL();
 
@@ -198,13 +198,16 @@ async function insertNewPackageVersion(packJSON) {
         throw `Unable to create new version: ${packJSON.name}`;
       }
 
-      return { ok: true, content: `Successfully added new version: ${packJSON.name}@${packJSON.version}` };
+      return {
+        ok: true,
+        content: `Successfully added new version: ${packJSON.name}@${packJSON.version}`,
+      };
     })
     .catch((err) => {
       const msg =
         typeof err === "string"
-        ? err
-        : `A generic error occured while inserting the new package version ${packJSON.name}`;
+          ? err
+          : `A generic error occured while inserting the new package version ${packJSON.name}`;
 
       return { ok: false, content: msg, short: "Server Error" };
     });
@@ -1423,5 +1426,5 @@ module.exports = {
   insertNewUser,
   updateUser,
   insertNewPackageName,
-  insertNewPackageVersion
+  insertNewPackageVersion,
 };

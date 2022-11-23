@@ -147,6 +147,7 @@ with and retreive data from the cloud hosted database instance.
     * [~setupSQL()](#module_database..setupSQL) ⇒ <code>object</code>
     * [~shutdownSQL()](#module_database..shutdownSQL)
     * [~insertNewPackage(pack)](#module_database..insertNewPackage) ⇒ <code>object</code>
+    * [~insertNewPackageVersion(packJSON)](#module_database..insertNewPackageVersion) ⇒ <code>object</code>
     * [~insertNewPackageName(newName, oldName)](#module_database..insertNewPackageName) ⇒ <code>object</code>
     * [~insertNewUser(user)](#module_database..insertNewUser) ⇒ <code>object</code>
     * [~updateUser(user)](#module_database..updateUser) ⇒ <code>object</code>
@@ -205,6 +206,18 @@ Insert a new package inside the DB taking a `Server Object Full` as argument.
 | Param | Type | Description |
 | --- | --- | --- |
 | pack | <code>object</code> | The `Server Object Full` package. |
+
+<a name="module_database..insertNewPackageVersion"></a>
+
+### database~insertNewPackageVersion(packJSON) ⇒ <code>object</code>
+Adds a new package version to the db.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| packJSON | <code>object</code> | A full `package.json` file for the wanted version. |
 
 <a name="module_database..insertNewPackageName"></a>
 
@@ -1434,10 +1447,6 @@ Endpoint used to direct users to login, directing the user to the
 proper GitHub OAuth Page based on the backends client id.
 
 **Kind**: inner method of [<code>oauth\_handler</code>](#module_oauth_handler)  
-**Todo**
-
-- [ ] Finish Implementation.
-
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -1449,7 +1458,7 @@ proper GitHub OAuth Page based on the backends client id.
 | Type | Description |
 | --- | --- |
 | <code>http\_method</code> | GET |
-| <code>http\_endpoint</code> | /api/oauth |
+| <code>http\_endpoint</code> | /api/lgoin |
 
 <a name="module_oauth_handler..getOauth"></a>
 
@@ -1457,10 +1466,6 @@ proper GitHub OAuth Page based on the backends client id.
 Endpoint intended to use as the actual return from GitHub to login.
 
 **Kind**: inner method of [<code>oauth\_handler</code>](#module_oauth_handler)  
-**Todo**
-
-- [ ] Just about everything here.
-
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -1472,7 +1477,7 @@ Endpoint intended to use as the actual return from GitHub to login.
 | Type | Description |
 | --- | --- |
 | <code>http\_method</code> | GET |
-| <code>http\_endpoint</code> | ? |
+| <code>http\_endpoint</code> | /api/oath |
 
 <a name="module_package_handler"></a>
 
