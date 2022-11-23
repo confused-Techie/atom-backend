@@ -151,7 +151,6 @@ with and retreive data from the cloud hosted database instance.
     * [~insertNewPackageName(newName, oldName)](#module_database..insertNewPackageName) ⇒ <code>object</code>
     * [~insertNewUser(user)](#module_database..insertNewUser) ⇒ <code>object</code>
     * [~updateUser(user)](#module_database..updateUser) ⇒ <code>object</code>
-    * [~getPackageByID(id)](#module_database..getPackageByID) ⇒ <code>object</code>
     * [~getPackageByName(name, user)](#module_database..getPackageByName) ⇒ <code>object</code>
     * [~getPackageVersionByNameAndVersion(name, version)](#module_database..getPackageVersionByNameAndVersion) ⇒ <code>object</code>
     * [~getPackageCollectionByName(packArray)](#module_database..getPackageCollectionByName) ⇒ <code>object</code>
@@ -160,8 +159,6 @@ with and retreive data from the cloud hosted database instance.
     * [~updatePackageDecrementStarByName(name)](#module_database..updatePackageDecrementStarByName) ⇒ <code>object</code>
     * [~updatePackageIncrementDownloadByName(name)](#module_database..updatePackageIncrementDownloadByName) ⇒ <code>object</code>
     * [~updatePackageDecrementDownloadByName(name)](#module_database..updatePackageDecrementDownloadByName) ⇒ <code>object</code>
-    * [~updatePackageByID(id, data)](#module_database..updatePackageByID) ⇒ <code>object</code>
-    * [~updatePackageByName(name, data)](#module_database..updatePackageByName) ⇒ <code>object</code>
     * [~removePackageByName(name)](#module_database..removePackageByName) ⇒ <code>object</code>
     * [~removePackageVersion(packName, semVer)](#module_database..removePackageVersion) ⇒ <code>object</code>
     * [~getFeaturedPackages()](#module_database..getFeaturedPackages) ⇒ <code>object</code>
@@ -170,7 +167,6 @@ with and retreive data from the cloud hosted database instance.
     * [~getUserByName(username)](#module_database..getUserByName) ⇒ <code>object</code>
     * [~getUserByNodeID(id)](#module_database..getUserByNodeID) ⇒ <code>object</code>
     * [~getUserByID(id)](#module_database..getUserByID) ⇒ <code>object</code>
-    * [~verifyAuth(token)](#module_database..verifyAuth) ⇒ <code>object</code>
     * [~updateStars(user, pack)](#module_database..updateStars) ⇒ <code>object</code>
     * [~updateDeleteStar(user, pack)](#module_database..updateDeleteStar) ⇒ <code>object</code>
     * [~getStarredPointersByUserID(userid)](#module_database..getStarredPointersByUserID) ⇒ <code>object</code>
@@ -257,19 +253,6 @@ a Server Status Object.
 | Param | Type | Description |
 | --- | --- | --- |
 | user | <code>object</code> | An object containing information related to the user. |
-
-<a name="module_database..getPackageByID"></a>
-
-### database~getPackageByID(id) ⇒ <code>object</code>
-Takes a package pointer UUID, and returns the package object within
-a Server Status Object.
-
-**Kind**: inner method of [<code>database</code>](#module_database)  
-**Returns**: <code>object</code> - A server status object.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| id | <code>string</code> | Package UUID. |
 
 <a name="module_database..getPackageByName"></a>
 
@@ -373,40 +356,6 @@ Uses the package name to decrement the download count by one.
 | --- | --- | --- |
 | name | <code>string</code> | The package name. |
 
-<a name="module_database..updatePackageByID"></a>
-
-### database~updatePackageByID(id, data) ⇒ <code>object</code>
-Updates a Packages content, with new data.
-
-**Kind**: inner method of [<code>database</code>](#module_database)  
-**Returns**: <code>object</code> - The modified Server Status Object.  
-**Todo**
-
-- [ ] This is one of the original functions migrated to SQL, and should be reviewed for accuracy.
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| id | <code>string</code> | The packages ID. |
-| data | <code>object</code> | The Object data to update it with. |
-
-<a name="module_database..updatePackageByName"></a>
-
-### database~updatePackageByName(name, data) ⇒ <code>object</code>
-Updates the packages content, with new data.
-
-**Kind**: inner method of [<code>database</code>](#module_database)  
-**Returns**: <code>object</code> - A server status object.  
-**Todo**
-
-- [ ] This is one of the original functions migrated to SQL, and should be reviewed for accuracy.
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| name | <code>string</code> | The packages name. |
-| data | <code>object</code> | The object data to update it with. |
-
 <a name="module_database..removePackageByName"></a>
 
 ### database~removePackageByName(name) ⇒ <code>object</code>
@@ -494,22 +443,6 @@ Get user details providing their ID.
 | Param | Type | Description |
 | --- | --- | --- |
 | id | <code>int</code> | User ID |
-
-<a name="module_database..verifyAuth"></a>
-
-### database~verifyAuth(token) ⇒ <code>object</code>
-Verify if an auth token matches a user, and get that user back if it does.
-
-**Kind**: inner method of [<code>database</code>](#module_database)  
-**Returns**: <code>object</code> - A server status object.  
-**Todo**
-
-- [ ] Early write, should be reviewed.
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| token | <code>string</code> | Token. |
 
 <a name="module_database..updateStars"></a>
 
