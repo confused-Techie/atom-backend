@@ -1013,37 +1013,6 @@ async function getUserByID(id) {
     return { ok: false, content: err, short: "Server Error" };
   }
 }
-/**
- * @async
- * @function verifyAuth
- * @description Verify if an auth token matches a user, and get that user back if it does.
- * @todo Early write, should be reviewed.
- * @param {string} token - Token.
- * @returns {object} A server status object.
- */
-async function verifyAuth(token) {
-  try {
-    sqlStorage ??= setupSQL();
-
-    const command = await sqlStorage`
-      SELECT * FROM users
-      WHERE token = ${token};
-    `;
-
-    // If the return is zero rows, that means the request was successful
-    // but nothing matched the query, which in this case is for the token.
-    // so this should return bad auth.
-    return command.count !== 0
-      ? { ok: true, content: command[0] }
-      : {
-          ok: false,
-          content: `Unable to Verify Auth for Token: ${token}`,
-          short: "Bad Auth",
-        };
-  } catch (err) {
-    return { ok: false, content: err, short: "Server Error" };
-  }
-}
 
 /**
  * @async
@@ -1410,7 +1379,6 @@ module.exports = {
   getUserByName,
   getUserByNodeID,
   getUserByID,
-  verifyAuth,
   getStarredPointersByUserID,
   getStarringUsersByPointer,
   getUserCollectionById,
