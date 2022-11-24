@@ -1635,10 +1635,6 @@ Allows a new version of a package to be published. But also can allow
 a user to rename their application during this process.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
-**Todo**
-
-- [ ] Find methodology of handling rename.
-
 
 | Param | Type | Description |
 | --- | --- | --- |
