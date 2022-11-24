@@ -604,18 +604,6 @@ async function postPackagesVersion(req, res) {
       await common.handleError(req, res, newName);
       return;
     }
-
-    // Now add the new version key.
-
-    let addVer = await database.insertNewPackageVersion(packJSON);
-
-    if (!addVer.ok) {
-      await common.handleError(req, res, addVer);
-      return;
-    }
-
-    res.status(201).json(addVer.content);
-    logger.httpLog(req, res);
   }
 
   // Now add the new Version key.
