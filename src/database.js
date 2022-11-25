@@ -628,13 +628,24 @@ async function removePackageByName(name) {
 
   return await sqlStorage
     .begin(async () => {
+      // Retrieve the package pointer
+      const getID = await sqlStorage`
+        SELECT pointer FROM names
+        WHERE name = ${name};
+      `;
+
+      if (getID.count === 0) {
+        // The package does not exists, but we return ok since it's like
+        // it has been deleted.
+        return { ok: true, content: `${name} package does not exists.` };
+      }
+
+      const pointer = getID[0].pointer;
+
       // Remove versions of the package
       const commandVers = await sqlStorage`
         DELETE FROM versions
-        WHERE package IN (
-          SELECT pointer FROM names
-          WHERE name = ${name}
-        )
+        WHERE package = ${pointer}
         RETURNING *;
       `;
 
@@ -645,24 +656,16 @@ async function removePackageByName(name) {
       // Remove stars assigned to the package
       const commandStar = await sqlStorage`
         DELETE FROM stars
-        WHERE package IN (
-          SELECT pointer FROM names
-          WHERE name = ${name}
-        )
+        WHERE package = ${pointer}
         RETURNING *;
       `;
 
-      if (commandStar.count === 0) {
-        throw `Failed to delete stars for: ${name}`;
-      }
+      // No check on deleted stars because the package could also have 0 stars.
 
       // Remove names related to the package
       const commandName = await sqlStorage`
         DELETE FROM names
-        WHERE pointer IN (
-          SELECT pointer FROM names
-          WHERE name = ${name}
-        )
+        WHERE pointer = ${pointer}
         RETURNING *;
       `;
 
@@ -670,12 +673,9 @@ async function removePackageByName(name) {
         throw `Failed to delete names for: ${name}`;
       }
 
-      // Remove the package itself.
-      // We will have to use the pointer returning from this last command, since we
-      // can no longer preform the same lookup as before.
       const commandPack = await sqlStorage`
         DELETE FROM packages
-        WHERE pointer = ${commandName[0].pointer}
+        WHERE pointer = ${pointer}
         RETURNING *;
       `;
 
@@ -1204,44 +1204,20 @@ async function getSortedPackages(page, dir, method) {
   try {
     sqlStorage ??= setupSQL();
 
-    let command = null;
+    let orderType = null;
 
     switch (method) {
       case "downloads":
-        command = await sqlStorage`
-          SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
-          ORDER BY downloads
-          ${dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`}
-          LIMIT ${limit}
-          OFFSET ${offset};
-        `;
+        orderType = "downloads";
         break;
       case "created_at":
-        command = await sqlStorage`
-          SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
-          ORDER BY created
-          ${dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`}
-          LIMIT ${limit}
-          OFFSET ${offset};
-        `;
+        orderType = "created";
         break;
       case "updated_at":
-        command = await sqlStorage`
-          SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
-          ORDER BY updated
-          ${dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`}
-          LIMIT ${limit}
-          OFFSET ${offset};
-        `;
+        orderType = "updated";
         break;
       case "stars":
-        command = await sqlStorage`
-          SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
-          ORDER BY stargazers_count
-          ${dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`}
-          LIMIT ${limit}
-          OFFSET ${offset};
-        `;
+        orderType = "stargazers_count";
         break;
       default:
         logger.warningLog(
@@ -1255,6 +1231,14 @@ async function getSortedPackages(page, dir, method) {
           short: "Server Error",
         };
     }
+
+    const command = await sqlStorage`
+      SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
+      ORDER BY ${orderType}
+      ${dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`}
+      LIMIT ${limit}
+      OFFSET ${offset};
+    `;
 
     return { ok: true, content: command };
   } catch (err) {
