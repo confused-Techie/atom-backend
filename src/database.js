@@ -160,24 +160,24 @@ async function insertNewPackage(pack) {
 async function insertNewPackageVersion(packJSON) {
   sqlStorage ??= setupSQL();
 
-  // We first need to collect the needed values to insert into the DB.
-  // The pointer, status, semver, license, engine, meta. We are expected to receive
-  // a standard `package.json` file.
-
-  let packID = await getPackageByName(packJSON.name);
-
-  if (!packID.ok) {
-    return packID;
-  }
-
   return await sqlStorage
     .begin(async () => {
+      // We first need to collect the needed values to insert into the DB.
+      // The pointer, status, semver, license, engine, meta.
+      // We are expected to receive a standard `package.json` file.
+      const packID = await getPackageByName(packJSON.name);
+
+      if (!packID.ok) {
+        return packID;
+      }
+
+      const pointer = packID.content.pointer;
+
       // First we need to change the last 'latest' version, to now just published.
       const updateLastVer = await sqlStorage`
         UPDATE versions
-        SET status = "published"
-        WHERE pointer = ${packID.pointer}
-        AND status = "latest"
+        SET status = 'published'
+        WHERE pointer = ${pointer} AND status = 'latest'
         RETURNING *;
       `;
 
@@ -188,9 +188,9 @@ async function insertNewPackageVersion(packJSON) {
       const license = packJSON.license ?? "NONE";
       const engine = packJSON.engines ?? { atom: "*" };
 
-      let addVer = await sqlStorage`
+      const addVer = await sqlStorage`
         INSERT INTO version (package, status, semver, license, engine, meta)
-        VALUES(${packID.pointer}, "published", ${packJSON.version}, ${license}, ${engine}, ${packJSON})
+        VALUES(${pointer}, 'published', ${packJSON.version}, ${license}, ${engine}, ${packJSON})
         RETURNING *;
       `;
 
@@ -797,7 +797,7 @@ async function getTotalPackageEstimate() {
     sqlStorage ??= setupSQL();
 
     const command = await sqlStorage`
-      SELECT reltuples AS estimate FROM pg_class WHERE relname='packages';
+      SELECT reltuples AS estimate FROM pg_class WHERE relname = 'packages';
     `;
 
     if (command.count === 0) {
@@ -1053,7 +1053,7 @@ async function getStarredPointersByUserID(userid) {
 
     const command = await sqlStorage`
       SELECT ARRAY (
-        SELECT package FROM stars WHERE userid=${userid}
+        SELECT package FROM stars WHERE userid = ${userid}
       );
     `;
 
@@ -1085,7 +1085,7 @@ async function getStarringUsersByPointer(pointer) {
 
     const command = await sqlStorage`
       SELECT ARRAY (
-        SELECT userid FROM stars WHERE package=${pointer.pointer}
+        SELECT userid FROM stars WHERE package = ${pointer.pointer}
       );
     `;
 
