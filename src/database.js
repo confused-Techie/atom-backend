@@ -1204,44 +1204,20 @@ async function getSortedPackages(page, dir, method) {
   try {
     sqlStorage ??= setupSQL();
 
-    let command = null;
+    let orderType = null;
 
     switch (method) {
       case "downloads":
-        command = await sqlStorage`
-          SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
-          ORDER BY downloads
-          ${dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`}
-          LIMIT ${limit}
-          OFFSET ${offset};
-        `;
+        orderType = "downloads";
         break;
       case "created_at":
-        command = await sqlStorage`
-          SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
-          ORDER BY created
-          ${dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`}
-          LIMIT ${limit}
-          OFFSET ${offset};
-        `;
+        orderType = "created";
         break;
       case "updated_at":
-        command = await sqlStorage`
-          SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
-          ORDER BY updated
-          ${dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`}
-          LIMIT ${limit}
-          OFFSET ${offset};
-        `;
+        orderType = "updated";
         break;
       case "stars":
-        command = await sqlStorage`
-          SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
-          ORDER BY stargazers_count
-          ${dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`}
-          LIMIT ${limit}
-          OFFSET ${offset};
-        `;
+        orderType = "stargazers_count";
         break;
       default:
         logger.warningLog(
@@ -1255,6 +1231,14 @@ async function getSortedPackages(page, dir, method) {
           short: "Server Error",
         };
     }
+
+    const command = await sqlStorage`
+      SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
+      ORDER BY ${orderType}
+      ${dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`}
+      LIMIT ${limit}
+      OFFSET ${offset};
+    `;
 
     return { ok: true, content: command };
   } catch (err) {
