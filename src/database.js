@@ -628,13 +628,24 @@ async function removePackageByName(name) {
 
   return await sqlStorage
     .begin(async () => {
+      // Retrieve the package pointer
+      const getID = await sqlStorage`
+        SELECT pointer FROM names
+        WHERE name = ${name};
+      `;
+
+      if (getID.count === 0) {
+        // The package does not exists, but we return ok since it's like
+        // it has been deleted.
+        return { ok: true, content: `${name} package does not exists.` };
+      }
+
+      const pointer = getID[0].pointer;
+
       // Remove versions of the package
       const commandVers = await sqlStorage`
         DELETE FROM versions
-        WHERE package IN (
-          SELECT pointer FROM names
-          WHERE name = ${name}
-        )
+        WHERE package = ${pointer}
         RETURNING *;
       `;
 
@@ -645,24 +656,16 @@ async function removePackageByName(name) {
       // Remove stars assigned to the package
       const commandStar = await sqlStorage`
         DELETE FROM stars
-        WHERE package IN (
-          SELECT pointer FROM names
-          WHERE name = ${name}
-        )
+        WHERE package = ${pointer}
         RETURNING *;
       `;
 
-      if (commandStar.count === 0) {
-        throw `Failed to delete stars for: ${name}`;
-      }
+      // No check on deleted stars because the package could also have 0 stars.
 
       // Remove names related to the package
       const commandName = await sqlStorage`
         DELETE FROM names
-        WHERE pointer IN (
-          SELECT pointer FROM names
-          WHERE name = ${name}
-        )
+        WHERE pointer = ${pointer}
         RETURNING *;
       `;
 
@@ -670,12 +673,9 @@ async function removePackageByName(name) {
         throw `Failed to delete names for: ${name}`;
       }
 
-      // Remove the package itself.
-      // We will have to use the pointer returning from this last command, since we
-      // can no longer preform the same lookup as before.
       const commandPack = await sqlStorage`
         DELETE FROM packages
-        WHERE pointer = ${commandName[0].pointer}
+        WHERE pointer = ${pointer}
         RETURNING *;
       `;
 
