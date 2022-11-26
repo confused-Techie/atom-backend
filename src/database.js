@@ -749,7 +749,7 @@ async function removePackageVersion(packName, semVer) {
       for (const v of getVersions) {
         if (v.semver === semVer) {
           versionId = v.id;
-          removeLatest = (v.status === "latest");
+          removeLatest = v.status === "latest";
         }
       }
 
@@ -759,7 +759,7 @@ async function removePackageVersion(packName, semVer) {
           ok: false,
           content: `There's no version ${semVer} to remove for ${packName} package`,
           short: "Not Found",
-        }
+        };
       }
 
       // We have the version to remove, but for the package integrity we have to make sure that
@@ -814,7 +814,7 @@ async function removePackageVersion(packName, semVer) {
           continue;
         }
 
-        const sva = utils.semverArray()
+        const sva = utils.semverArray();
         if (utils.semverGt(sva, maxSemVer)) {
           latestSemver = v.semver;
           maxSemVer = utils.semverArray(latestSemver);

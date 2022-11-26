@@ -317,7 +317,10 @@ async function engineFilter(pack, engine) {
 
       if (
         eq_sv !== null &&
-        semverEq([eng_sv[1], eng_sv[2], eng_sv[3]], [eq_sv[1], eq_sv[2], eq_sv[3]])
+        semverEq(
+          [eng_sv[1], eng_sv[2], eng_sv[3]],
+          [eq_sv[1], eq_sv[2], eq_sv[3]]
+        )
       ) {
         compatible_version = ver;
 
