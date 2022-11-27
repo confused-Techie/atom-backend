@@ -814,10 +814,11 @@ async function removePackageVersion(packName, semVer) {
           continue;
         }
 
-        const sva = utils.semverArray();
+        // Compare versions
+        const sva = utils.semverArray(v.semver);
         if (utils.semverGt(sva, maxSemVer)) {
           latestSemver = v.semver;
-          maxSemVer = utils.semverArray(latestSemver);
+          maxSemVer = sva;
           highestVersionId = v.id;
         }
       }
