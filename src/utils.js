@@ -206,59 +206,14 @@ async function deepCopy(obj) {
 }
 
 /**
+ * @async
  * @function engineFilter
  * @desc A complex function that provides filtering by Atom engine version.
  * This should take a package with it's versions and retreive whatever matches
  * that engine version as provided.
+ * @returns {object} The filtered object.
  */
 async function engineFilter(pack, engine) {
-  // Comparison utils:
-  // These ones expect to get valid strings as parameters, which should be convertible to numbers.
-  // Providing other types may lead to unexpected behaviors.
-  // Always to be executed after passing the semver format validity.
-  const gt = (a1, a2) => {
-    const v1 = a1.map((n) => parseInt(n, 10));
-    const v2 = a2.map((n) => parseInt(n, 10));
-
-    if (v1[0] > v2[0]) {
-      return true;
-    } else if (v1[0] < v2[0]) {
-      return false;
-    }
-
-    if (v1[1] > v2[1]) {
-      return true;
-    } else if (v1[1] < v2[1]) {
-      return false;
-    }
-
-    return v1[2] > v2[2];
-  };
-
-  const lt = (a1, a2) => {
-    const v1 = a1.map((n) => parseInt(n, 10));
-    const v2 = a2.map((n) => parseInt(n, 10));
-
-    if (v1[0] < v2[0]) {
-      return true;
-    } else if (v1[0] > v2[0]) {
-      return false;
-    }
-
-    if (v1[1] < v2[1]) {
-      return true;
-    } else if (v1[1] > v2[1]) {
-      return false;
-    }
-
-    return v1[2] < v2[2];
-  };
-
-  const eq = (a1, a2) => {
-    return a1[0] === a2[0] && a1[1] === a2[1] && a1[2] === a2[2];
-  };
-
-  // Function start.
   // If a compatible version is found, we add its data to the metadata property of the package
   // Otherwise we return an unmodified package, so that it is usable to the consumer.
 
@@ -267,7 +222,7 @@ async function engineFilter(pack, engine) {
     return pack;
   }
 
-  const eng_sv = engine.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/);
+  const eng_sv = semverArray(engine);
 
   // Validate engine semver format.
   if (eng_sv === null) {
@@ -302,7 +257,7 @@ async function engineFilter(pack, engine) {
       // Lower end condition present, so test it.
       switch (low_sv[1]) {
         case ">":
-          lower_end = gt(
+          lower_end = semverGt(
             [eng_sv[1], eng_sv[2], eng_sv[3]],
             [low_sv[2], low_sv[3], low_sv[4]]
           );
@@ -310,11 +265,11 @@ async function engineFilter(pack, engine) {
           break;
         case ">=":
           lower_end =
-            gt(
+            semverGt(
               [eng_sv[1], eng_sv[2], eng_sv[3]],
               [low_sv[2], low_sv[3], low_sv[4]]
             ) ||
-            eq(
+            semverEq(
               [eng_sv[1], eng_sv[2], eng_sv[3]],
               [low_sv[2], low_sv[3], low_sv[4]]
             );
@@ -332,7 +287,7 @@ async function engineFilter(pack, engine) {
       // Upper end condition present, so test it.
       switch (up_sv[1]) {
         case "<":
-          upper_end = lt(
+          upper_end = semverLt(
             [eng_sv[1], eng_sv[2], eng_sv[3]],
             [up_sv[2], up_sv[3], up_sv[4]]
           );
@@ -340,11 +295,11 @@ async function engineFilter(pack, engine) {
           break;
         case "<=":
           upper_end =
-            lt(
+            semverLt(
               [eng_sv[1], eng_sv[2], eng_sv[3]],
               [up_sv[2], up_sv[3], up_sv[4]]
             ) ||
-            eq(
+            semverEq(
               [eng_sv[1], eng_sv[2], eng_sv[3]],
               [up_sv[2], up_sv[3], up_sv[4]]
             );
@@ -362,7 +317,10 @@ async function engineFilter(pack, engine) {
 
       if (
         eq_sv !== null &&
-        eq([eng_sv[1], eng_sv[2], eng_sv[3]], [eq_sv[1], eq_sv[2], eq_sv[3]])
+        semverEq(
+          [eng_sv[1], eng_sv[2], eng_sv[3]],
+          [eq_sv[1], eq_sv[2], eq_sv[3]]
+        )
       ) {
         compatible_version = ver;
 
@@ -408,6 +366,85 @@ async function engineFilter(pack, engine) {
   pack.metadata = pack.versions[compatible_version];
 
   return pack;
+}
+
+/**
+ * @function semverArray
+ * @desc Takes a semver string and return it as an Array of strings
+ * @param {string} semver
+ * @returns {array} Formatted semver
+ */
+function semverArray(semver) {
+  return semver.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/);
+}
+
+/**
+ * @function semverGt
+ * @desc Compares two sermver and return true if the first is greater than the second.
+ * Expects to get the semver formatted as array of strings.
+ * Should be always executed after running semverArray.
+ * @param {array} a1 - First semver as array
+ * @param {array} a2 - Second semver as array
+ * @returns {boolean} The result of the comparison
+ */
+function semverGt(a1, a2) {
+  const v1 = a1.map((n) => parseInt(n, 10));
+  const v2 = a2.map((n) => parseInt(n, 10));
+
+  if (v1[0] > v2[0]) {
+    return true;
+  } else if (v1[0] < v2[0]) {
+    return false;
+  }
+
+  if (v1[1] > v2[1]) {
+    return true;
+  } else if (v1[1] < v2[1]) {
+    return false;
+  }
+
+  return v1[2] > v2[2];
+}
+
+/**
+ * @function semverLt
+ * @desc Compares two sermver and return true if the first is less than the second.
+ * Expects to get the semver formatted as array of strings.
+ * Should be always executed after running semverArray.
+ * @param {array} a1 - First semver as array
+ * @param {array} a2 - Second semver as array
+ * @returns {boolean} The result of the comparison
+ */
+function semverLt(a1, a2) {
+  const v1 = a1.map((n) => parseInt(n, 10));
+  const v2 = a2.map((n) => parseInt(n, 10));
+
+  if (v1[0] < v2[0]) {
+    return true;
+  } else if (v1[0] > v2[0]) {
+    return false;
+  }
+
+  if (v1[1] < v2[1]) {
+    return true;
+  } else if (v1[1] > v2[1]) {
+    return false;
+  }
+
+  return v1[2] < v2[2];
+}
+
+/**
+ * @function semverEq
+ * @desc Compares two sermver and return true if the first is equal to the second.
+ * Expects to get the semver formatted as array of strings.
+ * Should be always executed after running semverArray.
+ * @param {array} a1 - First semver as array
+ * @param {array} a2 - Second semver as array
+ * @returns {boolean} The result of the comparison
+ */
+function semverEq(a1, a2) {
+  return a1[0] === a2[0] && a1[1] === a2[1] && a1[2] === a2[2];
 }
 
 /**
@@ -458,5 +495,9 @@ module.exports = {
   constructPackageObjectJSON,
   deepCopy,
   engineFilter,
+  semverArray,
+  semverGt,
+  semverLt,
+  semverEq,
   StateStore,
 };
