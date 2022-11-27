@@ -750,6 +750,7 @@ async function removePackageVersion(packName, semVer) {
         if (v.semver === semVer) {
           versionId = v.id;
           removeLatest = v.status === "latest";
+          break;
         }
       }
 
