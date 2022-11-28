@@ -1,4 +1,4 @@
-## Auth
+# Auth
 
 There are two seperate levels of authentication for end users on the server, which are below as well as a short summary of our authentication strategy.
 
