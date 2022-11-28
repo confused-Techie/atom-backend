@@ -25,7 +25,7 @@ If you a user of Atom want to continue being able to install and search packages
 
 ## Summary / Links
 
-Creating this code base and the interactions it has, has been a massive feat with extreme thanks going out to the contributors that assisted in creating this, and getting us to a point of stability where we now have hundreds of requests every single day providing a great service to all users Pulsar.
+Creating this code base and the interactions it has, has been a massive feat with extreme thanks going out to the contributors that assisted in creating this and getting us to a point of stability where we now have hundreds of requests every single day providing a great service to all users of Pulsar.
 
 If you'd like to learn more about the Pulsar / Atom Backend or learn how to contribute look at the links below:
 
