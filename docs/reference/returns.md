@@ -1,4 +1,6 @@
-This document will details the JSON schema that many endpoints are expected to provide, as well as the names assigned to them in this project.
+# Returns
+
+This document details the JSON schema that many endpoints are expected to provide, as well as the names assigned to them in this project.
 
 ## Package Object Short
 
