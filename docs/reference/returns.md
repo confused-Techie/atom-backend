@@ -4,7 +4,7 @@ This document details the JSON schema that many endpoints are expected to provid
 
 ## Package Object Short
 
-This is the most common return for a package, which leaves out some details of the package, most notably, all versions extra versions and version information. But this includes enough data allowing the user to understand the package itself, and to download the latest version of it's source.
+This is the most common return for a package, which leaves out some details of the package, most notably, all versions extra versions and version information. This includes enough data allowing the user to understand the package itself and to download the latest version of its source.
 
 ### Schema
 
