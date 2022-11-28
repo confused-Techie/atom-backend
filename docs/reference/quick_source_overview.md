@@ -1,3 +1,5 @@
+# Quick Source Overview
+
 This document serves as a short summary of the entire codebase and how it's different parts communicate to each other.
 
 * `server.js`: This is the starting point of the application, calling on `main.js` to initiate the ExpressJS Server.
