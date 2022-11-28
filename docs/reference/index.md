@@ -4,7 +4,7 @@ The Pulsar / Atom Backend happily accepts all form of contributions, and contrib
 
 If you ever have any questions feel free to reach out on GitHub issues, PRs, Discussions, or through the [Pulsar Disccord](https://discord.gg/7aEbB9dGRT) where you can chat with the repo's creators.
 
-But please before contributing ensure to read our [Contribtuing Guide](../../CONTRIBUTING.md).
+Before contributing make sure you have read our [Contribtuing Guide](../../CONTRIBUTING.md).
 
 Once you've read through the above and understand it's contents you are ready to start diving into the code, with a full guide on how to run your development environment available in [build.md](../build.md).
 
