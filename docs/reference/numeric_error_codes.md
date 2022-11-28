@@ -1,3 +1,5 @@
+# Numeric Error Codes
+
 In some locations of the backend numeric, non-personalized error codes can be returned to be output onto the console. This is intened to aid in tracking down where and how an error occured, to ensure debugging after the fact can be easier.
 
 Currently this implementation is in development, and not all errors will provide an error code.
