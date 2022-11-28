@@ -8,7 +8,7 @@ This document serves as a short summary of the entire codebase and how it's diff
     * `package_handler.js`: Handles all endpoints relating to packages specifically, generally any API endpoint with its starting slug of `packages` is handled here.
     * `star_handler.js`: Handles all endpoints relating to stars specifically, generally any API endpoint with its starting slug of `stars` is handled here.
     * `theme_handler.js`: Handles all endpoints relating to themes specifically, generally any API endpoint with its starting slug of `theme` is handled here.
-    * `user_handler.js`: Handles all endpoints relating to users specifically, generally any API endpoint with it's starting slug of `users` is handled here.
+    * `user_handler.js`: Handles all endpoints relating to users specifically, generally any API endpoint with its starting slug of `users` is handled here.
     * `update_handler.js`: Handles the update endpoint, as there is only one. But generally any API endpoint with it's starting slug of `update` is handled here.
     * `oauth_handler.js`: Handles all endpoints relating to OAuth or Authentication in general.
       * `common_handler.js`: All the above listed files have a large dependency on this module, as it provides all common returns to users, such as providing `Server Error` messages, or `Not Found` messages.
