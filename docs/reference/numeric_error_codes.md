@@ -12,7 +12,7 @@ For developers that are looking to add in additional error codes there are some 
 
 Although if an error code is collected, below is a guide to determine where it had originated.
 
-# Numeric Error Codes
+## Numeric Error Codes
 
 ### 9999
 
