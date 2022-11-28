@@ -1,3 +1,5 @@
+# Queries
+
 This document aims to collect all the queries used to retrieve data from the SQL Database, as well as the resulting Object you'll receive from them.
 
 But please note that this document is currently in progress, and may not contain all endpoints that are in production use.
