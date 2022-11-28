@@ -8,7 +8,7 @@ Before contributing make sure you have read our [Contribtuing Guide](../../CONTR
 
 Once you've read through the above and understand its contents you are ready to start diving into the code. A full guide on how to run your development environment is available in [build.md](../build.md).
 
-## Automaticly Generated Docs
+## Automatically Generated Docs
 
 After every push, GitHub Actions build several forms of documentation and resources about the codebase.
 
