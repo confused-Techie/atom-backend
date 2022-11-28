@@ -106,6 +106,6 @@ This means that if you run any of the following scripts it will assume you have 
 
 Again, the ability to spin up this local database means that your system has Docker setup and running, as well as is available to the user that owns the repo folder on your system.
 
-Using this development database means you have the ability to safely write, delete, edit any data stored within your database. The database is created from scratch on each run based on the SQL Commands found in `./src/dev-runner/migrations/001-initial-migration.sql` and there will be no persistence each time the development backend server is shut down.
+Using this development database means you have the ability to safely write, delete and edit any data stored within your database. The database is created from scratch on each run based on the SQL Commands found in `./src/dev-runner/migrations/001-initial-migration.sql` and there will be no persistence each time the development backend server is shut down.
 
 If you experience any issues with this feature feel free to open an issue.
