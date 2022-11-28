@@ -6,7 +6,7 @@
 [![CI - Standards](https://github.com/confused-Techie/atom-backend/actions/workflows/ci-standards.yml/badge.svg)](https://github.com/confused-Techie/atom-backend/actions/workflows/ci-standards.yml)
 [![CI - Tests](https://github.com/confused-Techie/atom-backend/actions/workflows/ci-tests.yml/badge.svg)](https://github.com/confused-Techie/atom-backend/actions/workflows/ci-tests.yml)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 
@@ -42,12 +42,15 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 <table>
-  <tr>
-    <td align="center"><a href="https://github.com/confused-Techie"><img src="https://avatars.githubusercontent.com/u/26921489?v=4?s=100" width="100px;" alt=""/><br /><sub><b>confused_techie</b></sub></a><br /><a href="https://github.com/confused-Techie/atom-backend/commits?author=confused-Techie" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/Digitalone1"><img src="https://avatars.githubusercontent.com/u/25790525?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Giusy Digital</b></sub></a><br /><a href="https://github.com/confused-Techie/atom-backend/commits?author=Digitalone1" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/DeeDeeG"><img src="https://avatars.githubusercontent.com/u/20157115?v=4?s=100" width="100px;" alt=""/><br /><sub><b>DeeDeeG</b></sub></a><br /><a href="#ideas-DeeDeeG" title="Ideas, Planning, & Feedback">🤔</a></td>
-    <td align="center"><a href="https://github.com/ndr-brt"><img src="https://avatars.githubusercontent.com/u/8570990?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ndr_brt</b></sub></a><br /><a href="https://github.com/confused-Techie/atom-backend/commits?author=ndr-brt" title="Code">💻</a></td>
-  </tr>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/confused-Techie"><img src="https://avatars.githubusercontent.com/u/26921489?v=4?s=100" width="100px;" alt="confused_techie"/><br /><sub><b>confused_techie</b></sub></a><br /><a href="https://github.com/confused-Techie/atom-backend/commits?author=confused-Techie" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Digitalone1"><img src="https://avatars.githubusercontent.com/u/25790525?v=4?s=100" width="100px;" alt="Giusy Digital"/><br /><sub><b>Giusy Digital</b></sub></a><br /><a href="https://github.com/confused-Techie/atom-backend/commits?author=Digitalone1" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/DeeDeeG"><img src="https://avatars.githubusercontent.com/u/20157115?v=4?s=100" width="100px;" alt="DeeDeeG"/><br /><sub><b>DeeDeeG</b></sub></a><br /><a href="#ideas-DeeDeeG" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ndr-brt"><img src="https://avatars.githubusercontent.com/u/8570990?v=4?s=100" width="100px;" alt="ndr_brt"/><br /><sub><b>ndr_brt</b></sub></a><br /><a href="https://github.com/confused-Techie/atom-backend/commits?author=ndr-brt" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Daeraxa"><img src="https://avatars.githubusercontent.com/u/58074586?v=4?s=100" width="100px;" alt="Daeraxa"/><br /><sub><b>Daeraxa</b></sub></a><br /><a href="https://github.com/confused-Techie/atom-backend/commits?author=Daeraxa" title="Documentation">📖</a></td>
+    </tr>
+  </tbody>
 </table>
 
 <!-- markdownlint-restore -->
