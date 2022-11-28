@@ -27,7 +27,7 @@ If you a user of Atom want to continue being able to install and search packages
 
 Creating this code base and the interactions it has, has been a massive feat with extreme thanks going out to the contributors that assisted in creating this and getting us to a point of stability where we now have hundreds of requests every single day providing a great service to all users of Pulsar.
 
-If you'd like to learn more about the Pulsar / Atom Backend or learn how to contribute look at the links below:
+If you'd like to learn more about the Pulsar / Atom Backend or learn how to contribute then check out the links below:
 
 * If you'd like to contribute read the [docs](/docs/reference/index.md).
 * To read about the original research and code that started the backend, visit [Atom Community Server Backend](https://github.com/confused-Techie/atom-community-server-backend). Which was the original codebase of this project written in Golang. But was switched to JavaScript to provide more broad support from contributors.
