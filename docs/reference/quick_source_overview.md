@@ -5,7 +5,7 @@ This document serves as a short summary of the entire codebase and how it's diff
 * `server.js`: This is the starting point of the application, calling on `main.js` to initiate the ExpressJS Server.
 * `config.js`: This module handles collecting the current configuration from configuration files and system Environment Variables, providing them to most modules as they request them.
   * `main.js`: Defines every single API endpoint, as well as some axhillary data, such as global `404` methods, and RateLimiting features. Each endpoint here then calls the respective handler function.
-    * `package_handler.js`: Handles all endpoints relating to packages specifically, generally any API endpoint with it's starting slug of `packages` is handled here.
+    * `package_handler.js`: Handles all endpoints relating to packages specifically, generally any API endpoint with its starting slug of `packages` is handled here.
     * `star_handler.js`: Handles all endpoints relating to stars specifically, generally any API endpoint with it's starting slug of `stars` is handled here.
     * `theme_handler.js`: Handles all endpoints relating to themes specifically, generally any API endpoint with it's starting slug of `theme` is handled here.
     * `user_handler.js`: Handles all endpoints relating to users specifically, generally any API endpoint with it's starting slug of `users` is handled here.
