@@ -6,7 +6,7 @@ If you ever have any questions feel free to reach out on GitHub issues, PRs, Dis
 
 Before contributing make sure you have read our [Contribtuing Guide](../../CONTRIBUTING.md).
 
-Once you've read through the above and understand it's contents you are ready to start diving into the code, with a full guide on how to run your development environment available in [build.md](../build.md).
+Once you've read through the above and understand its contents you are ready to start diving into the code. A full guide on how to run your development environment is available in [build.md](../build.md).
 
 ## Automaticly Generated Docs
 
