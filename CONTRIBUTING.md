@@ -1,3 +1,5 @@
+# Contributing
+
 This project welcomes all forms of contributions, and everything is always appreciated.
 
 But please before contributing ensure to read this document in it's entirety.
