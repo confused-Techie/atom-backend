@@ -168,14 +168,15 @@ async function postPackages(req, res) {
   // convert it into Package Object Full format.
   let newDbPack = await database.getPackageByName(repo, true);
 
-  if (newDbPack.ok) {
-    const packageObjectFull = await utils.constructPackageObjectFull(
-      newDbPack.content
-    );
-    res.status(201).json(packageObjectFull);
-  } else {
+  if (!newDbPack.ok) {
     common.serverError(req, res, "Cannot retrieve new package from DB");
+    return;
   }
+
+  const packageObjectFull = await utils.constructPackageObjectFull(
+    newDbPack.content
+  );
+  res.status(201).json(packageObjectFull);
 }
 
 /**
@@ -522,7 +523,6 @@ async function getPackagesStargazers(req, res) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @property {http_method} - POST
  * @property {http_endpoint} - /api/packages/:packageName/versions
- * @todo Find methodology of handling rename.
  */
 async function postPackagesVersion(req, res) {
   let params = {
@@ -533,9 +533,11 @@ async function postPackagesVersion(req, res) {
   };
 
   // On renaming:
-  // When a package is being renamed, we will expect that packageName will match a previously published package.
-  // But then the `name` of their `package.json` will be different. And if they are, we expect that `auth` is true.
-  // Because otherwise it will fail. That's the methodology, the logic here just needs to catch up.
+  // When a package is being renamed, we will expect that packageName will
+  // match a previously published package.
+  // But then the `name` of their `package.json` will be different.
+  // And if they are, we expect that `auth` is true. Because otherwise it will fail.
+  // That's the methodology, the logic here just needs to catch up.
 
   let user = await auth.verifyAuth(params.auth);
 
@@ -555,7 +557,8 @@ async function postPackagesVersion(req, res) {
   }
 
   // Now it's important to note, that getPackageJSON was intended to be an internal function.
-  // As such does not return a Server Status Object. This may change later, but for now, we will expect `undefined` to not be success.
+  // As such does not return a Server Status Object. This may change later, but for now,
+  // we will expect `undefined` to not be success.
   let packJSON = await git.getPackageJSON(
     `${user.content.username}/${packExists.name}`,
     user.content
@@ -580,8 +583,8 @@ async function postPackagesVersion(req, res) {
     return;
   }
 
-  // Else we will continue, and trust the name provided from the package as being accurate. And now we can ensure the user
-  // actually owns this repo, with our updated name.
+  // Else we will continue, and trust the name provided from the package as being accurate.
+  // And now we can ensure the user actually owns this repo, with our updated name.
 
   let gitowner = await git.ownership(user.content, packJSON.name);
 
@@ -590,11 +593,11 @@ async function postPackagesVersion(req, res) {
     return;
   }
 
-  // Now the only thing left to do, is add this new version with the name from the package. And check again if the name is incorrect, since it'll
-  // need a new entry onto the names.
+  // Now the only thing left to do, is add this new version with the name from the package.
+  // And check again if the name is incorrect, since it'll need a new entry onto the names.
 
   if (packJSON.name !== params.packageName && params.rename) {
-    // The flow for creating a new package name.
+    // The flow for renaming the existing package.
     let newName = await database.insertNewPackageName(
       packJSON.name,
       params.packageName
@@ -604,18 +607,6 @@ async function postPackagesVersion(req, res) {
       await common.handleError(req, res, newName);
       return;
     }
-
-    // Now add the new version key.
-
-    let addVer = await database.insertNewPackageVersion(packJSON);
-
-    if (!addVer.ok) {
-      await common.handleError(req, res, addVer);
-      return;
-    }
-
-    res.status(201).json(addVer.content);
-    logger.httpLog(req, res);
   }
 
   // Now add the new Version key.

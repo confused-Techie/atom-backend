@@ -372,7 +372,8 @@ Given a package name, removes its record alongside its names, versions, stars.
 
 ### database~removePackageVersion(packName, semVer) ⇒ <code>object</code>
 Mark a version of a specific package as removed. This does not delete the record,
-just mark the status as removed.
+just mark the status as removed, but only if one published version remain available.
+This also makes sure that a new latest version is selected in case the previous one is removed.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
 **Returns**: <code>object</code> - A server status object.  
@@ -1077,7 +1078,11 @@ A helper for any functions that are agnostic in handlers.
     * [~constructPackageObjectShort(pack)](#module_utils..constructPackageObjectShort) ⇒ <code>object</code>
     * [~constructPackageObjectJSON(pack)](#module_utils..constructPackageObjectJSON) ⇒ <code>object</code>
     * [~deepCopy(obj)](#module_utils..deepCopy) ⇒ <code>object</code>
-    * [~engineFilter()](#module_utils..engineFilter)
+    * [~engineFilter()](#module_utils..engineFilter) ⇒ <code>object</code>
+    * [~semverArray(semver)](#module_utils..semverArray) ⇒ <code>array</code>
+    * [~semverGt(a1, a2)](#module_utils..semverGt) ⇒ <code>boolean</code>
+    * [~semverLt(a1, a2)](#module_utils..semverLt) ⇒ <code>boolean</code>
+    * [~semverEq(a1, a2)](#module_utils..semverEq) ⇒ <code>boolean</code>
 
 <a name="module_utils..StateStore"></a>
 
@@ -1176,12 +1181,70 @@ Just in case it is needed again.
 
 <a name="module_utils..engineFilter"></a>
 
-### utils~engineFilter()
+### utils~engineFilter() ⇒ <code>object</code>
 A complex function that provides filtering by Atom engine version.
 This should take a package with it's versions and retreive whatever matches
 that engine version as provided.
 
 **Kind**: inner method of [<code>utils</code>](#module_utils)  
+**Returns**: <code>object</code> - The filtered object.  
+<a name="module_utils..semverArray"></a>
+
+### utils~semverArray(semver) ⇒ <code>array</code>
+Takes a semver string and return it as an Array of strings
+
+**Kind**: inner method of [<code>utils</code>](#module_utils)  
+**Returns**: <code>array</code> - Formatted semver  
+
+| Param | Type |
+| --- | --- |
+| semver | <code>string</code> | 
+
+<a name="module_utils..semverGt"></a>
+
+### utils~semverGt(a1, a2) ⇒ <code>boolean</code>
+Compares two sermver and return true if the first is greater than the second.
+Expects to get the semver formatted as array of strings.
+Should be always executed after running semverArray.
+
+**Kind**: inner method of [<code>utils</code>](#module_utils)  
+**Returns**: <code>boolean</code> - The result of the comparison  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| a1 | <code>array</code> | First semver as array |
+| a2 | <code>array</code> | Second semver as array |
+
+<a name="module_utils..semverLt"></a>
+
+### utils~semverLt(a1, a2) ⇒ <code>boolean</code>
+Compares two sermver and return true if the first is less than the second.
+Expects to get the semver formatted as array of strings.
+Should be always executed after running semverArray.
+
+**Kind**: inner method of [<code>utils</code>](#module_utils)  
+**Returns**: <code>boolean</code> - The result of the comparison  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| a1 | <code>array</code> | First semver as array |
+| a2 | <code>array</code> | Second semver as array |
+
+<a name="module_utils..semverEq"></a>
+
+### utils~semverEq(a1, a2) ⇒ <code>boolean</code>
+Compares two sermver and return true if the first is equal to the second.
+Expects to get the semver formatted as array of strings.
+Should be always executed after running semverArray.
+
+**Kind**: inner method of [<code>utils</code>](#module_utils)  
+**Returns**: <code>boolean</code> - The result of the comparison  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| a1 | <code>array</code> | First semver as array |
+| a2 | <code>array</code> | Second semver as array |
+
 <a name="module_common_handler"></a>
 
 ## common\_handler
@@ -1635,10 +1698,6 @@ Allows a new version of a package to be published. But also can allow
 a user to rename their application during this process.
 
 **Kind**: inner method of [<code>package\_handler</code>](#module_package_handler)  
-**Todo**
-
-- [ ] Find methodology of handling rename.
-
 
 | Param | Type | Description |
 | --- | --- | --- |
