@@ -77,7 +77,7 @@ Below are the available scripts:
   - Requires the ability to spin up a local Database that it will connect to, ignoring the values in your `app.yaml`. This Database is run using your local Docker service.
   - Uses mocked responses for all functions in `./src/storage.js` to avoid having to contact Google Storage APIs.
   - Spins up a mock GitHub API Server to respond to requests from `git.js` (Only when running tests located in `./src/tests_integration/git.js`).
-* `start:dev`: This can be used for local development of the backend, if you don't have access to the production database. This will spin up a local Database using Docker and will mock external requests for all other services such as GitHub and Google Storage.
+* `start:dev`: This can be used for local development of the backend if you don't have access to the production database. This will spin up a local Database using Docker and will mock external requests for all other services such as GitHub and Google Storage.
   - Sets `PULSAR_STATUS=dev`
   - Starts up the server using `./src/dev_server.js` instead of `./src/server.js`
   - Requires the ability to spin up a local Database that it will connect to, ignoring the values in your `app.yaml`
