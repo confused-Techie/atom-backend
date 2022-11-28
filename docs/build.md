@@ -61,7 +61,7 @@ npm run $SCRIPT_NAME
 
 Below are the available scripts:
 
-* `start`: Starts the Backend Server normally. Using your `app.yaml` for all needed values. This is what's used in production. And is not recommended for development purposes.
+* `start`: Starts the Backend Server normally. Using your `app.yaml` for all needed values. This is what's used in production but is not recommended for development purposes.
 * `test`: This runs all tests written, which isn't always wanted. For the requirements and expectations when running `test` read the documentation for both `test:unit` and `test:integration`.
 * `test:unit`: This is used for unit testing, where all calls to other API's or data sources are intentionally served false static data instead of completing the normal API call.
   - Sets `NODE_ENV=test`
