@@ -2,7 +2,7 @@
 
 There are two seperate levels of authentication for end users on the server, which are below as well as a short summary of our authentication strategy.
 
-### How does Authentication work on the Pulsar Backend
+## How does Authentication work on the Pulsar Backend
 
 Since it was found to be essential to not be saving any delicate user information on our systems, the team of Pulsar decided to offload the major responsibility of authentication to GitHub.
 
