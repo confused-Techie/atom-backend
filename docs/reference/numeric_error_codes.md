@@ -4,7 +4,7 @@ In some locations of the backend numeric, non-personalized error codes can be re
 
 Currently this implementation is in development, and not all errors will provide an error code.
 
-For developers that are looking to add in additional error codes there are some guides that should be considered while doing so. But please note, like this implementation this guide is in progress and will likely change in the future.
+For developers that are looking to add in additional error codes there are some guides that should be considered while doing so. Please note, like this implementation, this guide is in progress and will likely change in the future.
 
 * Ensure your error code doesn't already exist. There should never be the same code originating from separate locations.
 * Ensure you add your error code here. Without adding it below, it disregards it major purpose of helping to locate the problem for developers and end users.
