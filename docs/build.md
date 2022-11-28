@@ -13,7 +13,6 @@ If you plan to run the full test suite or Integration tests you need to have:
 * Docker running
 * Docker accessible to the user that owns the directory where the repo is stored.
 
-If you are on Linux and have trouble running the test suite/development server read below:
 
 Since the scripts within `package.json` are run with the same permissions as the user that owns the file itself `sudo` won't change running any Docker commands, which is commonly needed on Linux Distros, so you likely will need to add your user to the Docker Group.
 
