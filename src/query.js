@@ -100,7 +100,7 @@ function query(req) {
 /**
  * @function engine
  * @desc Parses the 'engine' query parameter to ensure its valid, otherwise returning false.
- * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object|string} req - The `Request` object inherited from the Express endpoint.
  * @returns {string|boolean} Returns the valid 'engine' specified, or if none, returns false.
  */
 function engine(req) {
@@ -203,14 +203,14 @@ function rename(req) {
  * and ensuring the name is converted to lower case. As is the requirement of all package names.
  * @param {object} req - The `Request` Object inherited from the Express endpoint.
  * @returns {string} Returns the package name in a safe format that can be worked with further.
+ * On error an empty string is returned.
  */
 function packageName(req) {
-  let prov = req.params.packageName;
-
-  prov = decodeURIComponent(prov);
-  prov = prov.toLowerCase();
-
-  return prov;
+  try {
+    decodeURIComponent(req.params.packageName).toLowerCase();
+  } catch (e) {
+    return "";
+  }
 }
 
 /**

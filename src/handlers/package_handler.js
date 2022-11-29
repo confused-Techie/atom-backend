@@ -637,7 +637,7 @@ async function getPackagesVersion(req, res) {
     versionName: query.engine(req.params.versionName),
   };
   // Check the truthiness of the returned query engine.
-  if (!params.versionName) {
+  if (params.versionName === false) {
     // we return a 404 for the version, since its an invalid format
     await common.notFound(req, res);
     return;
@@ -679,7 +679,7 @@ async function getPackagesVersionTarball(req, res) {
   // a tarball_url key on it, linking directly to the tarball from gh for that version.
 
   // we initially want to ensure we have a valid version.
-  if (!params.versionName) {
+  if (params.versionName === false) {
     // since query.engine gives false if invalid, we can just check if its truthy
     // additionally if its false, we know the version will never be found.
     await common.notFound(req, res);
@@ -726,7 +726,7 @@ async function deletePackageVersion(req, res) {
   let params = {
     auth: query.auth(req),
     packageName: query.packageName(req),
-    versionName: req.params.versionName,
+    versionName: query.engine(req.params.versionName),
   };
 
   // Verify the user has local and remote permissions
@@ -749,6 +749,12 @@ async function deletePackageVersion(req, res) {
 
   if (!packageExists.ok) {
     await common.handleError(req, res, packageExists);
+    return;
+  }
+
+  // Check version validity
+  if (params.versionName === false) {
+    await common.notFound(req, res);
     return;
   }
 
@@ -784,7 +790,7 @@ async function postPackagesEventUninstall(req, res) {
   let params = {
     auth: query.auth(req),
     packageName: query.packageName(req),
-    versionName: req.params.versionName, // TODO - This should likely be handled by a proper query?
+    versionName: query.engine(req.params.versionName),  // TODO: unused parameter
   };
 
   let user = await auth.verifyAuth(params.auth);

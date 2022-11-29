@@ -1241,12 +1241,17 @@ async function simpleSearch(term, page, dir, sort) {
     let limit = paginated_amount;
     let offset = page > 1 ? (page - 1) * limit : 0;
 
+    // According to some researches ILIKE is slow and not SQL standard,
+    // so for now we just obtain the lowercase version of term since
+    // names should be in lowercase format anyway (see atom-backend issue #86).
+    const lcterm = term.toLowerCase();
+
     const command = await sqlStorage`
       SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
       WHERE pointer IN (
         SELECT pointer
         FROM names
-        ${sqlStorage`WHERE name ILIKE ${"%" + term + "%"}`}
+        ${sqlStorage`WHERE name LIKE ${"%" + lcterm + "%"}`}
       )
       ORDER BY ${
         sort === "relevance" ? sqlStorage`downloads` : sqlStorage`${term}`
