@@ -68,7 +68,8 @@ async function constructPackageObjectFull(pack) {
   let newPack = pack.data;
   newPack.name = pack.name;
   newPack.downloads = pack.downloads;
-  newPack.stargazers_count = parseInt(pack.stargazers_count) + parseInt(pack.original_stargazers);
+  newPack.stargazers_count =
+    parseInt(pack.stargazers_count) + parseInt(pack.original_stargazers);
   newPack.versions = parseVersions(pack.versions);
   newPack.releases = {
     latest: findLatestVersion(pack.versions),
@@ -100,7 +101,8 @@ async function constructPackageObjectShort(pack) {
     for (let i = 0; i < pack.length; i++) {
       let newPack = pack[i].data;
       newPack.downloads = pack[i].downloads;
-      newPack.stargazers_count = parseInt(pack.stargazers_count) + parseInt(pack.original_stargazers);
+      newPack.stargazers_count =
+        parseInt(pack.stargazers_count) + parseInt(pack.original_stargazers);
       newPack.releases = {
         latest: pack[i].semver,
       };
