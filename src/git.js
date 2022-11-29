@@ -277,13 +277,13 @@ async function createPackage(repo, user) {
             newPack.versions[ver].tarball_url = tag.tarball_url;
             newPack.versions[ver].sha = tag.commit.sha;
             versionCount++;
+            break;
           }
         }
       }
     } else if (pack.version) {
       const ver = query.engine(pack.version);
       if (ver !== false) {
-        newPack.versions[ver] = pack;
         // Otherwise if they only have a version tag, we can make the first entry onto the versions.
         // This first entry of course, contains the package.json currently, and in the future,
         // will allow modifications.
@@ -291,9 +291,11 @@ async function createPackage(repo, user) {
         for (const tag of repoTag) {
           const shortTag = query.engine(tag.name.replace(/^\s?v/i, ""));
           if (ver === shortTag) {
+            newPack.versions[ver] = pack;
             newPack.versions[ver].tarball_url = tag.tarball_url;
             newPack.versions[ver].sha = tag.commit.sha;
             versionCount++;
+            break;
           }
         }
       }
