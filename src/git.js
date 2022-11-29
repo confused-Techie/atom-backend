@@ -249,16 +249,22 @@ async function createPackage(repo, user) {
       };
     }
 
+    let versionCount = 0;
     newPack.versions = {};
 
     // now during migration packages will have a 'versions' key, but otherwise the standard
     // package will just have a 'version', so we will check which is present.
     if (pack.versions) {
       // now to add the release data to each release within the package
-      for (const ver of Object.keys(pack.versions)) {
+      for (const v of Object.keys(pack.versions)) {
+        const ver = query.engine(v);
+        if (ver === false) {
+          continue;
+        }
+
         for (const tag of repoTag) {
-          const shortTag = tag.name.replace("v", "");
-          if (ver == shortTag) {
+          const shortTag = query.engine(tag.name.replace(/^\s?v/i, ""));
+          if (ver === shortTag) {
             // they match tag and version, stuff the data into the package.
             newPack.versions[ver] = pack;
             // TODO::
@@ -270,22 +276,35 @@ async function createPackage(repo, user) {
             // the packages details.
             newPack.versions[ver].tarball_url = tag.tarball_url;
             newPack.versions[ver].sha = tag.commit.sha;
+            versionCount++;
           }
         }
       }
     } else if (pack.version) {
-      newPack.versions[pack.version] = pack;
-      // Otherwise if they only have a version tag, we can make the first entry onto the versions.
-      // This first entry of course, contains the package.json currently, and in the future,
-      // will allow modifications.
-      // But now we do need to retreive, the tarball data.
-      for (const tag of repoTag) {
-        const shortTag = tag.name.replace("v", "");
-        if (pack.version == shortTag) {
-          newPack.versions[pack.version].tarball_url = tag.tarball_url;
-          newPack.versions[pack.version].sha = tag.commit.sha;
+      const ver = query.engine(pack.version);
+      if (ver !== false) {
+        newPack.versions[ver] = pack;
+        // Otherwise if they only have a version tag, we can make the first entry onto the versions.
+        // This first entry of course, contains the package.json currently, and in the future,
+        // will allow modifications.
+        // But now we do need to retreive, the tarball data.
+        for (const tag of repoTag) {
+          const shortTag = query.engine(tag.name.replace(/^\s?v/i, ""));
+          if (ver === shortTag) {
+            newPack.versions[ver].tarball_url = tag.tarball_url;
+            newPack.versions[ver].sha = tag.commit.sha;
+            versionCount++;
+          }
         }
       }
+    }
+
+    if (versionCount === 0) {
+      return {
+        ok: false,
+        content: "Failed to retrieve package versions.",
+        short: "Server Error",
+      };
     }
 
     // now with all the versions properly filled, we lastly just need the release data.
