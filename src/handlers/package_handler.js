@@ -790,7 +790,7 @@ async function postPackagesEventUninstall(req, res) {
   let params = {
     auth: query.auth(req),
     packageName: query.packageName(req),
-    versionName: query.engine(req.params.versionName),  // TODO: unused parameter
+    versionName: query.engine(req.params.versionName), // TODO: unused parameter
   };
 
   let user = await auth.verifyAuth(params.auth);

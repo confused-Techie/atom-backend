@@ -937,7 +937,7 @@ Parses the 'engine' query parameter to ensure its valid, otherwise returning fal
 
 | Param | Type | Description |
 | --- | --- | --- |
-| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| req | <code>object</code> \| <code>string</code> | The `Request` object inherited from the Express endpoint. |
 
 <a name="module_query..auth"></a>
 
@@ -996,7 +996,8 @@ The most major actions taken will be ensuring the name is URI decoded,
 and ensuring the name is converted to lower case. As is the requirement of all package names.
 
 **Kind**: inner method of [<code>query</code>](#module_query)  
-**Returns**: <code>string</code> - Returns the package name in a safe format that can be worked with further.  
+**Returns**: <code>string</code> - Returns the package name in a safe format that can be worked with further.
+On error an empty string is returned.  
 
 | Param | Type | Description |
 | --- | --- | --- |
