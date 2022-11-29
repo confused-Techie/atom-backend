@@ -4,6 +4,7 @@
  */
 
 const superagent = require("superagent");
+const query = require("./query.js");
 const { GH_USERAGENT } = require("./config.js").getConfig();
 const logger = require("./logger.js");
 let GH_API_URL = "https://api.github.com";
@@ -189,10 +190,21 @@ async function createPackage(repo, user) {
 
     const time = Date.now();
 
+    // First we ensure the package name is the the proper format.
+    const packName = query.packageName(pack.name);
+    if (packName === "") {
+      return {
+        ok: false,
+        content: `Failed to convert ${pack.name} in the proper format.`,
+        short: "Server Error",
+      }
+    }
+
     // One note about the difference in atom created package.json files, is the 'repository'
     // is an object rather than a string like NPM.
-    newPack.name = pack.name;
-    //newPack.repository = pack.repository; // the auto gen package.json does not include the repo in a valid format.
+    newPack.name = packName;
+    // the auto gen package.json does not include the repo in a valid format.
+    //newPack.repository = pack.repository;
     newPack.created = time;
     newPack.updated = time;
     newPack.creation_method = "User Made Package";
