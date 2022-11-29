@@ -937,7 +937,7 @@ Parses the 'engine' query parameter to ensure its valid, otherwise returning fal
 
 | Param | Type | Description |
 | --- | --- | --- |
-| req | <code>object</code> \| <code>string</code> | The `Request` object inherited from the Express endpoint. |
+| req | <code>object</code> \| <code>string</code> | The `Request` object inherited from the Express endpoint or the engine string. |
 
 <a name="module_query..auth"></a>
 
@@ -1001,7 +1001,7 @@ On error an empty string is returned.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| req | <code>object</code> | The `Request` Object inherited from the Express endpoint. |
+| req | <code>object</code> \| <code>string</code> | The `Request` Object inherited from the Express endpoint or the name string. |
 
 <a name="module_query..pathTraversalAttempt"></a>
 

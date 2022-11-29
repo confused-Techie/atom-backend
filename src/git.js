@@ -197,7 +197,7 @@ async function createPackage(repo, user) {
         ok: false,
         content: `Failed to convert ${pack.name} in the proper format.`,
         short: "Server Error",
-      }
+      };
     }
 
     // One note about the difference in atom created package.json files, is the 'repository'
