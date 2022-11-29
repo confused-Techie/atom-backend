@@ -207,7 +207,7 @@ function rename(req) {
  */
 function packageName(req) {
   try {
-    decodeURIComponent(req.params.packageName).toLowerCase();
+    return decodeURIComponent(req.params.packageName).toLowerCase();
   } catch (e) {
     return "";
   }
