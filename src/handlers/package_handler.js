@@ -302,7 +302,7 @@ async function getPackagesSearch(req, res) {
 async function getPackagesDetails(req, res) {
   let params = {
     engine: query.engine(req),
-    name: decodeURIComponent(req.params.packageName),
+    name: query.packageName(req)
   };
   let pack = await database.getPackageByName(params.name);
 
@@ -335,7 +335,7 @@ async function getPackagesDetails(req, res) {
 async function deletePackagesName(req, res) {
   let params = {
     auth: query.auth(req),
-    packageName: decodeURIComponent(req.params.packageName),
+    packageName: query.packageName(req)
   };
 
   let user = await auth.verifyAuth(params.auth);
@@ -376,7 +376,7 @@ async function deletePackagesName(req, res) {
 async function postPackagesStar(req, res) {
   let params = {
     auth: query.auth(req),
-    packageName: decodeURIComponent(req.params.packageName),
+    packageName: query.packageName(req)
   };
 
   let user = await auth.verifyAuth(params.auth);
@@ -441,7 +441,7 @@ async function postPackagesStar(req, res) {
 async function deletePackagesStar(req, res) {
   let params = {
     auth: query.auth(req),
-    packageName: decodeURIComponent(req.params.packageName),
+    packageName: query.packageName(req)
   };
 
   let user = await auth.verifyAuth(params.auth);
@@ -487,7 +487,7 @@ async function deletePackagesStar(req, res) {
  */
 async function getPackagesStargazers(req, res) {
   let params = {
-    packageName: decodeURIComponent(req.params.packageName),
+    packageName: query.packageName(req)
   };
   let pack = await database.getPackageByName(params.packageName);
 
@@ -529,7 +529,7 @@ async function postPackagesVersion(req, res) {
     tag: query.tag(req),
     rename: query.rename(req),
     auth: query.auth(req),
-    packageName: decodeURIComponent(req.params.packageName),
+    packageName: query.packageName(req)
   };
 
   // On renaming:
@@ -633,7 +633,7 @@ async function postPackagesVersion(req, res) {
  */
 async function getPackagesVersion(req, res) {
   let params = {
-    packageName: decodeURIComponent(req.params.packageName),
+    packageName: query.packageName(req),
     versionName: query.engine(req.params.versionName),
   };
   // Check the truthiness of the returned query engine.
@@ -672,7 +672,7 @@ async function getPackagesVersion(req, res) {
  */
 async function getPackagesVersionTarball(req, res) {
   let params = {
-    packageName: decodeURIComponent(req.params.packageName),
+    packageName: query.packageName(req),
     versionName: query.engine(req.params.versionName),
   };
   // Now that migration has began we know that each version will have
@@ -725,7 +725,7 @@ async function getPackagesVersionTarball(req, res) {
 async function deletePackageVersion(req, res) {
   let params = {
     auth: query.auth(req),
-    packageName: decodeURIComponent(req.params.packageName),
+    packageName: query.packageName(req),
     versionName: req.params.versionName,
   };
 
@@ -783,8 +783,8 @@ async function deletePackageVersion(req, res) {
 async function postPackagesEventUninstall(req, res) {
   let params = {
     auth: query.auth(req),
-    packageName: decodeURIComponent(req.params.packageName),
-    versionName: req.params.versionName,
+    packageName: query.packageName(req),
+    versionName: req.params.versionName, // TODO - This should likely be handled by a proper query?
   };
 
   let user = await auth.verifyAuth(params.auth);
