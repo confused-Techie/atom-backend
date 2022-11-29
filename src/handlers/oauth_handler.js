@@ -66,6 +66,8 @@ async function getOauth(req, res) {
     code: req.query.code ?? "",
   };
 
+  //throw new Error("Not Supported!"); // WARNING: Turning on before remote depoloyment disables auth during beta
+
   // First we want to ensure that our state is still the same.
   let stateCheck = stateStore.getState(req.ip, params.state);
 

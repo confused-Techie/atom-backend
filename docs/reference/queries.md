@@ -1,14 +1,21 @@
+# Queries
+
 This document aims to collect all the queries used to retrieve data from the SQL Database, as well as the resulting Object you'll receive from them.
+
+But please note that this document is currently in progress, and may not contain all endpoints that are in production use.
+
+* [Retrieve Single Package : Package Object Full](#retrievesinglepackagepackageobjectfull)
+* [Retrieve Many Sorted Packages : Package Object Short](#retievemanysortedpackagespackageobjectshort)
 
 ---
 
-# Retrieve Single Package : Package Object Full 
+## Retrieve Single Package : Package Object Full
 
-```sql 
+```sql
 SELECT p.*, JSON_AGG(v.*)
-FROM packages p 
-JOIN versions v ON p.pointer = v.package 
-JOIN names n ON n.pointer = p.pointer 
+FROM packages p
+JOIN versions v ON p.pointer = v.package
+JOIN names n ON n.pointer = p.pointer
 WHERE n.name = ${name}
 GROUP BY p.pointer, v.package;
 ```
@@ -91,7 +98,7 @@ Returns the following Object (Modeled after 'language-css'):
           'tree-sitter-css': '^0.19.0'
         },
         devDependencies: {
-          coffeelint: '^1.10.1' 
+          coffeelint: '^1.10.1'
         }
       }
     },
@@ -125,7 +132,7 @@ Returns the following Object (Modeled after 'language-css'):
           'tree-sitter-css': '^0.19.0'
         },
         devDependencies: {
-          coffeelint: '^1.10.1' 
+          coffeelint: '^1.10.1'
         }
       }
     },
@@ -134,9 +141,9 @@ Returns the following Object (Modeled after 'language-css'):
 }
 ```
 
-# Retrieve Many Sorted Packages : Package Object Short 
+## Retrieve Many Sorted Packages : Package Object Short
 
-```sql 
+```sql
 SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
 ORDER BY ${sort_method} ${sort_direction}
 LIMIT ${limit}

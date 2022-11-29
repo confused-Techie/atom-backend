@@ -871,6 +871,7 @@ engine(): Returns false if not defined, to allow a fast way to determine if resu
     * [~repo(req)](#module_query..repo) ⇒ <code>string</code>
     * [~tag(req)](#module_query..tag) ⇒ <code>string</code>
     * [~rename(req)](#module_query..rename) ⇒ <code>boolean</code>
+    * [~packageName(req)](#module_query..packageName) ⇒ <code>string</code>
     * [~pathTraversalAttempt(data)](#module_query..pathTraversalAttempt) ⇒ <code>boolean</code>
 
 <a name="module_query..page"></a>
@@ -986,6 +987,20 @@ if invalid, otherwise returns true. Checking for mixed captilization.
 | Param | Type | Description |
 | --- | --- | --- |
 | req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+
+<a name="module_query..packageName"></a>
+
+### query~packageName(req) ⇒ <code>string</code>
+This function will convert a user provided package name into a safe format.
+The most major actions taken will be ensuring the name is URI decoded,
+and ensuring the name is converted to lower case. As is the requirement of all package names.
+
+**Kind**: inner method of [<code>query</code>](#module_query)  
+**Returns**: <code>string</code> - Returns the package name in a safe format that can be worked with further.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` Object inherited from the Express endpoint. |
 
 <a name="module_query..pathTraversalAttempt"></a>
 

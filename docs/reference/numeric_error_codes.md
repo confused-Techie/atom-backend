@@ -1,23 +1,18 @@
-As the final push to get the Backend ready for Atom's sunset is here, there is a lot that is supposed to be happening to the backend.
+# Numeric Error Codes
 
-The last of the tests are seemingly all integration tests. And at this point that means it's hard to find what's causing errors on tests that fail.
+In some locations of the backend numeric, non-personalized error codes can be returned to be output onto the console. This is intened to aid in tracking down where and how an error occured, to ensure debugging after the fact can be easier.
 
-With so many moving parts and a single function touching so many modules and functions, it can make life difficult, especially when all you see is the final error returned to the end user. And your logs all come from one module.
+Currently this implementation is in development, and not all errors will provide an error code.
 
-So in this effort I'm introducing something I've always not been the biggest fan of.
+For developers that are looking to add in additional error codes there are some guides that should be considered while doing so. Please note, like this implementation, this guide is in progress and will likely change in the future.
+
+* Ensure your error code doesn't already exist. There should never be the same code originating from separate locations.
+* Ensure you add your error code here. Without adding it below, it disregards it major purpose of helping to locate the problem for developers and end users.
+* Lastly Numeric Error Codes are only shown within `warningLog` && `errorLog`.
+
+Although if an error code is collected, below is a guide to determine where it had originated.
 
 ## Numeric Error Codes
-
-While I always disliked them because of their associated non-existent documentation, here is where I make sure that doesn't happen.
-
-For Developers, if adding in a new Numeric Error Code please do the following:
-  * Ensure your error code doesn't already exist. There should never be the same code originated from separate locations.
-  * Ensure you add your error code here. Without adding it below, it is worthless as an error code.
-  * Lastly Numeric Error Codes are only shown within `warningLog && errorLog`
-
-While Numeric Error Codes will now accompany traditional error messages, this will aim to make reporting bugs, and fixing bugs during testing easier and faster. So lets begin:
-
-# Numeric Error Codes
 
 ### 9999
 

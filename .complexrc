@@ -1,7 +1,7 @@
 {
   "excludepattern": "node_modules",
   "filepattern": "\\.js$",
-  "output": "./docs/complexity-report.md",
+  "output": "./docs/resources/complexity-report.md",
   "format": "markdown",
   "ignoreerrors": true
 }
