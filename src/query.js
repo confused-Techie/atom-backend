@@ -197,13 +197,13 @@ function rename(req) {
 }
 
 /**
-  * @function packageName
-  * @desc This function will convert a user provided package name into a safe format.
-  * The most major actions taken will be ensuring the name is URI decoded,
-  * and ensuring the name is converted to lower case. As is the requirement of all package names.
-  * @param {object} req - The `Request` Object inherited from the Express endpoint.
-  * @returns {string} Returns the package name in a safe format that can be worked with further.
-  */
+ * @function packageName
+ * @desc This function will convert a user provided package name into a safe format.
+ * The most major actions taken will be ensuring the name is URI decoded,
+ * and ensuring the name is converted to lower case. As is the requirement of all package names.
+ * @param {object} req - The `Request` Object inherited from the Express endpoint.
+ * @returns {string} Returns the package name in a safe format that can be worked with further.
+ */
 function packageName(req) {
   let prov = req.params.packageName;
 
@@ -237,4 +237,15 @@ function pathTraversalAttempt(data) {
   return false; // if none of the matches are true.
 }
 
-module.exports = { page, sort, dir, query, engine, repo, tag, rename, auth, packageName };
+module.exports = {
+  page,
+  sort,
+  dir,
+  query,
+  engine,
+  repo,
+  tag,
+  rename,
+  auth,
+  packageName,
+};

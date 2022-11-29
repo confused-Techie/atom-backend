@@ -302,7 +302,7 @@ async function getPackagesSearch(req, res) {
 async function getPackagesDetails(req, res) {
   let params = {
     engine: query.engine(req),
-    name: query.packageName(req)
+    name: query.packageName(req),
   };
   let pack = await database.getPackageByName(params.name);
 
@@ -335,7 +335,7 @@ async function getPackagesDetails(req, res) {
 async function deletePackagesName(req, res) {
   let params = {
     auth: query.auth(req),
-    packageName: query.packageName(req)
+    packageName: query.packageName(req),
   };
 
   let user = await auth.verifyAuth(params.auth);
@@ -376,7 +376,7 @@ async function deletePackagesName(req, res) {
 async function postPackagesStar(req, res) {
   let params = {
     auth: query.auth(req),
-    packageName: query.packageName(req)
+    packageName: query.packageName(req),
   };
 
   let user = await auth.verifyAuth(params.auth);
@@ -441,7 +441,7 @@ async function postPackagesStar(req, res) {
 async function deletePackagesStar(req, res) {
   let params = {
     auth: query.auth(req),
-    packageName: query.packageName(req)
+    packageName: query.packageName(req),
   };
 
   let user = await auth.verifyAuth(params.auth);
@@ -487,7 +487,7 @@ async function deletePackagesStar(req, res) {
  */
 async function getPackagesStargazers(req, res) {
   let params = {
-    packageName: query.packageName(req)
+    packageName: query.packageName(req),
   };
   let pack = await database.getPackageByName(params.packageName);
 
@@ -529,7 +529,7 @@ async function postPackagesVersion(req, res) {
     tag: query.tag(req),
     rename: query.rename(req),
     auth: query.auth(req),
-    packageName: query.packageName(req)
+    packageName: query.packageName(req),
   };
 
   // On renaming:
