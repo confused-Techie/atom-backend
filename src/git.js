@@ -311,7 +311,7 @@ async function createPackage(repo, user) {
 
     // now with all the versions properly filled, we lastly just need the release data.
     newPack.releases = {
-      latest: repoTag[0].name.replace("v", ""),
+      latest: repoTag[0].name.replace(/^\s?v/i, ""),
     };
 
     // for this we just use the most recent tag published to the repo.
