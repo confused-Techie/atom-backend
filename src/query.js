@@ -84,13 +84,11 @@ function query(req) {
   }
 
   try {
-    let decodeProv = decodeURIComponent(prov); // this will undo any encoding done to get the request to us.
-
     // If there is a path traversal attach detected return empty query.
     // Additionally do not allow strings longer than `max_length`
-    return pathTraversalAttempt(decodeProv)
+    return pathTraversalAttempt(prov)
       ? ""
-      : decodeProv.slice(0, max_length).trim();
+      : prov.slice(0, max_length).trim();
   } catch (err) {
     // an error occured while decoding the URI component. Return an empty query.
     return "";
@@ -203,18 +201,12 @@ function rename(req) {
 /**
  * @function packageName
  * @desc This function will convert a user provided package name into a safe format.
- * The most major actions taken will be ensuring the name is URI decoded,
- * and ensuring the name is converted to lower case. As is the requirement of all package names.
+ * It ensures the name is converted to lower case. As is the requirement of all package names.
  * @param {object} req - The `Request` Object inherited from the Express endpoint.
  * @returns {string} Returns the package name in a safe format that can be worked with further.
- * On error an empty string is returned.
  */
 function packageName(req) {
-  try {
-    return decodeURIComponent(req.params.packageName).toLowerCase();
-  } catch (e) {
-    return "";
-  }
+  return req.params.packageName.toLowerCase();
 }
 
 /**
