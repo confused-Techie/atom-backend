@@ -1241,9 +1241,8 @@ async function simpleSearch(term, page, dir, sort) {
     let limit = paginated_amount;
     let offset = page > 1 ? (page - 1) * limit : 0;
 
-    // According to some researches ILIKE is slow and not SQL standard,
-    // so for now we just obtain the lowercase version of term since
-    // names should be in lowercase format anyway (see atom-backend issue #86).
+    // We obtain the lowercase version of term since names should be in
+    // lowercase format (see atom-backend issue #86).
     const lcterm = term.toLowerCase();
 
     const command = await sqlStorage`
@@ -1254,11 +1253,11 @@ async function simpleSearch(term, page, dir, sort) {
         ${sqlStorage`WHERE name LIKE ${"%" + lcterm + "%"}`}
       )
       ORDER BY ${
-        sort === "relevance" ? sqlStorage`downloads` : sqlStorage`${term}`
+        sort === "relevance" ? sqlStorage`downloads` : sqlStorage`${sort}`
       }
       ${dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`}
       LIMIT ${limit}
-      OFFSET ${offset}
+      OFFSET ${offset};
     `;
 
     return command.count !== 0
