@@ -205,14 +205,13 @@ function rename(req) {
  * @desc This function will convert a user provided package name into a safe format.
  * The most major actions taken will be ensuring the name is URI decoded,
  * and ensuring the name is converted to lower case. As is the requirement of all package names.
- * @param {object|string} req - The `Request` Object inherited from the Express endpoint or the name string.
+ * @param {object} req - The `Request` Object inherited from the Express endpoint.
  * @returns {string} Returns the package name in a safe format that can be worked with further.
  * On error an empty string is returned.
  */
 function packageName(req) {
   try {
-    const name = typeof req === "object" ? req.params.packageName : req;
-    return decodeURIComponent(name).toLowerCase();
+    return decodeURIComponent(req.params.packageName).toLowerCase();
   } catch (e) {
     return "";
   }
