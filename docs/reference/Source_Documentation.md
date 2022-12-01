@@ -992,16 +992,14 @@ if invalid, otherwise returns true. Checking for mixed captilization.
 
 ### query~packageName(req) ⇒ <code>string</code>
 This function will convert a user provided package name into a safe format.
-The most major actions taken will be ensuring the name is URI decoded,
-and ensuring the name is converted to lower case. As is the requirement of all package names.
+It ensures the name is converted to lower case. As is the requirement of all package names.
 
 **Kind**: inner method of [<code>query</code>](#module_query)  
-**Returns**: <code>string</code> - Returns the package name in a safe format that can be worked with further.
-On error an empty string is returned.  
+**Returns**: <code>string</code> - Returns the package name in a safe format that can be worked with further.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| req | <code>object</code> \| <code>string</code> | The `Request` Object inherited from the Express endpoint or the name string. |
+| req | <code>object</code> | The `Request` Object inherited from the Express endpoint. |
 
 <a name="module_query..pathTraversalAttempt"></a>
 

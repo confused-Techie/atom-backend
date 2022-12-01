@@ -86,9 +86,7 @@ function query(req) {
   try {
     // If there is a path traversal attach detected return empty query.
     // Additionally do not allow strings longer than `max_length`
-    return pathTraversalAttempt(prov)
-      ? ""
-      : prov.slice(0, max_length).trim();
+    return pathTraversalAttempt(prov) ? "" : prov.slice(0, max_length).trim();
   } catch (err) {
     // an error occured while decoding the URI component. Return an empty query.
     return "";
