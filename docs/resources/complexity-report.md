@@ -219,7 +219,7 @@
 * Maintainability index: 37.55816344262995
 * Dependency count: 1
 
-## /home/runner/work/atom-backend/atom-backend/src/tests_integration/fixtures/git.createPackage_returns/valid_one_version.js
+## /home/runner/work/atom-community-server-backend-JS/atom-community-server-backend-JS/src/tests_integration/fixtures/git.createPackage_returns/valid_one_version.js
 
 * Physical LOC: 25
 * Logical LOC: 19
