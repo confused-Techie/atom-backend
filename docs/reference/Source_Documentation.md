@@ -596,6 +596,7 @@ Assists in interactions between the backend and GitHub.
     * [~setGHAPIURL(val)](#module_git..setGHAPIURL)
     * [~ownership(user, repo, [dev_override])](#module_git..ownership)
     * [~createPackage(repo)](#module_git..createPackage) ⇒ <code>object</code>
+    * [~selectPackageRepository(repo)](#module_git..selectPackageRepository) ⇒ <code>object</code>
     * [~doesUserHaveRepo(user, repo, [page])](#module_git..doesUserHaveRepo) ⇒ <code>object</code>
     * [~getRepoExistance(repo)](#module_git..getRepoExistance) ⇒ <code>boolean</code>
     * [~getPackageJSON(repo)](#module_git..getPackageJSON) ⇒ <code>string</code> \| <code>undefined</code>
@@ -656,6 +657,19 @@ return back a proper `Server Object Full` object within a `Server Status`.conten
 | Param | Type | Description |
 | --- | --- | --- |
 | repo | <code>string</code> | The Repo to use in the form `owner/repo`. |
+
+<a name="module_git..selectPackageRepository"></a>
+
+### git~selectPackageRepository(repo) ⇒ <code>object</code>
+Determines the repository object by the given argument.
+The functionality will only be declarative for now, and may change later on.
+
+**Kind**: inner method of [<code>git</code>](#module_git)  
+**Returns**: <code>object</code> - The object related to the package repository type.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| repo | <code>string</code> \| <code>object</code> | The repository of the retrieved package. |
 
 <a name="module_git..doesUserHaveRepo"></a>
 
@@ -866,7 +880,7 @@ engine(): Returns false if not defined, to allow a fast way to determine if resu
     * [~sort(req, [def])](#module_query..sort) ⇒ <code>string</code>
     * [~dir(req)](#module_query..dir) ⇒ <code>string</code>
     * [~query(req)](#module_query..query) ⇒ <code>string</code>
-    * [~engine(req)](#module_query..engine) ⇒ <code>string</code> \| <code>boolean</code>
+    * [~engine(semver)](#module_query..engine) ⇒ <code>string</code> \| <code>boolean</code>
     * [~auth(req)](#module_query..auth) ⇒ <code>string</code>
     * [~repo(req)](#module_query..repo) ⇒ <code>string</code>
     * [~tag(req)](#module_query..tag) ⇒ <code>string</code>
@@ -929,7 +943,7 @@ it is not a malicious request. Returning "" if an unsafe or invalid query is pas
 
 <a name="module_query..engine"></a>
 
-### query~engine(req) ⇒ <code>string</code> \| <code>boolean</code>
+### query~engine(semver) ⇒ <code>string</code> \| <code>boolean</code>
 Parses the 'engine' query parameter to ensure its valid, otherwise returning false.
 
 **Kind**: inner method of [<code>query</code>](#module_query)  
@@ -937,7 +951,7 @@ Parses the 'engine' query parameter to ensure its valid, otherwise returning fal
 
 | Param | Type | Description |
 | --- | --- | --- |
-| req | <code>object</code> \| <code>string</code> | The `Request` object inherited from the Express endpoint or the engine string. |
+| semver | <code>string</code> | The engine string. |
 
 <a name="module_query..auth"></a>
 
@@ -1093,7 +1107,7 @@ A helper for any functions that are agnostic in handlers.
     * [~constructPackageObjectJSON(pack)](#module_utils..constructPackageObjectJSON) ⇒ <code>object</code>
     * [~deepCopy(obj)](#module_utils..deepCopy) ⇒ <code>object</code>
     * [~engineFilter()](#module_utils..engineFilter) ⇒ <code>object</code>
-    * [~semverArray(semver)](#module_utils..semverArray) ⇒ <code>array</code>
+    * [~semverArray(semver)](#module_utils..semverArray) ⇒ <code>array</code> \| <code>null</code>
     * [~semverGt(a1, a2)](#module_utils..semverGt) ⇒ <code>boolean</code>
     * [~semverLt(a1, a2)](#module_utils..semverLt) ⇒ <code>boolean</code>
     * [~semverEq(a1, a2)](#module_utils..semverEq) ⇒ <code>boolean</code>
@@ -1204,11 +1218,11 @@ that engine version as provided.
 **Returns**: <code>object</code> - The filtered object.  
 <a name="module_utils..semverArray"></a>
 
-### utils~semverArray(semver) ⇒ <code>array</code>
+### utils~semverArray(semver) ⇒ <code>array</code> \| <code>null</code>
 Takes a semver string and return it as an Array of strings
 
 **Kind**: inner method of [<code>utils</code>](#module_utils)  
-**Returns**: <code>array</code> - Formatted semver  
+**Returns**: <code>array</code> \| <code>null</code> - The formatted semver in array of three strings, or null if no match.  
 
 | Param | Type |
 | --- | --- |
