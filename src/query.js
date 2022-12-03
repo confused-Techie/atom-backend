@@ -84,13 +84,9 @@ function query(req) {
   }
 
   try {
-    let decodeProv = decodeURIComponent(prov); // this will undo any encoding done to get the request to us.
-
     // If there is a path traversal attach detected return empty query.
     // Additionally do not allow strings longer than `max_length`
-    return pathTraversalAttempt(decodeProv)
-      ? ""
-      : decodeProv.slice(0, max_length).trim();
+    return pathTraversalAttempt(prov) ? "" : prov.slice(0, max_length).trim();
   } catch (err) {
     // an error occured while decoding the URI component. Return an empty query.
     return "";
@@ -100,27 +96,31 @@ function query(req) {
 /**
  * @function engine
  * @desc Parses the 'engine' query parameter to ensure its valid, otherwise returning false.
- * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object|string} req - The `Request` object inherited from the Express endpoint or the engine string.
  * @returns {string|boolean} Returns the valid 'engine' specified, or if none, returns false.
  */
 function engine(req) {
-  // adding support for being passed the request object, or a specific version to check.
-  let prov = typeof req === "object" ? req.query.engine : req;
+  try {
+    // adding support for being passed the request object, or a specific version to check.
+    let prov = typeof req === "object" ? req.query.engine : req;
 
-  if (prov === undefined) {
+    if (prov === undefined) {
+      return false;
+    }
+
+    // Taken from
+    // - https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
+    // - https://regex101.com/r/vkijKf/1/
+    // The only difference is that we use \d rather than 0-9 as suggested by Codacy
+
+    const regex =
+      /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][\da-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][\da-zA-Z-]*))*))?(?:\+([\da-zA-Z-]+(?:\.[\da-zA-Z-]+)*))?$/;
+
+    // Check if it's a valid semver
+    return prov.match(regex) !== null ? prov : false;
+  } catch (e) {
     return false;
   }
-
-  // Taken from
-  // - https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
-  // - https://regex101.com/r/vkijKf/1/
-  // The only difference is that we use \d rather than 0-9 as suggested by Codacy
-
-  const regex =
-    /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][\da-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][\da-zA-Z-]*))*))?(?:\+([\da-zA-Z-]+(?:\.[\da-zA-Z-]+)*))?$/;
-
-  // Check if it's a valid semver
-  return prov.match(regex) !== null ? prov : false;
 }
 
 /**
@@ -199,18 +199,12 @@ function rename(req) {
 /**
  * @function packageName
  * @desc This function will convert a user provided package name into a safe format.
- * The most major actions taken will be ensuring the name is URI decoded,
- * and ensuring the name is converted to lower case. As is the requirement of all package names.
+ * It ensures the name is converted to lower case. As is the requirement of all package names.
  * @param {object} req - The `Request` Object inherited from the Express endpoint.
  * @returns {string} Returns the package name in a safe format that can be worked with further.
  */
 function packageName(req) {
-  let prov = req.params.packageName;
-
-  prov = decodeURIComponent(prov);
-  prov = prov.toLowerCase();
-
-  return prov;
+  return req.params.packageName.toLowerCase();
 }
 
 /**
