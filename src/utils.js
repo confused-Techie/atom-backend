@@ -374,7 +374,7 @@ async function engineFilter(pack, engine) {
  * @function semverArray
  * @desc Takes a semver string and return it as an Array of strings
  * @param {string} semver
- * @returns {array} Formatted semver
+ * @returns {array|null} The formatted semver in array of three strings, or null if no match.
  */
 function semverArray(semver) {
   return semver.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/);
