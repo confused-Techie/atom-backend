@@ -216,19 +216,20 @@ function packageName(req) {
  * @returns {boolean} True indicates a path traversal attempt was found. False otherwise.
  */
 function pathTraversalAttempt(data) {
-  // this will use several methods to check for the possibility of an attempted path traversal attack.
+  // This will use several methods to check for the possibility of an attempted path traversal attack.
 
-  // The definitions here are based off GoPage checks. https://github.com/confused-Techie/GoPage/blob/main/src/pkg/universalMethods/universalMethods.go
+  // The definitions here are based off GoPage checks.
+  // https://github.com/confused-Techie/GoPage/blob/main/src/pkg/universalMethods/universalMethods.go
   // But we leave out any focused on defended against URL Encoded values, since this has already been decoded.
-  //           unixBackNav, unixBackNavReverse, unixParentCatchAll,
-  const checks = [/\.{2}\//, /\.{2}\\/, /\.{2}/];
+  // const checks = [
+  //   /\.{2}\//,   //unixBackNav
+  //   /\.{2}\\/,   //unixBackNavReverse
+  //   /\.{2}/,     //unixParentCatchAll
+  // ];
 
-  for (let i = 0; i < checks.length; i++) {
-    if (data.match(checks[i]) !== null) {
-      return true;
-    }
-  }
-  return false; // if none of the matches are true.
+  // Combine the 3 regex into one: https://regex101.com/r/CgcZev/1
+  const check = /\.{2}(?:[/\\])?/;
+  return data.match(check) !== null;
 }
 
 module.exports = {
