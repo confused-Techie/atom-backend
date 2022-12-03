@@ -6,6 +6,7 @@
 const superagent = require("superagent");
 const { GH_USERAGENT } = require("./config.js").getConfig();
 const logger = require("./logger.js");
+const query = require("./query.js");
 let GH_API_URL = "https://api.github.com";
 let GH_WEB_URL = "https://github.com";
 
