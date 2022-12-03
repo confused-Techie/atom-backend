@@ -301,7 +301,7 @@ async function getPackagesSearch(req, res) {
  */
 async function getPackagesDetails(req, res) {
   let params = {
-    engine: query.engine(req),
+    engine: query.engine(req.query.engine),
     name: query.packageName(req),
   };
   let pack = await database.getPackageByName(params.name);
@@ -313,7 +313,7 @@ async function getPackagesDetails(req, res) {
 
   pack = await utils.constructPackageObjectFull(pack.content);
 
-  if (params.engine) {
+  if (params.engine !== false) {
     // query.engine returns false if no valid query param is found.
     // before using engineFilter we need to check the truthiness of it.
     pack = await utils.engineFilter(pack, params.engine);
@@ -790,7 +790,9 @@ async function postPackagesEventUninstall(req, res) {
   let params = {
     auth: query.auth(req),
     packageName: query.packageName(req),
-    versionName: query.engine(req.params.versionName), // TODO: unused parameter
+    // TODO: versionName unused parameter. On the roadmap to be removed.
+    // See https://github.com/confused-Techie/atom-backend/pull/88#issuecomment-1331809594
+    versionName: query.engine(req.params.versionName),
   };
 
   let user = await auth.verifyAuth(params.auth);

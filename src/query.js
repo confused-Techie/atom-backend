@@ -96,18 +96,11 @@ function query(req) {
 /**
  * @function engine
  * @desc Parses the 'engine' query parameter to ensure its valid, otherwise returning false.
- * @param {object|string} req - The `Request` object inherited from the Express endpoint or the engine string.
+ * @param {string} semver - The engine string.
  * @returns {string|boolean} Returns the valid 'engine' specified, or if none, returns false.
  */
-function engine(req) {
+function engine(semver) {
   try {
-    // adding support for being passed the request object, or a specific version to check.
-    let prov = typeof req === "object" ? req.query.engine : req;
-
-    if (prov === undefined) {
-      return false;
-    }
-
     // Taken from
     // - https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
     // - https://regex101.com/r/vkijKf/1/
@@ -117,7 +110,7 @@ function engine(req) {
       /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][\da-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][\da-zA-Z-]*))*))?(?:\+([\da-zA-Z-]+(?:\.[\da-zA-Z-]+)*))?$/;
 
     // Check if it's a valid semver
-    return prov.match(regex) !== null ? prov : false;
+    return semver.match(regex) !== null ? semver : false;
   } catch (e) {
     return false;
   }
