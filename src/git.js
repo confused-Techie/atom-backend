@@ -242,6 +242,7 @@ async function createPackage(repo, user) {
       };
     }
 
+    const semVerInitRegex = /^\s?v/i;
     let versionCount = 0;
     newPack.versions = {};
 
@@ -256,7 +257,7 @@ async function createPackage(repo, user) {
         }
 
         for (const tag of repoTag) {
-          const shortTag = query.engine(tag.name.replace(/^\s?v/i, ""));
+          const shortTag = query.engine(tag.name.replace(semVerInitRegex, ""));
           if (ver === shortTag) {
             // they match tag and version, stuff the data into the package.
             newPack.versions[ver] = pack;
@@ -282,7 +283,7 @@ async function createPackage(repo, user) {
         // will allow modifications.
         // But now we do need to retreive, the tarball data.
         for (const tag of repoTag) {
-          const shortTag = query.engine(tag.name.replace(/^\s?v/i, ""));
+          const shortTag = query.engine(tag.name.replace(semVerInitRegex, ""));
           if (ver === shortTag) {
             newPack.versions[ver] = pack;
             newPack.versions[ver].tarball_url = tag.tarball_url;
@@ -304,7 +305,7 @@ async function createPackage(repo, user) {
 
     // now with all the versions properly filled, we lastly just need the release data.
     newPack.releases = {
-      latest: repoTag[0].name.replace(/^\s?v/i, ""),
+      latest: repoTag[0].name.replace(semVerInitRegex, ""),
     };
 
     // for this we just use the most recent tag published to the repo.
