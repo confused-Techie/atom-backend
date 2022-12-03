@@ -224,15 +224,15 @@ async function engineFilter(pack, engine) {
     return pack;
   }
 
-  const eng_sv = semverArray(engine);
+  const engSv = semverArray(engine);
 
   // Validate engine semver format.
-  if (eng_sv === null) {
+  if (engSv === null) {
     return pack;
   }
 
   // We will want to loop through each version of the package, and check its engine version against the specified one.
-  let compatible_version = "";
+  let compatibleVersion = "";
 
   for (const ver in pack.versions) {
     // Make sure the key we need is available, otherwise skip the current loop.
@@ -247,33 +247,33 @@ async function engineFilter(pack, engine) {
 
     // Track the upper and lower end conditions.
     // Null type means not available; Bool type means available with the relative result.
-    let lower_end = null;
-    let upper_end = null;
+    let lowerEnd = null;
+    let upperEnd = null;
 
     // Extract the lower end semver condition (i.e >=1.0.0)
-    const low_sv = pack.versions[ver].engines.atom.match(
+    const lowSv = pack.versions[ver].engines.atom.match(
       /(>=?)(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/
     );
 
-    if (low_sv != null) {
+    if (lowSv != null) {
       // Lower end condition present, so test it.
-      switch (low_sv[1]) {
+      switch (lowSv[1]) {
         case ">":
-          lower_end = semverGt(
-            [eng_sv[1], eng_sv[2], eng_sv[3]],
-            [low_sv[2], low_sv[3], low_sv[4]]
+          lowerEnd = semverGt(
+            [engSv[1], engSv[2], engSv[3]],
+            [lowSv[2], lowSv[3], lowSv[4]]
           );
 
           break;
         case ">=":
-          lower_end =
+          lowerEnd =
             semverGt(
-              [eng_sv[1], eng_sv[2], eng_sv[3]],
-              [low_sv[2], low_sv[3], low_sv[4]]
+              [engSv[1], engSv[2], engSv[3]],
+              [lowSv[2], lowSv[3], lowSv[4]]
             ) ||
             semverEq(
-              [eng_sv[1], eng_sv[2], eng_sv[3]],
-              [low_sv[2], low_sv[3], low_sv[4]]
+              [engSv[1], engSv[2], engSv[3]],
+              [lowSv[2], lowSv[3], lowSv[4]]
             );
 
           break;
@@ -281,50 +281,50 @@ async function engineFilter(pack, engine) {
     }
 
     // Extract the upper end semver condition (i.e <=2.0.0)
-    const up_sv = pack.versions[ver].engines.atom.match(
+    const upSv = pack.versions[ver].engines.atom.match(
       /(<=?)(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/
     );
 
-    if (up_sv != null) {
+    if (upSv != null) {
       // Upper end condition present, so test it.
-      switch (up_sv[1]) {
+      switch (upSv[1]) {
         case "<":
-          upper_end = semverLt(
-            [eng_sv[1], eng_sv[2], eng_sv[3]],
-            [up_sv[2], up_sv[3], up_sv[4]]
+          upperEnd = semverLt(
+            [engSv[1], engSv[2], engSv[3]],
+            [upSv[2], upSv[3], upSv[4]]
           );
 
           break;
         case "<=":
-          upper_end =
+          upperEnd =
             semverLt(
-              [eng_sv[1], eng_sv[2], eng_sv[3]],
-              [up_sv[2], up_sv[3], up_sv[4]]
+              [engSv[1], engSv[2], engSv[3]],
+              [upSv[2], upSv[3], upSv[4]]
             ) ||
             semverEq(
-              [eng_sv[1], eng_sv[2], eng_sv[3]],
-              [up_sv[2], up_sv[3], up_sv[4]]
+              [engSv[1], engSv[2], engSv[3]],
+              [upSv[2], upSv[3], upSv[4]]
             );
 
           break;
       }
     }
 
-    if (lower_end === null && upper_end === null) {
+    if (lowerEnd === null && upperEnd === null) {
       // Both lower and upper end condition are unavailable.
       // So, as last resort, check if there is an equality condition (i.e =1.0.0)
-      const eq_sv = pack.versions[ver].engines.atom.match(
+      const eqSv = pack.versions[ver].engines.atom.match(
         /^=(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/
       );
 
       if (
-        eq_sv !== null &&
+        eqSv !== null &&
         semverEq(
-          [eng_sv[1], eng_sv[2], eng_sv[3]],
-          [eq_sv[1], eq_sv[2], eq_sv[3]]
+          [engSv[1], engSv[2], engSv[3]],
+          [eqSv[1], eqSv[2], eqSv[3]]
         )
       ) {
-        compatible_version = ver;
+        compatibleVersion = ver;
 
         break; // Found the compatible version, break the loop.
       }
@@ -334,38 +334,38 @@ async function engineFilter(pack, engine) {
     }
 
     // One of the semver condition may still be not present.
-    if (lower_end === null) {
+    if (lowerEnd === null) {
       // Only upper end available
-      if (upper_end) {
-        compatible_version = ver;
+      if (upperEnd) {
+        compatibleVersion = ver;
 
         break; // The version is under the upper end, break the loop.
       }
-    } else if (upper_end === null) {
+    } else if (upperEnd === null) {
       // Only lower end available
-      if (lower_end) {
-        compatible_version = ver;
+      if (lowerEnd) {
+        compatibleVersion = ver;
 
         break; // The version is over the lower end, break the loop.
       }
     }
 
     // Both lower and upper end are available.
-    if (lower_end && upper_end) {
-      compatible_version = ver;
+    if (lowerEnd && upperEnd) {
+      compatibleVersion = ver;
 
       break; // The version is within the range, break the loop.
     }
   }
 
   // After the loop ends, or breaks, check the extracted compatible version.
-  if (compatible_version === "") {
+  if (compatibleVersion === "") {
     // No valid version found.
     return pack;
   }
 
   // We have a compatible version, let's add its data to the metadata property of the package.
-  pack.metadata = pack.versions[compatible_version];
+  pack.metadata = pack.versions[compatibleVersion];
 
   return pack;
 }
