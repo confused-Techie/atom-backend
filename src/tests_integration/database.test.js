@@ -168,23 +168,37 @@ describe("Package Lifetime Tests", () => {
     );
 
     // === Now lets add a version
-    const addNextVersion = await database.insertNewPackageVersion(pack.nextVersion);
+    const addNextVersion = await database.insertNewPackageVersion(
+      pack.nextVersion
+    );
     if (!addNextVersion.ok) {
       console.log(addNextVersion);
     }
     expect(addNextVersion.ok).toBeTruthy();
-    expect(addNextVersion.content).toEqual(`Successfully added new version: ${pack.nextVersion.name}@${pack.nextVersion.version}`);
+    expect(addNextVersion.content).toEqual(
+      `Successfully added new version: ${pack.nextVersion.name}@${pack.nextVersion.version}`
+    );
 
     // === Lets see if this new version is the latest
     const getAfterVer = await database.getPackageByName(NEW_NAME);
     expect(getAfterVer.ok).toBeTruthy();
     expect(getAfterVer.content.versions.length).toEqual(2);
-    expect(getAfterVer.content.versions[1].semver).toEqual(pack.nextVersion.version);
+    expect(getAfterVer.content.versions[1].semver).toEqual(
+      pack.nextVersion.version
+    );
     expect(getAfterVer.content.versions[1].status).toEqual("latest");
-    expect(getAfterVer.content.versions[1].license).toEqual(pack.nextVersion.license);
-    expect(getAfterVer.content.versions[1].meta.name).toEqual(pack.nextVersion.name);
-    expect(getAfterVer.content.versions[1].meta.version).toEqual(pack.nextVersion.version);
-    expect(getAfterVer.content.versions[0].semver).toEqual(pack.createPack.metadata.version);
+    expect(getAfterVer.content.versions[1].license).toEqual(
+      pack.nextVersion.license
+    );
+    expect(getAfterVer.content.versions[1].meta.name).toEqual(
+      pack.nextVersion.name
+    );
+    expect(getAfterVer.content.versions[1].meta.version).toEqual(
+      pack.nextVersion.version
+    );
+    expect(getAfterVer.content.versions[0].semver).toEqual(
+      pack.createPack.metadata.version
+    );
 
     // === Can we publish a duplicate version?
     //const dupVer = await database.insertNewPackageVersion(pack.nextVersion);
@@ -193,17 +207,25 @@ describe("Package Lifetime Tests", () => {
     // prior to this test being run
 
     // === Can we get this specific version with the new name
-    const getNewVerOnly = await database.getPackageVersionByNameAndVersion(NEW_NAME, pack.nextVersion.version);
+    const getNewVerOnly = await database.getPackageVersionByNameAndVersion(
+      NEW_NAME,
+      pack.nextVersion.version
+    );
     expect(getNewVerOnly.ok).toBeTruthy();
     expect(getNewVerOnly.content.status).toEqual("latest");
     expect(getNewVerOnly.content.semver).toEqual(pack.nextVersion.version);
     expect(getNewVerOnly.content.meta.name).toEqual(pack.createPack.name);
 
     // === Can we get the first verison published still?
-    const getOldVerOnly = await database.getPackageVersionByNameAndVersion(NEW_NAME, pack.createPack.metadata.version);
+    const getOldVerOnly = await database.getPackageVersionByNameAndVersion(
+      NEW_NAME,
+      pack.createPack.metadata.version
+    );
     expect(getOldVerOnly.ok).toBeTruthy();
     expect(getOldVerOnly.content.status).toEqual("published");
-    expect(getOldVerOnly.content.semver).toEqual(pack.createPack.metadata.version);
+    expect(getOldVerOnly.content.semver).toEqual(
+      pack.createPack.metadata.version
+    );
     expect(getOldVerOnly.content.meta.name).toEqual(pack.createPack.name);
 
     // === Can we star our package?
@@ -214,53 +236,72 @@ describe("Package Lifetime Tests", () => {
     expect(starPack.content.original_stargazers).toEqual("0");
 
     // === Can we add a download to our package?
-    const downPack = await database.updatePackageIncrementDownloadByName(NEW_NAME);
+    const downPack = await database.updatePackageIncrementDownloadByName(
+      NEW_NAME
+    );
     expect(downPack.ok).toBeTruthy();
     expect(downPack.content.name).toEqual(NEW_NAME);
     expect(downPack.content.downloads).toEqual("1");
 
     // === Can we undownload our package?
-    const downPackUndo = await database.updatePackageDecrementDownloadByName(NEW_NAME);
+    const downPackUndo = await database.updatePackageDecrementDownloadByName(
+      NEW_NAME
+    );
     expect(downPackUndo.ok).toBeTruthy();
     expect(downPackUndo.content.name).toEqual(NEW_NAME);
     expect(downPackUndo.content.downloads).toEqual("0");
 
     // === Can we unstar our package?
-    const starPackUndo = await database.updatePackageDecrementStarByName(NEW_NAME);
+    const starPackUndo = await database.updatePackageDecrementStarByName(
+      NEW_NAME
+    );
     expect(starPackUndo.ok).toBeTruthy();
     expect(starPackUndo.content.name).toEqual(NEW_NAME);
     expect(starPackUndo.content.stargazers_count).toEqual("0");
     expect(starPackUndo.content.original_stargazers).toEqual("0");
 
     // === Can we star by the old name?
-    const starPackOld = await database.updatePackageIncrementStarByName(pack.createPack.name);
+    const starPackOld = await database.updatePackageIncrementStarByName(
+      pack.createPack.name
+    );
     expect(starPackOld.ok).toBeTruthy();
     expect(starPackOld.content.name).toEqual(NEW_NAME);
     expect(starPackOld.content.stargazers_count).toEqual("1");
 
     // === Can we download by old name?
-    const downPackOld = await database.updatePackageIncrementDownloadByName(pack.createPack.name);
+    const downPackOld = await database.updatePackageIncrementDownloadByName(
+      pack.createPack.name
+    );
     expect(downPackOld.ok).toBeTruthy();
     expect(downPackOld.content.name).toEqual(NEW_NAME);
     expect(downPackOld.content.downloads).toEqual("1");
 
     // === Can we delete our newest version?
-    const delLatestVer = await database.removePackageVersion(NEW_NAME, pack.nextVersion.version);
+    const delLatestVer = await database.removePackageVersion(
+      NEW_NAME,
+      pack.nextVersion.version
+    );
     expect(delLatestVer.ok).toBeTruthy();
-    expect(delLatestVer.content).toEqual(`Removed ${pack.nextVersion.version} of ${NEW_NAME} and ${pack.createPack.metadata.version} is the new latest version.`);
+    expect(delLatestVer.content).toEqual(
+      `Removed ${pack.nextVersion.version} of ${NEW_NAME} and ${pack.createPack.metadata.version} is the new latest version.`
+    );
 
     // === Is our old version the latest again?
     const newLateVer = await database.getPackageByName(NEW_NAME);
     expect(newLateVer.ok).toBeTruthy();
     expect(newLateVer.content.name).toEqual(NEW_NAME);
     expect(newLateVer.content.versions.length).toEqual(1);
-    expect(newLateVer.content.versions[0].semver).toEqual(pack.createPack.metadata.version);
+    expect(newLateVer.content.versions[0].semver).toEqual(
+      pack.createPack.metadata.version
+    );
     expect(newLateVer.content.versions[0].status).toEqual("latest");
 
     // === Can we delete our version?
     const delPack = await database.removePackageByName(NEW_NAME);
     expect(delPack.ok).toBeTruthy();
-    expect(delPack.content).toEqual(`Successfully Deleted Package: ${NEW_NAME}`);
+    expect(delPack.content).toEqual(
+      `Successfully Deleted Package: ${NEW_NAME}`
+    );
 
     // === Can we get our now deleted package?
     const ghostPack = await database.getPackageByName(NEW_NAME);
