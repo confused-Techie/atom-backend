@@ -91,19 +91,19 @@ function query(req) {
 
 /**
  * @function engine
- * @desc Parses the 'engine' query parameter to ensure its valid, otherwise returning false.
+ * @desc Parses the 'engine' query parameter to ensure it's valid, otherwise returning false.
  * @param {string} semver - The engine string.
  * @returns {string|boolean} Returns the valid 'engine' specified, or if none, returns false.
  */
 function engine(semver) {
   try {
-    // Taken from
+    // Regex inspired by:
     // - https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
     // - https://regex101.com/r/vkijKf/1/
-    // The only difference is that we use \d rather than 0-9 as suggested by Codacy
+    // The only difference is that we truncate the check for additional labels because we want to be
+    // as permissive as possible and need only the first three version numbers.
 
-    const regex =
-      /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][\da-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][\da-zA-Z-]*))*))?(?:\+([\da-zA-Z-]+(?:\.[\da-zA-Z-]+)*))?$/;
+    const regex = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/;
 
     // Check if it's a valid semver
     return semver.match(regex) !== null ? semver : false;
