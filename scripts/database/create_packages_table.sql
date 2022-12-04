@@ -15,3 +15,7 @@ CREATE TABLE packages (
     original_stargazers BIGINT NOT NULL DEFAULT 0,
     data JSONB
 );
+
+-- https://github.com/confused-Techie/atom-backend/issues/90
+
+ALTER TABLE packages ADD CONSTRAINT lowercase_names CHECK (name = LOWER(name));
