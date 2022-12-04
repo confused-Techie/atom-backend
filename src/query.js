@@ -75,26 +75,18 @@ function dir(req) {
  * @implements {pathTraversalAttempt}
  */
 function query(req) {
-  let max_length = 50; // While package.json names according to NPM can be up to 214 characters, for performance
-  // on the server and assumed deminishing returns on longer queries, this is cut off at 50 as suggested by Digitalone1.
+  const max_length = 50; // While package.json names according to NPM can be up to 214 characters,
+  // for performance on the server and assumed deminishing returns on longer queries,
+  // this is cut off at 50 as suggested by Digitalone1.
   let prov = req.query.q;
-
-  if (prov === undefined) {
-    return "";
-  }
 
   if (typeof prov !== "string") {
     return "";
   }
 
-  try {
-    // If there is a path traversal attach detected return empty query.
-    // Additionally do not allow strings longer than `max_length`
-    return pathTraversalAttempt(prov) ? "" : prov.slice(0, max_length).trim();
-  } catch (err) {
-    // an error occured while decoding the URI component. Return an empty query.
-    return "";
-  }
+  // If there is a path traversal attach detected return empty query.
+  // Additionally do not allow strings longer than `max_length`
+  return pathTraversalAttempt(prov) ? "" : prov.slice(0, max_length).trim();
 }
 
 /**
