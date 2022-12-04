@@ -78,11 +78,11 @@ describe("getTotalPackageEstimate", () => {
   });
 });
 
-describe("Package Lifetime Tests", () => {
+describe("Package Lifecycle Tests", () => {
   // Below are what we will call lifecycle tests.
   // That is tests that will test multiple actions against the same package,
   // to ensure that the lifecycle of a package will be healthy.
-  test("Package A Lifetime", async () => {
+  test("Package A Lifecycle", async () => {
     const pack = require("./fixtures/lifetime/package-a.js");
 
     // === Lets publish our package
@@ -307,5 +307,84 @@ describe("Package Lifetime Tests", () => {
     const ghostPack = await database.getPackageByName(NEW_NAME);
     expect(ghostPack.ok).toBeFalsy();
     expect(ghostPack.short).toEqual("Not Found");
+  });
+  test("User A Lifecycle Test", async () => {
+    const user = require("./fixtures/lifetime/user-a.js");
+
+    // === Can we get our Non-Existant User?
+    const noExistUser = await database.getUserByNodeID(user.userObj.node_id);
+    expect(noExistUser.ok).toBeFalsy();
+    expect(noExistUser.short).toEqual("Not Found");
+
+    // === Can we create our User?
+    const createUser = await database.insertNewUser(user.userObj);
+    expect(createUser.ok).toBeTruthy();
+    expect(createUser.content.username).toEqual(user.userObj.username);
+    expect(createUser.content.node_id).toEqual(user.userObj.node_id);
+    expect(createUser.content.avatar).toEqual(user.userObj.avatar);
+
+    // === Can we get our user that now exists?
+    const getUser = await database.getUserByNodeID(user.userObj.node_id);
+    expect(getUser.ok).toBeTruthy();
+    expect(getUser.content.username).toEqual(user.userObj.username);
+    expect(getUser.content.node_id).toEqual(user.userObj.node_id);
+    expect(getUser.content.avatar).toEqual(user.userObj.avatar);
+    expect(getUser.content.created_at).toBeDefined();
+    expect(getUser.content.data).toBeDefined();
+    expect(getUser.content.id).toBeDefined();
+
+    // === Can we get our user by name?
+    const getUserName = await database.getUserByName(user.userObj.username);
+    expect(getUserName.ok).toBeTruthy();
+    expect(getUserName.content.username).toEqual(user.userObj.username);
+    expect(getUserName.content.node_id).toEqual(user.userObj.node_id);
+    expect(getUserName.content.avatar).toEqual(user.userObj.avatar);
+    expect(getUserName.content.created_at).toBeDefined();
+    expect(getUserName.content.data).toBeDefined();
+    expect(getUserName.content.id).toBeDefined();
+
+    const USER_ID = getUserName.content.id;
+
+    // === Can we get our user by Id?
+    const getUserID = await database.getUserByID(USER_ID);
+    expect(getUserID.ok).toBeTruthy();
+    expect(getUserID.content.username).toEqual(user.userObj.username);
+    expect(getUserID.content.node_id).toEqual(user.userObj.node_id);
+    expect(getUserID.content.avatar).toEqual(user.userObj.avatar);
+    expect(getUserID.content.created_at).toBeDefined();
+    expect(getUserID.content.data).toBeDefined();
+    expect(getUserID.content.id).toBeDefined();
+
+    // === Can we get our user in a collection?
+    const getUserIDCol = await database.getUserCollectionById([ USER_ID ]);
+    expect(getUserIDCol.ok).toBeTruthy();
+    expect(getUserIDCol.content.length).toEqual(1);
+    expect(getUserIDCol.content[0].login).toEqual(user.userObj.username);
+
+    // === Does our user have any fake stars?
+    const getFakeStars = await database.getStarredPointersByUserID(USER_ID);
+    expect(getFakeStars.ok).toBeTruthy();
+    expect(getFakeStars.content.length).toEqual(0);
+
+    // === Can we star a package with our User?
+    const starPack = await database.updateStars(getUserID.content, "language-css");
+    expect(starPack.ok).toBeTruthy();
+    expect(starPack.content.startsWith("Successfully Stared ")).toBeTruthy();
+    expect(starPack.content.endsWith(` with ${USER_ID}`)).toBeTruthy();
+
+    // === Does our user now have valid stars?
+    const getStars = await database.getStarredPointersByUserID(USER_ID);
+    expect(getStars.ok).toBeTruthy();
+    expect(getStars.content.length).toEqual(1);
+
+    // === Can we remove our star?
+    const remStar = await database.updateDeleteStar(getUserID.content, "language-css");
+    expect(remStar.ok).toBeTruthy();
+    expect(remStar.content.startsWith("Successfully Unstarred ")).toBeTruthy();
+    expect(remStar.content.endsWith(` with ${USER_ID}`)).toBeTruthy();
+
+    // === Can we remove our User?
+    // TODO: Currently there is no way to delete a user account.
+    // There is no supported endpoint for this, but is something that should be implemented.
   });
 });

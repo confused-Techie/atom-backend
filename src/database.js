@@ -310,37 +310,6 @@ async function insertNewUser(user) {
 
 /**
  * @async
- * @function updateUser
- * @desc Given the username, the record of the user is updated with the new token and the avatar.
- * a Server Status Object.
- * @param {object} user - An object containing information related to the user.
- * @returns {object} A server status object.
- */
-async function updateUser(user) {
-  try {
-    sqlStorage ??= setupSQL();
-
-    const command = await sqlStorage`
-      UPDATE users
-      SET token = ${user.token}, avatar = ${user.avatar}
-      WHERE username = ${user.username}
-      RETURNING *;
-    `;
-
-    return command.count !== 0
-      ? { ok: true, content: command[0] }
-      : {
-          ok: false,
-          content: `Unable to update user: ${user}`,
-          short: "Server Error",
-        };
-  } catch (err) {
-    return { ok: false, content: err, short: "Server Error" };
-  }
-}
-
-/**
- * @async
  * @function getPackageByName
  * @desc Takes a package name and returns the raw SQL package with all its versions.
  * This module is also used to get the data to be sent to utils.constructPackageObjectFull()
@@ -984,7 +953,7 @@ async function getUserByNodeID(id) {
       return {
         ok: false,
         content: `Unable to get User By NODE_ID: ${id}`,
-        short: "Server Error",
+        short: "Not Found",
       };
     }
 
@@ -1040,7 +1009,7 @@ async function getUserByID(id) {
  * @async
  * @function updateStars
  * @description Register the star given by a user to a package.
- * @param {int} user - ID of the user who give the star.
+ * @param {int} user - A User Object that should star the package.
  * @param {string} pack - Package name that get the new star.
  * @returns {object} A server status object.
  */
@@ -1092,7 +1061,7 @@ async function updateStars(user, pack) {
  * @async
  * @function updateDeleteStar
  * @description Register the removal of the star on a package by a user.
- * @param {int} user - ID of the user who remove the star.
+ * @param {int} user - User Object who remove the star.
  * @param {string} pack - Package name that get the star removed.
  * @returns {object} A server status object.
  */
@@ -1399,7 +1368,6 @@ module.exports = {
   updateStars,
   updateDeleteStar,
   insertNewUser,
-  updateUser,
   insertNewPackageName,
   insertNewPackageVersion,
 };
