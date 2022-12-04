@@ -56,7 +56,7 @@ function dir(req) {
 
   // Seems that the autolink headers use order, while documentation uses direction.
   // Since we are not sure where in the codebase it uses the other, we will just accept both.
-  const prov = req.query.direction ?? (req.query.order ?? def);
+  const prov = req.query.direction ?? req.query.order ?? def;
 
   return valid.includes(prov) ? prov : def;
 }

@@ -944,7 +944,7 @@ it is not a malicious request. Returning "" if an unsafe or invalid query is pas
 <a name="module_query..engine"></a>
 
 ### query~engine(semver) ⇒ <code>string</code> \| <code>boolean</code>
-Parses the 'engine' query parameter to ensure its valid, otherwise returning false.
+Parses the 'engine' query parameter to ensure it's valid, otherwise returning false.
 
 **Kind**: inner method of [<code>query</code>](#module_query)  
 **Returns**: <code>string</code> \| <code>boolean</code> - Returns the valid 'engine' specified, or if none, returns false.  
@@ -1219,7 +1219,8 @@ that engine version as provided.
 <a name="module_utils..semverArray"></a>
 
 ### utils~semverArray(semver) ⇒ <code>array</code> \| <code>null</code>
-Takes a semver string and return it as an Array of strings
+Takes a semver string and returns it as an Array of strings.
+This can also be used to check for semver valitidy. If it's not a semver, null is returned.
 
 **Kind**: inner method of [<code>utils</code>](#module_utils)  
 **Returns**: <code>array</code> \| <code>null</code> - The formatted semver in array of three strings, or null if no match.  
