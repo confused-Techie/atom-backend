@@ -83,6 +83,10 @@ function query(req) {
     return "";
   }
 
+  if (typeof prov !== "string") {
+    return "";
+  }
+
   try {
     // If there is a path traversal attach detected return empty query.
     // Additionally do not allow strings longer than `max_length`
