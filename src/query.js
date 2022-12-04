@@ -12,8 +12,8 @@
  * @returns {string} Returns the valid page provided in the query parameter or 1, as the default.
  */
 function page(req) {
-  let def = 1;
-  let prov = req.query.page;
+  const def = 1;
+  const prov = req.query.page;
 
   if (prov === undefined) {
     return def;
@@ -35,9 +35,9 @@ function sort(req, def = "downloads") {
   // using sort with a default def value of downloads, means when using the generic sort parameter
   // it will default to downloads, but if we pass the default, such as during search we can provide
   // the default relevance
-  let valid = ["downloads", "created_at", "updated_at", "stars", "relevance"];
+  const valid = ["downloads", "created_at", "updated_at", "stars", "relevance"];
 
-  let prov = req.query.sort ?? def;
+  const prov = req.query.sort ?? def;
 
   return valid.includes(prov) ? prov : def;
 }
@@ -51,17 +51,12 @@ function sort(req, def = "downloads") {
  * query parameter.
  */
 function dir(req) {
-  let def = "desc";
-  let valid = ["asc", "desc"];
-  let prov = req.query.direction;
+  const def = "desc";
+  const valid = ["asc", "desc"];
 
-  if (prov === undefined) {
-    // Seems that the autolink headers use order, while documentation uses direction.
-    // Since we are not sure where in the codebase it uses the other, we will just accept both.
-    let altprov = req.query.order ?? def;
-
-    return valid.includes(altprov) ? altprov : def;
-  }
+  // Seems that the autolink headers use order, while documentation uses direction.
+  // Since we are not sure where in the codebase it uses the other, we will just accept both.
+  const prov = req.query.direction ?? (req.query.order ?? def);
 
   return valid.includes(prov) ? prov : def;
 }
@@ -78,7 +73,7 @@ function query(req) {
   const max_length = 50; // While package.json names according to NPM can be up to 214 characters,
   // for performance on the server and assumed deminishing returns on longer queries,
   // this is cut off at 50 as suggested by Digitalone1.
-  let prov = req.query.q;
+  const prov = req.query.q;
 
   if (typeof prov !== "string") {
     return "";
@@ -119,7 +114,7 @@ function engine(semver) {
  * @returns {string} Returning a valid Authorization Token, or '' if invalid/not found.
  */
 function auth(req) {
-  let token = req.get("Authorization");
+  const token = req.get("Authorization");
 
   return token ?? "";
 }
@@ -131,7 +126,7 @@ function auth(req) {
  * @returns {string} Returning the valid 'repository' query parameter, or '' if invalid.
  */
 function repo(req) {
-  let prov = req.query.repository;
+  const prov = req.query.repository;
 
   if (prov === undefined) {
     return "";
@@ -155,9 +150,7 @@ function repo(req) {
  * @returns {string} Returns a valid 'tag' query parameter. Or '' if invalid.
  */
 function tag(req) {
-  let prov = req.query.tag;
-
-  return prov ?? "";
+  return req.query.tag ?? "";
 }
 
 /**
@@ -168,7 +161,7 @@ function tag(req) {
  * @returns {boolean} Returns false if invalid, or otherwise returns the boolean value of the string.
  */
 function rename(req) {
-  let prov = req.query.rename;
+  const prov = req.query.rename;
 
   if (prov === undefined) {
     // since this is supposed to be a boolean value, return false as the defaulting behavior
