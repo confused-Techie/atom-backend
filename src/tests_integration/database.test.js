@@ -79,9 +79,9 @@ describe("getTotalPackageEstimate", () => {
 });
 
 describe("Package Lifetime Tests", () => {
-  // Below are what we will call lifetime tests.
+  // Below are what we will call lifecycle tests.
   // That is tests that will test multiple actions against the same package,
-  // to ensure that the lifetime of a package will be healthy.
+  // to ensure that the lifecycle of a package will be healthy.
   test("Package A Lifetime", async () => {
     const pack = require("./fixtures/lifetime/package-a.js");
 
