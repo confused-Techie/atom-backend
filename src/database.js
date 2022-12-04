@@ -767,7 +767,7 @@ async function removePackageVersion(packName, semVer) {
       // at least one published version is still available after the removal.
       // This is not possible if the version count is only 1.
       if (versionCount === 1) {
-        throw `It'n not possible to leave the ${packName} without at least one published version`;
+        throw `It's not possible to leave the ${packName} without at least one published version`;
       }
 
       // The package will have published versions, so we can remove the targeted semver.

@@ -81,7 +81,7 @@ Now there is a certain set of test data that is available while testing, which w
 - has-all-stars
   * Token: "all-star-token"
 
-## GitHub Pages avialable on 'GitHub'
+## GitHub Pages available on 'GitHub'
 
 For the `git.js` tests, because those interact with GitHub exclusively, the solution to mock these tests is to startup a mock
 GitHub API server when running tests in that file exclusively. It's important to note, that when running other integration tests that rely on `git.js`
