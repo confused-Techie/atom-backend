@@ -369,12 +369,13 @@ async function engineFilter(pack, engine) {
 
 /**
  * @function semverArray
- * @desc Takes a semver string and return it as an Array of strings
+ * @desc Takes a semver string and returns it as an Array of strings.
+ * This can also be used to check for semver valitidy. If it's not a semver, null is returned.
  * @param {string} semver
  * @returns {array|null} The formatted semver in array of three strings, or null if no match.
  */
 function semverArray(semver) {
-  return semver.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/);
+  return semver.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/);
 }
 
 /**

@@ -12,8 +12,8 @@
  * @returns {string} Returns the valid page provided in the query parameter or 1, as the default.
  */
 function page(req) {
-  let def = 1;
-  let prov = req.query.page;
+  const def = 1;
+  const prov = req.query.page;
 
   if (prov === undefined) {
     return def;
@@ -35,9 +35,9 @@ function sort(req, def = "downloads") {
   // using sort with a default def value of downloads, means when using the generic sort parameter
   // it will default to downloads, but if we pass the default, such as during search we can provide
   // the default relevance
-  let valid = ["downloads", "created_at", "updated_at", "stars", "relevance"];
+  const valid = ["downloads", "created_at", "updated_at", "stars", "relevance"];
 
-  let prov = req.query.sort ?? def;
+  const prov = req.query.sort ?? def;
 
   return valid.includes(prov) ? prov : def;
 }
@@ -51,17 +51,12 @@ function sort(req, def = "downloads") {
  * query parameter.
  */
 function dir(req) {
-  let def = "desc";
-  let valid = ["asc", "desc"];
-  let prov = req.query.direction;
+  const def = "desc";
+  const valid = ["asc", "desc"];
 
-  if (prov === undefined) {
-    // Seems that the autolink headers use order, while documentation uses direction.
-    // Since we are not sure where in the codebase it uses the other, we will just accept both.
-    let altprov = req.query.order ?? def;
-
-    return valid.includes(altprov) ? altprov : def;
-  }
+  // Seems that the autolink headers use order, while documentation uses direction.
+  // Since we are not sure where in the codebase it uses the other, we will just accept both.
+  const prov = req.query.direction ?? req.query.order ?? def;
 
   return valid.includes(prov) ? prov : def;
 }
@@ -75,43 +70,35 @@ function dir(req) {
  * @implements {pathTraversalAttempt}
  */
 function query(req) {
-  let max_length = 50; // While package.json names according to NPM can be up to 214 characters, for performance
-  // on the server and assumed deminishing returns on longer queries, this is cut off at 50 as suggested by Digitalone1.
-  let prov = req.query.q;
-
-  if (prov === undefined) {
-    return "";
-  }
+  const max_length = 50; // While package.json names according to NPM can be up to 214 characters,
+  // for performance on the server and assumed deminishing returns on longer queries,
+  // this is cut off at 50 as suggested by Digitalone1.
+  const prov = req.query.q;
 
   if (typeof prov !== "string") {
     return "";
   }
 
-  try {
-    // If there is a path traversal attach detected return empty query.
-    // Additionally do not allow strings longer than `max_length`
-    return pathTraversalAttempt(prov) ? "" : prov.slice(0, max_length).trim();
-  } catch (err) {
-    // an error occured while decoding the URI component. Return an empty query.
-    return "";
-  }
+  // If there is a path traversal attach detected return empty query.
+  // Additionally do not allow strings longer than `max_length`
+  return pathTraversalAttempt(prov) ? "" : prov.slice(0, max_length).trim();
 }
 
 /**
  * @function engine
- * @desc Parses the 'engine' query parameter to ensure its valid, otherwise returning false.
+ * @desc Parses the 'engine' query parameter to ensure it's valid, otherwise returning false.
  * @param {string} semver - The engine string.
  * @returns {string|boolean} Returns the valid 'engine' specified, or if none, returns false.
  */
 function engine(semver) {
   try {
-    // Taken from
+    // Regex inspired by:
     // - https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
     // - https://regex101.com/r/vkijKf/1/
-    // The only difference is that we use \d rather than 0-9 as suggested by Codacy
+    // The only difference is that we truncate the check for additional labels because we want to be
+    // as permissive as possible and need only the first three version numbers.
 
-    const regex =
-      /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][\da-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][\da-zA-Z-]*))*))?(?:\+([\da-zA-Z-]+(?:\.[\da-zA-Z-]+)*))?$/;
+    const regex = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/;
 
     // Check if it's a valid semver
     return semver.match(regex) !== null ? semver : false;
@@ -127,7 +114,7 @@ function engine(semver) {
  * @returns {string} Returning a valid Authorization Token, or '' if invalid/not found.
  */
 function auth(req) {
-  let token = req.get("Authorization");
+  const token = req.get("Authorization");
 
   return token ?? "";
 }
@@ -139,7 +126,7 @@ function auth(req) {
  * @returns {string} Returning the valid 'repository' query parameter, or '' if invalid.
  */
 function repo(req) {
-  let prov = req.query.repository;
+  const prov = req.query.repository;
 
   if (prov === undefined) {
     return "";
@@ -163,9 +150,7 @@ function repo(req) {
  * @returns {string} Returns a valid 'tag' query parameter. Or '' if invalid.
  */
 function tag(req) {
-  let prov = req.query.tag;
-
-  return prov ?? "";
+  return req.query.tag ?? "";
 }
 
 /**
@@ -176,7 +161,7 @@ function tag(req) {
  * @returns {boolean} Returns false if invalid, or otherwise returns the boolean value of the string.
  */
 function rename(req) {
-  let prov = req.query.rename;
+  const prov = req.query.rename;
 
   if (prov === undefined) {
     // since this is supposed to be a boolean value, return false as the defaulting behavior
