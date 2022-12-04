@@ -1,10 +1,10 @@
 # Complexity report, 12/4/2022
 
-* Mean per-function logical LOC: 20.25
+* Mean per-function logical LOC: 20.75
 * Mean per-function parameter count: 0.3958333333333333
 * Mean per-function cyclomatic complexity: 3.2916666666666665
-* Mean per-function Halstead effort: 11547.650841095914
-* Mean per-module maintainability index: 60.135607272104885
+* Mean per-function Halstead effort: 11604.263617958766
+* Mean per-module maintainability index: 59.87327730242251
 * First-order density: 1.3888888888888888%
 * Change cost: 9.722222222222223%
 * Core size: 100%
@@ -241,11 +241,11 @@
 
 ## /home/runner/work/atom-backend/atom-backend/src/tests_integration/fixtures/lifetime/package-a.js
 
-* Physical LOC: 29
-* Logical LOC: 21
+* Physical LOC: 37
+* Logical LOC: 27
 * Mean parameter count: 0
 * Cyclomatic complexity: 1
-* Cyclomatic complexity density: 4.761904761904762%
-* Maintainability index: 56.59405318285476
+* Cyclomatic complexity density: 3.7037037037037033%
+* Maintainability index: 53.446093546666255
 * Dependency count: 0
 
