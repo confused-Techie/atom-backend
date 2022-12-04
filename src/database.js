@@ -178,7 +178,7 @@ async function insertNewPackageVersion(packJSON) {
       const updateLastVer = await sqlStorage`
         UPDATE versions
         SET status = 'published'
-        WHERE pointer = ${pointer} AND status = 'latest'
+        WHERE package = ${pointer} AND status = 'latest'
         RETURNING *;
       `;
 
@@ -190,8 +190,8 @@ async function insertNewPackageVersion(packJSON) {
       const engine = packJSON.engines ?? { atom: "*" };
 
       const addVer = await sqlStorage`
-        INSERT INTO version (package, status, semver, license, engine, meta)
-        VALUES(${pointer}, 'published', ${packJSON.version}, ${license}, ${engine}, ${packJSON})
+        INSERT INTO versions (package, status, semver, license, engine, meta)
+        VALUES(${pointer}, 'latest', ${packJSON.version}, ${license}, ${engine}, ${packJSON})
         RETURNING *;
       `;
 
@@ -503,11 +503,12 @@ async function updatePackageIncrementStarByName(name) {
         SELECT pointer
         FROM names
         WHERE name = ${name}
-      );
+      )
+      RETURNING *;
     `;
 
     return command.count !== 0
-      ? { ok: true, content: command }
+      ? { ok: true, content: command[0] }
       : {
           ok: false,
           content: "Unable to Update Package Stargazers",
@@ -536,11 +537,12 @@ async function updatePackageDecrementStarByName(name) {
         SELECT pointer
         FROM names
         WHERE name = ${name}
-      );
+      )
+      RETURNING *;
     `;
 
     return command.count !== 0
-      ? { ok: true, content: command }
+      ? { ok: true, content: command[0] }
       : {
           ok: false,
           content: "Unable to Update Package Stargazers",
@@ -569,11 +571,12 @@ async function updatePackageIncrementDownloadByName(name) {
         SELECT pointer
         FROM names
         WHERE name = ${name}
-      );
+      )
+      RETURNING *;
     `;
 
     return command.count !== 0
-      ? { ok: true, content: command }
+      ? { ok: true, content: command[0] }
       : {
           ok: false,
           content: "Unable to Update Package Download",
@@ -602,11 +605,12 @@ async function updatePackageDecrementDownloadByName(name) {
         SELECT pointer
         FROM names
         WHERE name = ${name}
-      );
+      )
+      RETURNING *;
     `;
 
     return command.count !== 0
-      ? { ok: true, content: command }
+      ? { ok: true, content: command[0] }
       : {
           ok: false,
           content: "Unable to decrement Package Download Count",

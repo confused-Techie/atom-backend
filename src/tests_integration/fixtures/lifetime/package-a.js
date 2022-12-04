@@ -24,6 +24,14 @@ const createPack = {
   },
 };
 
+const nextVersion = {
+  name: "package-a-lifetime",
+  version: "1.0.1",
+  description: "A package.json description",
+  license: "MIT"
+};
+
 module.exports = {
   createPack,
+  nextVersion,
 };
