@@ -69,11 +69,13 @@ describe("Verify 'Query' Query Returns", () => {
   });
 });
 
+// query.engine() used to accept both the object and the string,
+// but it has been simplified to accept only the string.
 const engine_cases = [
-  [{ query: { engine: "0.1.2" } }, "0.1.2"],
-  [{ query: { engine: "JustText" } }, false], // should return false to indicate that no check is needed.
-  [{ query: { engine: undefined } }, false],
-  ["2.5.6", "2.5.6"], // Test support for being passed a direct version
+  ["0.1.2", "0.1.2"],
+  ["JustText", false],
+  [undefined, false],
+  ["2.5.6", "2.5.6"],
 ];
 
 describe("Verify Engine Query Returns", () => {

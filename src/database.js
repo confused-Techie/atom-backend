@@ -379,8 +379,8 @@ async function getPackageByName(name, user = false) {
           'license', v.license, 'engine', v.engine, 'meta', v.meta
         )) AS versions
       FROM packages p
-        JOIN versions v ON p.pointer = v.package
-        JOIN names n ON n.pointer = p.pointer
+        JOIN versions v ON (p.pointer = v.package) AND (v.status != 'removed')
+        JOIN names n ON (n.pointer = p.pointer)
       WHERE n.name = ${name}
       GROUP BY p.pointer, v.package;
     `;
@@ -417,7 +417,7 @@ async function getPackageVersionByNameAndVersion(name, version) {
         FROM names
         WHERE name = ${name}
       )
-      AND semver = ${version};
+      AND semver = ${version} AND status != 'removed';
     `;
 
     return command.count !== 0

@@ -7,6 +7,7 @@ const superagent = require("superagent");
 const { GH_USERAGENT } = require("./config.js").getConfig();
 const logger = require("./logger.js");
 const query = require("./query.js");
+const utils = require("./utils.js");
 let GH_API_URL = "https://api.github.com";
 let GH_WEB_URL = "https://github.com";
 
@@ -171,7 +172,21 @@ async function createPackage(repo, user) {
       };
     }
 
-    // now to get our readme
+    // Build a repo tag object indexed by tag names so we can handle versions easily and
+    // won't call query.engine() multiple times for a single version.
+    const semVerInitRegex = /^\s*v/i;
+    let tagList = {};
+    for (const tag of repoTag) {
+      if (typeof tag.name !== "string") {
+        continue;
+      }
+      const sv = query.engine(tag.name.replace(semVerInitRegex, "").trim());
+      if (sv !== false) {
+        tagList[sv] = tag;
+      }
+    }
+
+    // Now to get our readme
     let readme = await getRepoReadMe(repo, user);
 
     if (readme === undefined) {
@@ -207,90 +222,63 @@ async function createPackage(repo, user) {
     newPack.readme = readme;
     newPack.metadata = pack; // The metadata tag is the most recent package.json file, in full.
 
-    // currently there is no purpose to store the type of repo. But for the time being,
+    // Currently there is no purpose to store the type of repo. But for the time being,
     // we will assume this could be used in the future as a way to determine how to interact with a repo.
-    // The functionality will only be declarative for now, and may change later on.
-    // Although first party packages do already have the regular package object. So we
-    // will need to check if its an object or string.
-    if (typeof pack.repository !== "string") {
-      newPack.repository = pack.repository; // likely a first party package, with an
-      // already valid package object, that can just be added over.
-    } else if (pack.repository.includes("github")) {
-      newPack.repository = {
-        type: "git",
-        url: pack.repository,
-      };
-    } else if (pack.repository.includes("bitbucket")) {
-      newPack.repository = {
-        type: "bit",
-        url: pack.repository,
-      };
-    } else if (pack.repository.includes("sourceforge")) {
-      newPack.repository = {
-        type: "sfr",
-        url: pack.repository,
-      };
-    } else if (pack.repository.includes("gitlab")) {
-      newPack.repository = {
-        type: "lab",
-        url: pack.repository,
-      };
-    } else {
-      newPack.repository = {
-        type: "na",
-        url: pack.repository,
-      };
+    newPack.repository = selectPackageRepository(pack.repository);
+
+    // Now during migration packages will have a 'versions' key, but otherwise the standard
+    // package will just have a 'version'.
+    // We build the array of available versions extracted from the pack object.
+    let versionList = [];
+    if (pack.versions) {
+      for (const v of Object.keys(pack.versions)) {
+        versionList.push(v);
+      }
+    } else if (pack.version) {
+      versionList.push(pack.version);
     }
 
     let versionCount = 0;
+    let latestVersion = null;
+    let latestSemverArr = null;
     newPack.versions = {};
-
-    // now during migration packages will have a 'versions' key, but otherwise the standard
-    // package will just have a 'version', so we will check which is present.
-    if (pack.versions) {
-      // now to add the release data to each release within the package
-      for (const v of Object.keys(pack.versions)) {
-        const ver = query.engine(v);
-        if (ver === false) {
-          continue;
-        }
-
-        for (const tag of repoTag) {
-          const shortTag = query.engine(tag.name.replace(/^\s?v/i, ""));
-          if (ver === shortTag) {
-            // they match tag and version, stuff the data into the package.
-            newPack.versions[ver] = pack;
-            // TODO::
-            // Its worthy to note that ^^^ assigns the current package.json file within the repo
-            // as the version tag. Now this in most cases during a publish should be fine.
-            // But if a user were to publish a version to the backend AFTER having published several
-            // versions to their repo, this would cause identical versions to be created, although
-            // would have the correct download URL. So the error would only be visual when browsing
-            // the packages details.
-            newPack.versions[ver].tarball_url = tag.tarball_url;
-            newPack.versions[ver].sha = tag.commit.sha;
-            versionCount++;
-            break;
-          }
-        }
+    // Now to add the release data to each release within the package
+    for (const v of versionList) {
+      const ver = query.engine(v);
+      if (ver === false) {
+        continue;
       }
-    } else if (pack.version) {
-      const ver = query.engine(pack.version);
-      if (ver !== false) {
-        // Otherwise if they only have a version tag, we can make the first entry onto the versions.
-        // This first entry of course, contains the package.json currently, and in the future,
-        // will allow modifications.
-        // But now we do need to retreive, the tarball data.
-        for (const tag of repoTag) {
-          const shortTag = query.engine(tag.name.replace(/^\s?v/i, ""));
-          if (ver === shortTag) {
-            newPack.versions[ver] = pack;
-            newPack.versions[ver].tarball_url = tag.tarball_url;
-            newPack.versions[ver].sha = tag.commit.sha;
-            versionCount++;
-            break;
-          }
-        }
+
+      const tag = tagList[ver];
+      if (tag === undefined) {
+        continue;
+      }
+
+      // They match tag and version, stuff the data into the package.
+      newPack.versions[ver] = pack;
+      // TODO::
+      // Its worthy to note that ^^^ assigns the current package.json file within the repo
+      // as the version tag. Now this in most cases during a publish should be fine.
+      // But if a user were to publish a version to the backend AFTER having published several
+      // versions to their repo, this would cause identical versions to be created, although
+      // would have the correct download URL. So the error would only be visual when browsing
+      // the packages details.
+      newPack.versions[ver].tarball_url = tag.tarball_url;
+      newPack.versions[ver].sha = tag.commit.sha;
+      versionCount++;
+
+      // Check latest version.
+      if (latestVersion === null) {
+        // Initialize latestVersion
+        latestVersion = ver;
+        latestSemverArr = utils.semverArray(ver);
+        continue;
+      }
+
+      const sva = utils.semverArray(ver);
+      if (utils.semverGt(sva, latestSemverArr)) {
+        latestVersion = ver;
+        latestSemverArr = sva;
       }
     }
 
@@ -302,9 +290,9 @@ async function createPackage(repo, user) {
       };
     }
 
-    // now with all the versions properly filled, we lastly just need the release data.
+    // Now with all the versions properly filled, we lastly just need the release data.
     newPack.releases = {
-      latest: repoTag[0].name.replace(/^\s?v/i, ""),
+      latest: latestVersion,
     };
 
     // for this we just use the most recent tag published to the repo.
@@ -313,6 +301,69 @@ async function createPackage(repo, user) {
   } catch (err) {
     // an error occured somewhere during package generation
     return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+/**
+ * @function selectPackageRepository
+ * @desc Determines the repository object by the given argument.
+ * The functionality will only be declarative for now, and may change later on.
+ * @param {string|object} repo - The repository of the retrieved package.
+ * @returns {object} The object related to the package repository type.
+ */
+function selectPackageRepository(repo) {
+  try {
+    // First party packages do already have the regular package object.
+    // So we will need to check if its an object or string.
+
+    if (!repo) {
+      // In case of faulty value, just return and empty url.
+      return {
+        type: "na",
+        url: "",
+      };
+    }
+
+    if (typeof repo !== "string") {
+      // Likely a first party package, with an already valid package object,
+      // that can just be added over.
+      return repo;
+    }
+
+    if (repo.includes("github")) {
+      return {
+        type: "git",
+        url: repo,
+      };
+    }
+    if (repo.includes("bitbucket")) {
+      return {
+        type: "bit",
+        url: repo,
+      };
+    }
+    if (repo.includes("sourceforge")) {
+      return {
+        type: "sfr",
+        url: repo,
+      };
+    }
+    if (repo.includes("gitlab")) {
+      return {
+        type: "lab",
+        url: repo,
+      };
+    }
+
+    return {
+      type: "na",
+      url: repo,
+    };
+  } catch (e) {
+    return {
+      type: "na",
+      url: "",
+    };
   }
 }
 

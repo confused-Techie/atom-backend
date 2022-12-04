@@ -96,18 +96,11 @@ function query(req) {
 /**
  * @function engine
  * @desc Parses the 'engine' query parameter to ensure its valid, otherwise returning false.
- * @param {object|string} req - The `Request` object inherited from the Express endpoint or the engine string.
+ * @param {string} semver - The engine string.
  * @returns {string|boolean} Returns the valid 'engine' specified, or if none, returns false.
  */
-function engine(req) {
+function engine(semver) {
   try {
-    // adding support for being passed the request object, or a specific version to check.
-    let prov = typeof req === "object" ? req.query.engine : req;
-
-    if (prov === undefined) {
-      return false;
-    }
-
     // Taken from
     // - https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
     // - https://regex101.com/r/vkijKf/1/
@@ -117,7 +110,7 @@ function engine(req) {
       /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][\da-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][\da-zA-Z-]*))*))?(?:\+([\da-zA-Z-]+(?:\.[\da-zA-Z-]+)*))?$/;
 
     // Check if it's a valid semver
-    return prov.match(regex) !== null ? prov : false;
+    return semver.match(regex) !== null ? semver : false;
   } catch (e) {
     return false;
   }
@@ -216,19 +209,20 @@ function packageName(req) {
  * @returns {boolean} True indicates a path traversal attempt was found. False otherwise.
  */
 function pathTraversalAttempt(data) {
-  // this will use several methods to check for the possibility of an attempted path traversal attack.
+  // This will use several methods to check for the possibility of an attempted path traversal attack.
 
-  // The definitions here are based off GoPage checks. https://github.com/confused-Techie/GoPage/blob/main/src/pkg/universalMethods/universalMethods.go
+  // The definitions here are based off GoPage checks.
+  // https://github.com/confused-Techie/GoPage/blob/main/src/pkg/universalMethods/universalMethods.go
   // But we leave out any focused on defended against URL Encoded values, since this has already been decoded.
-  //           unixBackNav, unixBackNavReverse, unixParentCatchAll,
-  const checks = [/\.{2}\//, /\.{2}\\/, /\.{2}/];
+  // const checks = [
+  //   /\.{2}\//,   //unixBackNav
+  //   /\.{2}\\/,   //unixBackNavReverse
+  //   /\.{2}/,     //unixParentCatchAll
+  // ];
 
-  for (let i = 0; i < checks.length; i++) {
-    if (data.match(checks[i]) !== null) {
-      return true;
-    }
-  }
-  return false; // if none of the matches are true.
+  // Combine the 3 regex into one: https://regex101.com/r/CgcZev/1
+  const check = /\.{2}(?:[/\\])?/;
+  return data.match(check) !== null;
 }
 
 module.exports = {
