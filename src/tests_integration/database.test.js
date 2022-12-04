@@ -46,14 +46,22 @@ describe("insertNewPackage", () => {
 
 describe("insertNewPackageName", () => {
   test("Should return Server Error for package that doesn't exist", async () => {
-    const obj = await database.insertNewPackageName("notARepo", "notARepo-Reborn");
+    const obj = await database.insertNewPackageName(
+      "notARepo",
+      "notARepo-Reborn"
+    );
     expect(obj.ok).toBeFalsy();
     expect(obj.short).toEqual("Server Error");
   });
   test("Should return Success for valid package", async () => {
-    const obj = await database.insertNewPackageName("publish-test-valid-rename", "publish-test-valid");
+    const obj = await database.insertNewPackageName(
+      "publish-test-valid-rename",
+      "publish-test-valid"
+    );
     expect(obj.ok).toBeTruthy();
-    expect(obj.content).toEqual("Successfully inserted publish-test-valid-rename.");
+    expect(obj.content).toEqual(
+      "Successfully inserted publish-test-valid-rename."
+    );
   });
 });
 
@@ -84,39 +92,56 @@ describe("Package Lifetime Tests", () => {
     // this endpoint only returns a pointer on success.
 
     // === Do we get all the right data back when asking for our package
-    const getAfterPublish = await database.getPackageByName(pack.createPack.name);
+    const getAfterPublish = await database.getPackageByName(
+      pack.createPack.name
+    );
     expect(getAfterPublish.ok).toBeTruthy();
     // then lets check some essential values
     expect(typeof getAfterPublish.content.pointer === "string").toBeTruthy();
     expect(getAfterPublish.content.name).toEqual(pack.createPack.name);
     expect(getAfterPublish.content.created).toBeDefined();
     expect(getAfterPublish.content.updated).toBeDefined();
-    expect(getAfterPublish.content.creation_method).toEqual(pack.createPack.creation_method);
+    expect(getAfterPublish.content.creation_method).toEqual(
+      pack.createPack.creation_method
+    );
     expect(getAfterPublish.content.downloads).toEqual("0");
     expect(getAfterPublish.content.stargazers_count).toEqual("0");
     expect(getAfterPublish.content.original_stargazers).toEqual("0");
     expect(getAfterPublish.content.data.name).toEqual(pack.createPack.name);
     expect(getAfterPublish.content.data.readme).toEqual(pack.createPack.readme);
-    expect(getAfterPublish.content.data.repository).toEqual(pack.createPack.repository);
-    expect(getAfterPublish.content.data.metadata).toEqual(pack.createPack.metadata);
+    expect(getAfterPublish.content.data.repository).toEqual(
+      pack.createPack.repository
+    );
+    expect(getAfterPublish.content.data.metadata).toEqual(
+      pack.createPack.metadata
+    );
     expect(getAfterPublish.content.versions.length).toEqual(1); // Only 1 ver was provided
-    expect(getAfterPublish.content.versions[0].semver).toEqual(pack.createPack.metadata.version);
+    expect(getAfterPublish.content.versions[0].semver).toEqual(
+      pack.createPack.metadata.version
+    );
     expect(getAfterPublish.content.versions[0].status).toEqual("latest");
     expect(getAfterPublish.content.versions[0].license).toEqual("NONE");
     expect(getAfterPublish.content.versions[0].package).toBeDefined();
 
     // === Lets rename our package
     const NEW_NAME = "package-a-lifetime-rename";
-    const newName = await database.insertNewPackageName(NEW_NAME, pack.createPack.name);
+    const newName = await database.insertNewPackageName(
+      NEW_NAME,
+      pack.createPack.name
+    );
     expect(newName.ok).toBeTruthy();
-    expect(newName.content).toEqual("Successfully inserted package-a-lifetime-rename.");
+    expect(newName.content).toEqual(
+      "Successfully inserted package-a-lifetime-rename."
+    );
 
     // === Can we get the package by it's new name?
     const getByNewName = await database.getPackageByName(NEW_NAME);
     expect(getByNewName.ok).toBeTruthy();
     expect(getByNewName.content.name).toEqual(NEW_NAME);
     expect(getByNewName.content.created).toBeDefined();
-    expect(getByNewName.content.updated >= getAfterPublish.content.updated).toBeTruthy();
+    expect(
+      getByNewName.content.updated >= getAfterPublish.content.updated
+    ).toBeTruthy();
     // For the above expect().getGreaterThan() doesn't support dates.
 
     // === Can we still get the package by it's old name?
@@ -124,12 +149,18 @@ describe("Package Lifetime Tests", () => {
     expect(getByOldName.ok).toBeTruthy();
     expect(getByOldName.content.name).toEqual(NEW_NAME);
     expect(getByOldName.content.created).toBeDefined();
-    expect(getByOldName.content.updated >= getAfterPublish.content.updated).toBeTruthy();
+    expect(
+      getByOldName.content.updated >= getAfterPublish.content.updated
+    ).toBeTruthy();
 
     // === Now lets try to delete the only version available. This should fail.
-    const removeOnlyVersion = await database.removePackageVersion(NEW_NAME, "1.0.0");
+    const removeOnlyVersion = await database.removePackageVersion(
+      NEW_NAME,
+      "1.0.0"
+    );
     expect(removeOnlyVersion.ok).toBeFalsy();
-    expect(removeOnlyVersion.content).toEqual(`It's not possible to leave the ${NEW_NAME} without at least one published version`);
-
+    expect(removeOnlyVersion.content).toEqual(
+      `It's not possible to leave the ${NEW_NAME} without at least one published version`
+    );
   });
 });
