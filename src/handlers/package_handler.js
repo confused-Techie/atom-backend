@@ -63,11 +63,11 @@ async function getPackages(req, res) {
       params.sort
     }&order=${
       params.direction
-    }>; rel="self", <${server_url}/api/packages?page=${totalPages.content}&sort=${
-      params.sort
-    }&order=${
+    }>; rel="self", <${server_url}/api/packages?page=${
+      totalPages.content
+    }&sort=${params.sort}&order=${
       params.direction
-    }>; rel="last", <${server_url}/api/packages?page=${params.page+1}&sort=${
+    }>; rel="last", <${server_url}/api/packages?page=${params.page + 1}&sort=${
       params.sort
     }&order=${params.direction}>; rel="next"`
   );
@@ -276,9 +276,9 @@ async function getPackagesSearch(req, res) {
       params.page
     }&sort=${params.sort}&order=${
       params.direction
-    }>; rel="self", <${server_url}/api/packages?q=${
-      params.query
-    }&page=${totalPages.content}&sort=${params.sort}&order=${
+    }>; rel="self", <${server_url}/api/packages?q=${params.query}&page=${
+      totalPages.content
+    }&sort=${params.sort}&order=${
       params.direction
     }>; rel="last", <${server_url}/api/packages/search?q=${params.query}&page=${
       params.page + 1
