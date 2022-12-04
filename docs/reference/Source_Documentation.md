@@ -150,7 +150,6 @@ with and retreive data from the cloud hosted database instance.
     * [~insertNewPackageVersion(packJSON)](#module_database..insertNewPackageVersion) ⇒ <code>object</code>
     * [~insertNewPackageName(newName, oldName)](#module_database..insertNewPackageName) ⇒ <code>object</code>
     * [~insertNewUser(user)](#module_database..insertNewUser) ⇒ <code>object</code>
-    * [~updateUser(user)](#module_database..updateUser) ⇒ <code>object</code>
     * [~getPackageByName(name, user)](#module_database..getPackageByName) ⇒ <code>object</code>
     * [~getPackageVersionByNameAndVersion(name, version)](#module_database..getPackageVersionByNameAndVersion) ⇒ <code>object</code>
     * [~getPackageCollectionByName(packArray)](#module_database..getPackageCollectionByName) ⇒ <code>object</code>
@@ -233,19 +232,6 @@ This essentially renames an existing package.
 
 ### database~insertNewUser(user) ⇒ <code>object</code>
 Insert a new user into the database.
-
-**Kind**: inner method of [<code>database</code>](#module_database)  
-**Returns**: <code>object</code> - A server status object.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| user | <code>object</code> | An object containing information related to the user. |
-
-<a name="module_database..updateUser"></a>
-
-### database~updateUser(user) ⇒ <code>object</code>
-Given the username, the record of the user is updated with the new token and the avatar.
-a Server Status Object.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
 **Returns**: <code>object</code> - A server status object.  
@@ -455,7 +441,7 @@ Register the star given by a user to a package.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| user | <code>int</code> | ID of the user who give the star. |
+| user | <code>int</code> | A User Object that should star the package. |
 | pack | <code>string</code> | Package name that get the new star. |
 
 <a name="module_database..updateDeleteStar"></a>
@@ -468,7 +454,7 @@ Register the removal of the star on a package by a user.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| user | <code>int</code> | ID of the user who remove the star. |
+| user | <code>int</code> | User Object who remove the star. |
 | pack | <code>string</code> | Package name that get the star removed. |
 
 <a name="module_database..getStarredPointersByUserID"></a>

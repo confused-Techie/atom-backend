@@ -356,7 +356,7 @@ describe("Package Lifecycle Tests", () => {
     expect(getUserID.content.id).toBeDefined();
 
     // === Can we get our user in a collection?
-    const getUserIDCol = await database.getUserCollectionById([ USER_ID ]);
+    const getUserIDCol = await database.getUserCollectionById([USER_ID]);
     expect(getUserIDCol.ok).toBeTruthy();
     expect(getUserIDCol.content.length).toEqual(1);
     expect(getUserIDCol.content[0].login).toEqual(user.userObj.username);
@@ -367,7 +367,10 @@ describe("Package Lifecycle Tests", () => {
     expect(getFakeStars.content.length).toEqual(0);
 
     // === Can we star a package with our User?
-    const starPack = await database.updateStars(getUserID.content, "language-css");
+    const starPack = await database.updateStars(
+      getUserID.content,
+      "language-css"
+    );
     expect(starPack.ok).toBeTruthy();
     expect(starPack.content.startsWith("Successfully Stared ")).toBeTruthy();
     expect(starPack.content.endsWith(` with ${USER_ID}`)).toBeTruthy();
@@ -378,7 +381,10 @@ describe("Package Lifecycle Tests", () => {
     expect(getStars.content.length).toEqual(1);
 
     // === Can we remove our star?
-    const remStar = await database.updateDeleteStar(getUserID.content, "language-css");
+    const remStar = await database.updateDeleteStar(
+      getUserID.content,
+      "language-css"
+    );
     expect(remStar.ok).toBeTruthy();
     expect(remStar.content.startsWith("Successfully Unstarred ")).toBeTruthy();
     expect(remStar.content.endsWith(` with ${USER_ID}`)).toBeTruthy();
