@@ -737,15 +737,7 @@ async function getPackagesVersionTarball(req, res) {
     // we are likely in a test environment. And will just leave this blank to error out on the client side.
     tarballURL = "";
   }
-  try {
-    console.log(url);
-    console.log(pack.content.meta.tarball_url);
-    //let tarballURL = url.parse(pack.content.meta.tarball_url);
-  } catch (e) {
-    throw e;
-  }
 
-  //res.redirect(url.toString());
   res.redirect(tarballURL);
   logger.httpLog(req, res);
   return;
