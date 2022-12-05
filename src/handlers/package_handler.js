@@ -713,7 +713,7 @@ async function getPackagesVersionTarball(req, res) {
 
   // But right before, lets do a couple simple checks to make sure we are sending to a legit site.
   //let tarballURL = new url((pack.content.meta.tarball_url ? pack.content.meta.tarball_url : ""));
-  let tarballURL;
+  let tarballURL = pack.content.meta.tarball_url;
 
   if (tarballURL !== undefined) {
     tarballURL = new url(pack.content.meta.tarball_url);
