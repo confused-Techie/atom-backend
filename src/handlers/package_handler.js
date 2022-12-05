@@ -19,6 +19,7 @@ const { server_url } = require("../config.js").getConfig();
 const utils = require("../utils.js");
 const database = require("../database.js");
 const auth = require("../auth.js");
+const url = require("url");
 
 /**
  * @async
@@ -269,18 +270,19 @@ async function getPackagesSearch(req, res) {
 
   let totalPages = !totalPageEstimate.ok ? 1 : totalPageEstimate.content;
 
+  let safeQuery = params.query.replace(/[^a-zA-Z0-9_\-\s*\.]/gi, '');
   // now to get headers.
   res.append(
     "Link",
-    `<${server_url}/api/packages/search?q=${params.query}&page=${
+    `<${server_url}/api/packages/search?q=${safeQuery}&page=${
       params.page
     }&sort=${params.sort}&order=${
       params.direction
-    }>; rel="self", <${server_url}/api/packages?q=${params.query}&page=${
+    }>; rel="self", <${server_url}/api/packages?q=${safeQuery}&page=${
       totalPages.content
     }&sort=${params.sort}&order=${
       params.direction
-    }>; rel="last", <${server_url}/api/packages/search?q=${params.query}&page=${
+    }>; rel="last", <${server_url}/api/packages/search?q=${safeQuery}&page=${
       params.page + 1
     }&sort=${params.sort}&order=${params.direction}>; rel="next"`
   );
@@ -710,23 +712,41 @@ async function getPackagesVersionTarball(req, res) {
   // the download to take place from their servers.
 
   // But right before, lets do a couple simple checks to make sure we are sending to a legit site.
-  let url = pack.content.meta.tarball_url;
+  //let tarballURL = new url((pack.content.meta.tarball_url ? pack.content.meta.tarball_url : ""));
+  let tarballURL;
 
-  if (
-    url.hostname != "codeload.github.com" ||
-    url.hostname != "api.github.com" ||
-    url.hostname != "github.com" ||
-    url.hostname != "raw.githubusercontent.com"
-  ) {
-    await common.handleError(req, res, {
-      ok: false,
-      short: "Server Error",
-      content: `Invalid Domain for Download Redirect: ${url.toString()}`,
-    });
-    return;
+  if (tarballURL !== undefined) {
+    tarballURL = new url(pack.content.meta.tarball_url);
+
+    if (
+      url.hostname != "codeload.github.com" ||
+      url.hostname != "api.github.com" ||
+      url.hostname != "github.com" ||
+      url.hostname != "raw.githubusercontent.com"
+    ) {
+      await common.handleError(req, res, {
+        ok: false,
+        short: "Server Error",
+        content: `Invalid Domain for Download Redirect: ${url.toString()}`,
+      });
+      return;
+    }
+
+    tarballURL = tarballURL.toString();
+  } else {
+    // we are likely in a test environment. And will just leave this blank to error out on the client side.
+    tarballURL = "";
+  }
+  try {
+    console.log(url);
+    console.log(pack.content.meta.tarball_url);
+    //let tarballURL = url.parse(pack.content.meta.tarball_url);
+  } catch(e) {
+    throw e;
   }
 
-  res.redirect(url.toString());
+  //res.redirect(url.toString());
+  res.redirect(tarballURL);
   logger.httpLog(req, res);
   return;
 }
