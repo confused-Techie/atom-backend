@@ -718,7 +718,11 @@ async function getPackagesVersionTarball(req, res) {
     url.hostname != "github.com" ||
     url.hostname != "raw.githubusercontent.com"
   ) {
-    await common.handleError(req, res, { ok: false, short: "Server Error", content: `Invalid Domain for Download Redirect: ${url.toString()}`});
+    await common.handleError(req, res, {
+      ok: false,
+      short: "Server Error",
+      content: `Invalid Domain for Download Redirect: ${url.toString()}`,
+    });
     return;
   }
 
