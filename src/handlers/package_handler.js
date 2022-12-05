@@ -708,7 +708,21 @@ async function getPackagesVersionTarball(req, res) {
 
   // For simplicity, we will redirect the request to gh tarball url, to allow
   // the download to take place from their servers.
-  res.redirect(pack.content.meta.tarball_url);
+
+  // But right before, lets do a couple simple checks to make sure we are sending to a legit site.
+  let url = pack.content.meta.tarball_url;
+
+  if (
+    url.hostname != "codeload.github.com" ||
+    url.hostname != "api.github.com" ||
+    url.hostname != "github.com" ||
+    url.hostname != "raw.githubusercontent.com"
+  ) {
+    await common.handleError(req, res, { ok: false, short: "Server Error", content: `Invalid Domain for Download Redirect: ${url.toString()}`});
+    return;
+  }
+
+  res.redirect(url.toString());
   logger.httpLog(req, res);
   return;
 }

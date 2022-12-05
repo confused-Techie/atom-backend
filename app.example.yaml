@@ -8,12 +8,6 @@ service: default
 env_variables:
   PORT: 8080
   # Valid Search:
-  # -- Please note currently SEARCHALGORITHM is ignored
-  # In favour of built in fuzzy matching.
-  # Longest Common Sequence: "lcs"
-  # Levenshtein Distance: "levenshtein_distance"
-  # Levenshtein Distance w/ Word Seperators - Double Mean: "levenshtein_distance_wsdm"
-  SEARCHALGORITHM: "lcs"
   SERVERURL: "http://localhost:8080"
   # Paginate is the amount to paginate results by.
   PAGINATE: 30
@@ -28,8 +22,8 @@ env_variables:
   GOOGLE_APPLICATION_CREDENTIALS: "local_file_path"
   # The GH Client ID, for use with OAuth
   GH_CLIENTID: ""
-  # The token to allow us to interact with GitHub.
-  GH_TOKEN: ""
+  # The Client Secret to accompany the CLIENT ID
+  GH_CLIENTSECRET: ""
   # The github username associated with the token.
   GH_USERNAME: ""
   # The User Agent thats used to communicate with GitHub
