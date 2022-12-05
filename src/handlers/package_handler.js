@@ -270,7 +270,7 @@ async function getPackagesSearch(req, res) {
 
   let totalPages = !totalPageEstimate.ok ? 1 : totalPageEstimate.content;
 
-  let safeQuery = params.query.replace(/[^a-zA-Z0-9_\-\s*\.]/gi, '');
+  let safeQuery = params.query.replace(/[^a-zA-Z0-9_\-\s*\.]/gi, "");
   // now to get headers.
   res.append(
     "Link",
@@ -741,7 +741,7 @@ async function getPackagesVersionTarball(req, res) {
     console.log(url);
     console.log(pack.content.meta.tarball_url);
     //let tarballURL = url.parse(pack.content.meta.tarball_url);
-  } catch(e) {
+  } catch (e) {
     throw e;
   }
 
