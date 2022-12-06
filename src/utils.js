@@ -257,10 +257,10 @@ async function engineFilter(pack, engine) {
 
     if (lowSv != null) {
       // Lower end condition present, so test it.
-      switch (lowSv[1]) {
+      switch (lowSv[0]) {
         case ">":
           lowerEnd = semverGt(
-            [engSv[1], engSv[2], engSv[3]],
+            [engSv[0], engSv[1], engSv[2]],
             [lowSv[2], lowSv[3], lowSv[4]]
           );
 
@@ -268,11 +268,11 @@ async function engineFilter(pack, engine) {
         case ">=":
           lowerEnd =
             semverGt(
-              [engSv[1], engSv[2], engSv[3]],
+              [engSv[0], engSv[1], engSv[2]],
               [lowSv[2], lowSv[3], lowSv[4]]
             ) ||
             semverEq(
-              [engSv[1], engSv[2], engSv[3]],
+              [engSv[0], engSv[1], engSv[2]],
               [lowSv[2], lowSv[3], lowSv[4]]
             );
 
@@ -290,7 +290,7 @@ async function engineFilter(pack, engine) {
       switch (upSv[1]) {
         case "<":
           upperEnd = semverLt(
-            [engSv[1], engSv[2], engSv[3]],
+            [engSv[0], engSv[1], engSv[2]],
             [upSv[2], upSv[3], upSv[4]]
           );
 
@@ -298,11 +298,11 @@ async function engineFilter(pack, engine) {
         case "<=":
           upperEnd =
             semverLt(
-              [engSv[1], engSv[2], engSv[3]],
+              [engSv[0], engSv[1], engSv[2]],
               [upSv[2], upSv[3], upSv[4]]
             ) ||
             semverEq(
-              [engSv[1], engSv[2], engSv[3]],
+              [engSv[0], engSv[1], engSv[2]],
               [upSv[2], upSv[3], upSv[4]]
             );
 
@@ -319,7 +319,7 @@ async function engineFilter(pack, engine) {
 
       if (
         eqSv !== null &&
-        semverEq([engSv[1], engSv[2], engSv[3]], [eqSv[1], eqSv[2], eqSv[3]])
+        semverEq([engSv[0], engSv[1], engSv[2]], [eqSv[1], eqSv[2], eqSv[3]])
       ) {
         compatibleVersion = ver;
 
@@ -373,9 +373,19 @@ async function engineFilter(pack, engine) {
  * This can also be used to check for semver valitidy. If it's not a semver, null is returned.
  * @param {string} semver
  * @returns {array|null} The formatted semver in array of three strings, or null if no match.
+ * @example <caption>Valid Semver Passed</caption>
+ * // returns ["1", "2", "3" ]
+ * semverArray("1.2.3");
+ * @example <caption>Invalid Semver Passed</caption>
+ * // returns null
+ * semverArray("1.Hello.World");
  */
 function semverArray(semver) {
-  return semver.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/);
+  let array = semver.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/);
+  if (array.length != 4) {
+    return null; // returning null on no match
+  }
+  return array.slice(1, 4);
 }
 
 /**
@@ -383,8 +393,8 @@ function semverArray(semver) {
  * @desc Compares two sermver and return true if the first is greater than the second.
  * Expects to get the semver formatted as array of strings.
  * Should be always executed after running semverArray.
- * @param {array} a1 - First semver as array
- * @param {array} a2 - Second semver as array
+ * @param {array} a1 - First semver as array of strings.
+ * @param {array} a2 - Second semver as array of string.
  * @returns {boolean} The result of the comparison
  */
 function semverGt(a1, a2) {
@@ -411,8 +421,8 @@ function semverGt(a1, a2) {
  * @desc Compares two sermver and return true if the first is less than the second.
  * Expects to get the semver formatted as array of strings.
  * Should be always executed after running semverArray.
- * @param {array} a1 - First semver as array
- * @param {array} a2 - Second semver as array
+ * @param {array} a1 - First semver as array of strings.
+ * @param {array} a2 - Second semver as array of strings.
  * @returns {boolean} The result of the comparison
  */
 function semverLt(a1, a2) {
@@ -449,7 +459,7 @@ function semverEq(a1, a2) {
 
 /**
  * @class StateStore
- * @desc This simple state store acts as a hash map, allowing authentication request
+ * @classdesc This simple state store acts as a hash map, allowing authentication request
  * to quickly add a new state related to an IP, and retrieve it later on.
  * These states are used during the authentication flow to help ensure against malicious activity.
  */
@@ -459,8 +469,17 @@ class StateStore {
     // In the future ideally we could allow the choice of how to generate the state
     // But in this case it'll currently be hard coded
   }
+  /**
+    * @function getState
+    * @desc `getState` of `StateStore` checks if the given IP in the hashmap matches
+    * the given IP and given State in the StateStore.
+    * @param {string} ip - The IP Address to check with.
+    * @param {string} state - The State to check with.
+    * @returns {object} A Server Status Object, where `ok` is true if the IP corresponds to
+    * the given state. And `ok` is false otherwise.
+    */
   getState(ip, state) {
-    if (this.hashmap[ip]) {
+    if (this.hashmap[ip] == state) {
       return { ok: true, content: this.hashmap[ip] };
     } else {
       return {
@@ -470,6 +489,14 @@ class StateStore {
       };
     }
   }
+  /**
+    * @function setState
+    * @desc A Promise that inputs the given IP into the StateStore, and returns
+    * it's generated State Hash.
+    * @param {string} ip - The IP to enter into the State Store.
+    * @returns {object} A Server Status Object where if `ok` is true, `content` contains
+    * the generated state.
+    */
   setState(ip) {
     return new Promise((resolve, reject) => {
       crypto.generateKey("aes", { length: 128 }, (err, key) => {

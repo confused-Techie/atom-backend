@@ -104,3 +104,46 @@ describe("engineFilter returns version expected.", () => {
     expect(res.metadata.version == "2.0.0");
   });
 });
+
+describe("Tests against semverArray", () => {
+  test("Returns valid data back for 1.0.1", () => {
+    const ver = "1.0.1";
+    const res = utils.semverArray(ver);
+    expect(res.length).toEqual(3);
+    expect(res[0]).toEqual("1");
+    expect(res[1]).toEqual("0");
+    expect(res[2]).toEqual("1");
+  });
+  test("Returns valid data back for 2.4.16", () => {
+    const ver = "2.4.16";
+    const res = utils.semverArray(ver);
+    expect(res.length).toEqual(3);
+    expect(res[0]).toEqual("2");
+    expect(res[1]).toEqual("4");
+    expect(res[2]).toEqual("16");
+  });
+  test("Returns valid data back for 200.4180.2", () => {
+    const ver = "200.4180.2";
+    const res = utils.semverArray(ver);
+    expect(res.length).toEqual(3);
+    expect(res[0]).toEqual("200");
+    expect(res[1]).toEqual("4180");
+    expect(res[2]).toEqual("2");
+  });
+
+});
+
+describe("Tests against semverGt", () => {
+  test("Returns True with Valid data", () => {
+    const gVer = [ "1", "0", "1" ];
+    const lVer = [ "1", "0", "0" ];
+    const res = utils.semverGt(gVer, lVer);
+    expect(res).toBeTruthy();
+  });
+  test("Returns False with Valid data", () => {
+    const ver1 = [ "1", "0", "0" ];
+    const ver2 = [ "1", "0", "1" ];
+    const res = utils.semverGt(ver1, ver2);
+    expect(res).toBeFalsy();
+  });
+});
