@@ -10,7 +10,7 @@ const logger = require("./logger.js");
 const database = require("./database.js");
 
 if (process.env.PULSAR_STATUS == "dev") {
-  logger.warningLog("Pulsar Server is in Development Mode!");
+  logger.generic(3, "Pulsar Server is in Development Mode!");
 }
 
 const serve = app.listen(port, () => {

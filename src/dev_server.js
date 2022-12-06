@@ -37,12 +37,20 @@ async function test() {
   const database = require("./database.js");
   // We can only require these items after we have set our env variables
 
-  logger.warningLog(
-    "Pulsar Server is in Development Mode with a Local Database!"
-  );
+  logger.generic(3, "Pulsar Server is in Development Mode with a Local Database!");
+
+  logger.generic(6, "Dev DB Configured Environment Variables.", {
+    type: "object",
+    obj: {
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      database: process.env.DB_DB,
+      port: process.env.DB_PORT
+    }
+  });
 
   const serve = app.listen(process.env.PORT, () => {
-    logger.infoLog(`Pulsar Server Listening on port ${process.env.PORT}`);
+    logger.generic(3, `Pulsar Server Listening on port ${process.env.PORT}`);
   });
 
   process.on("SIGTERM", async () => {

@@ -94,6 +94,12 @@ function getConfig() {
       DB_SSL_CERT: process.env.DB_SSL_CERT
         ? process.env.DB_SSL_CERT
         : data.env_variables.DB_SSL_CERT,
+      LOG_LEVEL: process.env.LOG_LEVEL
+        ? process.env.LOG_LEVEL
+        : data.env_variables.LOG_LEVEL,
+      LOG_FORMAT: process.env.LOG_FORMAT
+        ? process.env.LOG_FORMAT
+        : data.env_variables.LOG_FORMAT,
     };
   } catch (err) {
     // since this is necessary for the server to startup, we can throw an error here and exit the process.
