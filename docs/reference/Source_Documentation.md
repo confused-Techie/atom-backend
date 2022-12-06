@@ -743,6 +743,7 @@ logging methods if a log server is ever implemented.
     * [~infoLog(value)](#module_logger..infoLog)
     * [~debugLog(value)](#module_logger..debugLog)
     * [~sanitizeLogs(val)](#module_logger..sanitizeLogs) ⇒ <code>string</code>
+    * [~generic(lvl, val, [meta])](#module_logger..generic)
 
 <a name="module_logger..httpLog"></a>
 
@@ -846,6 +847,24 @@ admins reviewing the logs.
 | Param | Type | Description |
 | --- | --- | --- |
 | val | <code>string</code> | The user provided value to sanitize. |
+
+<a name="module_logger..generic"></a>
+
+### logger~generic(lvl, val, [meta])
+A generic logger, that will can accept all types of logs. And from then
+create warning, or info logs debending on the Log Level provided.
+Additionally the generic logger accepts a meta object argument, to extend
+it's logging capabilities, to include system objects, or otherwise unexpected values.
+It will have support for certain objects in the meta field to create specific
+logs, but otherwise will attempt to display the data provided.
+
+**Kind**: inner method of [<code>logger</code>](#module_logger)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| lvl | <code>integer</code> | The Log Level to output. With the following definition. 1 - Fatal 2 - Error 3 - Warning 4 - Information 5 - Debug 6 - Trace |
+| val | <code>string</code> | The main information to contain within the log. |
+| [meta] | <code>object</code> | An optional Object to include, this object as described above can contain additional information either expected of the log, or that is not natively supported, but will be attempted to display. |
 
 <a name="module_main"></a>
 

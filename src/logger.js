@@ -116,25 +116,25 @@ function sanitizeLogs(val) {
 }
 
 /**
-  * @function generic
-  * @desc A generic logger, that will can accept all types of logs. And from then
-  * create warning, or info logs debending on the Log Level provided.
-  * Additionally the generic logger accepts a meta object argument, to extend
-  * it's logging capabilities, to include system objects, or otherwise unexpected values.
-  * It will have support for certain objects in the meta field to create specific
-  * logs, but otherwise will attempt to display the data provided.
-  * @param {integer} lvl - The Log Level to output. With the following definition.
-  * 1 - Fatal
-  * 2 - Error
-  * 3 - Warning
-  * 4 - Information
-  * 5 - Debug
-  * 6 - Trace
-  * @param {string} val - The main information to contain within the log.
-  * @param {object} [meta] - An optional Object to include, this object as described
-  * above can contain additional information either expected of the log, or that
-  * is not natively supported, but will be attempted to display.
-  */
+ * @function generic
+ * @desc A generic logger, that will can accept all types of logs. And from then
+ * create warning, or info logs debending on the Log Level provided.
+ * Additionally the generic logger accepts a meta object argument, to extend
+ * it's logging capabilities, to include system objects, or otherwise unexpected values.
+ * It will have support for certain objects in the meta field to create specific
+ * logs, but otherwise will attempt to display the data provided.
+ * @param {integer} lvl - The Log Level to output. With the following definition.
+ * 1 - Fatal
+ * 2 - Error
+ * 3 - Warning
+ * 4 - Information
+ * 5 - Debug
+ * 6 - Trace
+ * @param {string} val - The main information to contain within the log.
+ * @param {object} [meta] - An optional Object to include, this object as described
+ * above can contain additional information either expected of the log, or that
+ * is not natively supported, but will be attempted to display.
+ */
 function generic(lvl, val, meta = {}) {
   if (lvl === undefined) {
     // we will use our own supported logging to log that an invalid log was attempted.
@@ -171,7 +171,7 @@ function generic(lvl, val, meta = {}) {
 
   let output = "";
 
-  switch(lvl) {
+  switch (lvl) {
     case 1:
       output += `[FATAL]:: ${val ?? ""}`;
       break;
@@ -195,7 +195,7 @@ function generic(lvl, val, meta = {}) {
       break;
   }
 
-  switch(type) {
+  switch (type) {
     case "error":
       output += craftError(meta);
       break;
@@ -209,13 +209,13 @@ function generic(lvl, val, meta = {}) {
       break;
   }
 
-  switch(LOG_FORMAT) {
+  switch (LOG_FORMAT) {
     case "stdout":
       console.log(output);
       break;
     default:
       // Unsupported method. Use "stdout" by default.
-      console.log("#BAD_LOG_FORMAT#"+ output);
+      console.log("#BAD_LOG_FORMAT#" + output);
       break;
   }
 }
@@ -227,8 +227,10 @@ function craftError(meta) {
 
   if (meta.err) {
     ret += ` ${meta.err.name ?? "Error"} Occured: ${
-      (meta.err.fileName !== undefined && meta.err.lineNumber !== undefined)
-      ? ` in ${meta.err.fileName}#${meta.err.lineNumber}` : ""}: ${meta.err.cause ?? meta.err?.toString()}`;
+      meta.err.fileName !== undefined && meta.err.lineNumber !== undefined
+        ? ` in ${meta.err.fileName}#${meta.err.lineNumber}`
+        : ""
+    }: ${meta.err.cause ?? meta.err?.toString()}`;
   } else {
     ret += " Unspecified Error Occured.";
   }
