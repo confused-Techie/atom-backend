@@ -743,6 +743,7 @@ logging methods if a log server is ever implemented.
     * [~infoLog(value)](#module_logger..infoLog)
     * [~debugLog(value)](#module_logger..debugLog)
     * [~sanitizeLogs(val)](#module_logger..sanitizeLogs) ⇒ <code>string</code>
+    * [~generic(lvl, val, [meta])](#module_logger..generic)
 
 <a name="module_logger..httpLog"></a>
 
@@ -846,6 +847,24 @@ admins reviewing the logs.
 | Param | Type | Description |
 | --- | --- | --- |
 | val | <code>string</code> | The user provided value to sanitize. |
+
+<a name="module_logger..generic"></a>
+
+### logger~generic(lvl, val, [meta])
+A generic logger, that will can accept all types of logs. And from then
+create warning, or info logs debending on the Log Level provided.
+Additionally the generic logger accepts a meta object argument, to extend
+it's logging capabilities, to include system objects, or otherwise unexpected values.
+It will have support for certain objects in the meta field to create specific
+logs, but otherwise will attempt to display the data provided.
+
+**Kind**: inner method of [<code>logger</code>](#module_logger)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| lvl | <code>integer</code> | The Log Level to output. With the following definition. 1 - Fatal 2 - Error 3 - Warning 4 - Information 5 - Debug 6 - Trace |
+| val | <code>string</code> | The main information to contain within the log. |
+| [meta] | <code>object</code> | An optional Object to include, this object as described above can contain additional information either expected of the log, or that is not natively supported, but will be attempted to display. |
 
 <a name="module_main"></a>
 
@@ -1086,7 +1105,6 @@ A helper for any functions that are agnostic in handlers.
 
 * [utils](#module_utils)
     * [~StateStore](#module_utils..StateStore)
-        * [new StateStore()](#new_module_utils..StateStore_new)
     * [~isPackageNameBanned(name)](#module_utils..isPackageNameBanned) ⇒ <code>boolean</code>
     * [~constructPackageObjectFull(pack)](#module_utils..constructPackageObjectFull) ⇒ <code>object</code>
     * [~constructPackageObjectShort(pack)](#module_utils..constructPackageObjectShort) ⇒ <code>object</code>
@@ -1097,18 +1115,17 @@ A helper for any functions that are agnostic in handlers.
     * [~semverGt(a1, a2)](#module_utils..semverGt) ⇒ <code>boolean</code>
     * [~semverLt(a1, a2)](#module_utils..semverLt) ⇒ <code>boolean</code>
     * [~semverEq(a1, a2)](#module_utils..semverEq) ⇒ <code>boolean</code>
+    * [~getState(ip, state)](#module_utils..getState) ⇒ <code>object</code>
+    * [~setState(ip)](#module_utils..setState) ⇒ <code>object</code>
 
 <a name="module_utils..StateStore"></a>
 
 ### utils~StateStore
-**Kind**: inner class of [<code>utils</code>](#module_utils)  
-<a name="new_module_utils..StateStore_new"></a>
-
-#### new StateStore()
 This simple state store acts as a hash map, allowing authentication request
 to quickly add a new state related to an IP, and retrieve it later on.
 These states are used during the authentication flow to help ensure against malicious activity.
 
+**Kind**: inner class of [<code>utils</code>](#module_utils)  
 <a name="module_utils..isPackageNameBanned"></a>
 
 ### utils~isPackageNameBanned(name) ⇒ <code>boolean</code>
@@ -1215,6 +1232,16 @@ This can also be used to check for semver valitidy. If it's not a semver, null i
 | --- | --- |
 | semver | <code>string</code> | 
 
+**Example** *(Valid Semver Passed)*  
+```js
+// returns ["1", "2", "3" ]
+semverArray("1.2.3");
+```
+**Example** *(Invalid Semver Passed)*  
+```js
+// returns null
+semverArray("1.Hello.World");
+```
 <a name="module_utils..semverGt"></a>
 
 ### utils~semverGt(a1, a2) ⇒ <code>boolean</code>
@@ -1227,8 +1254,8 @@ Should be always executed after running semverArray.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| a1 | <code>array</code> | First semver as array |
-| a2 | <code>array</code> | Second semver as array |
+| a1 | <code>array</code> | First semver as array of strings. |
+| a2 | <code>array</code> | Second semver as array of string. |
 
 <a name="module_utils..semverLt"></a>
 
@@ -1242,8 +1269,8 @@ Should be always executed after running semverArray.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| a1 | <code>array</code> | First semver as array |
-| a2 | <code>array</code> | Second semver as array |
+| a1 | <code>array</code> | First semver as array of strings. |
+| a2 | <code>array</code> | Second semver as array of strings. |
 
 <a name="module_utils..semverEq"></a>
 
@@ -1259,6 +1286,35 @@ Should be always executed after running semverArray.
 | --- | --- | --- |
 | a1 | <code>array</code> | First semver as array |
 | a2 | <code>array</code> | Second semver as array |
+
+<a name="module_utils..getState"></a>
+
+### utils~getState(ip, state) ⇒ <code>object</code>
+`getState` of `StateStore` checks if the given IP in the hashmap matches
+the given IP and given State in the StateStore.
+
+**Kind**: inner method of [<code>utils</code>](#module_utils)  
+**Returns**: <code>object</code> - A Server Status Object, where `ok` is true if the IP corresponds to
+the given state. And `ok` is false otherwise.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| ip | <code>string</code> | The IP Address to check with. |
+| state | <code>string</code> | The State to check with. |
+
+<a name="module_utils..setState"></a>
+
+### utils~setState(ip) ⇒ <code>object</code>
+A Promise that inputs the given IP into the StateStore, and returns
+it's generated State Hash.
+
+**Kind**: inner method of [<code>utils</code>](#module_utils)  
+**Returns**: <code>object</code> - A Server Status Object where if `ok` is true, `content` contains
+the generated state.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| ip | <code>string</code> | The IP to enter into the State Store. |
 
 <a name="module_common_handler"></a>
 

@@ -38,3 +38,15 @@ env_variables:
   DB_PORT: 8080
   # This should be the path to a cert file for your DB
   DB_SSL_CERT: ""
+  # Determines how verbose your logs will be.
+  # Requires a numeric value to be input. These below values are inclusive of values below it.
+  # 1 - Fatal
+  # 2 - Error
+  # 3 - Warning
+  # 4 - Information
+  # 5 - Debug
+  # 6 - Trace
+  LOG_LEVEL: 6
+  # Determines how Logs are written. Currently supports the following options:
+  # stdout - Writes the console
+  LOG_FORMAT: "stdout"

@@ -25,6 +25,7 @@ After every push, GitHub Actions build several forms of documentation and resour
 * Abstract overview of the codebase's modules and how they rely on each other [quick_source_overview.md](/quick_source_overview.md).
 * How the backend handles Authentication [auth.md](./auth.md).
 * How and what errors bubble through the code [bubbled_errors.md](./bubbled_errors.md).
+* How our Logging Module Works in detail [logging.md](./logging.md).
 * Definition and List of the code's Numeric Error codes [numeric_error_codes.md](./numeric_error_codes.md).
 * The definition of the objects returned and handled [returns.md](./returns.md).
 * Details of how the backend SQL Database is configured [database.md](./database.md).

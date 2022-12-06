@@ -20,9 +20,14 @@ async function isPackageNameBanned(name) {
   let banList = await storage.getBanList();
   if (!banList.ok) {
     // we failed to find the ban list. For now we will just return ok.
-    logger.warningLog(null, null, "Unable to locate Name Ban List");
+    logger.generic(3, "Unable to Locate Name Ban List", {
+      type: "error",
+      err: banList.content,
+    });
     return { ok: true };
   }
+
+  logger.generic(6, "Success Status while retreiving Name Ban List.");
 
   return banList.content.find((b) => name === b) ? { ok: true } : { ok: false };
 }
@@ -75,6 +80,8 @@ async function constructPackageObjectFull(pack) {
     latest: findLatestVersion(pack.versions),
   };
 
+  logger.generic(6, "Built Package Object Full without Error");
+
   return newPack;
 }
 
@@ -94,6 +101,11 @@ async function constructPackageObjectShort(pack) {
     if (pack.length == 0) {
       // Sometimes it seems an empty array will be passed here, in that case we will protect against
       // manipulation of `undefined` objects
+      logger.generic(
+        5,
+        "Package Object Short Constructor Protected against 0 Length Array"
+      );
+
       return [];
     }
     let retPacks = [];
@@ -108,6 +120,8 @@ async function constructPackageObjectShort(pack) {
       };
       retPacks.push(newPack);
     }
+    logger.generic(6, "Array Package Object Short Constructor without Error");
+
     return retPacks;
   }
 
@@ -118,6 +132,11 @@ async function constructPackageObjectShort(pack) {
     pack.stargazers_count === undefined ||
     pack.semver === undefined
   ) {
+    logger.generic(
+      5,
+      "Package Object Short Constructor Protected against Undefined Required Values"
+    );
+
     return {};
   }
 
@@ -127,6 +146,8 @@ async function constructPackageObjectShort(pack) {
   newPack.releases = {
     latest: pack.semver,
   };
+
+  logger.generic(6, "Single Package Object Short Constructor without Error");
 
   return newPack;
 }
@@ -150,6 +171,7 @@ async function constructPackageObjectJSON(pack) {
     newPack.dist ??= {};
     newPack.dist.tarball = `${server_url}/api/packages/${pack.meta.name}/versions/${pack.semver}/tarball`;
     newPack.engines = pack.engine;
+    logger.generic(6, "Single Package Object JSON finished without Error");
     return newPack;
   }
 
@@ -165,6 +187,8 @@ async function constructPackageObjectJSON(pack) {
     newPack.engines = pack[i].engine;
     arrPack.push(newPack);
   }
+
+  logger.generic(66, "Array Package Object JSON finished without Error");
 
   return arrPack;
 }
@@ -182,7 +206,7 @@ async function constructPackageObjectJSON(pack) {
  * @returns {object} A Deep Copy of the original object, that should share zero references to the original.
  */
 async function deepCopy(obj) {
-  console.warn(`utils.deepCopy is depreciated! ${deepCopy.caller}`);
+  logger.generic(3, `utils.deepCopy() is deprecated! ${deepCopy.caller ?? ""}`);
   // this resolves github.com/confused-Techie/atom-community-server-backend-JS issue 13, and countless others.
   // When the object is passed to these sort functions, they work off a shallow copy. Meaning their changes
   // affect the original read data, meaning the cached data. Meaning subsequent queries may fail or error out.
@@ -221,6 +245,10 @@ async function engineFilter(pack, engine) {
 
   // Validate engine type.
   if (typeof engine !== "string") {
+    logger.generic(5, "engineFilter returning non-string pack.", {
+      type: "object",
+      obj: pack,
+    });
     return pack;
   }
 
@@ -228,6 +256,10 @@ async function engineFilter(pack, engine) {
 
   // Validate engine semver format.
   if (engSv === null) {
+    logger.generic(5, "engineFilter returning non-valid Engine semverArray", {
+      type: "object",
+      obj: engSv,
+    });
     return pack;
   }
 
@@ -257,10 +289,10 @@ async function engineFilter(pack, engine) {
 
     if (lowSv != null) {
       // Lower end condition present, so test it.
-      switch (lowSv[1]) {
+      switch (lowSv[0]) {
         case ">":
           lowerEnd = semverGt(
-            [engSv[1], engSv[2], engSv[3]],
+            [engSv[0], engSv[1], engSv[2]],
             [lowSv[2], lowSv[3], lowSv[4]]
           );
 
@@ -268,11 +300,11 @@ async function engineFilter(pack, engine) {
         case ">=":
           lowerEnd =
             semverGt(
-              [engSv[1], engSv[2], engSv[3]],
+              [engSv[0], engSv[1], engSv[2]],
               [lowSv[2], lowSv[3], lowSv[4]]
             ) ||
             semverEq(
-              [engSv[1], engSv[2], engSv[3]],
+              [engSv[0], engSv[1], engSv[2]],
               [lowSv[2], lowSv[3], lowSv[4]]
             );
 
@@ -290,7 +322,7 @@ async function engineFilter(pack, engine) {
       switch (upSv[1]) {
         case "<":
           upperEnd = semverLt(
-            [engSv[1], engSv[2], engSv[3]],
+            [engSv[0], engSv[1], engSv[2]],
             [upSv[2], upSv[3], upSv[4]]
           );
 
@@ -298,11 +330,11 @@ async function engineFilter(pack, engine) {
         case "<=":
           upperEnd =
             semverLt(
-              [engSv[1], engSv[2], engSv[3]],
+              [engSv[0], engSv[1], engSv[2]],
               [upSv[2], upSv[3], upSv[4]]
             ) ||
             semverEq(
-              [engSv[1], engSv[2], engSv[3]],
+              [engSv[0], engSv[1], engSv[2]],
               [upSv[2], upSv[3], upSv[4]]
             );
 
@@ -319,7 +351,7 @@ async function engineFilter(pack, engine) {
 
       if (
         eqSv !== null &&
-        semverEq([engSv[1], engSv[2], engSv[3]], [eqSv[1], eqSv[2], eqSv[3]])
+        semverEq([engSv[0], engSv[1], engSv[2]], [eqSv[1], eqSv[2], eqSv[3]])
       ) {
         compatibleVersion = ver;
 
@@ -373,9 +405,19 @@ async function engineFilter(pack, engine) {
  * This can also be used to check for semver valitidy. If it's not a semver, null is returned.
  * @param {string} semver
  * @returns {array|null} The formatted semver in array of three strings, or null if no match.
+ * @example <caption>Valid Semver Passed</caption>
+ * // returns ["1", "2", "3" ]
+ * semverArray("1.2.3");
+ * @example <caption>Invalid Semver Passed</caption>
+ * // returns null
+ * semverArray("1.Hello.World");
  */
 function semverArray(semver) {
-  return semver.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/);
+  let array = semver.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/);
+  if (array.length != 4) {
+    return null; // returning null on no match
+  }
+  return array.slice(1, 4);
 }
 
 /**
@@ -383,8 +425,8 @@ function semverArray(semver) {
  * @desc Compares two sermver and return true if the first is greater than the second.
  * Expects to get the semver formatted as array of strings.
  * Should be always executed after running semverArray.
- * @param {array} a1 - First semver as array
- * @param {array} a2 - Second semver as array
+ * @param {array} a1 - First semver as array of strings.
+ * @param {array} a2 - Second semver as array of string.
  * @returns {boolean} The result of the comparison
  */
 function semverGt(a1, a2) {
@@ -411,8 +453,8 @@ function semverGt(a1, a2) {
  * @desc Compares two sermver and return true if the first is less than the second.
  * Expects to get the semver formatted as array of strings.
  * Should be always executed after running semverArray.
- * @param {array} a1 - First semver as array
- * @param {array} a2 - Second semver as array
+ * @param {array} a1 - First semver as array of strings.
+ * @param {array} a2 - Second semver as array of strings.
  * @returns {boolean} The result of the comparison
  */
 function semverLt(a1, a2) {
@@ -449,20 +491,49 @@ function semverEq(a1, a2) {
 
 /**
  * @class StateStore
- * @desc This simple state store acts as a hash map, allowing authentication request
+ * @classdesc This simple state store acts as a hash map, allowing authentication request
  * to quickly add a new state related to an IP, and retrieve it later on.
  * These states are used during the authentication flow to help ensure against malicious activity.
  */
 class StateStore {
   constructor() {
+    logger.generic(6, "StateStore Initialized");
     this.hashmap = {};
     // In the future ideally we could allow the choice of how to generate the state
     // But in this case it'll currently be hard coded
   }
+  /**
+   * @function getState
+   * @desc `getState` of `StateStore` checks if the given IP in the hashmap matches
+   * the given IP and given State in the StateStore.
+   * @param {string} ip - The IP Address to check with.
+   * @param {string} state - The State to check with.
+   * @returns {object} A Server Status Object, where `ok` is true if the IP corresponds to
+   * the given state. And `ok` is false otherwise.
+   */
   getState(ip, state) {
-    if (this.hashmap[ip]) {
+    logger.generic(
+      4,
+      `StateStore.getState() Called with IP: ${ip} - State: ${state}`
+    );
+    logger.generic(
+      6,
+      `StateStore.getState(): HashMap Report - HashMap Size: ${
+        Object.keys(this.hashmap).length
+      }`
+    );
+
+    if (this.hashmap[ip] == state) {
+      logger.generic(
+        6,
+        `StateStore.getState() Successfully Returning for IP: ${ip} - State: ${state}`
+      );
       return { ok: true, content: this.hashmap[ip] };
     } else {
+      logger.generic(
+        3,
+        `StateStore.getState() Fail Returning for IP: ${ip} - State: ${state}`
+      );
       return {
         ok: false,
         short: "Not Found",
@@ -470,10 +541,27 @@ class StateStore {
       };
     }
   }
+  /**
+   * @function setState
+   * @desc A Promise that inputs the given IP into the StateStore, and returns
+   * it's generated State Hash.
+   * @param {string} ip - The IP to enter into the State Store.
+   * @returns {object} A Server Status Object where if `ok` is true, `content` contains
+   * the generated state.
+   */
   setState(ip) {
     return new Promise((resolve, reject) => {
+      logger.generic(6, `StateStore.setState() Called with IP: ${ip}`);
       crypto.generateKey("aes", { length: 128 }, (err, key) => {
         if (err) {
+          logger.generic(
+            2,
+            "StateStore.setState() crypto.generateKey() Failed!",
+            {
+              type: "error",
+              err: err,
+            }
+          );
           reject({
             ok: false,
             short: "Server Error",
@@ -482,6 +570,10 @@ class StateStore {
         }
         let state = key.export().toString("hex");
         this.hashmap[ip] = state;
+        logger.generic(
+          5,
+          "StateStore.setState() Successfully added IP and State to Hashmap"
+        );
         resolve({ ok: true, content: state });
       });
     });

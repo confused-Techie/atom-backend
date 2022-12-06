@@ -675,7 +675,9 @@ async function removePackageByName(name) {
         RETURNING *;
       `;
 
-      // No check on deleted stars because the package could also have 0 stars.
+      if (commandStar.count === 0) {
+        // No check on deleted stars because the package could also have 0 stars.
+      }
 
       // Remove names related to the package
       const commandName = await sqlStorage`
