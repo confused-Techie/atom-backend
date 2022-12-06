@@ -20,9 +20,14 @@ async function isPackageNameBanned(name) {
   let banList = await storage.getBanList();
   if (!banList.ok) {
     // we failed to find the ban list. For now we will just return ok.
-    logger.warningLog(null, null, "Unable to locate Name Ban List");
+    logger.generic(3, "Unable to Locate Name Ban List", {
+      type: "error",
+      err: banList.content
+    });
     return { ok: true };
   }
+
+  logger.generic(6, "Success Status while retreiving Name Ban List.");
 
   return banList.content.find((b) => name === b) ? { ok: true } : { ok: false };
 }
@@ -75,6 +80,8 @@ async function constructPackageObjectFull(pack) {
     latest: findLatestVersion(pack.versions),
   };
 
+  logger.generic(6, "Built Package Object Full without Error");
+
   return newPack;
 }
 
@@ -94,6 +101,8 @@ async function constructPackageObjectShort(pack) {
     if (pack.length == 0) {
       // Sometimes it seems an empty array will be passed here, in that case we will protect against
       // manipulation of `undefined` objects
+      logger.generic(5, "Package Object Short Constructor Protected against 0 Length Array");
+
       return [];
     }
     let retPacks = [];
@@ -108,6 +117,8 @@ async function constructPackageObjectShort(pack) {
       };
       retPacks.push(newPack);
     }
+    logger.generic(6, "Array Package Object Short Constructor without Error");
+
     return retPacks;
   }
 
@@ -118,6 +129,8 @@ async function constructPackageObjectShort(pack) {
     pack.stargazers_count === undefined ||
     pack.semver === undefined
   ) {
+    logger.generic(5, "Package Object Short Constructor Protected against Undefined Required Values");
+
     return {};
   }
 
@@ -127,6 +140,8 @@ async function constructPackageObjectShort(pack) {
   newPack.releases = {
     latest: pack.semver,
   };
+
+  logger.generic(6, "Single Package Object Short Constructor without Error");
 
   return newPack;
 }
@@ -150,6 +165,7 @@ async function constructPackageObjectJSON(pack) {
     newPack.dist ??= {};
     newPack.dist.tarball = `${server_url}/api/packages/${pack.meta.name}/versions/${pack.semver}/tarball`;
     newPack.engines = pack.engine;
+    logger.generic(6, "Single Package Object JSON finished without Error");
     return newPack;
   }
 
@@ -165,6 +181,8 @@ async function constructPackageObjectJSON(pack) {
     newPack.engines = pack[i].engine;
     arrPack.push(newPack);
   }
+
+  logger.generic(66, "Array Package Object JSON finished without Error");
 
   return arrPack;
 }
@@ -182,7 +200,7 @@ async function constructPackageObjectJSON(pack) {
  * @returns {object} A Deep Copy of the original object, that should share zero references to the original.
  */
 async function deepCopy(obj) {
-  console.warn(`utils.deepCopy is depreciated! ${deepCopy.caller}`);
+  logger.generic(3, `utils.deepCopy() is deprecated! ${deepCopy.caller ?? ""}`);
   // this resolves github.com/confused-Techie/atom-community-server-backend-JS issue 13, and countless others.
   // When the object is passed to these sort functions, they work off a shallow copy. Meaning their changes
   // affect the original read data, meaning the cached data. Meaning subsequent queries may fail or error out.
@@ -221,6 +239,10 @@ async function engineFilter(pack, engine) {
 
   // Validate engine type.
   if (typeof engine !== "string") {
+    logger.generic(5, "engineFilter returning non-string pack.", {
+      type: "object",
+      obj: pack
+    });
     return pack;
   }
 
@@ -228,6 +250,10 @@ async function engineFilter(pack, engine) {
 
   // Validate engine semver format.
   if (engSv === null) {
+    logger.generic(5, "engineFilter returning non-valid Engine semverArray", {
+      type: "object",
+      obj: engSv
+    });
     return pack;
   }
 
@@ -465,6 +491,7 @@ function semverEq(a1, a2) {
  */
 class StateStore {
   constructor() {
+    logger.generic(6, "StateStore Initialized");
     this.hashmap = {};
     // In the future ideally we could allow the choice of how to generate the state
     // But in this case it'll currently be hard coded
@@ -479,9 +506,14 @@ class StateStore {
    * the given state. And `ok` is false otherwise.
    */
   getState(ip, state) {
+    logger.generic(4, `StateStore.getState() Called with IP: ${ip} - State: ${state}`);
+    logger.generic(6, `StateStore.getState(): HashMap Report - HashMap Size: ${Object.keys(this.hashmap).length}`);
+    
     if (this.hashmap[ip] == state) {
+      logger.generic(6, `StateStore.getState() Successfully Returning for IP: ${ip} - State: ${state}`);
       return { ok: true, content: this.hashmap[ip] };
     } else {
+      logger.generic(3, `StateStore.getState() Fail Returning for IP: ${ip} - State: ${state}`);
       return {
         ok: false,
         short: "Not Found",
@@ -499,8 +531,13 @@ class StateStore {
    */
   setState(ip) {
     return new Promise((resolve, reject) => {
+      logger.generic(6, `StateStore.setState() Called with IP: ${ip}`);
       crypto.generateKey("aes", { length: 128 }, (err, key) => {
         if (err) {
+          logger.generic(2, "StateStore.setState() crypto.generateKey() Failed!", {
+            type: "error",
+            err: err
+          });
           reject({
             ok: false,
             short: "Server Error",
@@ -509,6 +546,7 @@ class StateStore {
         }
         let state = key.export().toString("hex");
         this.hashmap[ip] = state;
+        logger.generic(5, "StateStore.setState() Successfully added IP and State to Hashmap");
         resolve({ ok: true, content: state });
       });
     });
