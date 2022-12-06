@@ -22,7 +22,7 @@ async function isPackageNameBanned(name) {
     // we failed to find the ban list. For now we will just return ok.
     logger.generic(3, "Unable to Locate Name Ban List", {
       type: "error",
-      err: banList.content
+      err: banList.content,
     });
     return { ok: true };
   }
@@ -101,7 +101,10 @@ async function constructPackageObjectShort(pack) {
     if (pack.length == 0) {
       // Sometimes it seems an empty array will be passed here, in that case we will protect against
       // manipulation of `undefined` objects
-      logger.generic(5, "Package Object Short Constructor Protected against 0 Length Array");
+      logger.generic(
+        5,
+        "Package Object Short Constructor Protected against 0 Length Array"
+      );
 
       return [];
     }
@@ -129,7 +132,10 @@ async function constructPackageObjectShort(pack) {
     pack.stargazers_count === undefined ||
     pack.semver === undefined
   ) {
-    logger.generic(5, "Package Object Short Constructor Protected against Undefined Required Values");
+    logger.generic(
+      5,
+      "Package Object Short Constructor Protected against Undefined Required Values"
+    );
 
     return {};
   }
@@ -241,7 +247,7 @@ async function engineFilter(pack, engine) {
   if (typeof engine !== "string") {
     logger.generic(5, "engineFilter returning non-string pack.", {
       type: "object",
-      obj: pack
+      obj: pack,
     });
     return pack;
   }
@@ -252,7 +258,7 @@ async function engineFilter(pack, engine) {
   if (engSv === null) {
     logger.generic(5, "engineFilter returning non-valid Engine semverArray", {
       type: "object",
-      obj: engSv
+      obj: engSv,
     });
     return pack;
   }
@@ -506,14 +512,28 @@ class StateStore {
    * the given state. And `ok` is false otherwise.
    */
   getState(ip, state) {
-    logger.generic(4, `StateStore.getState() Called with IP: ${ip} - State: ${state}`);
-    logger.generic(6, `StateStore.getState(): HashMap Report - HashMap Size: ${Object.keys(this.hashmap).length}`);
-    
+    logger.generic(
+      4,
+      `StateStore.getState() Called with IP: ${ip} - State: ${state}`
+    );
+    logger.generic(
+      6,
+      `StateStore.getState(): HashMap Report - HashMap Size: ${
+        Object.keys(this.hashmap).length
+      }`
+    );
+
     if (this.hashmap[ip] == state) {
-      logger.generic(6, `StateStore.getState() Successfully Returning for IP: ${ip} - State: ${state}`);
+      logger.generic(
+        6,
+        `StateStore.getState() Successfully Returning for IP: ${ip} - State: ${state}`
+      );
       return { ok: true, content: this.hashmap[ip] };
     } else {
-      logger.generic(3, `StateStore.getState() Fail Returning for IP: ${ip} - State: ${state}`);
+      logger.generic(
+        3,
+        `StateStore.getState() Fail Returning for IP: ${ip} - State: ${state}`
+      );
       return {
         ok: false,
         short: "Not Found",
@@ -534,10 +554,14 @@ class StateStore {
       logger.generic(6, `StateStore.setState() Called with IP: ${ip}`);
       crypto.generateKey("aes", { length: 128 }, (err, key) => {
         if (err) {
-          logger.generic(2, "StateStore.setState() crypto.generateKey() Failed!", {
-            type: "error",
-            err: err
-          });
+          logger.generic(
+            2,
+            "StateStore.setState() crypto.generateKey() Failed!",
+            {
+              type: "error",
+              err: err,
+            }
+          );
           reject({
             ok: false,
             short: "Server Error",
@@ -546,7 +570,10 @@ class StateStore {
         }
         let state = key.export().toString("hex");
         this.hashmap[ip] = state;
-        logger.generic(5, "StateStore.setState() Successfully added IP and State to Hashmap");
+        logger.generic(
+          5,
+          "StateStore.setState() Successfully added IP and State to Hashmap"
+        );
         resolve({ ok: true, content: state });
       });
     });
