@@ -1086,7 +1086,6 @@ A helper for any functions that are agnostic in handlers.
 
 * [utils](#module_utils)
     * [~StateStore](#module_utils..StateStore)
-        * [new StateStore()](#new_module_utils..StateStore_new)
     * [~isPackageNameBanned(name)](#module_utils..isPackageNameBanned) ⇒ <code>boolean</code>
     * [~constructPackageObjectFull(pack)](#module_utils..constructPackageObjectFull) ⇒ <code>object</code>
     * [~constructPackageObjectShort(pack)](#module_utils..constructPackageObjectShort) ⇒ <code>object</code>
@@ -1097,18 +1096,17 @@ A helper for any functions that are agnostic in handlers.
     * [~semverGt(a1, a2)](#module_utils..semverGt) ⇒ <code>boolean</code>
     * [~semverLt(a1, a2)](#module_utils..semverLt) ⇒ <code>boolean</code>
     * [~semverEq(a1, a2)](#module_utils..semverEq) ⇒ <code>boolean</code>
+    * [~getState(ip, state)](#module_utils..getState) ⇒ <code>object</code>
+    * [~setState(ip)](#module_utils..setState) ⇒ <code>object</code>
 
 <a name="module_utils..StateStore"></a>
 
 ### utils~StateStore
-**Kind**: inner class of [<code>utils</code>](#module_utils)  
-<a name="new_module_utils..StateStore_new"></a>
-
-#### new StateStore()
 This simple state store acts as a hash map, allowing authentication request
 to quickly add a new state related to an IP, and retrieve it later on.
 These states are used during the authentication flow to help ensure against malicious activity.
 
+**Kind**: inner class of [<code>utils</code>](#module_utils)  
 <a name="module_utils..isPackageNameBanned"></a>
 
 ### utils~isPackageNameBanned(name) ⇒ <code>boolean</code>
@@ -1215,6 +1213,16 @@ This can also be used to check for semver valitidy. If it's not a semver, null i
 | --- | --- |
 | semver | <code>string</code> | 
 
+**Example** *(Valid Semver Passed)*  
+```js
+// returns ["1", "2", "3" ]
+semverArray("1.2.3");
+```
+**Example** *(Invalid Semver Passed)*  
+```js
+// returns null
+semverArray("1.Hello.World");
+```
 <a name="module_utils..semverGt"></a>
 
 ### utils~semverGt(a1, a2) ⇒ <code>boolean</code>
@@ -1227,8 +1235,8 @@ Should be always executed after running semverArray.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| a1 | <code>array</code> | First semver as array |
-| a2 | <code>array</code> | Second semver as array |
+| a1 | <code>array</code> | First semver as array of strings. |
+| a2 | <code>array</code> | Second semver as array of string. |
 
 <a name="module_utils..semverLt"></a>
 
@@ -1242,8 +1250,8 @@ Should be always executed after running semverArray.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| a1 | <code>array</code> | First semver as array |
-| a2 | <code>array</code> | Second semver as array |
+| a1 | <code>array</code> | First semver as array of strings. |
+| a2 | <code>array</code> | Second semver as array of strings. |
 
 <a name="module_utils..semverEq"></a>
 
@@ -1259,6 +1267,35 @@ Should be always executed after running semverArray.
 | --- | --- | --- |
 | a1 | <code>array</code> | First semver as array |
 | a2 | <code>array</code> | Second semver as array |
+
+<a name="module_utils..getState"></a>
+
+### utils~getState(ip, state) ⇒ <code>object</code>
+`getState` of `StateStore` checks if the given IP in the hashmap matches
+the given IP and given State in the StateStore.
+
+**Kind**: inner method of [<code>utils</code>](#module_utils)  
+**Returns**: <code>object</code> - A Server Status Object, where `ok` is true if the IP corresponds to
+the given state. And `ok` is false otherwise.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| ip | <code>string</code> | The IP Address to check with. |
+| state | <code>string</code> | The State to check with. |
+
+<a name="module_utils..setState"></a>
+
+### utils~setState(ip) ⇒ <code>object</code>
+A Promise that inputs the given IP into the StateStore, and returns
+it's generated State Hash.
+
+**Kind**: inner method of [<code>utils</code>](#module_utils)  
+**Returns**: <code>object</code> - A Server Status Object where if `ok` is true, `content` contains
+the generated state.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| ip | <code>string</code> | The IP to enter into the State Store. |
 
 <a name="module_common_handler"></a>
 

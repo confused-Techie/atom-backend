@@ -470,14 +470,14 @@ class StateStore {
     // But in this case it'll currently be hard coded
   }
   /**
-    * @function getState
-    * @desc `getState` of `StateStore` checks if the given IP in the hashmap matches
-    * the given IP and given State in the StateStore.
-    * @param {string} ip - The IP Address to check with.
-    * @param {string} state - The State to check with.
-    * @returns {object} A Server Status Object, where `ok` is true if the IP corresponds to
-    * the given state. And `ok` is false otherwise.
-    */
+   * @function getState
+   * @desc `getState` of `StateStore` checks if the given IP in the hashmap matches
+   * the given IP and given State in the StateStore.
+   * @param {string} ip - The IP Address to check with.
+   * @param {string} state - The State to check with.
+   * @returns {object} A Server Status Object, where `ok` is true if the IP corresponds to
+   * the given state. And `ok` is false otherwise.
+   */
   getState(ip, state) {
     if (this.hashmap[ip] == state) {
       return { ok: true, content: this.hashmap[ip] };
@@ -490,13 +490,13 @@ class StateStore {
     }
   }
   /**
-    * @function setState
-    * @desc A Promise that inputs the given IP into the StateStore, and returns
-    * it's generated State Hash.
-    * @param {string} ip - The IP to enter into the State Store.
-    * @returns {object} A Server Status Object where if `ok` is true, `content` contains
-    * the generated state.
-    */
+   * @function setState
+   * @desc A Promise that inputs the given IP into the StateStore, and returns
+   * it's generated State Hash.
+   * @param {string} ip - The IP to enter into the State Store.
+   * @returns {object} A Server Status Object where if `ok` is true, `content` contains
+   * the generated state.
+   */
   setState(ip) {
     return new Promise((resolve, reject) => {
       crypto.generateKey("aes", { length: 128 }, (err, key) => {

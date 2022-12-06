@@ -130,19 +130,18 @@ describe("Tests against semverArray", () => {
     expect(res[1]).toEqual("4180");
     expect(res[2]).toEqual("2");
   });
-
 });
 
 describe("Tests against semverGt", () => {
   test("Returns True with Valid data", () => {
-    const gVer = [ "1", "0", "1" ];
-    const lVer = [ "1", "0", "0" ];
+    const gVer = ["1", "0", "1"];
+    const lVer = ["1", "0", "0"];
     const res = utils.semverGt(gVer, lVer);
     expect(res).toBeTruthy();
   });
   test("Returns False with Valid data", () => {
-    const ver1 = [ "1", "0", "0" ];
-    const ver2 = [ "1", "0", "1" ];
+    const ver1 = ["1", "0", "0"];
+    const ver2 = ["1", "0", "1"];
     const res = utils.semverGt(ver1, ver2);
     expect(res).toBeFalsy();
   });
