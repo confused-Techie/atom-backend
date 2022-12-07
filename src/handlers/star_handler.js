@@ -28,7 +28,10 @@ async function getStars(req, res) {
   let user = await auth.verifyAuth(params.auth);
 
   if (!user.ok) {
-    logger.generic(3, "getStars auth.verifyAuth() Not OK", { type: "object", obj: user });
+    logger.generic(3, "getStars auth.verifyAuth() Not OK", {
+      type: "object",
+      obj: user,
+    });
     await common.handleError(req, res, user);
     return;
   }
@@ -36,7 +39,10 @@ async function getStars(req, res) {
   let userStars = await database.getStarredPointersByUserID(user.content.id);
 
   if (!userStars.ok) {
-    logger.generic(3, "getStars database.getStarredPointersByUserID() Not OK", {type: "object", obj: userStars});
+    logger.generic(3, "getStars database.getStarredPointersByUserID() Not OK", {
+      type: "object",
+      obj: userStars,
+    });
     await common.handleError(req, res, userStars);
     return;
   }
@@ -54,7 +60,10 @@ async function getStars(req, res) {
   let packCol = await database.getPackageCollectionByID(userStars.content);
 
   if (!packCol.ok) {
-    logger.generic(3, "getStars database.getPackageCollectionByID() Not OK", {type: "object", obj: packCol});
+    logger.generic(3, "getStars database.getPackageCollectionByID() Not OK", {
+      type: "object",
+      obj: packCol,
+    });
     await common.handleError(req, res, packCol);
     return;
   }

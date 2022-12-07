@@ -16,7 +16,10 @@ const logger = require("./logger.js");
  */
 async function verifyAuth(token) {
   if (token === null || token === undefined) {
-    logger.generic(5, "auth.verifyAuth() Returning 'Bad Auth' due to null|undefined token");
+    logger.generic(
+      5,
+      "auth.verifyAuth() Returning 'Bad Auth' due to null|undefined token"
+    );
 
     return { ok: false, short: "Bad Auth", content: "User Token not valid" };
   }
@@ -65,7 +68,10 @@ async function verifyAuth(token) {
     }
 
     if (user_data.status !== 200) {
-      logger.generic(3, `auth.verifyAuth() API Call returned: ${user_data.status}`);
+      logger.generic(
+        3,
+        `auth.verifyAuth() API Call returned: ${user_data.status}`
+      );
       switch (user_data.status) {
         case 403:
         case 401:
@@ -74,7 +80,11 @@ async function verifyAuth(token) {
           return { ok: false, short: "Bad Auth", content: user_data };
           break;
         default:
-          logger.generic(3, "auth.verifyAuth() API Call Returned Uncaught Status", { type: "object", obj: user_data});
+          logger.generic(
+            3,
+            "auth.verifyAuth() API Call Returned Uncaught Status",
+            { type: "object", obj: user_data }
+          );
 
           return { ok: false, short: "Server Error", content: user_data };
       }
@@ -102,13 +112,19 @@ async function verifyAuth(token) {
       data: db_user.content.data,
     };
 
-    logger.generic(4, `auth.verifyAuth() Returning Authenticated User: ${auth_user_object.username}`);
+    logger.generic(
+      4,
+      `auth.verifyAuth() Returning Authenticated User: ${auth_user_object.username}`
+    );
     return {
       ok: true,
       content: auth_user_object,
     };
   } catch (err) {
-    logger.generic(3, "auth.verifyAuth() Caught an error", { type: "error", err: err });
+    logger.generic(3, "auth.verifyAuth() Caught an error", {
+      type: "error",
+      err: err,
+    });
     return { ok: false, short: "Server Error", content: err };
   }
 }
