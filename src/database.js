@@ -816,7 +816,8 @@ async function removePackageVersion(packName, semVer) {
       // just pick the first one not equal to semVer
       let highestVersionId = null;
       for (const v of getVersions) {
-        if (v.id === versionId) { // Skip the removed version
+        if (v.id === versionId) {
+          // Skip the removed version
           continue;
         }
         highestVersionId = v.id;
