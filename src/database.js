@@ -186,7 +186,7 @@ async function insertNewPackageVersion(packJSON) {
 
       const higherSemver = utils.semverGt(
         utils.semverArray(packJSON.version),
-        utils.semverArray(latestVersion[0].semver),
+        utils.semverArray(latestVersion[0].semver)
       );
       if (!higherSemver) {
         throw `Cannot publish a new version with semver lower than the current latest one.`;
@@ -1149,7 +1149,8 @@ async function updateDeleteStar(user, pack) {
     }
 
     // if the return matches our input we know it was successful
-    return user.id == commandUnstar[0].userid && pointer == commandUnstar[0].package
+    return user.id == commandUnstar[0].userid &&
+      pointer == commandUnstar[0].package
       ? {
           ok: true,
           content: `Successfully Unstarred ${pointer} with ${user.id}`,

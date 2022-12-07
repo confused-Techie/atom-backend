@@ -74,7 +74,8 @@ async function constructPackageObjectFull(pack) {
   newPack.name = pack.name;
   newPack.downloads = pack.downloads;
   newPack.stargazers_count =
-    parseInt(pack.stargazers_count, 10) + parseInt(pack.original_stargazers, 10);
+    parseInt(pack.stargazers_count, 10) +
+    parseInt(pack.original_stargazers, 10);
   newPack.versions = parseVersions(pack.versions);
   newPack.releases = {
     latest: findLatestVersion(pack.versions),
