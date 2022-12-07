@@ -106,10 +106,12 @@ async function insertNewPackage(pack) {
         throw `Cannot insert ${pack.name} in names table`;
       }
 
-      // Populate versions table
+      // git.createPackage() executed before this function ensures
+      // the latest version is correctly selected.
       const latest = pack.releases.latest;
-      const pv = pack.versions;
 
+      // Populate versions table
+      const pv = pack.versions;
       for (const ver of Object.keys(pv)) {
         const status = ver === latest ? "latest" : "published";
 
