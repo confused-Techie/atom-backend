@@ -1,6 +1,7 @@
 const database = require("./database.js");
 const superagent = require("superagent");
 const { GH_USERAGENT } = require("./config.js").getConfig();
+const logger = require("./logger.js");
 
 /**
  * @async
@@ -15,6 +16,8 @@ const { GH_USERAGENT } = require("./config.js").getConfig();
  */
 async function verifyAuth(token) {
   if (token === null || token === undefined) {
+    logger.generic(5, "auth.verifyAuth() Returning 'Bad Auth' due to null|undefined token");
+
     return { ok: false, short: "Bad Auth", content: "User Token not valid" };
   }
 
@@ -23,7 +26,7 @@ async function verifyAuth(token) {
 
     if (process.env.PULSAR_STATUS == "dev") {
       // Server is in developer mode.
-      console.log("auth.js is returning Dev Only Permissions");
+      logger.generic(3, "auth.verifyAuth() is returning Dev Only Permissions!");
 
       switch (token) {
         case "valid-token":
@@ -45,7 +48,7 @@ async function verifyAuth(token) {
           };
           break;
         default:
-          console.log("No valid dev user found!");
+          logger.generic(3, "No Valid dev user found!");
           user_data = {
             status: 401,
             body: { message: "No Valid dev user found!" },
@@ -53,6 +56,8 @@ async function verifyAuth(token) {
           break;
       }
     } else {
+      logger.generic(6, "auth.verifyAuth() Called in Production instance");
+
       user_data = await superagent
         .get("https://api.github.com/user")
         .set({ Authorization: `Bearer ${token}` })
@@ -60,13 +65,17 @@ async function verifyAuth(token) {
     }
 
     if (user_data.status !== 200) {
+      logger.generic(3, `auth.verifyAuth() API Call returned: ${user_data.status}`);
       switch (user_data.status) {
         case 403:
         case 401:
           // When the user provides bad authentication, lets tell them it's bad auth.
+          logger.generic(6, "auth.verifyAuth() API Call Returning Bad Auth");
           return { ok: false, short: "Bad Auth", content: user_data };
           break;
         default:
+          logger.generic(3, "auth.verifyAuth() API Call Returned Uncaught Status", { type: "object", obj: user_data});
+
           return { ok: false, short: "Server Error", content: user_data };
       }
     }
@@ -93,12 +102,13 @@ async function verifyAuth(token) {
       data: db_user.content.data,
     };
 
-    console.log(auth_user_object);
+    logger.generic(4, `auth.verifyAuth() Returning Authenticated User: ${auth_user_object.username}`);
     return {
       ok: true,
       content: auth_user_object,
     };
   } catch (err) {
+    logger.generic(3, "auth.verifyAuth() Caught an error", { type: "error", err: err });
     return { ok: false, short: "Server Error", content: err };
   }
 }

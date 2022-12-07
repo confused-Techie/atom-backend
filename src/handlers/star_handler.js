@@ -28,6 +28,7 @@ async function getStars(req, res) {
   let user = await auth.verifyAuth(params.auth);
 
   if (!user.ok) {
+    logger.generic(3, "getStars auth.verifyAuth() Not OK", { type: "object", obj: user });
     await common.handleError(req, res, user);
     return;
   }
@@ -35,11 +36,13 @@ async function getStars(req, res) {
   let userStars = await database.getStarredPointersByUserID(user.content.id);
 
   if (!userStars.ok) {
+    logger.generic(3, "getStars database.getStarredPointersByUserID() Not OK", {type: "object", obj: userStars});
     await common.handleError(req, res, userStars);
     return;
   }
 
   if (userStars.content.length === 0) {
+    logger.generic(6, "getStars userStars Has Length of 0. Returning empty");
     // If we have a return with no items, means the user has no stars.
     // And this will error out later when attempting to collect the data for the stars.
     // So we will reutrn here
@@ -51,6 +54,7 @@ async function getStars(req, res) {
   let packCol = await database.getPackageCollectionByID(userStars.content);
 
   if (!packCol.ok) {
+    logger.generic(3, "getStars database.getPackageCollectionByID() Not OK", {type: "object", obj: packCol});
     await common.handleError(req, res, packCol);
     return;
   }
