@@ -139,10 +139,61 @@ describe("Tests against semverGt", () => {
     const res = utils.semverGt(gVer, lVer);
     expect(res).toBeTruthy();
   });
+  test("Returns True with Valid Data first position", () => {
+    const res = utils.semverGt(["2", "0", "0"], ["1", "0", "0"]);
+    expect(res).toBeTruthy();
+  });
+  test("Returns True with Valid Data second position", () => {
+    const res = utils.semverGt(["1", "2", "0"], ["1", "1", "0"]);
+    expect(res).toBeTruthy();
+  });
+  test("Returns True with Valid Data third position", () => {
+    const res = utils.semverGt(["1", "1", "2"], ["1", "1", "1"]);
+    expect(res).toBeTruthy();
+  });
+  test("Returns false with Valid Data first position", () => {
+    const res = utils.semverGt(["1", "0", "0"], ["2", "0", "0"]);
+    expect(res).toBeFalsy();
+  });
+  test("Returns false with Valid Data second position", () => {
+    const res = utils.semverGt(["1", "1", "0"], ["1", "2", "0"]);
+    expect(res).toBeFalsy();
+  });
+  test("Returns false with Valid Data thrid position", () => {
+    const res = utils.semverGt(["1", "1", "1"], ["1", "1", "2"]);
+    expect(res).toBeFalsy();
+  });
   test("Returns False with Valid data", () => {
     const ver1 = ["1", "0", "0"];
     const ver2 = ["1", "0", "1"];
     const res = utils.semverGt(ver1, ver2);
+    expect(res).toBeFalsy();
+  });
+});
+
+describe("Tests against semverLt", () => {
+  test("Returns true with Valid Data first position", () => {
+    const res = utils.semverLt(["0", "0", "9"], ["1", "0", "0"]);
+    expect(res).toBeTruthy();
+  });
+  test("Returns true with Valid Data second position", () => {
+    const res = utils.semverLt(["1", "1", "1"], ["1", "2", "1"]);
+    expect(res).toBeTruthy();
+  });
+  test("Returns true with Valid Data third position", () => {
+    const res = utils.semverLt(["1", "1", "1"], ["1", "1", "2"]);
+    expect(res).toBeTruthy();
+  });
+  test("Returns false with Valid Data first position", () => {
+    const res = utils.semverLt(["2", "0", "0"], ["1", "0", "0"]);
+    expect(res).toBeFalsy();
+  });
+  test("Returns false with Valid Data second position", () => {
+    const res = utils.semverLt(["1", "2", "1"], ["1", "1", "0"]);
+    expect(res).toBeFalsy();
+  });
+  test("Returns false with Valid Data third position", () => {
+    const res = utils.semverLt(["1", "1", "2"], ["1", "1", "1"]);
     expect(res).toBeFalsy();
   });
 });

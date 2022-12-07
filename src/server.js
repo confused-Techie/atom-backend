@@ -14,7 +14,7 @@ if (process.env.PULSAR_STATUS == "dev") {
 }
 
 const serve = app.listen(port, () => {
-  logger.infoLog(`Pulsar Server Listening on port ${port}`);
+  logger.generic(4, `Pulsar Server Listening on port ${port}`);
 });
 
 process.on("SIGTERM", async () => {
