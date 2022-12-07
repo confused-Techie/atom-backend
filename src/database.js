@@ -741,11 +741,12 @@ async function removePackageVersion(packName, semVer) {
 
       const pointer = packID.content.pointer;
 
-      // Retrieve all non-removed versions
+      // Retrieve all non-removed versions orderd from latest to older
       const getVersions = await sqlStorage`
         SELECT id, semver, status
         FROM versions
-        WHERE package = ${pointer} AND status != 'removed';
+        WHERE package = ${pointer} AND status != 'removed'
+        ORDER BY semver_v1 DESC, semver_v2 DESC, semver_v3 DESC;
       `;
 
       const versionCount = getVersions.count;
@@ -809,31 +810,14 @@ async function removePackageVersion(packName, semVer) {
 
       // We have removed the version with the "latest" status, so now we have to select
       // a new version between the remaining ones which will obtain "latest" status.
-      // We use the utils in utils.js to select the highest semver.
+      // No need to compare versions here. We have an array ordered from latest to older,
+      // just pick the first one not equal to semVer
       let highestVersionId = null;
-      let latestSemver = null;
-      let maxSemVer = null;
       for (const v of getVersions) {
-        if (v.id === versionId) {
-          // Skip the removed version
+        if (v.id === versionId) { // Skip the removed version
           continue;
         }
-
-        if (maxSemVer === null) {
-          // Initialize variables
-          latestSemver = v.semver;
-          maxSemVer = utils.semverArray(latestSemver);
-          highestVersionId = v.id;
-          continue;
-        }
-
-        // Compare versions
-        const sva = utils.semverArray(v.semver);
-        if (utils.semverGt(sva, maxSemVer)) {
-          latestSemver = v.semver;
-          maxSemVer = sva;
-          highestVersionId = v.id;
-        }
+        highestVersionId = v.id;
       }
 
       if (highestVersionId === null) {
