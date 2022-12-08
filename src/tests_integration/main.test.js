@@ -121,23 +121,33 @@ describe("Get /api/packages", () => {
     expect(res).toHaveHTTPCode(404);
   });
   test("Should respond with an array of packages sorted by creation date.", async () => {
-    const res = await request(app).get("/api/packages?page=2&sort=created_at&direction=asc");
+    const res = await request(app).get(
+      "/api/packages?page=2&sort=created_at&direction=asc"
+    );
     expect(res.body).toBeArray();
   });
   test("Should return valid Status Code", async () => {
-    const res = await request(app).get("/api/packages?page=2&sort=created_at&direction=asc");
+    const res = await request(app).get(
+      "/api/packages?page=2&sort=created_at&direction=asc"
+    );
     expect(res).toHaveHTTPCode(200);
   });
   test("Should respond with an array of packages sorted by stars.", async () => {
-    const res = await request(app).get("/api/packages?page=3&sort=stars&direction=desc");
+    const res = await request(app).get(
+      "/api/packages?page=3&sort=stars&direction=desc"
+    );
     expect(res.body).toBeArray();
   });
   test("Should return valid Status Code", async () => {
-    const res = await request(app).get("/api/packages?page=3&sort=stars&direction=desc");
+    const res = await request(app).get(
+      "/api/packages?page=3&sort=stars&direction=desc"
+    );
     expect(res).toHaveHTTPCode(200);
   });
   test("Should return valid Status Code on invalid parameters", async () => {
-    const res = await request(app).get("/api/packages?page=nv&sort=nv&direction=nv");
+    const res = await request(app).get(
+      "/api/packages?page=nv&sort=nv&direction=nv"
+    );
     expect(res).toHaveHTTPCode(200);
   });
 });
