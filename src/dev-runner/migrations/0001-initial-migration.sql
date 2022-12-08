@@ -14,12 +14,16 @@ CREATE TABLE packages (
   data JSONB
 );
 
+ALTER TABLE packages ADD CONSTRAINT lowercase_names CHECK (name = LOWER(name));
+
 -- Create names Table
 
 CREATE TABLE names (
   name VARCHAR(128) NOT NULL PRIMARY KEY,
   pointer UUID NOT NULL REFERENCES packages(pointer)
 );
+
+ALTER TABLE names ADD CONSTRAINT lowercase_names CHECK (name = LOWER(name));
 
 -- Create users Table
 
@@ -53,6 +57,17 @@ CREATE TABLE versions (
     engine JSONB NOT NULL,
     meta JSONB
 );
+
+ALTER TABLE versions ADD CONSTRAINT unique_pack_version UNIQUE(package, semver);
+
+ALTER TABLE versions ADD CONSTRAINT semver2_format CHECK (semver ~ '^\d+\.\d+\.\d+');
+
+ALTER TABLE versions ADD COLUMN semver_v1 INTEGER
+    GENERATED ALWAYS AS CAST ((regexp_match(semver, '^(\d+)\.(\d+)\.(\d+)'))[1] AS INTEGER) STORED;
+ALTER TABLE versions ADD COLUMN semver_v2 INTEGER
+    GENERATED ALWAYS AS (CAST ((regexp_match(semver, '^(\d+)\.(\d+)\.(\d+)'))[2] AS INTEGER)) STORED;
+ALTER TABLE versions ADD COLUMN semver_v3 INTEGER
+    GENERATED ALWAYS AS (CAST ((regexp_match(semver, '^(\d+)\.(\d+)\.(\d+)'))[3] AS INTEGER)) STORED;
 
 ------------------------------------------------------------------------------
 
