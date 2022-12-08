@@ -191,7 +191,7 @@ async function insertNewPackageVersion(packJSON) {
         utils.semverArray(latestVersion[0].semver)
       );
       if (!higherSemver) {
-        throw `Cannot publish a new version with semver lower than the current latest one.`;
+        throw `Cannot publish a new version with semver lower or equal than the current latest one.`;
       }
 
       // The new version can be published. First switch the current "latest" to "published".
@@ -217,7 +217,7 @@ async function insertNewPackageVersion(packJSON) {
       `;
 
       if (addVer.count === 0) {
-        throw `Unable to create new version: ${packJSON.name}`;
+        throw `Unable to create a new version for ${packJSON.name}`;
       }
 
       return {
