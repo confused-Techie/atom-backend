@@ -850,7 +850,7 @@ async function removePackageVersion(packName, semVer) {
       const msg =
         typeof err === "string"
           ? err
-          : `A generic error occurred while inserting ${pack.name} package`;
+          : `A generic error occurred while inserting ${packName} package`;
 
       return { ok: false, content: msg, short: "Server Error" };
     });
