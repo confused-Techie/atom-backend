@@ -743,7 +743,7 @@ async function removePackageVersion(packName, semVer) {
 
       const pointer = packID.content.pointer;
 
-      // Retrieve all non-removed versions orderd from latest to older
+      // Retrieve all non-removed versions sorted from latest to older
       const getVersions = await sqlStorage`
         SELECT id, semver, status
         FROM versions
@@ -814,16 +814,18 @@ async function removePackageVersion(packName, semVer) {
       // a new version between the remaining ones which will obtain "latest" status.
       // No need to compare versions here. We have an array ordered from latest to older,
       // just pick the first one not equal to semVer
-      let highestVersionId = null;
+      let latestVersionId = null;
+      let latestSemver = null;
       for (const v of getVersions) {
         if (v.id === versionId) {
           // Skip the removed version
           continue;
         }
-        highestVersionId = v.id;
+        latestVersionId = v.id;
+        latestSemver = v.semver;
       }
 
-      if (highestVersionId === null) {
+      if (latestVersionId === null) {
         throw `An error occurred while selecting the highest versions of ${packName}`;
       }
 
@@ -831,7 +833,7 @@ async function removePackageVersion(packName, semVer) {
       const commandLatest = await sqlStorage`
         UPDATE versions
         SET status = 'latest'
-        WHERE id = ${highestVersionId}
+        WHERE id = ${latestVersionId}
         RETURNING *;
       `;
 
