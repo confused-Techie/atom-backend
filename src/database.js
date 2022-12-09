@@ -370,12 +370,15 @@ async function getPackageByName(name, user = false) {
           user ? sqlStorage`` : sqlStorage`p.pointer,`
         } p.name, p.created, p.updated, p.creation_method,
         p.downloads, p.stargazers_count, p.original_stargazers, p.data,
-        JSONB_AGG(JSON_BUILD_OBJECT(
-          ${
-            user ? sqlStorage`` : sqlStorage`'id', v.id, 'package', v.package,`
-          } 'status', v.status, 'semver', v.semver,
-          'license', v.license, 'engine', v.engine, 'meta', v.meta
-        )) AS versions
+        JSONB_AGG(
+          JSON_BUILD_OBJECT(
+            ${
+              user ? sqlStorage`` : sqlStorage`'id', v.id, 'package', v.package,`
+            } 'status', v.status, 'semver', v.semver,
+            'license', v.license, 'engine', v.engine, 'meta', v.meta
+          )
+          ORDER BY v.semver_v1 DESC, v.semver_v2 DESC, v.semver_v3 DESC
+        ) AS versions
       FROM packages p
         JOIN versions v ON (p.pointer = v.package) AND (v.status != 'removed')
         JOIN names n ON (n.pointer = p.pointer)

@@ -194,15 +194,17 @@ describe("Package Lifecycle Tests", () => {
     );
 
     // === Let's see if this new version is the latest
+    // The versions are sorted by latest to older, so
+    // index 0 is the latest, index 1 is the older.
     const getAfterVer = await database.getPackageByName(NEW_NAME);
     expect(getAfterVer.ok).toBeTruthy();
     expect(getAfterVer.content.versions.length).toEqual(2);
-    expect(getAfterVer.content.versions[1].semver).toEqual(v1_0_1.version);
-    expect(getAfterVer.content.versions[1].status).toEqual("latest");
-    expect(getAfterVer.content.versions[1].license).toEqual(v1_0_1.license);
-    expect(getAfterVer.content.versions[1].meta.name).toEqual(v1_0_1.name);
-    expect(getAfterVer.content.versions[1].meta.version).toEqual(v1_0_1.version);
-    expect(getAfterVer.content.versions[0].semver).toEqual(pack.createPack.metadata.version);
+    expect(getAfterVer.content.versions[0].semver).toEqual(v1_0_1.version);
+    expect(getAfterVer.content.versions[0].status).toEqual("latest");
+    expect(getAfterVer.content.versions[0].license).toEqual(v1_0_1.license);
+    expect(getAfterVer.content.versions[0].meta.name).toEqual(v1_0_1.name);
+    expect(getAfterVer.content.versions[0].meta.version).toEqual(v1_0_1.version);
+    expect(getAfterVer.content.versions[1].semver).toEqual(pack.createPack.metadata.version);
 
     // === Can we publish a duplicate or a lower version?
     const dupVer = await database.insertNewPackageVersion(v1_0_1);
