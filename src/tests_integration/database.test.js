@@ -135,7 +135,7 @@ describe("Package Lifecycle Tests", () => {
     );
     expect(newName.ok).toBeTruthy();
     expect(newName.content).toEqual(
-      "Successfully inserted package-a-lifetime-rename."
+      `Successfully inserted ${NEW_NAME}.`
     );
 
     // === Can we get the package by it's new name?
@@ -156,6 +156,19 @@ describe("Package Lifecycle Tests", () => {
     expect(
       getByOldName.content.updated >= getAfterPublish.content.updated
     ).toBeTruthy();
+
+    // === Can we rename with an already used name?
+    // This should fail because there's a unique constraint on names, not only
+    // for the single package, but the entire table, i.e. two packages cannot
+    // have the same name.
+    const renameToExistingName = await database.insertNewPackageName(
+      pack.createPack.name,
+      NEW_NAME
+    );
+    expect(renameToExistingName.ok).toBeFalsy();
+    expect(renameToExistingName.content).toEqual(
+      `Unable to add the new name: ${pack.createPack.name} is already used.`
+    );
 
     // === Now let's try to delete the only version available.
     // This should fail because the package needs to have at least

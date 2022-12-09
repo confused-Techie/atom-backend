@@ -265,27 +265,35 @@ async function insertNewPackageName(newName, oldName) {
 
       // Before inserting the new name, we try to update it into the `packages` table
       // since we want that column to contain the current name.
-      const updateNewName = await sqlTrans`
+      try {
+        const updateNewName = await sqlTrans`
         UPDATE packages
         SET name = ${newName}
         WHERE pointer = ${pointer}
         RETURNING *;
-      `;
+        `;
 
-      if (updateNewName.count === 0) {
-        throw `Unable to update the package name. ${newName} is already used.`;
+        if (updateNewName.count === 0) {
+          throw `Unable to update the package name.`;
+        }
+      } catch (e) {
+        throw `Unable to update the package name. ${newName} is already used by another package.`;
       }
 
       // Now we can finally insert the new name inside the `names` table.
-      const newInsertedName = await sqlTrans`
+      try {
+        const newInsertedName = await sqlTrans`
         INSERT INTO names
         (name, pointer) VALUES
         (${newName}, ${pointer})
         RETURNING *;
-      `;
+        `;
 
-      if (newInsertedName.count === 0) {
-        throw `Unable to add the new name: ${newName}`;
+        if (newInsertedName.count === 0) {
+          throw `Unable to add the new name: ${newName}`;
+        }
+      } catch (e) {
+        throw `Unable to add the new name: ${newName} is already used.`;
       }
 
       return { ok: true, content: `Successfully inserted ${newName}.` };
