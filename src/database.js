@@ -222,7 +222,7 @@ async function insertNewPackageVersion(packJSON) {
         }
       } catch (e) {
         // This occurs when the (package, semver) unique constraint is violated.
-        throw `Not allowed to publish a version previously deleted for ${packJSON.name}`
+        throw `Not allowed to publish a version previously deleted for ${packJSON.name}`;
       }
 
       return {

@@ -194,7 +194,7 @@ describe("Package Lifecycle Tests", () => {
     );
 
     // === Let's see if this new version is the latest
-    // The versions are sorted by latest to older, so
+    // The versions are sorted from latest to oldest, so
     // index 0 is the latest, index 1 is the older.
     const getAfterVer = await database.getPackageByName(NEW_NAME);
     expect(getAfterVer.ok).toBeTruthy();
