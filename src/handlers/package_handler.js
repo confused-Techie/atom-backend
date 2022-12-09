@@ -32,7 +32,7 @@ const url = require("url");
  * @property {http_endpoint} - /api/packages
  */
 async function getPackages(req, res) {
-  let params = {
+  const params = {
     page: query.page(req),
     sort: query.sort(req),
     direction: query.dir(req),
@@ -51,7 +51,7 @@ async function getPackages(req, res) {
 
   packages = await utils.constructPackageObjectShort(packages.content);
 
-  let totalPages = await database.getTotalPackageEstimate();
+  const totalPages = await database.getTotalPackageEstimate();
 
   if (!totalPages.ok) {
     await common.handleError(req, res, totalPages, 1002);
@@ -91,12 +91,12 @@ async function getPackages(req, res) {
  * @property {http_endpoint} - /api/packages
  */
 async function postPackages(req, res) {
-  let params = {
+  const params = {
     repository: query.repo(req),
     auth: query.auth(req),
   };
 
-  let user = await auth.verifyAuth(params.auth);
+  const user = await auth.verifyAuth(params.auth);
 
   // Check authentication.
   if (!user.ok) {
@@ -149,7 +149,7 @@ async function postPackages(req, res) {
   }
 
   // Now knowing they own the git repo, and it doesn't exist here, lets publish.
-  let newPack = await git.createPackage(params.repository, user.content);
+  const newPack = await git.createPackage(params.repository, user.content);
 
   if (!newPack.ok) {
     await common.handleError(req, res, newPack);
@@ -157,7 +157,7 @@ async function postPackages(req, res) {
   }
 
   // Now with valid package data, we can insert them into the DB.
-  let insertedNewPack = await database.insertNewPackage(newPack.content);
+  const insertedNewPack = await database.insertNewPackage(newPack.content);
 
   if (!insertedNewPack.ok) {
     await common.handleError(req, res, insertedNewPack);
@@ -167,7 +167,7 @@ async function postPackages(req, res) {
   // Finally we can return what was actually put into the database.
   // Retrieve the data from database.getPackageByName() and
   // convert it into Package Object Full format.
-  let newDbPack = await database.getPackageByName(repo, true);
+  const newDbPack = await database.getPackageByName(repo, true);
 
   if (!newDbPack.ok) {
     common.serverError(req, res, "Cannot retrieve new package from DB");
@@ -197,14 +197,14 @@ async function postPackages(req, res) {
 async function getPackagesFeatured(req, res) {
   // Returns Package Object Short array.
   // Supports engine query parameter.
-  let col = await database.getFeaturedPackages();
+  const col = await database.getFeaturedPackages();
 
   if (!col.ok) {
     await common.handleError(req, res, col, 1003);
     return;
   }
 
-  let newCol = await utils.constructPackageObjectShort(col.content);
+  const newCol = await utils.constructPackageObjectShort(col.content);
 
   res.status(200).json(newCol);
   logger.httpLog(req, res);
@@ -224,7 +224,7 @@ async function getPackagesFeatured(req, res) {
  * rather than simple search.
  */
 async function getPackagesSearch(req, res) {
-  let params = {
+  const params = {
     sort: query.sort(req, "relevance"),
     page: query.page(req),
     direction: query.dir(req),
@@ -302,7 +302,7 @@ async function getPackagesSearch(req, res) {
  * @property {http_endpoint} - /api/packages/:packageName
  */
 async function getPackagesDetails(req, res) {
-  let params = {
+  const params = {
     engine: query.engine(req.query.engine),
     name: query.packageName(req),
   };
@@ -335,19 +335,19 @@ async function getPackagesDetails(req, res) {
  * @property {http_endpoint} - /api/packages/:packageName
  */
 async function deletePackagesName(req, res) {
-  let params = {
+  const params = {
     auth: query.auth(req),
     packageName: query.packageName(req),
   };
 
-  let user = await auth.verifyAuth(params.auth);
+  const user = await auth.verifyAuth(params.auth);
 
   if (!user.ok) {
     await common.handleError(req, res, user, 1005);
     return;
   }
 
-  let gitowner = await git.ownership(user.content, params.packageName);
+  const gitowner = await git.ownership(user.content, params.packageName);
 
   if (!gitowner.ok) {
     await common.handleError(req, res, gitowner, 4001);
@@ -355,7 +355,7 @@ async function deletePackagesName(req, res) {
   }
 
   // Now they are logged in locally, and have permission over the GitHub repo.
-  let rm = await database.removePackageByName(params.packageName);
+  const rm = await database.removePackageByName(params.packageName);
 
   if (!rm.ok) {
     await common.handleError(req, res, rm, 1006);
@@ -376,12 +376,12 @@ async function deletePackagesName(req, res) {
  * @property {http_endpoint} - /api/packages/:packageName/star
  */
 async function postPackagesStar(req, res) {
-  let params = {
+  const params = {
     auth: query.auth(req),
     packageName: query.packageName(req),
   };
 
-  let user = await auth.verifyAuth(params.auth);
+  const user = await auth.verifyAuth(params.auth);
 
   if (!user.ok) {
     await common.handleError(req, res, user, 1008);
@@ -401,14 +401,14 @@ async function postPackagesStar(req, res) {
     return;
   }
 
-  let star = await database.updateStars(user.content, params.packageName);
+  const star = await database.updateStars(user.content, params.packageName);
 
   if (!star.ok) {
     await common.handleError(req, res, user, 1009);
     return;
   }
 
-  let updatePack = await database.updatePackageIncrementStarByName(
+  const updatePack = await database.updatePackageIncrementStarByName(
     params.packageName
   );
 
@@ -441,19 +441,19 @@ async function postPackagesStar(req, res) {
  * @property {http_endpoint} - /api/packages/:packageName/star
  */
 async function deletePackagesStar(req, res) {
-  let params = {
+  const params = {
     auth: query.auth(req),
     packageName: query.packageName(req),
   };
 
-  let user = await auth.verifyAuth(params.auth);
+  const user = await auth.verifyAuth(params.auth);
 
   if (!user.ok) {
     await common.handleError(req, res, user);
     return;
   }
 
-  let unstar = await database.updateDeleteStar(
+  const unstar = await database.updateDeleteStar(
     user.content,
     params.packageName
   );
@@ -463,7 +463,7 @@ async function deletePackagesStar(req, res) {
     return;
   }
 
-  let updatePack = await database.updatePackageDecrementStarByName(
+  const updatePack = await database.updatePackageDecrementStarByName(
     params.packageName
   );
 
@@ -488,25 +488,25 @@ async function deletePackagesStar(req, res) {
  * @property {http_endpoint} - /api/packages/:packageName/stargazers
  */
 async function getPackagesStargazers(req, res) {
-  let params = {
+  const params = {
     packageName: query.packageName(req),
   };
   // The following can't be executed in user mode because we need the pointer
-  let pack = await database.getPackageByName(params.packageName);
+  const pack = await database.getPackageByName(params.packageName);
 
   if (!pack.ok) {
     await common.handleError(req, res, pack);
     return;
   }
 
-  let stars = await database.getStarringUsersByPointer(pack.content);
+  const stars = await database.getStarringUsersByPointer(pack.content);
 
   if (!stars.ok) {
     await common.handleError(req, res, stars);
     return;
   }
 
-  let gazers = await database.getUserCollectionById(stars.content);
+  const gazers = await database.getUserCollectionById(stars.content);
 
   if (!gazers.ok) {
     await common.handleError(req, res, gazers);
@@ -528,7 +528,7 @@ async function getPackagesStargazers(req, res) {
  * @property {http_endpoint} - /api/packages/:packageName/versions
  */
 async function postPackagesVersion(req, res) {
-  let params = {
+  const params = {
     tag: query.tag(req),
     rename: query.rename(req),
     auth: query.auth(req),
@@ -542,7 +542,7 @@ async function postPackagesVersion(req, res) {
   // And if they are, we expect that `auth` is true. Because otherwise it will fail.
   // That's the methodology, the logic here just needs to catch up.
 
-  let user = await auth.verifyAuth(params.auth);
+  const user = await auth.verifyAuth(params.auth);
 
   if (!user.ok) {
     await common.handleError(req, res, user);
@@ -552,7 +552,7 @@ async function postPackagesVersion(req, res) {
   // To support a rename, we need to check if they have permissions over this packages new name.
   // Which means we have to check if they have ownership AFTER we collect it's data.
 
-  let packExists = await database.getPackageByName(params.packageName, true);
+  const packExists = await database.getPackageByName(params.packageName, true);
 
   if (!packExists.ok) {
     await common.handleError(req, res, packExists);
@@ -562,7 +562,7 @@ async function postPackagesVersion(req, res) {
   // Now it's important to note, that getPackageJSON was intended to be an internal function.
   // As such does not return a Server Status Object. This may change later, but for now,
   // we will expect `undefined` to not be success.
-  let packJSON = await git.getPackageJSON(
+  const packJSON = await git.getPackageJSON(
     `${user.content.username}/${packExists.name}`,
     user.content
   );
@@ -589,7 +589,7 @@ async function postPackagesVersion(req, res) {
   // Else we will continue, and trust the name provided from the package as being accurate.
   // And now we can ensure the user actually owns this repo, with our updated name.
 
-  let gitowner = await git.ownership(user.content, packJSON.name);
+  const gitowner = await git.ownership(user.content, packJSON.name);
 
   if (!gitowner.ok) {
     await common.handleError(req, res, gitowner);
@@ -601,7 +601,7 @@ async function postPackagesVersion(req, res) {
 
   if (packJSON.name !== params.packageName && params.rename) {
     // The flow for renaming the existing package.
-    let newName = await database.insertNewPackageName(
+    const newName = await database.insertNewPackageName(
       packJSON.name,
       params.packageName
     );
@@ -614,7 +614,7 @@ async function postPackagesVersion(req, res) {
 
   // Now add the new Version key.
 
-  let addVer = await database.insertNewPackageVersion(packJSON);
+  const addVer = await database.insertNewPackageVersion(packJSON);
 
   if (!addVer.ok) {
     await common.handleError(req, res, addVer);
@@ -635,7 +635,7 @@ async function postPackagesVersion(req, res) {
  * @property {http_endpoint} - /api/packages/:packageName/versions/:versionName
  */
 async function getPackagesVersion(req, res) {
-  let params = {
+  const params = {
     packageName: query.packageName(req),
     versionName: query.engine(req.params.versionName),
   };
@@ -647,7 +647,7 @@ async function getPackagesVersion(req, res) {
   }
   // Now we know the version is a valid semver.
 
-  let pack = await database.getPackageVersionByNameAndVersion(
+  const pack = await database.getPackageVersionByNameAndVersion(
     params.packageName,
     params.versionName
   );
@@ -657,7 +657,7 @@ async function getPackagesVersion(req, res) {
     return;
   }
 
-  let packRes = await utils.constructPackageObjectJSON(pack.content);
+  const packRes = await utils.constructPackageObjectJSON(pack.content);
 
   res.status(200).json(packRes);
   logger.httpLog(req, res);
@@ -674,7 +674,7 @@ async function getPackagesVersion(req, res) {
  * @property {http_endpoint} - /api/packages/:packageName/versions/:versionName/tarball
  */
 async function getPackagesVersionTarball(req, res) {
-  let params = {
+  const params = {
     packageName: query.packageName(req),
     versionName: query.engine(req.params.versionName),
   };
@@ -690,7 +690,7 @@ async function getPackagesVersionTarball(req, res) {
   }
 
   // first lets get the package
-  let pack = await database.getPackageVersionByNameAndVersion(
+  const pack = await database.getPackageVersionByNameAndVersion(
     params.packageName,
     params.versionName
   );
@@ -700,7 +700,7 @@ async function getPackagesVersionTarball(req, res) {
     return;
   }
 
-  let save = await database.updatePackageIncrementDownloadByName(
+  const save = await database.updatePackageIncrementDownloadByName(
     params.packageName
   );
 
@@ -754,21 +754,21 @@ async function getPackagesVersionTarball(req, res) {
  * @property {http_endpoint} - /api/packages/:packageName/versions/:versionName
  */
 async function deletePackageVersion(req, res) {
-  let params = {
+  const params = {
     auth: query.auth(req),
     packageName: query.packageName(req),
     versionName: query.engine(req.params.versionName),
   };
 
   // Verify the user has local and remote permissions
-  let user = await auth.verifyAuth(params.auth);
+  const user = await auth.verifyAuth(params.auth);
 
   if (!user.ok) {
     await common.handleError(req, res, user);
     return;
   }
 
-  let gitowner = await git.ownership(user.content, params.packageName);
+  const gitowner = await git.ownership(user.content, params.packageName);
 
   if (!gitowner.ok) {
     await common.handleError(req, res, gitowner);
@@ -776,7 +776,7 @@ async function deletePackageVersion(req, res) {
   }
 
   // Lets also first check to make sure the package exists.
-  let packageExists = await database.getPackageByName(params.packageName, true);
+  const packageExists = await database.getPackageByName(params.packageName, true);
 
   if (!packageExists.ok) {
     await common.handleError(req, res, packageExists);
@@ -790,7 +790,7 @@ async function deletePackageVersion(req, res) {
   }
 
   // Mark the specified version for deletion, if version is valid
-  let removeVersion = await database.removePackageVersion(
+  const removeVersion = await database.removePackageVersion(
     params.packageName,
     params.versionName
   );
@@ -818,7 +818,7 @@ async function deletePackageVersion(req, res) {
  * @property {http_endpoint} - /api/packages/:packageName/versions/:versionName/events/uninstall
  */
 async function postPackagesEventUninstall(req, res) {
-  let params = {
+  const params = {
     auth: query.auth(req),
     packageName: query.packageName(req),
     // TODO: versionName unused parameter. On the roadmap to be removed.
@@ -826,7 +826,7 @@ async function postPackagesEventUninstall(req, res) {
     versionName: query.engine(req.params.versionName),
   };
 
-  let user = await auth.verifyAuth(params.auth);
+  const user = await auth.verifyAuth(params.auth);
 
   if (!user.ok) {
     await common.handleError(req, res, user);
@@ -835,14 +835,14 @@ async function postPackagesEventUninstall(req, res) {
 
   // TODO: How does this impact performance? Wonder if we could return
   // the next command with more intelligence to know the pack doesn't exist.
-  let packExists = await database.getPackageByName(params.packageName, true);
+  const packExists = await database.getPackageByName(params.packageName, true);
 
   if (!packExists.ok) {
     await common.handleError(req, res, packExists);
     return;
   }
 
-  let write = await database.updatePackageDecrementDownloadByName(
+  const write = await database.updatePackageDecrementDownloadByName(
     params.packageName
   );
 
