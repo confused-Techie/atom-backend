@@ -1,6 +1,10 @@
 const config = {
   collectCoverage: true,
   coverageReporters: ["text", "clover"],
+  coveragePathIgnorePatterns: [
+    "<rootDir>/src/tests_integration/fixtures/**",
+    "<rootDir>/node_modules/**",
+  ],
   projects: [
     {
       displayName: "Integration-Tests",

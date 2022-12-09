@@ -211,11 +211,11 @@ function generic(lvl, val, meta = {}) {
 
   switch (LOG_FORMAT) {
     case "stdout":
-      console.log(output);
+      console.log(sanitizeLogs(output));
       break;
     default:
       // Unsupported method. Use "stdout" by default.
-      console.log("#BAD_LOG_FORMAT#" + output);
+      console.log("#BAD_LOG_FORMAT#" + sanitizeLogs(output));
       break;
   }
 }
