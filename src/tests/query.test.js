@@ -7,6 +7,7 @@ const page_cases = [
   [{ query: {} }, 1],
   [{ query: { page: "2" } }, "2"],
   [{ query: { page: "JustText" } }, 1],
+  [{ query: { page: undefined } }, 1],
 ];
 // once proper type conversion is implemented the last test should pass a string "2"
 
@@ -84,6 +85,23 @@ describe("Verify Engine Query Returns", () => {
   });
 });
 
+describe("Verify Auth Query Returns", () => {
+  class SimpleReq {
+    constructor(auth) {
+      this.authHeader = auth;
+    }
+    get(headerType) {
+      return this.authHeader;
+    }
+  }
+
+  test("Properly Retreives Value", () => {
+    const req = new SimpleReq("ValidHeader");
+    const res = query.auth(req);
+    expect(res).toEqual("ValidHeader");
+  });
+});
+
 const repo_cases = [
   [{ query: { repository: "owner/repo" } }, "owner/repo"],
   [{ query: {} }, ""],
@@ -99,6 +117,8 @@ describe("Verify Repo Query Returns", () => {
 const tag_cases = [
   [{ query: { tag: "latest" } }, "latest"],
   [{ query: {} }, ""],
+  [{ query: { tag: null } }, ""],
+  [{ query: { tag: undefined } }, ""],
 ];
 
 describe("Verify Tag Query Returns", () => {
