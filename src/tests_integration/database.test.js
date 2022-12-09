@@ -317,6 +317,16 @@ describe("Package Lifecycle Tests", () => {
       `Successfully removed ${pack.createPack.metadata.version} version of ${NEW_NAME} package.`
     );
 
+    // === Can we remove a non-existing version?
+    const removeNonExistingVersion = await database.removePackageVersion(
+      NEW_NAME,
+      pack.createPack.metadata.version
+    );
+    expect(removeNonExistingVersion.ok).toBeFalsy();
+    expect(removeNonExistingVersion.content).toEqual(
+      `There's no version ${pack.createPack.metadata.version} to remove for ${NEW_NAME} package`
+    );
+
     // === Can we delete the entire package?
     const delPack = await database.removePackageByName(NEW_NAME);
     expect(delPack.ok).toBeTruthy();
