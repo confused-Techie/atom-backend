@@ -291,13 +291,10 @@ describe("Package Lifecycle Tests", () => {
     // higher than the previous latest one in order to trigger an update to the user.
     const reAddNextVersion = await database.insertNewPackageVersion(v1_0_1);
     const latestVer = await database.getPackageByName(NEW_NAME);
-    // Should be latest, but it's published.
-    console.log(latestVer.content.versions);
     expect(reAddNextVersion.ok).toBeFalsy();
-    // Let's skip this for the moment
-    /*expect(reAddNextVersion.content).toEqual(
-      `Unable to create a new version for ${v1_0_1.name}`
-    );*/
+    expect(reAddNextVersion.content).toEqual(
+      `Not allowed to publish a version previously deleted for ${v1_0_1.name}`
+    );
 
     // === Can we delete a version lower than the current latest?
     // First let's push a new version.
