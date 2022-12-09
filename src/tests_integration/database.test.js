@@ -157,7 +157,9 @@ describe("Package Lifecycle Tests", () => {
       getByOldName.content.updated >= getAfterPublish.content.updated
     ).toBeTruthy();
 
-    // === Now let's try to delete the only version available. This should fail.
+    // === Now let's try to delete the only version available.
+    // This should fail because the package needs to have at least
+    // one published (latest) version.
     const removeOnlyVersion = await database.removePackageVersion(
       NEW_NAME,
       pack.createPack.metadata.version
@@ -305,8 +307,15 @@ describe("Package Lifecycle Tests", () => {
     expect(addNewVersion.content).toEqual(
       `Successfully added new version: ${newVersion.name}@${newVersion.version}`
     );
-
-    // TODO: Delete the first version
+    // Delete the oldest version.
+    const removeOldestVersion = await database.removePackageVersion(
+      NEW_NAME,
+      pack.createPack.metadata.version
+    );
+    expect(removeOldestVersion.ok).toBeTruthy();
+    expect(removeOldestVersion.content).toEqual(
+      `Successfully removed ${pack.createPack.metadata.version} version of ${NEW_NAME} package.`
+    );
 
     // === Can we delete the entire package?
     const delPack = await database.removePackageByName(NEW_NAME);
