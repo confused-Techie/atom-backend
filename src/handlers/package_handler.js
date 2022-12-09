@@ -236,7 +236,7 @@ async function getPackagesSearch(req, res) {
   // side. This is only an effort to get this working quickly and should be changed later.
   // This also means for now, the default sorting method will be downloads, not relevance.
 
-  let packs = await database.simpleSearch(
+  const packs = await database.simpleSearch(
     params.query,
     params.page,
     params.direction,
@@ -266,11 +266,11 @@ async function getPackagesSearch(req, res) {
     // See: https://github.com/confused-Techie/atom-backend/issues/59
   }
 
-  let totalPageEstimate = await database.getTotalPackageEstimate();
+  const totalPageEstimate = await database.getTotalPackageEstimate();
 
-  let totalPages = !totalPageEstimate.ok ? 1 : totalPageEstimate.content;
+  const totalPages = !totalPageEstimate.ok ? 1 : totalPageEstimate.content;
 
-  let safeQuery = params.query.replace(/[^a-zA-Z0-9_\-\s*\.]/gi, "");
+  const safeQuery = encodeURIComponent(params.query.replace(/[<>"':;\\/]+/g, ""));
   // now to get headers.
   res.append(
     "Link",
