@@ -3,7 +3,7 @@ const config = {
   coverageReporters: ["text", "clover"],
   coveragePathIgnorePatterns: [
     "<rootDir>/src/tests_integration/fixtures/**",
-    "<rootDir>/node_modules/**"
+    "<rootDir>/node_modules/**",
   ],
   projects: [
     {

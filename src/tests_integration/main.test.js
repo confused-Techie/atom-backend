@@ -499,11 +499,15 @@ describe("GET /api/packages/:packageName/stargazers", () => {
 
 describe("POST /api/packages/:packageName/versions", () => {
   test("Returns 404 with Bad Package", async () => {
-    const res = await request(app).post("/api/packages/language-golang/versions");
+    const res = await request(app).post(
+      "/api/packages/language-golang/versions"
+    );
     expect(res).toHaveHTTPCode(401);
   });
   test("Returns Bad Auth Message with No Auth", async () => {
-    const res = await request(app).post("/api/packages/language-golang/versions");
+    const res = await request(app).post(
+      "/api/packages/language-golang/versions"
+    );
     expect(res.body.message).toEqual(msg.badAuth);
   });
   test.todo("Write all tests on this endpoint");
