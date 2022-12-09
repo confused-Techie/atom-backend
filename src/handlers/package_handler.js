@@ -125,7 +125,7 @@ async function postPackages(req, res) {
     return;
   }
 
-  const exists = await database.getPackageByName(repo);
+  const exists = await database.getPackageByName(repo, true);
 
   if (exists.ok) {
     // The package exists.
@@ -306,7 +306,7 @@ async function getPackagesDetails(req, res) {
     engine: query.engine(req.query.engine),
     name: query.packageName(req),
   };
-  let pack = await database.getPackageByName(params.name);
+  let pack = await database.getPackageByName(params.name, true);
 
   if (!pack.ok) {
     await common.handleError(req, res, pack, 1004);
@@ -388,7 +388,7 @@ async function postPackagesStar(req, res) {
     return;
   }
 
-  const exists = await database.getPackageByName(params.packageName);
+  const exists = await database.getPackageByName(params.packageName, true);
 
   if (!exists.ok) {
     // The package we are trying to star doesn't exist, resolve with a 404.
@@ -418,7 +418,7 @@ async function postPackagesStar(req, res) {
   }
 
   // Now with a success we want to return the package back in this query
-  let pack = await database.getPackageByName(params.packageName);
+  let pack = await database.getPackageByName(params.packageName, true);
 
   if (!pack.ok) {
     await common.handleError(req, res, pack, 1011);
@@ -491,6 +491,7 @@ async function getPackagesStargazers(req, res) {
   let params = {
     packageName: query.packageName(req),
   };
+  // The following can't be executed in user mode because we need the pointer
   let pack = await database.getPackageByName(params.packageName);
 
   if (!pack.ok) {
@@ -551,7 +552,7 @@ async function postPackagesVersion(req, res) {
   // To support a rename, we need to check if they have permissions over this packages new name.
   // Which means we have to check if they have ownership AFTER we collect it's data.
 
-  let packExists = await database.getPackageByName(params.packageName);
+  let packExists = await database.getPackageByName(params.packageName, true);
 
   if (!packExists.ok) {
     await common.handleError(req, res, packExists);
@@ -775,7 +776,7 @@ async function deletePackageVersion(req, res) {
   }
 
   // Lets also first check to make sure the package exists.
-  let packageExists = await database.getPackageByName(params.packageName);
+  let packageExists = await database.getPackageByName(params.packageName, true);
 
   if (!packageExists.ok) {
     await common.handleError(req, res, packageExists);
@@ -834,7 +835,7 @@ async function postPackagesEventUninstall(req, res) {
 
   // TODO: How does this impact performance? Wonder if we could return
   // the next command with more intelligence to know the pack doesn't exist.
-  let packExists = await database.getPackageByName(params.packageName);
+  let packExists = await database.getPackageByName(params.packageName, true);
 
   if (!packExists.ok) {
     await common.handleError(req, res, packExists);

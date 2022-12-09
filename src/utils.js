@@ -74,7 +74,8 @@ async function constructPackageObjectFull(pack) {
   newPack.name = pack.name;
   newPack.downloads = pack.downloads;
   newPack.stargazers_count =
-    parseInt(pack.stargazers_count) + parseInt(pack.original_stargazers);
+    parseInt(pack.stargazers_count, 10) +
+    parseInt(pack.original_stargazers, 10);
   newPack.versions = parseVersions(pack.versions);
   newPack.releases = {
     latest: findLatestVersion(pack.versions),
@@ -413,11 +414,10 @@ async function engineFilter(pack, engine) {
  * semverArray("1.Hello.World");
  */
 function semverArray(semver) {
-  let array = semver.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/);
-  if (array.length != 4) {
-    return null; // returning null on no match
-  }
-  return array.slice(1, 4);
+  let array = semver.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/) ?? [];
+
+  // returning null on no match
+  return array.length !== 4 ? null : array.slice(1, 4);
 }
 
 /**

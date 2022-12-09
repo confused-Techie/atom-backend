@@ -28,7 +28,8 @@
         "npm",
         "run",
         "migrations"
-      ]
+      ],
+      "image": "postgres:14.5-alpine"
     }
   },
   "dependencies": {

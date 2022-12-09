@@ -106,10 +106,12 @@ async function insertNewPackage(pack) {
         throw `Cannot insert ${pack.name} in names table`;
       }
 
-      // Populate versions table
+      // git.createPackage() executed before this function ensures
+      // the latest version is correctly selected.
       const latest = pack.releases.latest;
-      const pv = pack.versions;
 
+      // Populate versions table
+      const pv = pack.versions;
       for (const ver of Object.keys(pv)) {
         const status = ver === latest ? "latest" : "published";
 
@@ -161,12 +163,10 @@ async function insertNewPackage(pack) {
 async function insertNewPackageVersion(packJSON) {
   sqlStorage ??= setupSQL();
 
+  // We are expected to receive a standard `package.json` file.
   return await sqlStorage
     .begin(async () => {
-      // We first need to collect the needed values to insert into the DB.
-      // The pointer, status, semver, license, engine, meta.
-      // We are expected to receive a standard `package.json` file.
-      const packID = await getPackageByName(packJSON.name);
+      const packID = await getPackageByNameSimple(packJSON.name);
 
       if (!packID.ok) {
         return packID;
@@ -174,11 +174,31 @@ async function insertNewPackageVersion(packJSON) {
 
       const pointer = packID.content.pointer;
 
-      // First we need to change the last 'latest' version, to now just published.
+      // First we need to check if the current latest version is lower than the new one
+      // which we want to publish.
+      const latestVersion = await sqlStorage`
+        SELECT *
+        FROM versions
+        WHERE package = ${pointer} AND status = 'latest';
+      `;
+
+      if (latestVersion.count === 0) {
+        throw `There is no current latest version for ${packJSON.name}. The package is broken.`;
+      }
+
+      const higherSemver = utils.semverGt(
+        utils.semverArray(packJSON.version),
+        utils.semverArray(latestVersion[0].semver)
+      );
+      if (!higherSemver) {
+        throw `Cannot publish a new version with semver lower than the current latest one.`;
+      }
+
+      // The new version can be published. First switch the current "latest" to "published".
       const updateLastVer = await sqlStorage`
         UPDATE versions
         SET status = 'published'
-        WHERE package = ${pointer} AND status = 'latest'
+        WHERE id = ${latestVersion[0].id}
         RETURNING *;
       `;
 
@@ -186,6 +206,7 @@ async function insertNewPackageVersion(packJSON) {
         throw `Unable to modify last published version ${packJSON.name}`;
       }
 
+      // We can insert the new latest version
       const license = packJSON.license ?? "NONE";
       const engine = packJSON.engines ?? { atom: "*" };
 
@@ -229,17 +250,13 @@ async function insertNewPackageName(newName, oldName) {
   return await sqlStorage
     .begin(async () => {
       // Retrieve the package pointer
-      const getID = await sqlStorage`
-        SELECT pointer
-        FROM names
-        WHERE name = ${oldName};
-      `;
+      const packID = await getPackageByNameSimple(oldName);
 
-      if (getID.count === 0) {
+      if (!packID.ok) {
         throw `Unable to find the original pointer of ${oldName}`;
       }
 
-      const pointer = getID[0].pointer;
+      const pointer = packID.content.pointer;
 
       // Before inserting the new name, we try to update it into the `packages` table
       // since we want that column to contain the current name.
@@ -352,6 +369,35 @@ async function getPackageByName(name, user = false) {
         JOIN names n ON (n.pointer = p.pointer)
       WHERE n.name = ${name}
       GROUP BY p.pointer, v.package;
+    `;
+
+    return command.count !== 0
+      ? { ok: true, content: command[0] }
+      : {
+          ok: false,
+          content: `package ${name} not found.`,
+          short: "Not Found",
+        };
+  } catch (err) {
+    return { ok: false, content: err, short: "Server Error" };
+  }
+}
+
+/**
+ * @async
+ * @function getPackageByNameSimple
+ * @desc Internal util used by other functions in this module to get the package row by the given name.
+ * It's like getPackageByName(), but with a simple and faster query.
+ * @param {string} name - The name of the package.
+ * @returns {object} A server status object.
+ */
+async function getPackageByNameSimple(name) {
+  try {
+    sqlStorage ??= setupSQL();
+
+    const command = await sqlStorage`
+      SELECT pointer FROM names
+      WHERE name = ${name};
     `;
 
     return command.count !== 0
@@ -603,18 +649,15 @@ async function removePackageByName(name) {
   return await sqlStorage
     .begin(async () => {
       // Retrieve the package pointer
-      const getID = await sqlStorage`
-        SELECT pointer FROM names
-        WHERE name = ${name};
-      `;
+      const packID = await getPackageByNameSimple(name);
 
-      if (getID.count === 0) {
+      if (!packID.ok) {
         // The package does not exists, but we return ok since it's like
         // it has been deleted.
         return { ok: true, content: `${name} package does not exists.` };
       }
 
-      const pointer = getID[0].pointer;
+      const pointer = packID.content.pointer;
 
       // Remove versions of the package
       const commandVers = await sqlStorage`
@@ -634,9 +677,9 @@ async function removePackageByName(name) {
         RETURNING *;
       `;
 
-      if (commandStar.count === 0) {
+      /*if (commandStar.count === 0) {
         // No check on deleted stars because the package could also have 0 stars.
-      }
+      }*/
 
       // Remove names related to the package
       const commandName = await sqlStorage`
@@ -692,23 +735,20 @@ async function removePackageVersion(packName, semVer) {
   return await sqlStorage
     .begin(async () => {
       // Retrieve the package pointer
-      const getID = await sqlStorage`
-        SELECT pointer
-        FROM names
-        WHERE name = ${packName};
-      `;
+      const packID = await getPackageByNameSimple(packName);
 
-      if (getID.count === 0) {
+      if (!packID.ok) {
         throw `Unable to find the pointer of ${packName}`;
       }
 
-      const pointer = getID[0].pointer;
+      const pointer = packID.content.pointer;
 
-      // Retrieve all non-removed versions
+      // Retrieve all non-removed versions sorted from latest to older
       const getVersions = await sqlStorage`
         SELECT id, semver, status
         FROM versions
-        WHERE package = ${pointer} AND status != 'removed';
+        WHERE package = ${pointer} AND status != 'removed'
+        ORDER BY semver_v1 DESC, semver_v2 DESC, semver_v3 DESC;
       `;
 
       const versionCount = getVersions.count;
@@ -745,7 +785,7 @@ async function removePackageVersion(packName, semVer) {
         throw `It's not possible to leave the ${packName} without at least one published version`;
       }
 
-      // The package will have published versions, so we can remove the targeted semver.
+      // The package will have published versions, so we can remove the targeted semVer.
       const command = await sqlStorage`
         UPDATE versions
         SET status = 'removed'
@@ -772,34 +812,20 @@ async function removePackageVersion(packName, semVer) {
 
       // We have removed the version with the "latest" status, so now we have to select
       // a new version between the remaining ones which will obtain "latest" status.
-      // We use the utils in utils.js to select the highest semver.
-      let highestVersionId = null;
+      // No need to compare versions here. We have an array ordered from latest to older,
+      // just pick the first one not equal to semVer
+      let latestVersionId = null;
       let latestSemver = null;
-      let maxSemVer = null;
       for (const v of getVersions) {
         if (v.id === versionId) {
           // Skip the removed version
           continue;
         }
-
-        if (maxSemVer === null) {
-          // Initialize variables
-          latestSemver = v.semver;
-          maxSemVer = utils.semverArray(latestSemver);
-          highestVersionId = v.id;
-          continue;
-        }
-
-        // Compare versions
-        const sva = utils.semverArray(v.semver);
-        if (utils.semverGt(sva, maxSemVer)) {
-          latestSemver = v.semver;
-          maxSemVer = sva;
-          highestVersionId = v.id;
-        }
+        latestVersionId = v.id;
+        latestSemver = v.semver;
       }
 
-      if (highestVersionId === null) {
+      if (latestVersionId === null) {
         throw `An error occurred while selecting the highest versions of ${packName}`;
       }
 
@@ -807,7 +833,7 @@ async function removePackageVersion(packName, semVer) {
       const commandLatest = await sqlStorage`
         UPDATE versions
         SET status = 'latest'
-        WHERE id = ${highestVersionId}
+        WHERE id = ${latestVersionId}
         RETURNING *;
       `;
 
@@ -826,7 +852,7 @@ async function removePackageVersion(packName, semVer) {
       const msg =
         typeof err === "string"
           ? err
-          : `A generic error occurred while inserting ${pack.name} package`;
+          : `A generic error occurred while inserting ${packName} package`;
 
       return { ok: false, content: msg, short: "Server Error" };
     });
@@ -1019,12 +1045,9 @@ async function updateStars(user, pack) {
   try {
     sqlStorage ??= setupSQL();
 
-    const commandPointer = await sqlStorage`
-      SELECT pointer FROM names
-      WHERE name = ${pack};
-    `;
+    const packID = await getPackageByNameSimple(pack);
 
-    if (commandPointer.count === 0) {
+    if (!packID.ok) {
       return {
         ok: false,
         content: `Unable to find package ${pack} to star.`,
@@ -1032,26 +1055,25 @@ async function updateStars(user, pack) {
       };
     }
 
-    // else the command is a value, lets keep going
+    const pointer = packID.content.pointer;
 
     const commandStar = await sqlStorage`
       INSERT INTO stars
       (package, userid) VALUES
-      (${commandPointer[0].pointer}, ${user.id})
+      (${pointer}, ${user.id})
       RETURNING *;
     `;
 
     // Now we expect to get our data right back, and can check the
     // validity to know if this happened successfully or not.
-    return commandPointer[0].pointer == commandStar[0].package &&
-      user.id == commandStar[0].userid
+    return pointer == commandStar[0].package && user.id == commandStar[0].userid
       ? {
           ok: true,
-          content: `Successfully Stared ${commandPointer[0].pointer} with ${user.id}`,
+          content: `Successfully Stared ${pointer} with ${user.id}`,
         }
       : {
           ok: false,
-          content: `Failed to Star ${commandPointer[0].pointer} with ${user.id}`,
+          content: `Failed to Star ${pointer} with ${user.id}`,
           short: "Server Error",
         };
   } catch (err) {
@@ -1071,22 +1093,21 @@ async function updateDeleteStar(user, pack) {
   try {
     sqlStorage ??= setupSQL();
 
-    const commandPointer = await sqlStorage`
-      SELECT pointer FROM names
-      WHERE name = ${pack};
-    `;
+    const packID = await getPackageByNameSimple(pack);
 
-    if (commandPointer.count === 0) {
+    if (!packID.ok) {
       return {
         ok: false,
-        content: `Unable to find package ${pack} to star.`,
+        content: `Unable to find package ${pack} to unstar.`,
         short: "Not Found",
       };
     }
 
+    const pointer = packID.content.pointer;
+
     const commandUnstar = await sqlStorage`
       DELETE FROM stars
-      WHERE (package = ${commandPointer[0].pointer}) AND (userid = ${user.id})
+      WHERE (package = ${pointer}) AND (userid = ${user.id})
       RETURNING *;
     `;
 
@@ -1096,7 +1117,7 @@ async function updateDeleteStar(user, pack) {
       const doesExist = await sqlStorage`
         SELECT EXISTS (
           SELECT 1 FROM stars
-          WHERE (package = ${commandPointer[0].pointer}) AND (userid = ${user.id})
+          WHERE (package = ${pointer}) AND (userid = ${user.id})
         );
       `;
 
@@ -1118,14 +1139,14 @@ async function updateDeleteStar(user, pack) {
 
     // if the return matches our input we know it was successful
     return user.id == commandUnstar[0].userid &&
-      commandPointer[0].pointer == commandUnstar[0].package
+      pointer == commandUnstar[0].package
       ? {
           ok: true,
-          content: `Successfully Unstarred ${commandPointer[0].pointer} with ${user.id}`,
+          content: `Successfully Unstarred ${pointer} with ${user.id}`,
         }
       : {
           ok: false,
-          content: `Failed to Unstar ${commandPointer[0].pointer} with ${user.id}`,
+          content: `Failed to Unstar ${pointer} with ${user.id}`,
           short: "Server Error",
         };
   } catch (err) {

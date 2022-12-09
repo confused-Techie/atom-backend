@@ -151,6 +151,7 @@ with and retreive data from the cloud hosted database instance.
     * [~insertNewPackageName(newName, oldName)](#module_database..insertNewPackageName) ⇒ <code>object</code>
     * [~insertNewUser(user)](#module_database..insertNewUser) ⇒ <code>object</code>
     * [~getPackageByName(name, user)](#module_database..getPackageByName) ⇒ <code>object</code>
+    * [~getPackageByNameSimple(name)](#module_database..getPackageByNameSimple) ⇒ <code>object</code>
     * [~getPackageVersionByNameAndVersion(name, version)](#module_database..getPackageVersionByNameAndVersion) ⇒ <code>object</code>
     * [~getPackageCollectionByName(packArray)](#module_database..getPackageCollectionByName) ⇒ <code>object</code>
     * [~getPackageCollectionByID(packArray)](#module_database..getPackageCollectionByID) ⇒ <code>object</code>
@@ -255,6 +256,19 @@ In that case it's recommended to set the user flag as true for security reasons.
 | --- | --- | --- |
 | name | <code>string</code> | The name of the package. |
 | user | <code>bool</code> | Whether the packages has to be exposed outside or not. If true, all sensitive data like primary and foreign keys are not selected. Even if the keys are ignored by utils.constructPackageObjectFull(), it's still safe to not inclue them in case, by mistake, we publish the return of this module. |
+
+<a name="module_database..getPackageByNameSimple"></a>
+
+### database~getPackageByNameSimple(name) ⇒ <code>object</code>
+Internal util used by other functions in this module to get the package row by the given name.
+It's like getPackageByName(), but with a simple and faster query.
+
+**Kind**: inner method of [<code>database</code>](#module_database)  
+**Returns**: <code>object</code> - A server status object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name of the package. |
 
 <a name="module_database..getPackageVersionByNameAndVersion"></a>
 
