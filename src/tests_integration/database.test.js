@@ -134,9 +134,7 @@ describe("Package Lifecycle Tests", () => {
       pack.createPack.name
     );
     expect(newName.ok).toBeTruthy();
-    expect(newName.content).toEqual(
-      `Successfully inserted ${NEW_NAME}.`
-    );
+    expect(newName.content).toEqual(`Successfully inserted ${NEW_NAME}.`);
 
     // === Can we get the package by it's new name?
     const getByNewName = await database.getPackageByName(NEW_NAME);
@@ -203,8 +201,12 @@ describe("Package Lifecycle Tests", () => {
     expect(getAfterVer.content.versions[0].status).toEqual("latest");
     expect(getAfterVer.content.versions[0].license).toEqual(v1_0_1.license);
     expect(getAfterVer.content.versions[0].meta.name).toEqual(v1_0_1.name);
-    expect(getAfterVer.content.versions[0].meta.version).toEqual(v1_0_1.version);
-    expect(getAfterVer.content.versions[1].semver).toEqual(pack.createPack.metadata.version);
+    expect(getAfterVer.content.versions[0].meta.version).toEqual(
+      v1_0_1.version
+    );
+    expect(getAfterVer.content.versions[1].semver).toEqual(
+      pack.createPack.metadata.version
+    );
 
     // === Can we publish a duplicate or a lower version?
     const dupVer = await database.insertNewPackageVersion(v1_0_1);

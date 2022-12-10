@@ -270,7 +270,9 @@ async function getPackagesSearch(req, res) {
 
   const totalPages = !totalPageEstimate.ok ? 1 : totalPageEstimate.content;
 
-  const safeQuery = encodeURIComponent(params.query.replace(/[<>"':;\\/]+/g, ""));
+  const safeQuery = encodeURIComponent(
+    params.query.replace(/[<>"':;\\/]+/g, "")
+  );
   // now to get headers.
   res.append(
     "Link",
@@ -776,7 +778,10 @@ async function deletePackageVersion(req, res) {
   }
 
   // Lets also first check to make sure the package exists.
-  const packageExists = await database.getPackageByName(params.packageName, true);
+  const packageExists = await database.getPackageByName(
+    params.packageName,
+    true
+  );
 
   if (!packageExists.ok) {
     await common.handleError(req, res, packageExists);

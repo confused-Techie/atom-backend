@@ -373,7 +373,9 @@ async function getPackageByName(name, user = false) {
         JSONB_AGG(
           JSON_BUILD_OBJECT(
             ${
-              user ? sqlStorage`` : sqlStorage`'id', v.id, 'package', v.package,`
+              user
+                ? sqlStorage``
+                : sqlStorage`'id', v.id, 'package', v.package,`
             } 'status', v.status, 'semver', v.semver,
             'license', v.license, 'engine', v.engine, 'meta', v.meta
           )

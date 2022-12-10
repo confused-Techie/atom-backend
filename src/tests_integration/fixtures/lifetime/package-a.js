@@ -31,7 +31,7 @@ const addVersion = (v) => {
     description: "A package.json description",
     license: "MIT",
   };
-}
+};
 
 module.exports = {
   createPack,
