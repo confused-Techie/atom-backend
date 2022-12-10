@@ -193,9 +193,11 @@ function craftHttp(meta) {
     let date = new Date();
     let duration = Date.now() - (req.start ?? Date.now());
 
-    ret += `HTTP:: ${meta.req.ip ?? "NO_IP"} [${date.toISOString ?? "NO_DATE"}] "${
-      meta.req.method ?? "NO_METHOD"
-    } ${sanitizeLogs(meta.req.url) ?? "NO_URL"} ${meta.req.protocol ?? "NO_PROT"}" ${
+    ret += `HTTP:: ${meta.req.ip ?? "NO_IP"} [${
+      date.toISOString ?? "NO_DATE"
+    }] "${meta.req.method ?? "NO_METHOD"} ${
+      sanitizeLogs(meta.req.url) ?? "NO_URL"
+    } ${meta.req.protocol ?? "NO_PROT"}" ${
       meta.res.statusCode ?? "NO_STATUS"
     } ${duration}ms`;
   } else {

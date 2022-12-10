@@ -1228,7 +1228,10 @@ async function getStarringUsersByPointer(pointer) {
       // It is likely safe to assume that if nothing matches the packagepointer,
       // then the package pointer has no stars. So instead of server error
       // here we will non-traditionally return an empty array.
-      logger.generic(3, `No Stars for ${pointer} found, assuming 0 star value.`);
+      logger.generic(
+        3,
+        `No Stars for ${pointer} found, assuming 0 star value.`
+      );
       userArray = [];
     }
 
@@ -1295,11 +1298,11 @@ async function getUserCollectionById(ids) {
     if (!user.ok) {
       logger.generic(3, "Unable to find user id: ", {
         type: "object",
-        obj: ids[i]
+        obj: ids[i],
       });
       logger.generic(3, "Details on Not Found User: ", {
         type: "object",
-        obj: user
+        obj: user,
       });
       continue;
     }
@@ -1351,7 +1354,7 @@ async function getSortedPackages(page, dir, method) {
         orderType = "stargazers_count";
         break;
       default:
-        logger.generic(3, `Unrecognized Sorting Method Provided: ${method}`)
+        logger.generic(3, `Unrecognized Sorting Method Provided: ${method}`);
         return {
           ok: false,
           content: `Unrecognized Sorting Method Provided: ${method}`,

@@ -89,7 +89,7 @@ async function serverError(req, res, err, num) {
   logger.generic(3, "Returning Server Error in common", {
     type: "http",
     req: req,
-    res: res
+    res: res,
   });
 }
 

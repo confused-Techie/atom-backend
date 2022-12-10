@@ -709,12 +709,12 @@ async function getPackagesVersionTarball(req, res) {
   if (!save.ok) {
     logger.generic(3, "Failed to Update Downloads Count", {
       type: "object",
-      obj: save.content
+      obj: save.content,
     });
     logger.generic(3, "Failed to Update Downloads Count", {
       type: "http",
       req: req,
-      res: res
+      res: res,
     });
     // we don't want to exit on a failed to update downloads count, but should be logged.
   }

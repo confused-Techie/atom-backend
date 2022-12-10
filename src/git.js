@@ -470,11 +470,17 @@ async function getPackageJSON(repo, user) {
         );
 
       default:
-        logger.generic(3, `Unable to Get ${repo} from GH for package.json. HTTP Status ${res.status}`);
+        logger.generic(
+          3,
+          `Unable to Get ${repo} from GH for package.json. HTTP Status ${res.status}`
+        );
         return undefined;
     }
   } catch (err) {
-    logger.generic(3, `Failed to Get ${repo} from GH for package.json. Err: ${err}`);
+    logger.generic(
+      3,
+      `Failed to Get ${repo} from GH for package.json. Err: ${err}`
+    );
     return undefined;
   }
 }
@@ -500,16 +506,25 @@ async function getRepoReadMe(repo, user) {
         return Buffer.from(res.body.content, res.body.encoding).toString();
 
       default:
-        logger.generic(3, `Unexpected Status Code during README.md retrevial: ${res}`);
+        logger.generic(
+          3,
+          `Unexpected Status Code during README.md retrevial: ${res}`
+        );
         return undefined;
     }
   } catch (err) {
-    logger.generic(3, `Unable to get ${repo} from GH for README.md, trying readme.md: Err: ${err}`);
+    logger.generic(
+      3,
+      `Unable to get ${repo} from GH for README.md, trying readme.md: Err: ${err}`
+    );
 
     // since this can fail, on a 404, lets check for a lowercase readme
     if (err.status !== 404) {
       // Generic error code. Respond with undefined
-      logger.generic(3, `Unable to Get ${repo} from GH for README.md. Err: ${err}`);
+      logger.generic(
+        3,
+        `Unable to Get ${repo} from GH for README.md. Err: ${err}`
+      );
       return undefined;
     }
 
@@ -529,11 +544,17 @@ async function getRepoReadMe(repo, user) {
 
         default:
           // it returned, but not the error code we expect.
-          logger.generic(3, `Unexpected Status code during readme.md retrevial: ${resLower}`);
+          logger.generic(
+            3,
+            `Unexpected Status code during readme.md retrevial: ${resLower}`
+          );
           return undefined;
       }
     } catch (err) {
-      logger.generic(3, `Unable to get ${repo} from GH for readme.md. Err: ${err}`);
+      logger.generic(
+        3,
+        `Unable to get ${repo} from GH for readme.md. Err: ${err}`
+      );
       return undefined;
     }
   }
@@ -561,7 +582,10 @@ async function getRepoTags(repo, user) {
         return res.body;
 
       default:
-        logger.generic(3, `Unable to Get ${repo} from GH for Tags. HTTP Status ${res.status}`);
+        logger.generic(
+          3,
+          `Unable to Get ${repo} from GH for Tags. HTTP Status ${res.status}`
+        );
         return undefined;
     }
   } catch (err) {

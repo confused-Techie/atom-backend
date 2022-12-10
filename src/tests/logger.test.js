@@ -34,7 +34,9 @@ describe("generic Logger Call", () => {
   test("Bad Values returns default log", () => {
     logger.generic();
     expect(console.log).toBeCalledTimes(1);
-    expect(console.log).toHaveBeenLastCalledWith("[TRACE]:: logger.generic() Called with Missing `val`");
+    expect(console.log).toHaveBeenLastCalledWith(
+      "[TRACE]:: logger.generic() Called with Missing `val`"
+    );
   });
   test("Bad Level Returns Default Level", () => {
     logger.generic(undefined, "Hello World");

@@ -752,12 +752,10 @@ logging methods if a log server is ever implemented.
 
 * [logger](#module_logger)
     * [~httpLog(req, res)](#module_logger..httpLog)
-    * [~errorLog(req, res, err)](#module_logger..errorLog)
-    * [~warningLog([req], [res], err)](#module_logger..warningLog)
-    * [~infoLog(value)](#module_logger..infoLog)
-    * [~debugLog(value)](#module_logger..debugLog)
     * [~sanitizeLogs(val)](#module_logger..sanitizeLogs) ⇒ <code>string</code>
     * [~generic(lvl, val, [meta])](#module_logger..generic)
+    * [~craftError(meta)](#module_logger..craftError) ⇒ <code>string</code>
+    * [~craftHttp(meta)](#module_logger..craftHttp) ⇒ <code>string</code>
 
 <a name="module_logger..httpLog"></a>
 
@@ -774,77 +772,6 @@ The standard logger for HTTP calls. Logging in a modified 'Apache Combined Log F
 **Example** *(Logging Output Format)*  
 ```js
 HTTP:: IP [DATE (as ISO String)] "HTTP_METHOD URL PROTOCOL" STATUS_CODE DURATION_OF_REQUESTms
-```
-<a name="module_logger..errorLog"></a>
-
-### logger~errorLog(req, res, err)
-An endpoint to log errors, as well as exactly where they occured. Allowing some insight into what caused
-them, as well as how the server reacted to the end user.
-
-**Kind**: inner method of [<code>logger</code>](#module_logger)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
-| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
-| err | <code>object</code> \| <code>string</code> | The error of what happened. Will take a raw error value, or a string created one. |
-
-**Example** *(Logging Output Format)*  
-```js
-ERROR:: IP "HTTP_METHOD URL PROTOCOL" STATUS_CODE DURATION_OF_REQUESTms ! ERROR
-```
-<a name="module_logger..warningLog"></a>
-
-### logger~warningLog([req], [res], err)
-An endpoint to log warnings. This should be used for when an error recovered, but the server
-did its best to recover from it. Providing no error to the end user.
-
-**Kind**: inner method of [<code>logger</code>](#module_logger)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [req] | <code>object</code> | The Optional `Request` object inherited from the Express endpoint. |
-| [res] | <code>object</code> | The Optional `Response` object inherited from the Express endpoint. |
-| err | <code>object</code> \| <code>string</code> | The error of what happened. And like `ErrorLog` takes the raw error, or a string created one. |
-
-**Example** *(Logging Output Format w/ Req and Res.)*  
-```js
-WARNING:: IP "HTTP_METHOD URL PROTOCOL" STATUS_CODE DURATION_OF_REQUESTms ! ERROR
-```
-**Example** *(Logging Output Format w/o Req and Res.)*  
-```js
-WARNING:: ERROR
-```
-<a name="module_logger..infoLog"></a>
-
-### logger~infoLog(value)
-An endpoint to log information only. Used sparingly, but may be helpful.
-
-**Kind**: inner method of [<code>logger</code>](#module_logger)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| value | <code>string</code> | The value of whatever is being logged. |
-
-**Example** *(Logging Output Format)*  
-```js
-INFO:: VALUE
-```
-<a name="module_logger..debugLog"></a>
-
-### logger~debugLog(value)
-An endpoint to log debug information only. This log will only show if enabled in the Config file.
-That is if the `app.yaml` file has DEBUG as true.
-
-**Kind**: inner method of [<code>logger</code>](#module_logger)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| value | <code>string</code> | The value of whatever is being logged. |
-
-**Example** *(Logging Output Format)*  
-```js
-DEBUG:: VALUE
 ```
 <a name="module_logger..sanitizeLogs"></a>
 
@@ -879,6 +806,34 @@ logs, but otherwise will attempt to display the data provided.
 | lvl | <code>integer</code> | The Log Level to output. With the following definition. 1 - Fatal 2 - Error 3 - Warning 4 - Information 5 - Debug 6 - Trace |
 | val | <code>string</code> | The main information to contain within the log. |
 | [meta] | <code>object</code> | An optional Object to include, this object as described above can contain additional information either expected of the log, or that is not natively supported, but will be attempted to display. |
+
+<a name="module_logger..craftError"></a>
+
+### logger~craftError(meta) ⇒ <code>string</code>
+Used to help `logger.generic()` build it's logs. Used when type is
+specified as `error`.
+
+**Kind**: inner method of [<code>logger</code>](#module_logger)  
+**Returns**: <code>string</code> - A crafted string message containing the output of the data
+provided.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| meta | <code>object</code> | An object containing `err`. |
+
+<a name="module_logger..craftHttp"></a>
+
+### logger~craftHttp(meta) ⇒ <code>string</code>
+Used to help `logger.generic()` build it's logs. Used when type is
+specified as `http`. Based largely off `logger.httpLog()`
+
+**Kind**: inner method of [<code>logger</code>](#module_logger)  
+**Returns**: <code>string</code> - A crafted string message containing the output of the data
+provided.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| meta | <code>string</code> | An object containing `req`, and `res` |
 
 <a name="module_main"></a>
 
@@ -1373,7 +1328,7 @@ Will take the <b>failed</b> user object from VerifyAuth, and respond for the end
 either a "Server Error" or a "Bad Auth", whichever is correct based on the Error bubbled from VerifyAuth.
 
 **Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
-**Implements**: <code>MissingAuthJSON</code>, <code>ServerErrorJSON</code>, <code>logger.HTTPLog</code>, <code>logger.ErrorLog</code>  
+**Implements**: <code>MissingAuthJSON</code>, <code>ServerErrorJSON</code>, <code>logger.HTTPLog</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -1390,7 +1345,7 @@ Returns a standard Server Error to the user as JSON. Logging the detailed error 
 * JSON Response Body: message: "Application Error"
 
 **Kind**: inner method of [<code>common\_handler</code>](#module_common_handler)  
-**Implements**: <code>logger.HTTPLog</code>, <code>logger.ErrorLog</code>  
+**Implements**: <code>logger.HTTPLog</code>, <code>logger.generic</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |

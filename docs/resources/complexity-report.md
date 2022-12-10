@@ -1,10 +1,10 @@
 # Complexity report, 12/10/2022
 
-* Mean per-function logical LOC: 20.076923076923077
+* Mean per-function logical LOC: 19.76923076923077
 * Mean per-function parameter count: 0.36538461538461536
-* Mean per-function cyclomatic complexity: 3.269230769230769
-* Mean per-function Halstead effort: 11999.07555089631
-* Mean per-module maintainability index: 60.69954043323358
+* Mean per-function cyclomatic complexity: 3.1923076923076925
+* Mean per-function Halstead effort: 11647.260502179008
+* Mean per-module maintainability index: 61.22366766517072
 * First-order density: 1.183431952662722%
 * Change cost: 8.875739644970414%
 * Core size: 100%
@@ -31,23 +31,23 @@
 
 ## /home/runner/work/atom-backend/atom-backend/src/config.js
 
-* Physical LOC: 108
-* Logical LOC: 42
+* Physical LOC: 105
+* Logical LOC: 41
 * Mean parameter count: 0
-* Cyclomatic complexity: 23
-* Cyclomatic complexity density: 54.761904761904766%
-* Maintainability index: 42.56896480915834
+* Cyclomatic complexity: 22
+* Cyclomatic complexity density: 53.65853658536586%
+* Maintainability index: 42.93618749167956
 * Dependency count: 2
 * Function: **getConfig**
     * Line No.: 17
-    * Physical LOC: 93
-    * Logical LOC: 37
+    * Physical LOC: 90
+    * Logical LOC: 36
     * Parameter count: 0
-    * Cyclomatic complexity: 23
-    * Cyclomatic complexity density: 62.16216216216216%
-    * Halstead difficulty: 33.490196078431374
-    * Halstead volume: 2667.9089411716054
-    * Halstead effort: 89348.7935592373
+    * Cyclomatic complexity: 22
+    * Cyclomatic complexity density: 61.111111111111114%
+    * Halstead difficulty: 33.42857142857143
+    * Halstead volume: 2540.343967487465
+    * Halstead effort: 84920.06977029526
 
 ## /home/runner/work/atom-backend/atom-backend/src/debug_utils.js
 
@@ -201,12 +201,12 @@
 
 ## /home/runner/work/atom-backend/atom-backend/src/tests/logger.test.js
 
-* Physical LOC: 142
-* Logical LOC: 7
+* Physical LOC: 85
+* Logical LOC: 4
 * Mean parameter count: 0
 * Cyclomatic complexity: 1
-* Cyclomatic complexity density: 14.285714285714285%
-* Maintainability index: 69.95236801837311
+* Cyclomatic complexity density: 25%
+* Maintainability index: 76.39879935103494
 * Dependency count: 1
 
 ## /home/runner/work/atom-backend/atom-backend/src/tests/query.test.js
