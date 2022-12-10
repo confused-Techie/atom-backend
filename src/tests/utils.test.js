@@ -103,6 +103,20 @@ describe("engineFilter returns version expected.", () => {
     let res = await utils.engineFilter(pack, engine);
     expect(res.metadata.version == "2.0.0");
   });
+
+  test("Catches non String correctly", async () => {
+    let pack = {
+      versions: {
+        "1.0.0": {
+          version: "1.0.0"
+        }
+      }
+    };
+    let engine = { bad: "engine" };
+    let res = await utils.engineFilter(pack, engine);
+    expect(res.versions["1.0.0"]).toBeDefined();
+    expect(res.versions["1.0.0"].version).toEqual("1.0.0");
+  });
 });
 
 describe("Tests against semverArray", () => {
@@ -135,8 +149,23 @@ describe("Tests against semverArray", () => {
     const res = utils.semverArray(ver);
     expect(res).toEqual(null);
   });
-  test("Returns invalid data for types different than string", () => {
+  test("Returns invalid data for null passed", () => {
     const ver = null;
+    const res = utils.semverArray(ver);
+    expect(res).toEqual(null);
+  });
+  test("Returns invalid data for array passed", () => {
+    const ver = [];
+    const res = utils.semverArray(ver);
+    expect(res).toEqual(null);
+  });
+  test("Returns invalid data for Object passed", () => {
+    const ver = {};
+    const res = utils.semverArray(ver);
+    expect(res).toEqual(null);
+  });
+  test("Returns invalid data for Number passed", () => {
+    const ver = 2;
     const res = utils.semverArray(ver);
     expect(res).toEqual(null);
   });
@@ -176,6 +205,12 @@ describe("Tests against semverGt", () => {
   test("Returns False with Valid data", () => {
     const ver1 = ["1", "0", "0"];
     const ver2 = ["1", "0", "1"];
+    const res = utils.semverGt(ver1, ver2);
+    expect(res).toBeFalsy();
+  });
+  test("Returns False with Equal data", () => {
+    const ver1 = ["1", "1", "1"];
+    const ver2 = ["1", "1", "1"];
     const res = utils.semverGt(ver1, ver2);
     expect(res).toBeFalsy();
   });
