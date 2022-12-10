@@ -199,7 +199,7 @@ function craftHttp(meta) {
       sanitizeLogs(meta.req.url) ?? "NO_URL"
     } ${meta.req.protocol ?? "NO_PROT"}" ${
       meta.res.statusCode ?? "NO_STATUS"
-    } ${duration}ms`;
+    } ${duration ?? ""}ms`;
   } else {
     ret += " Unspecified HTTP Values Declared";
   }

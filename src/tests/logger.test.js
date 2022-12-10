@@ -82,4 +82,14 @@ describe("generic Logger Call", () => {
     expect(console.log).toBeCalledTimes(1);
     expect(console.log).toHaveBeenLastCalledWith("[FATAL]:: Test");
   });
+  test("Empty Meta Type", () => {
+    logger.generic(6, "Test", { type: undefined });
+    expect(console.log).toBeCalledTimes(1);
+    expect(console.log).toHaveBeenLastCalledWith("[TRACE]:: Test");
+  });
+  test("Empty HTTP But HTTP Type", () => {
+    logger.generic(6, "Test", { type: "http", res: {}, req: {} });
+    expect(console.log).toBeCalledTimes(1);
+    expect(console.log).toHaveBeenLastCalledWith(`[TRACE]:: Test`);
+  });
 });
