@@ -15,8 +15,6 @@ env_variables:
   # be read from disk again. Measured in milliseconds.
   # The default value for testing is 10 minutes = 600000
   CACHETIME: 600000
-  # Should only be enabled in non-production builds. Enabled as true for extra output during testing.
-  DEBUGLOG: true
   # The following settings are for storing data within Google Cloud Storage
   GCLOUD_STORAGE_BUCKET: "bucket_name"
   GOOGLE_APPLICATION_CREDENTIALS: "local_file_path"

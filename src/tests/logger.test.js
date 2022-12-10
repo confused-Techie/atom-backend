@@ -27,116 +27,57 @@ describe("httpLog Testing", () => {
   });
 });
 
-describe("errorLog Call", () => {
+describe("generic Logger Call", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
-  test("Normal errorLog Call", () => {
-    logger.errorLog(
-      {
-        ip: "0.0.0.0",
-        start: "0",
-        method: "GET",
-        url: "https://dev.com",
-        protocol: "HTTP",
-      },
-      {
-        statusCode: "500",
-      }
-    );
+  test("Bad Values returns default log", () => {
+    logger.generic();
     expect(console.log).toBeCalledTimes(1);
+    expect(console.log).toHaveBeenLastCalledWith("[TRACE]:: logger.generic() Called with Missing `val`");
   });
-  test("ErrorLog with Error Object", () => {
-    let err = new Error("No real error. Just test.");
-    logger.errorLog(
-      {
-        ip: "0.0.0.0",
-        start: "0",
-        method: "GET",
-        url: "https://pulsar-edit.dev",
-        protocol: "HTTP",
-      },
-      {
-        statusCode: "500",
-      },
-      err
-    );
+  test("Bad Level Returns Default Level", () => {
+    logger.generic(undefined, "Hello World");
     expect(console.log).toBeCalledTimes(1);
+    expect(console.log).toHaveBeenLastCalledWith("[TRACE]:: Hello World");
   });
-});
-
-describe("warningLog Call", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-  test("Normal warningLog Call", () => {
-    logger.warningLog(
-      {
-        ip: "0.0.0.0",
-        start: "0",
-        method: "GET",
-        url: "https://dev.com",
-        protocol: "HTTP",
-      },
-      {
-        statusCode: "200",
-      },
-      "No real error. Just test."
-    );
+  test("Valid Basic Values Log Correctly", () => {
+    logger.generic(6, "Hello World");
     expect(console.log).toBeCalledTimes(1);
+    expect(console.log).toHaveBeenLastCalledWith("[TRACE]:: Hello World");
   });
-  test("WarningLog Call with Error Object", () => {
-    let err = new Error("No real error. Just test");
-    logger.warningLog(
-      {
-        ip: "0.0.0.0",
-        start: "0",
-        method: "GET",
-        url: "https://pulsar-edit.dev",
-        protocol: "HTTP",
-      },
-      {
-        statusCode: "200",
-      },
-      err
-    );
+  test("Valid Trace Logs", () => {
+    logger.generic(6, "Test");
     expect(console.log).toBeCalledTimes(1);
+    expect(console.log).toHaveBeenLastCalledWith("[TRACE]:: Test");
   });
-  test("WarningLog Call with no Req/Res", () => {
-    logger.warningLog(null, null, "No error. Just test.");
-  });
-});
-
-describe("infoLog Testing", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-  test("Normal InfoLog Call", () => {
-    logger.infoLog("test");
-    expect(console.log).toBeCalledTimes(1);
-    expect(console.log).toHaveBeenLastCalledWith("INFO:: test");
-  });
-});
-
-describe("debugLog Call", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-  test("Debug w/ Debug=TRUE", () => {
-    process.env.DEBUGLOG = true;
-    let tmpLog = require("../logger.js");
-    tmpLog.debugLog("test");
-    expect(console.log).toBeCalledTimes(1);
-  });
-  test.failing("Debug w/ Debug=FALSE", () => {
-    // TODO: The above test is marked to fail.
-    // That's because even when reimporting here logger still logs, even
-    // when it doesn't during actual usage. The options to have a successful test will
-    // have to explored, but otherwise for CI purposes we will mark this as a failure.
-    // @see https://github.com/confused-Techie/atom-backend/pull/54
-    process.env.DEBUGLOG = false;
-    let tempLog = require("../logger.js");
-    tempLog.debugLog("test");
+  test("Valid Unsupported Log Level logs nothing", () => {
+    logger.generic(100, "Test");
     expect(console.log).toBeCalledTimes(0);
+  });
+  test("Valid Debug Log Level", () => {
+    logger.generic(5, "Test");
+    expect(console.log).toBeCalledTimes(1);
+    expect(console.log).toHaveBeenLastCalledWith("[DEBUG]:: Test");
+  });
+  test("Valid Info Log Level", () => {
+    logger.generic(4, "Test");
+    expect(console.log).toBeCalledTimes(1);
+    expect(console.log).toHaveBeenLastCalledWith("[INFO]:: Test");
+  });
+  test("Valid Warning Log Level", () => {
+    logger.generic(3, "Test");
+    expect(console.log).toBeCalledTimes(1);
+    expect(console.log).toHaveBeenLastCalledWith("[WARNING]:: Test");
+  });
+  test("Valid Error Log Level", () => {
+    logger.generic(2, "Test");
+    expect(console.log).toBeCalledTimes(1);
+    expect(console.log).toHaveBeenLastCalledWith("[ERROR]:: Test");
+  });
+  test("Valid Fatal Log Level", () => {
+    logger.generic(1, "Test");
+    expect(console.log).toBeCalledTimes(1);
+    expect(console.log).toHaveBeenLastCalledWith("[FATAL]:: Test");
   });
 });

@@ -101,3 +101,7 @@ if (!obj.ok) {
   logger.generic(2, "Couldn't get our data!", { type: "object", obj: obj.content });
 }
 ```
+
+---
+
+* `http`: The `meta.type` `http` can be used to show HTTP details along with your log. This isn't intended to handle purely logging HTTP Data, but instead when another type of log would benefit from displaying HTTP information.

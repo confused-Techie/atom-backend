@@ -4,7 +4,7 @@
  * logging methods if a log server is ever implemented.
  */
 
-const { debug, LOG_LEVEL, LOG_FORMAT } = require("./config.js").getConfig();
+const { LOG_LEVEL, LOG_FORMAT } = require("./config.js").getConfig();
 const util = require("util");
 
 /**
@@ -25,78 +25,6 @@ function httpLog(req, res) {
       res.statusCode ?? "NO_STATUS"
     } ${duration}ms`
   );
-}
-
-/**
- * @function errorLog
- * @desc An endpoint to log errors, as well as exactly where they occured. Allowing some insight into what caused
- * them, as well as how the server reacted to the end user.
- * @param {object} req - The `Request` object inherited from the Express endpoint.
- * @param {object} res - The `Response` object inherited from the Express endpoint.
- * @param {object|string} err - The error of what happened. Will take a raw error value, or a string created one.
- * @example <caption>Logging Output Format</caption>
- * ERROR:: IP "HTTP_METHOD URL PROTOCOL" STATUS_CODE DURATION_OF_REQUESTms ! ERROR
- */
-function errorLog(req, res, err, num = 9999) {
-  // this will be a generic error logger to grab some stats about what happened, how the server handled it. And of course the error.
-  let duration = Date.now() - (req.start ?? Date.now());
-  console.log(
-    `ERROR-${num}:: ${req.ip ?? "NO_IP"} "${req.method ?? "NO_METHOD"} ${
-      sanitizeLogs(req.url) ?? "NO_URL"
-    } ${req.protocol ?? "NO_PROT"}" ${
-      res.statusCode ?? "NO_STATUS"
-    } ${duration}ms ! ${sanitizeLogs(err?.toString()) ?? "NO_ERR"}`
-  );
-}
-
-/**
- * @function warningLog
- * @desc An endpoint to log warnings. This should be used for when an error recovered, but the server
- * did its best to recover from it. Providing no error to the end user.
- * @param {object} [req] - The Optional `Request` object inherited from the Express endpoint.
- * @param {object} [res] - The Optional `Response` object inherited from the Express endpoint.
- * @param {object|string} err - The error of what happened. And like `ErrorLog` takes the raw error, or a string created one.
- * @example <caption>Logging Output Format w/ Req and Res.</caption>
- * WARNING:: IP "HTTP_METHOD URL PROTOCOL" STATUS_CODE DURATION_OF_REQUESTms ! ERROR
- * @example <caption>Logging Output Format w/o Req and Res.</caption>
- * WARNING:: ERROR
- */
-function warningLog(req, res, err, num = 9999) {
-  // We must remember that in many instances warningLog is used to log generic warnings,
-  // without ever being passed req or res. So these values cannot be relied on.
-  let duration = Date.now() - (req?.start ?? Date.now());
-  console.log(
-    `WARNING-${num}:: ${req?.ip ?? "NO_IP"} "${req?.method ?? "NO_METHOD"} ${
-      sanitizeLogs(req?.url) ?? "NO_URL"
-    } ${req?.protocol ?? "NO_PROT"}" ${
-      res?.statusCode ?? "NO_STATUS"
-    } ${duration}ms ! ${sanitizeLogs(err?.toString()) ?? "NO_ERR"}`
-  );
-}
-
-/**
- * @function infoLog
- * @desc An endpoint to log information only. Used sparingly, but may be helpful.
- * @param {string} value - The value of whatever is being logged.
- * @example <caption>Logging Output Format</caption>
- * INFO:: VALUE
- */
-function infoLog(value) {
-  console.log(`INFO:: ${sanitizeLogs(value) ?? "NO_LOG_VALUE"}`);
-}
-
-/**
- * @function debugLog
- * @desc An endpoint to log debug information only. This log will only show if enabled in the Config file.
- * That is if the `app.yaml` file has DEBUG as true.
- * @param {string} value - The value of whatever is being logged.
- * @example <caption>Logging Output Format</caption>
- * DEBUG:: VALUE
- */
-function debugLog(value) {
-  if (debug) {
-    console.log(`DEBUG:: ${sanitizeLogs(value) ?? "NO_LOG_VALUE"}`);
-  }
 }
 
 /**
@@ -204,6 +132,11 @@ function generic(lvl, val, meta = {}) {
         output += util.inspect(meta.obj);
       }
       break;
+    case "http":
+      if (meta.obj !== undefined) {
+        output += craftHttp(meta);
+      }
+      break;
     case "default":
     default:
       break;
@@ -220,6 +153,14 @@ function generic(lvl, val, meta = {}) {
   }
 }
 
+/**
+ * @function craftError
+ * @desc Used to help `logger.generic()` build it's logs. Used when type is
+ * specified as `error`.
+ * @param {object} meta - An object containing `err`.
+ * @returns {string} A crafted string message containing the output of the data
+ * provided.
+ */
 function craftError(meta) {
   // This takes the meta object from the generic error handler, and returns a string
   // depending on what values are provided and supported.
@@ -237,12 +178,34 @@ function craftError(meta) {
   return ret;
 }
 
+/**
+ * @function craftHttp
+ * @desc Used to help `logger.generic()` build it's logs. Used when type is
+ * specified as `http`. Based largely off `logger.httpLog()`
+ * @param {string} meta - An object containing `req`, and `res`
+ * @returns {string} A crafted string message containing the output of the data
+ * provided.
+ */
+function craftHttp(meta) {
+  let ret = "";
+
+  if (meta.req && meta.res) {
+    let date = new Date();
+    let duration = Date.now() - (req.start ?? Date.now());
+
+    ret += `HTTP:: ${meta.req.ip ?? "NO_IP"} [${date.toISOString ?? "NO_DATE"}] "${
+      meta.req.method ?? "NO_METHOD"
+    } ${sanitizeLogs(meta.req.url) ?? "NO_URL"} ${meta.req.protocol ?? "NO_PROT"}" ${
+      meta.res.statusCode ?? "NO_STATUS"
+    } ${duration}ms`;
+  } else {
+    ret += " Unspecified HTTP Values Declared";
+  }
+  return ret;
+}
+
 module.exports = {
   httpLog,
-  errorLog,
-  warningLog,
-  infoLog,
-  debugLog,
   sanitizeLogs,
   generic,
 };

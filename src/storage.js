@@ -68,16 +68,16 @@ async function getBanList() {
   };
 
   if (cached_banlist === undefined) {
-    logger.debugLog("Creating Ban List Cache.");
+    logger.generic(5, "Creating Ban List Cache.");
     return getNew();
   }
 
   if (!cached_banlist.Expired) {
-    logger.debugLog("Ban List Cache NOT Expired.");
+    logger.generic(5, "Ban List Cache NOT Expired.");
     return { ok: true, content: cached_banlist.data };
   }
 
-  logger.debugLog("Ban List Cache IS Expired.");
+  logger.generic(5, "Ban List Cache IS Expired.");
   return getNew();
 }
 
@@ -123,16 +123,16 @@ async function getFeaturedPackages() {
   };
 
   if (cached_featuredlist === undefined) {
-    logger.debugLog("Creating Ban List Cache.");
+    logger.generic(5, "Creating Ban List Cache.");
     return getNew();
   }
 
   if (!cached_featuredlist.Expired) {
-    logger.debugLog("Ban List Cache NOT Expired.");
+    logger.generic(5, "Ban List Cache NOT Expired.");
     return { ok: true, content: cached_featuredlist.data };
   }
 
-  logger.debugLog("Ban List Cache IS Expired.");
+  logger.generic(5, "Ban List Cache IS Expired.");
   return getNew();
 }
 
@@ -177,16 +177,16 @@ async function getFeaturedThemes() {
   };
 
   if (cached_themelist === undefined) {
-    logger.debugLog("Creating Theme List Cache");
+    logger.generic(5, "Creating Theme List Cache");
     return getNew();
   }
 
   if (!cached_themelist.Expired) {
-    logger.debugLog("Theme List Cache NOT Expired.");
+    logger.generic(5, "Theme List Cache NOT Expired.");
     return { ok: true, content: cached_themelist.data };
   }
 
-  logger.debugLog("Theme List Cache IS Expired.");
+  logger.generic(5, "Theme List Cache IS Expired.");
   return getNew();
 }
 

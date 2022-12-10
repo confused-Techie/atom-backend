@@ -57,9 +57,6 @@ function getConfig() {
       cache_time: process.env.CACHETIME
         ? process.env.CACHETIME
         : data.env_variables.CACHETIME,
-      debug: process.env.DEBUGLOG
-        ? process.env.DEBUGLOG
-        : data.env_variables.DEBUGLOG,
       GCLOUD_STORAGE_BUCKET: process.env.GCLOUD_STORAGE_BUCKET
         ? process.env.GCLOUD_STORAGE_BUCKET
         : data.env_variables.GCLOUD_STORAGE_BUCKET,

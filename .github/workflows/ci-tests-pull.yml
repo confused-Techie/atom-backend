@@ -9,7 +9,6 @@ on:
 env:
   # Setup some basic Environment Variables
   PORT: 8080
-  DEBUGLOG: true
   CACHETIME: 600000
   PAGINATE: 30
   SERVERURL: "http://localhost:8080"

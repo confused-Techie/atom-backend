@@ -56,7 +56,6 @@ async function handleError(req, res, obj, num) {
  * @implements {MissingAuthJSON}
  * @implements {ServerErrorJSON}
  * @implements {logger.HTTPLog}
- * @implements {logger.ErrorLog}
  */
 async function authFail(req, res, user, num) {
   switch (user.short) {
@@ -82,12 +81,16 @@ async function authFail(req, res, user, num) {
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @param {string} err - The detailed error message to log server side.
  * @implements {logger.HTTPLog}
- * @implements {logger.ErrorLog}
+ * @implements {logger.generic}
  */
 async function serverError(req, res, err, num) {
   res.status(500).json({ message: "Application Error" });
   logger.httpLog(req, res);
-  logger.errorLog(req, res, err, num);
+  logger.generic(3, "Returning Server Error in common", {
+    type: "http",
+    req: req,
+    res: res
+  });
 }
 
 /**
