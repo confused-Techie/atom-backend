@@ -414,7 +414,9 @@ async function engineFilter(pack, engine) {
  * semverArray("1.Hello.World");
  */
 function semverArray(semver) {
-  let array = semver.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/) ?? [];
+  let array = typeof semver === "string"
+    ? (semver.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/) ?? [])
+    : [];
 
   // returning null on no match
   return array.length !== 4 ? null : array.slice(1, 4);

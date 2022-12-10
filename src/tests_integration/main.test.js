@@ -288,6 +288,10 @@ describe("GET /api/packages/:packageName", () => {
     const res = await request(app).get("/api/packages/LanguAge-CSs");
     expect(res.body.name).toBe("language-css");
   });
+  test("Valid package, does not return sensible data (package pointer)", async () => {
+    const res = await request(app).get("/api/packages/language-css");
+    expect(res.body.pointer).toBe(undefined);
+  });
   test("Valid package, gives success status code", async () => {
     const res = await request(app).get("/api/packages/language-css");
     expect(res).toHaveHTTPCode(200);

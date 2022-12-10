@@ -76,7 +76,7 @@ async function insertNewPackage(pack) {
   // PostgreSQL transaction executing a callback on begin().
   // All data is committed into the database only if no errors occur.
   return await sqlStorage
-    .begin(async () => {
+    .begin(async (sqlTrans) => {
       const packData = {
         name: pack.name,
         repository: pack.repository,
@@ -85,7 +85,7 @@ async function insertNewPackage(pack) {
       };
 
       // No need to specify downloads and stargazers. They default at 0 on creation.
-      let command = await sqlStorage`
+      let command = await sqlTrans`
       INSERT INTO packages (name, creation_method, data)
       VALUES (${pack.name}, ${pack.creation_method}, ${packData})
       RETURNING pointer;
@@ -97,7 +97,7 @@ async function insertNewPackage(pack) {
       }
 
       // Populate names table
-      command = await sqlStorage`
+      command = await sqlTrans`
       INSERT INTO names (name, pointer)
       VALUES (${pack.name}, ${pointer});
     `;
@@ -130,7 +130,7 @@ async function insertNewPackage(pack) {
         delete meta.engines;
         delete meta.license;
 
-        command = await sqlStorage`
+        command = await sqlTrans`
         INSERT INTO versions (package, status, semver, license, engine, meta)
         VALUES (${pointer}, ${status}, ${ver}, ${license}, ${engine}, ${meta})
         RETURNING id;
@@ -165,7 +165,7 @@ async function insertNewPackageVersion(packJSON) {
 
   // We are expected to receive a standard `package.json` file.
   return await sqlStorage
-    .begin(async () => {
+    .begin(async (sqlTrans) => {
       const packID = await getPackageByNameSimple(packJSON.name);
 
       if (!packID.ok) {
@@ -176,7 +176,7 @@ async function insertNewPackageVersion(packJSON) {
 
       // First we need to check if the current latest version is lower than the new one
       // which we want to publish.
-      const latestVersion = await sqlStorage`
+      const latestVersion = await sqlTrans`
         SELECT *
         FROM versions
         WHERE package = ${pointer} AND status = 'latest';
@@ -191,11 +191,11 @@ async function insertNewPackageVersion(packJSON) {
         utils.semverArray(latestVersion[0].semver)
       );
       if (!higherSemver) {
-        throw `Cannot publish a new version with semver lower than the current latest one.`;
+        throw `Cannot publish a new version with semver lower or equal than the current latest one.`;
       }
 
       // The new version can be published. First switch the current "latest" to "published".
-      const updateLastVer = await sqlStorage`
+      const updateLastVer = await sqlTrans`
         UPDATE versions
         SET status = 'published'
         WHERE id = ${latestVersion[0].id}
@@ -210,14 +210,19 @@ async function insertNewPackageVersion(packJSON) {
       const license = packJSON.license ?? "NONE";
       const engine = packJSON.engines ?? { atom: "*" };
 
-      const addVer = await sqlStorage`
+      try {
+        const addVer = await sqlTrans`
         INSERT INTO versions (package, status, semver, license, engine, meta)
         VALUES(${pointer}, 'latest', ${packJSON.version}, ${license}, ${engine}, ${packJSON})
         RETURNING *;
-      `;
+        `;
 
-      if (addVer.count === 0) {
-        throw `Unable to create new version: ${packJSON.name}`;
+        if (addVer.count === 0) {
+          throw `Unable to create a new version for ${packJSON.name}`;
+        }
+      } catch (e) {
+        // This occurs when the (package, semver) unique constraint is violated.
+        throw `Not allowed to publish a version previously deleted for ${packJSON.name}`;
       }
 
       return {
@@ -248,7 +253,7 @@ async function insertNewPackageName(newName, oldName) {
   sqlStorage ??= setupSQL();
 
   return await sqlStorage
-    .begin(async () => {
+    .begin(async (sqlTrans) => {
       // Retrieve the package pointer
       const packID = await getPackageByNameSimple(oldName);
 
@@ -260,28 +265,35 @@ async function insertNewPackageName(newName, oldName) {
 
       // Before inserting the new name, we try to update it into the `packages` table
       // since we want that column to contain the current name.
-      const updateNewName = await sqlStorage`
+      try {
+        const updateNewName = await sqlTrans`
         UPDATE packages
         SET name = ${newName}
         WHERE pointer = ${pointer}
         RETURNING *;
-      `;
+        `;
 
-      if (updateNewName.count === 0) {
-        throw `Unable to update the package name. ${newName} is already used.`;
+        if (updateNewName.count === 0) {
+          throw `Unable to update the package name.`;
+        }
+      } catch (e) {
+        throw `Unable to update the package name. ${newName} is already used by another package.`;
       }
 
       // Now we can finally insert the new name inside the `names` table.
-      const newInsertedName = await sqlStorage`
-        INSERT INTO names (name, pointer)
-        VALUES (
-          ${newName}, ${pointer}
-        )
+      try {
+        const newInsertedName = await sqlTrans`
+        INSERT INTO names
+        (name, pointer) VALUES
+        (${newName}, ${pointer})
         RETURNING *;
-      `;
+        `;
 
-      if (newInsertedName.count === 0) {
-        throw `Unable to add the new name: ${newName}`;
+        if (newInsertedName.count === 0) {
+          throw `Unable to add the new name: ${newName}`;
+        }
+      } catch (e) {
+        throw `Unable to add the new name: ${newName} is already used.`;
       }
 
       return { ok: true, content: `Successfully inserted ${newName}.` };
@@ -358,12 +370,15 @@ async function getPackageByName(name, user = false) {
           user ? sqlStorage`` : sqlStorage`p.pointer,`
         } p.name, p.created, p.updated, p.creation_method,
         p.downloads, p.stargazers_count, p.original_stargazers, p.data,
-        JSONB_AGG(JSON_BUILD_OBJECT(
-          ${
-            user ? sqlStorage`` : sqlStorage`'id', v.id, 'package', v.package,`
-          } 'status', v.status, 'semver', v.semver,
-          'license', v.license, 'engine', v.engine, 'meta', v.meta
-        )) AS versions
+        JSONB_AGG(
+          JSON_BUILD_OBJECT(
+            ${
+              user ? sqlStorage`` : sqlStorage`'id', v.id, 'package', v.package,`
+            } 'status', v.status, 'semver', v.semver,
+            'license', v.license, 'engine', v.engine, 'meta', v.meta
+          )
+          ORDER BY v.semver_v1 DESC, v.semver_v2 DESC, v.semver_v3 DESC
+        ) AS versions
       FROM packages p
         JOIN versions v ON (p.pointer = v.package) AND (v.status != 'removed')
         JOIN names n ON (n.pointer = p.pointer)
@@ -647,7 +662,7 @@ async function removePackageByName(name) {
   sqlStorage ??= setupSQL();
 
   return await sqlStorage
-    .begin(async () => {
+    .begin(async (sqlTrans) => {
       // Retrieve the package pointer
       const packID = await getPackageByNameSimple(name);
 
@@ -660,7 +675,7 @@ async function removePackageByName(name) {
       const pointer = packID.content.pointer;
 
       // Remove versions of the package
-      const commandVers = await sqlStorage`
+      const commandVers = await sqlTrans`
         DELETE FROM versions
         WHERE package = ${pointer}
         RETURNING *;
@@ -671,7 +686,7 @@ async function removePackageByName(name) {
       }
 
       // Remove stars assigned to the package
-      const commandStar = await sqlStorage`
+      await sqlTrans`
         DELETE FROM stars
         WHERE package = ${pointer}
         RETURNING *;
@@ -682,7 +697,7 @@ async function removePackageByName(name) {
       }*/
 
       // Remove names related to the package
-      const commandName = await sqlStorage`
+      const commandName = await sqlTrans`
         DELETE FROM names
         WHERE pointer = ${pointer}
         RETURNING *;
@@ -692,7 +707,7 @@ async function removePackageByName(name) {
         throw `Failed to delete names for: ${name}`;
       }
 
-      const commandPack = await sqlStorage`
+      const commandPack = await sqlTrans`
         DELETE FROM packages
         WHERE pointer = ${pointer}
         RETURNING *;
@@ -733,7 +748,7 @@ async function removePackageVersion(packName, semVer) {
   sqlStorage ??= setupSQL();
 
   return await sqlStorage
-    .begin(async () => {
+    .begin(async (sqlTrans) => {
       // Retrieve the package pointer
       const packID = await getPackageByNameSimple(packName);
 
@@ -744,7 +759,7 @@ async function removePackageVersion(packName, semVer) {
       const pointer = packID.content.pointer;
 
       // Retrieve all non-removed versions sorted from latest to older
-      const getVersions = await sqlStorage`
+      const getVersions = await sqlTrans`
         SELECT id, semver, status
         FROM versions
         WHERE package = ${pointer} AND status != 'removed'
@@ -786,7 +801,7 @@ async function removePackageVersion(packName, semVer) {
       }
 
       // The package will have published versions, so we can remove the targeted semVer.
-      const command = await sqlStorage`
+      const command = await sqlTrans`
         UPDATE versions
         SET status = 'removed'
         WHERE id = ${versionId}
@@ -830,23 +845,25 @@ async function removePackageVersion(packName, semVer) {
       }
 
       // Mark the targeted highest version as latest.
-      const commandLatest = await sqlStorage`
+      const commandLatest = await sqlTrans`
         UPDATE versions
         SET status = 'latest'
         WHERE id = ${latestVersionId}
         RETURNING *;
       `;
 
-      return commandLatest.count !== 0
-        ? {
-            ok: true,
-            content: `Removed ${semVer} of ${packName} and ${latestSemver} is the new latest version.`,
-          }
-        : {
-            ok: false,
-            content: `Unable to remove ${semVer} version of ${packName} package.`,
-            short: "Not Found",
-          };
+      if (commandLatest.count === 0) {
+        return {
+          ok: false,
+          content: `Unable to remove ${semVer} version of ${packName} package.`,
+          short: "Not Found",
+        };
+      }
+
+      return {
+        ok: true,
+        content: `Removed ${semVer} of ${packName} and ${latestSemver} is the new latest version.`,
+      };
     })
     .catch((err) => {
       const msg =

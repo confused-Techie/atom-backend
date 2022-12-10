@@ -130,6 +130,16 @@ describe("Tests against semverArray", () => {
     expect(res[1]).toEqual("4180");
     expect(res[2]).toEqual("2");
   });
+  test("Returns invalid data for an invalid string format", () => {
+    const ver = " 1.2.3";
+    const res = utils.semverArray(ver);
+    expect(res).toEqual(null);
+  });
+  test("Returns invalid data for types different than string", () => {
+    const ver = null;
+    const res = utils.semverArray(ver);
+    expect(res).toEqual(null);
+  });
 });
 
 describe("Tests against semverGt", () => {
