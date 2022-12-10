@@ -348,13 +348,17 @@ describe("Package Lifecycle Tests", () => {
     const oddVer = pack.addVersion("1.2.3-beta.0");
     const oddNewVer = await database.insertNewPackageVersion(oddVer);
     expect(oddNewVer.ok).toBeTruthy();
-    expect(oddNewVer.content).toEqual(`Successfully added new version: ${oddVer.name}@${oddVer.version}`);
+    expect(oddNewVer.content).toEqual(
+      `Successfully added new version: ${oddVer.name}@${oddVer.version}`
+    );
 
     // === What about another Odd yet valid semver?
     const oddVer2 = pack.addVersion("1.2.4-alpha1");
     const oddNewVer2 = await database.insertNewPackageVersion(oddVer2);
     expect(oddNewVer2.ok).toBeTruthy();
-    expect(oddNewVer2.content).toEqual(`Successfully added new version: ${oddVer2.name}@${oddVer2.version}`);
+    expect(oddNewVer2.content).toEqual(
+      `Successfully added new version: ${oddVer2.name}@${oddVer2.version}`
+    );
 
     // === Can we delete the entire package?
     const delPack = await database.removePackageByName(NEW_NAME);
