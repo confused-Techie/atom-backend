@@ -124,6 +124,19 @@ Allows simple interfaces to handle caching an object in memory. Used to cache da
 ## config
 Module that access' and returns the server wide configuration.
 
+
+* [config](#module_config)
+    * [~getConfigFile()](#module_config..getConfigFile) ⇒ <code>object</code>
+    * [~getConfig()](#module_config..getConfig) ⇒ <code>object</code>
+
+<a name="module_config..getConfigFile"></a>
+
+### config~getConfigFile() ⇒ <code>object</code>
+Used to read the `yaml` config file from the root of the project.
+Returning the YAML parsed file, or an empty obj.
+
+**Kind**: inner method of [<code>config</code>](#module_config)  
+**Returns**: <code>object</code> - A parsed YAML file config, or an empty object.  
 <a name="module_config..getConfig"></a>
 
 ### config~getConfig() ⇒ <code>object</code>

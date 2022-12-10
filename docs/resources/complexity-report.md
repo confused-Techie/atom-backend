@@ -1,12 +1,12 @@
 # Complexity report, 12/10/2022
 
-* Mean per-function logical LOC: 19.76923076923077
+* Mean per-function logical LOC: 17.153846153846153
 * Mean per-function parameter count: 0.36538461538461536
-* Mean per-function cyclomatic complexity: 3.1923076923076925
-* Mean per-function Halstead effort: 11647.260502179008
-* Mean per-module maintainability index: 61.22366766517072
-* First-order density: 1.183431952662722%
-* Change cost: 8.875739644970414%
+* Mean per-function cyclomatic complexity: 1.5769230769230769
+* Mean per-function Halstead effort: 5118.06282754091
+* Mean per-module maintainability index: 64.53863313132871
+* First-order density: 0.591715976331361%
+* Change cost: 8.284023668639055%
 * Core size: 100%
 
 ## /home/runner/work/atom-backend/atom-backend/jest.config.js
@@ -28,26 +28,6 @@
 * Cyclomatic complexity density: 33.33333333333333%
 * Maintainability index: 78.8444767459975
 * Dependency count: 1
-
-## /home/runner/work/atom-backend/atom-backend/src/config.js
-
-* Physical LOC: 105
-* Logical LOC: 41
-* Mean parameter count: 0
-* Cyclomatic complexity: 22
-* Cyclomatic complexity density: 53.65853658536586%
-* Maintainability index: 42.93618749167956
-* Dependency count: 2
-* Function: **getConfig**
-    * Line No.: 17
-    * Physical LOC: 90
-    * Logical LOC: 36
-    * Parameter count: 0
-    * Cyclomatic complexity: 22
-    * Cyclomatic complexity density: 61.111111111111114%
-    * Halstead difficulty: 33.42857142857143
-    * Halstead volume: 2540.343967487465
-    * Halstead effort: 84920.06977029526
 
 ## /home/runner/work/atom-backend/atom-backend/src/debug_utils.js
 
@@ -189,6 +169,16 @@
     * Halstead volume: 91.37651812938249
     * Halstead effort: 186.9065143555551
 
+## /home/runner/work/atom-backend/atom-backend/src/tests/config.test.js
+
+* Physical LOC: 63
+* Logical LOC: 2
+* Mean parameter count: 0
+* Cyclomatic complexity: 1
+* Cyclomatic complexity density: 50%
+* Maintainability index: 86.03073855173344
+* Dependency count: 1
+
 ## /home/runner/work/atom-backend/atom-backend/src/tests/debug_utils.test.js
 
 * Physical LOC: 31
@@ -201,7 +191,7 @@
 
 ## /home/runner/work/atom-backend/atom-backend/src/tests/logger.test.js
 
-* Physical LOC: 85
+* Physical LOC: 95
 * Logical LOC: 4
 * Mean parameter count: 0
 * Cyclomatic complexity: 1
