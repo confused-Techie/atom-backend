@@ -108,9 +108,9 @@ describe("engineFilter returns version expected.", () => {
     let pack = {
       versions: {
         "1.0.0": {
-          version: "1.0.0"
-        }
-      }
+          version: "1.0.0",
+        },
+      },
     };
     let engine = { bad: "engine" };
     let res = await utils.engineFilter(pack, engine);
