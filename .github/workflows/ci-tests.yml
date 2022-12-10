@@ -11,16 +11,28 @@ on:
   # Using this to prevent simultaneous runs, outdating local git cache
 
 env:
-  # Setup some basic Environment Variables
+  # Setup all Environment Variables as tests check they exist.
   PORT: 8080
-  CACHETIME: 600000
+  SERVERURL: "https://test.github.com"
   PAGINATE: 30
-  SERVERURL: "http://localhost:8080"
-  NODE_ENV: "test"
-  PULSAR_STATUS: "dev"  # This helps some modules know they are in a test environment
+  CACHETIME: 600000
+  GCLOUD_STORAGE_BUCKET: ""
+  GOOGLE_APPLICATION_CREDENTIALS: ""
+  GH_CLIENTID: ""
+  GH_CLIENTSECRET: ""
   GH_USERAGENT: "Pulsar-Edit Tester Bot"
+  GH_REDIRECTURI: "http://localhost:8080/api/oauth"
+  DB_HOST: ""
+  DB_USER: ""
+  DB_PASS: ""
+  DB_DB: ""
+  DB_PORT: 43
+  DB_SSL_CERT: ""
   LOG_LEVEL: 6
   LOG_FORMAT: "stdout"
+  # This helps some modules know they are in a test environment
+  NODE_ENV: "test"
+  PULSAR_STATUS: "dev"
 
 jobs:
   tests:
