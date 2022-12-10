@@ -25,6 +25,10 @@ beforeAll(async () => {
   database = require("../database.js");
 });
 
+afterAll(async () => {
+  await database.shutdownSQL();
+});
+
 describe("insertNewPackage", () => {
   test("Should return Success with Valid Data - 1 Version", async () => {
     const pack = require("./fixtures/git.createPackage_returns/valid_one_version.js");
@@ -62,6 +66,19 @@ describe("insertNewPackageName", () => {
     expect(obj.content).toEqual(
       "Successfully inserted publish-test-valid-rename."
     );
+  });
+});
+
+describe("getPackageByName", () => {
+  test("Should return Server Error for Package that doesn't exist", async () => {
+    const obj = await database.getPackageByName("language-golang");
+    expect(obj.ok).toBeFalsy();
+    expect(obj.short).toEqual("Not Found");
+  });
+  test("Should return Server Error for Package that doesn't exist, even with User", async () => {
+    const obj = await database.getPackageByName("language-golang", true);
+    expect(obj.ok).toBeFalsy();
+    expect(obj.short).toEqual("Not Found");
   });
 });
 

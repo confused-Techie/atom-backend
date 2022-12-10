@@ -56,9 +56,10 @@ function setupSQL() {
  * @function shutdownSQL
  * @desc Ensures any Database connection is properly, and safely closed before exiting.
  */
-function shutdownSQL() {
+async function shutdownSQL() {
   if (sqlStorage !== undefined) {
     sqlStorage.end();
+    logger.generic(1, "SQL Server Shutdown!");
   }
 }
 
