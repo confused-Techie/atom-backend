@@ -236,6 +236,22 @@ describe("GET /api/packages/featured", () => {
     const res = await request(app).get("/api/packages/featured");
     expect(res.body).toBeArray();
   });
+  test("Returns Valid Data", async () => {
+    const res = await request(app).get("/api/packages/featured");
+    for (const p of res.body) {
+      // Use type coercion to catch also undefined
+      expect(p.data == null).toBeFalsy();
+      expect(isNaN(p.stargazers_count)).toBeFalsy();
+      expect(typeof p.semver === "string").toBeTruthy();
+    }
+  });
+  test("Does Not Return Sensible Data", async () => {
+    const res = await request(app).get("/api/packages/featured");
+    for (const p of res.body) {
+      expect(p.pointer == null).toBeTruthy();
+      expect(p.id == null).toBeTruthy();
+    }
+  });
 });
 
 describe("GET /api/packages/search", () => {

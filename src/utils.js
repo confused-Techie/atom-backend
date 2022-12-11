@@ -93,7 +93,7 @@ async function constructPackageObjectFull(pack) {
  * construction of package object shorts
  * @param {object} pack - The anticipated raw SQL return that contains all data
  * to construct a Package Object Short.
- * @returns {object} A properly formatted and converted Package Object Short.
+ * @returns {object|array} A properly formatted and converted Package Object Short.
  * @see {@link https://github.com/confused-Techie/atom-backend/blob/main/docs/returns.md#package-object-short}
  * @see {@link https://github.com/confused-Techie/atom-backend/blob/main/docs/queries.md#retrieve-many-sorted-packages--package-object-short}
  */
@@ -131,6 +131,7 @@ async function constructPackageObjectShort(pack) {
     pack.data === undefined ||
     pack.downloads === undefined ||
     pack.stargazers_count === undefined ||
+    pack.original_stargazers === undefined ||
     pack.semver === undefined
   ) {
     logger.generic(

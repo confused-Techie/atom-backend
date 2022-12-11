@@ -212,16 +212,21 @@ async function postPackages(req, res) {
 async function getPackagesFeatured(req, res) {
   // Returns Package Object Short array.
   // Supports engine query parameter.
-  const col = await database.getFeaturedPackages();
+  const packs = await database.getFeaturedPackages();
 
-  if (!col.ok) {
-    await common.handleError(req, res, col, 1003);
+  if (!packs.ok) {
+    await common.handleError(req, res, packs, 1003);
     return;
   }
 
-  const newCol = await utils.constructPackageObjectShort(col.content);
+  const packObjShort = await utils.constructPackageObjectShort(packs.content);
 
-  res.status(200).json(newCol);
+  // The endpoint using this function needs an array.
+  const respArray = Array.isArray(packObjShort)
+    ? packObjShort
+    : [packObjShort];
+
+  res.status(200).json(respArray);
   logger.httpLog(req, res);
 }
 
