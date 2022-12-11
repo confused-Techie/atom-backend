@@ -1,12 +1,16 @@
 # Auth
 
-There are two seperate levels of authentication for end users on the server, which are below as well as a short summary of our authentication strategy.
+If you want to learn how authentication works as an end user read here [end_user_auth.md](end_user_auth.md).
+
+---
+
+There are two separate levels of authentication for end users on the server, which are below as well as a short summary of our authentication strategy.
 
 ## How does Authentication work on the Pulsar Backend
 
 Since it was found to be essential to not be saving any delicate user information on our systems, the team of Pulsar decided to offload the major responsibility of authentication to GitHub.
 
-When a user has a valid token, one retreived from the sign up page or a self created PAT token, and the user has an account on our backend (which would contain very few details of the user account, with the `node_id` being most important) they would then only need to provide whatever this token is to the backend for authentication.
+When a user has a valid token, one retrieved from the sign up page or a self created PAT token, and the user has an account on our backend (which would contain very few details of the user account, with the `node_id` being most important) they would then only need to provide whatever this token is to the backend for authentication.
 
 The important thing to note is that the Pulsar Backend does not store the users token, we simply use this token and provide it to GitHub asking for the details of the account the token belongs to. When we get that information back we check the returned `node_id` with the `node_id` of all the users we have stored. If there is a match, we assume that this is the user. Since the `node_id` should be consistent for a user on GitHub over the lifetime of their account, there shouldn't be any action a user can take to change this. Additionally the `node_id` is public information for a non-authenticated request to GitHub so it isn't considered sensitive information.
 
