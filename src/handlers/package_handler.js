@@ -131,7 +131,11 @@ async function postPackages(req, res) {
   if (isBanned.ok) {
     logger.generic(3, `postPackages Blocked by banned package name: ${repo}`);
     // The package name is banned
-    await common.handleError(req, res, { ok: false, short: "Server Error", content: "Package Name is banned" });
+    await common.handleError(req, res, {
+      ok: false,
+      short: "Server Error",
+      content: "Package Name is banned",
+    });
     // ^^^ Replace with a more specific error handler once supported TODO
     return;
   }
@@ -620,7 +624,11 @@ async function postPackagesVersion(req, res) {
     if (isBanned.ok) {
       logger.generic(3, `postPackages Blocked by banned package name: ${repo}`);
       // is banned
-      await common.handleError(req, res, { ok: false, short: "Server Error", content: "Package Name is Banned" });
+      await common.handleError(req, res, {
+        ok: false,
+        short: "Server Error",
+        content: "Package Name is Banned",
+      });
       // TODO ^^^ Replace with specific error once more are supported.
       return;
     }

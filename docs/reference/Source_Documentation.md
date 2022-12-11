@@ -1087,11 +1087,10 @@ A helper for any functions that are agnostic in handlers.
 
 * [utils](#module_utils)
     * [~StateStore](#module_utils..StateStore)
-    * [~isPackageNameBanned(name)](#module_utils..isPackageNameBanned) ⇒ <code>boolean</code>
+    * [~isPackageNameBanned(name)](#module_utils..isPackageNameBanned) ⇒ <code>object</code>
     * [~constructPackageObjectFull(pack)](#module_utils..constructPackageObjectFull) ⇒ <code>object</code>
     * [~constructPackageObjectShort(pack)](#module_utils..constructPackageObjectShort) ⇒ <code>object</code>
     * [~constructPackageObjectJSON(pack)](#module_utils..constructPackageObjectJSON) ⇒ <code>object</code>
-    * [~deepCopy(obj)](#module_utils..deepCopy) ⇒ <code>object</code>
     * [~engineFilter()](#module_utils..engineFilter) ⇒ <code>object</code>
     * [~semverArray(semver)](#module_utils..semverArray) ⇒ <code>array</code> \| <code>null</code>
     * [~semverGt(a1, a2)](#module_utils..semverGt) ⇒ <code>boolean</code>
@@ -1110,13 +1109,14 @@ These states are used during the authentication flow to help ensure against mali
 **Kind**: inner class of [<code>utils</code>](#module_utils)  
 <a name="module_utils..isPackageNameBanned"></a>
 
-### utils~isPackageNameBanned(name) ⇒ <code>boolean</code>
+### utils~isPackageNameBanned(name) ⇒ <code>object</code>
 This uses the `storage.js` to retreive a banlist. And then simply
 iterates through the banList array, until it finds a match to the name
 it was given. If no match is found then it returns false.
 
 **Kind**: inner method of [<code>utils</code>](#module_utils)  
-**Returns**: <code>boolean</code> - Returns true if the given name is banned. False otherwise.  
+**Returns**: <code>object</code> - Returns Server Status Object with ok as true if blocked,
+false otherwise.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -1174,23 +1174,6 @@ to this server for download.
 | Param | Type | Description |
 | --- | --- | --- |
 | pack | <code>object</code> | The expected raw SQL return of `getPackageVersionByNameAndVersion` |
-
-<a name="module_utils..deepCopy"></a>
-
-### utils~deepCopy(obj) ⇒ <code>object</code>
-Originally was a method to create a deep copy of shallow copied complex objects.
-Which allowed modifications on the object without worry of changing the values
-of the original object, or realistically cached objects. But at this point, the feature
-may still be useful in the future. So has been moved from collection.js to utils.js
-Just in case it is needed again.
-
-**Kind**: inner method of [<code>utils</code>](#module_utils)  
-**Returns**: <code>object</code> - A Deep Copy of the original object, that should share zero references to the original.  
-**Depreciated**: Since migration to DB, and not having to worry about in memory objects.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| obj | <code>object</code> | The Object to Deep Copy. |
 
 <a name="module_utils..engineFilter"></a>
 
