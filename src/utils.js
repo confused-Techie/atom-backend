@@ -14,7 +14,8 @@ const crypto = require("crypto");
  * iterates through the banList array, until it finds a match to the name
  * it was given. If no match is found then it returns false.
  * @param {string} name - The name of the package to check if it is banned.
- * @returns {boolean} Returns true if the given name is banned. False otherwise.
+ * @returns {object} Returns Server Status Object with ok as true if blocked,
+ * false otherwise.
  */
 async function isPackageNameBanned(name) {
   let banList = await storage.getBanList();
@@ -28,7 +29,6 @@ async function isPackageNameBanned(name) {
   }
 
   logger.generic(6, "Success Status while retreiving Name Ban List.");
-
   return banList.content.find((b) => name === b) ? { ok: true } : { ok: false };
 }
 
@@ -192,44 +192,6 @@ async function constructPackageObjectJSON(pack) {
   logger.generic(66, "Array Package Object JSON finished without Error");
 
   return arrPack;
-}
-
-/**
- * @async
- * @function deepCopy
- * @depreciated Since migration to DB, and not having to worry about in memory objects.
- * @desc Originally was a method to create a deep copy of shallow copied complex objects.
- * Which allowed modifications on the object without worry of changing the values
- * of the original object, or realistically cached objects. But at this point, the feature
- * may still be useful in the future. So has been moved from collection.js to utils.js
- * Just in case it is needed again.
- * @param {object} obj - The Object to Deep Copy.
- * @returns {object} A Deep Copy of the original object, that should share zero references to the original.
- */
-async function deepCopy(obj) {
-  logger.generic(3, `utils.deepCopy() is deprecated! ${deepCopy.caller ?? ""}`);
-  // this resolves github.com/confused-Techie/atom-community-server-backend-JS issue 13, and countless others.
-  // When the object is passed to these sort functions, they work off a shallow copy. Meaning their changes
-  // affect the original read data, meaning the cached data. Meaning subsequent queries may fail or error out.
-  // This will allow the object to be deep copied before modification.
-  // Because JS only will deep copy up to two levels deep within an object a custom implementation is needed.
-  // While we could stringify the object and parse, lets go with something a bit more obvious and verbose.
-
-  let outObject, value, key;
-
-  if (typeof obj !== "object" || obj === null) {
-    return obj;
-  }
-
-  outObject = Array.isArray(obj) ? [] : {};
-
-  for (key in obj) {
-    value = obj[key];
-
-    outObject[key] = await deepCopy(value);
-  }
-
-  return outObject;
 }
 
 /**
@@ -588,7 +550,6 @@ module.exports = {
   constructPackageObjectFull,
   constructPackageObjectShort,
   constructPackageObjectJSON,
-  deepCopy,
   engineFilter,
   semverArray,
   semverGt,

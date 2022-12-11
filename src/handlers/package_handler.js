@@ -125,6 +125,17 @@ async function postPackages(req, res) {
     return;
   }
 
+  // Now check if the name is banned.
+  const isBanned = await utils.isPackageNameBanned(repo);
+
+  if (isBanned.ok) {
+    logger.generic(3, `postPackages Blocked by banned package name: ${repo}`);
+    // The package name is banned
+    await common.handleError(req, res, { ok: false, short: "Server Error", content: "Package Name is banned" });
+    // ^^^ Replace with a more specific error handler once supported TODO
+    return;
+  }
+
   const exists = await database.getPackageByName(repo, true);
 
   if (exists.ok) {
@@ -602,6 +613,18 @@ async function postPackagesVersion(req, res) {
   // And check again if the name is incorrect, since it'll need a new entry onto the names.
 
   if (packJSON.name !== params.packageName && params.rename) {
+    // Before allowing the rename of a package, ensure the new name isn't banned.
+
+    const isBanned = await utils.isPackageNameBanned(packJSON.name);
+
+    if (isBanned.ok) {
+      logger.generic(3, `postPackages Blocked by banned package name: ${repo}`);
+      // is banned
+      await common.handleError(req, res, { ok: false, short: "Server Error", content: "Package Name is Banned" });
+      // TODO ^^^ Replace with specific error once more are supported.
+      return;
+    }
+
     // The flow for renaming the existing package.
     const newName = await database.insertNewPackageName(
       packJSON.name,
