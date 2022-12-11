@@ -64,7 +64,7 @@ async function getLogin(req, res) {
 async function getOauth(req, res) {
   let params = {
     state: req.query.state ?? "",
-    code: req.query.code ?? ""
+    code: req.query.code ?? "",
   };
   logger.generic(4, `Get OAuth Hit! Pat: ${params.pat}`);
 
@@ -92,7 +92,10 @@ async function getOauth(req, res) {
     initial_auth.body.access_token === null ||
     initial_auth.body.token_type === null
   ) {
-    logger.generic(2, "Auth Request to GitHub Failed!", { type: "object", obj: initial_auth });
+    logger.generic(2, "Auth Request to GitHub Failed!", {
+      type: "object",
+      obj: initial_auth,
+    });
     await common.handleError(req, res, {
       ok: false,
       short: "Server Error",
@@ -108,7 +111,10 @@ async function getOauth(req, res) {
       .set({ "User-Agent": GH_USERAGENT });
 
     if (user_data.status !== 200) {
-      logger.generic(2, "User Data Request to GitHub Failed!", { type: "object", obj: user_data });
+      logger.generic(2, "User Data Request to GitHub Failed!", {
+        type: "object",
+        obj: user_data,
+      });
       await common.handleError(req, res, {
         ok: false,
         short: "Server Error",
@@ -162,31 +168,38 @@ async function getOauth(req, res) {
     res.status(200).json(create_user.content);
     logger.httpLog(req, res);
   } catch (err) {
-    logger.generic(2, "/api/oauth Caught an Error!", { type: "error", err: err });
+    logger.generic(2, "/api/oauth Caught an Error!", {
+      type: "error",
+      err: err,
+    });
     await common.handleError(req, res, err);
     return;
   }
 }
 
 /**
-  * @async
-  * @function getPat
-  * @desc Endpoint intended to Allow users to sign up with a Pat Token.
-  * @param {object} req - The `Request` object inherited from the Express endpoint.
-  * @param {object} res - The `Response` object inherited from the Express endpoint.
-  * @property {http_method} - GET
-  * @property {http_endpoint} - /api/pat
-  */
+ * @async
+ * @function getPat
+ * @desc Endpoint intended to Allow users to sign up with a Pat Token.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ * @property {http_method} - GET
+ * @property {http_endpoint} - /api/pat
+ */
 async function getPat(req, res) {
   let params = {
-    token: req.query.token ?? ""
+    token: req.query.token ?? "",
   };
 
   logger.generic(4, `Get Pat Hit!`);
 
   if (params.pat === "") {
     logger.generic(3, "Pat Empty on Request");
-    await common.handleError(req, res, { ok: false, short: "Not Found", content: "Pat Empty on Request" });
+    await common.handleError(req, res, {
+      ok: false,
+      short: "Not Found",
+      content: "Pat Empty on Request",
+    });
     return;
   }
 
@@ -197,8 +210,15 @@ async function getPat(req, res) {
       .set({ "User-Agent": GH_USERAGENT });
 
     if (user_data.status !== 200) {
-      logger.generic(2, "User Data Request to GitHub Failed!", { type: "object", obj: user_data });
-      await common.handleError(req, res, { ok: false, short: "Server Error", content: user_data });
+      logger.generic(2, "User Data Request to GitHub Failed!", {
+        type: "object",
+        obj: user_data,
+      });
+      await common.handleError(req, res, {
+        ok: false,
+        short: "Server Error",
+        content: user_data,
+      });
       return;
     }
 
@@ -206,7 +226,7 @@ async function getPat(req, res) {
     let userObj = {
       username: user_data.body.login,
       node_id: user_data.body.node_id,
-      avatar: user_data.body.avatar_url
+      avatar: user_data.body.avatar_url,
     };
 
     let check_user_existance = await database.getUserByNodeID(userObj.node_id);
@@ -233,7 +253,7 @@ async function getPat(req, res) {
     create_user.content.token = params.token;
     res.status(200).json(create_user.content);
     logger.httpLog(req, res);
-  } catch(err) {
+  } catch (err) {
     logger.generic(2, "/api/pat Caught an Error!", { type: "error", err: err });
     await common.handleError(req, res, err);
     return;

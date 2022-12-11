@@ -45,7 +45,10 @@ async function getPackages(req, res) {
   );
 
   if (!packages.ok) {
-    logger.generic(3, `getPackages-getSortedPackages Not OK: ${packages.content}`);
+    logger.generic(
+      3,
+      `getPackages-getSortedPackages Not OK: ${packages.content}`
+    );
     await common.handleError(req, res, packages, 1001);
     return;
   }
@@ -55,7 +58,10 @@ async function getPackages(req, res) {
   const totalPages = await database.getTotalPackageEstimate();
 
   if (!totalPages.ok) {
-    logger.generic(3, `getPackages-getTotalPackageEstimate Not OK: ${totalPages.content}`);
+    logger.generic(
+      3,
+      `getPackages-getTotalPackageEstimate Not OK: ${totalPages.content}`
+    );
     await common.handleError(req, res, totalPages, 1002);
     return;
   }
@@ -153,7 +159,10 @@ async function postPackages(req, res) {
 
   // Even further though we need to check that the error is not found, since errors here can bubble.
   if (exists.short !== "Not Found") {
-    logger.generic(3, `postPackages-getPackageByName Not OK: ${exists.content}`);
+    logger.generic(
+      3,
+      `postPackages-getPackageByName Not OK: ${exists.content}`
+    );
     // The server failed for some other bubbled reason, and is now encountering an error.
     await common.handleError(req, res, exists);
     return;
@@ -181,7 +190,10 @@ async function postPackages(req, res) {
   const insertedNewPack = await database.insertNewPackage(newPack.content);
 
   if (!insertedNewPack.ok) {
-    logger.generic(3, `postPackages-insertNewPackage Not OK: ${insertedNewPack.content}`);
+    logger.generic(
+      3,
+      `postPackages-insertNewPackage Not OK: ${insertedNewPack.content}`
+    );
     await common.handleError(req, res, insertedNewPack);
     return;
   }
@@ -192,7 +204,10 @@ async function postPackages(req, res) {
   const newDbPack = await database.getPackageByName(repo, true);
 
   if (!newDbPack.ok) {
-    logger.generic(3, `postPackages-getPackageByName (After Pub) Not OK: ${newDbPack.content}`);
+    logger.generic(
+      3,
+      `postPackages-getPackageByName (After Pub) Not OK: ${newDbPack.content}`
+    );
     common.handleError(req, res, newDbPack);
     return;
   }
@@ -223,7 +238,10 @@ async function getPackagesFeatured(req, res) {
   const col = await database.getFeaturedPackages();
 
   if (!col.ok) {
-    logger.generic(3, `getPackagesFeatured-getFeaturedPackages Not OK: ${col.content}`);
+    logger.generic(
+      3,
+      `getPackagesFeatured-getFeaturedPackages Not OK: ${col.content}`
+    );
     await common.handleError(req, res, col, 1003);
     return;
   }
@@ -269,7 +287,10 @@ async function getPackagesSearch(req, res) {
 
   if (!packs.ok) {
     if (packs.short == "Not Found") {
-      logger.generic(4, "getPackagesSearch-simpleSearch Responding with Empty Array for Not Found Status");
+      logger.generic(
+        4,
+        "getPackagesSearch-simpleSearch Responding with Empty Array for Not Found Status"
+      );
       // Because getting not found from the search, means the users
       // search just had no matches, we will specially handle this to return
       // an empty array instead.
@@ -277,7 +298,10 @@ async function getPackagesSearch(req, res) {
       logger.httpLog(req, res);
       return;
     }
-    logger.generic(3, `getPackagesSearch-simpleSearch Not OK: ${packs.content}`);
+    logger.generic(
+      3,
+      `getPackagesSearch-simpleSearch Not OK: ${packs.content}`
+    );
     await common.handleError(req, res, packs, 1007);
     return;
   }
@@ -285,7 +309,10 @@ async function getPackagesSearch(req, res) {
   let newPacks = await utils.constructPackageObjectShort(packs.content);
 
   if (Object.keys(newPacks).length < 1) {
-    logger.generic(4, "getPackagesSearch-simpleSearch Responding with Empty Array for 0 Key Length Object");
+    logger.generic(
+      4,
+      "getPackagesSearch-simpleSearch Responding with Empty Array for 0 Key Length Object"
+    );
     newPacks = [];
     // This also helps protect against misreturned searches. As in getting a 404 rather
     // than empty search results.
@@ -337,7 +364,10 @@ async function getPackagesDetails(req, res) {
   let pack = await database.getPackageByName(params.name, true);
 
   if (!pack.ok) {
-    logger.generic(3, `getPackagesDetails-getPackageByName Not OK: ${pack.content}`);
+    logger.generic(
+      3,
+      `getPackagesDetails-getPackageByName Not OK: ${pack.content}`
+    );
     await common.handleError(req, res, pack, 1004);
     return;
   }

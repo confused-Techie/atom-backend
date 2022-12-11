@@ -10,6 +10,10 @@ Auth: `FALSE`
 OAuth Callback URL. Other details TDB.
 
 Auth: `FALSE`
+# **[GET]** /api/pat
+Pat Token Signup URL.
+
+Auth: `FALSE`
 # **[GET]** /api/packages
 List all packages.
 
