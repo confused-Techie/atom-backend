@@ -72,7 +72,7 @@ async function getOauth(req, res) {
   // We will support signing up with a PAT token, where if `?pat=true`
   // The user skips any state check, and provides their PAT token directly
   // to the server to create an account.
-  if (!pat) {
+  if (!params.pat) {
     // First we want to ensure that our state is still the same.
     let stateCheck = stateStore.getState(req.ip, params.state);
 
