@@ -477,8 +477,11 @@ async function getPackageCollectionByName(packArray) {
   try {
     sqlStorage ??= setupSQL();
 
+    // Since this function is invoked by getFeaturedThemes and getFeaturedPackages
+    // which process the returned content with constructPackageObjectShort(),
+    // we select only the needed columns.
     const command = await sqlStorage`
-      SELECT *
+      SELECT p.data, p.downloads, p.stargazers_count, p.original_stargazers, v.semver
       FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
       WHERE pointer IN (
         SELECT pointer FROM names
@@ -903,9 +906,8 @@ async function getFeaturedPackages() {
 /**
  * @async
  * @function getFeaturedThemes
- * @desc Collects the hardcoded featured themes array from the sotrage.js
- * module. Then uses this.getPackageCollectionByName to retreive details of the
- * package.
+ * @desc Collects the hardcoded featured themes array from the storage.js module.
+ * Then uses this.getPackageCollectionByName to retreive details of the package.
  * @returns {object} A server status object.
  */
 async function getFeaturedThemes() {
