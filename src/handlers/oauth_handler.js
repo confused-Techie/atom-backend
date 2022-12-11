@@ -64,16 +64,22 @@ async function getOauth(req, res) {
   let params = {
     state: req.query.state ?? "",
     code: req.query.code ?? "",
+    pat: req.query.pat ?? false,
   };
 
   //throw new Error("Not Supported!"); // WARNING: Turning on before remote depoloyment disables auth during beta
 
-  // First we want to ensure that our state is still the same.
-  let stateCheck = stateStore.getState(req.ip, params.state);
+  // We will support signing up with a PAT token, where if `?pat=true`
+  // The user skips any state check, and provides their PAT token directly
+  // to the server to create an account.
+  if (!pat) {
+    // First we want to ensure that our state is still the same.
+    let stateCheck = stateStore.getState(req.ip, params.state);
 
-  if (!stateCheck.ok) {
-    await common.handleError(req, res, stateCheck);
-    return;
+    if (!stateCheck.ok) {
+      await common.handleError(req, res, stateCheck);
+      return;
+    }
   }
 
   const initial_auth = await superagent
