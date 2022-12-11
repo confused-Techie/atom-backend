@@ -92,6 +92,18 @@ app.get("/api/oauth", authLimit, async (req, res) => {
 });
 
 /**
+  * @web
+  * @ignore
+  * @path /api/pat
+  * @desc Pat Token Signup URL.
+  * @method GET
+  * @auth FALSE
+  */
+app.get("/api/pat", authLimit, async (req, res) => {
+  await oauth_handler.getPat(req, res);
+});
+
+/**
  * @web
  * @ignore
  * @path /api/packages

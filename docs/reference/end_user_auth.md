@@ -25,15 +25,14 @@ Once you have your PAT token created, you'll need to pass that along to Pulsar d
 
 You can do this manually, but it's recommended to use it on the [Pulsar Sign Up Screen](#).
 
-But if you'd like to do it manually, you need to navigate to the following URL [`/api/oauth`](https://api.pulsar-edit.dev/api/oauth) while modifiying the following credentials.
+But if you'd like to do it manually, you need to navigate to the following URL [`/api/pat`](https://api.pulsar-edit.dev/api/pat) while modifying the following credentials.
 
-* `pat` = `true`
-* `code` = Your PAT Token
+* `token` = Your PAT Token
 
 Let's say your PAT Token is `gh_123` you should end up with a link like so:
 
 ```
-https://api.pulsar-edit.dev/api/oauth?pat=true&code=gh_123
+https://api.pulsar-edit.dev/api/pat?token=gh_123
 ```
 
 By following this link you should then be redirected to the User Page on the Pulsar Website where you can review your account details, and copy your Pulsar API Key, which in this case is just the same PAT Token you've provided us.

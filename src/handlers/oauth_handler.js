@@ -35,10 +35,11 @@ async function getLogin(req, res) {
   // So lets go ahead and get our state
   // Please note that because of the usage of the crypto module, this is one of the only functions that
   // return a promise
-
+  logger.generic(4, "New Hit on api/login");
   stateStore
     .setState(req.ip)
     .then((state) => {
+      logger.generic(4, `StateStore Success and Redirect for: ${req.ip}`);
       res
         .status(302)
         .redirect(
@@ -63,23 +64,19 @@ async function getLogin(req, res) {
 async function getOauth(req, res) {
   let params = {
     state: req.query.state ?? "",
-    code: req.query.code ?? "",
-    pat: req.query.pat ?? false,
+    code: req.query.code ?? ""
   };
+  logger.generic(4, `Get OAuth Hit! Pat: ${params.pat}`);
 
   //throw new Error("Not Supported!"); // WARNING: Turning on before remote depoloyment disables auth during beta
 
-  // We will support signing up with a PAT token, where if `?pat=true`
-  // The user skips any state check, and provides their PAT token directly
-  // to the server to create an account.
-  if (!params.pat) {
-    // First we want to ensure that our state is still the same.
-    let stateCheck = stateStore.getState(req.ip, params.state);
+  // First we want to ensure that our state is still the same.
+  let stateCheck = stateStore.getState(req.ip, params.state);
 
-    if (!stateCheck.ok) {
-      await common.handleError(req, res, stateCheck);
-      return;
-    }
+  if (!stateCheck.ok) {
+    logger.generic(3, `StateStore Check Failed! ${stateCheck.content}`);
+    await common.handleError(req, res, stateCheck);
+    return;
   }
 
   const initial_auth = await superagent
@@ -95,6 +92,7 @@ async function getOauth(req, res) {
     initial_auth.body.access_token === null ||
     initial_auth.body.token_type === null
   ) {
+    logger.generic(2, "Auth Request to GitHub Failed!", { type: "object", obj: initial_auth });
     await common.handleError(req, res, {
       ok: false,
       short: "Server Error",
@@ -110,6 +108,7 @@ async function getOauth(req, res) {
       .set({ "User-Agent": GH_USERAGENT });
 
     if (user_data.status !== 200) {
+      logger.generic(2, "User Data Request to GitHub Failed!", { type: "object", obj: user_data });
       await common.handleError(req, res, {
         ok: false,
         short: "Server Error",
@@ -131,6 +130,7 @@ async function getOauth(req, res) {
     let check_user_existance = await database.getUserByNodeID(userObj.node_id);
 
     if (check_user_existance.ok) {
+      logger.generic(4, `User Check Says User Exists: ${userObj.username}`);
       // This means that the user does in fact already exist.
       // And from there they are likely reauthenticating,
       // But since we don't save any type of auth tokens, the user just needs a new one
@@ -147,6 +147,7 @@ async function getOauth(req, res) {
     let create_user = await database.insertNewUser(userObj);
 
     if (!create_user.ok) {
+      logger.generic(2, `Creating User Failed! ${userObj.username}`);
       await common.handleError(req, res, create_user);
       return;
     }
@@ -161,6 +162,79 @@ async function getOauth(req, res) {
     res.status(200).json(create_user.content);
     logger.httpLog(req, res);
   } catch (err) {
+    logger.generic(2, "/api/oauth Caught an Error!", { type: "error", err: err });
+    await common.handleError(req, res, err);
+    return;
+  }
+}
+
+/**
+  * @async
+  * @function getPat
+  * @desc Endpoint intended to Allow users to sign up with a Pat Token.
+  * @param {object} req - The `Request` object inherited from the Express endpoint.
+  * @param {object} res - The `Response` object inherited from the Express endpoint.
+  * @property {http_method} - GET
+  * @property {http_endpoint} - /api/pat
+  */
+async function getPat(req, res) {
+  let params = {
+    token: req.query.token ?? ""
+  };
+
+  logger.generic(4, `Get Pat Hit!`);
+
+  if (params.pat === "") {
+    logger.generic(3, "Pat Empty on Request");
+    await common.handleError(req, res, { ok: false, short: "Not Found", content: "Pat Empty on Request" });
+    return;
+  }
+
+  try {
+    const user_data = await superagent
+      .get("https://api.github.com/user")
+      .set({ Authorization: `Bearer ${params.token}` })
+      .set({ "User-Agent": GH_USERAGENT });
+
+    if (user_data.status !== 200) {
+      logger.generic(2, "User Data Request to GitHub Failed!", { type: "object", obj: user_data });
+      await common.handleError(req, res, { ok: false, short: "Server Error", content: user_data });
+      return;
+    }
+
+    // Now to build a valid user object
+    let userObj = {
+      username: user_data.body.login,
+      node_id: user_data.body.node_id,
+      avatar: user_data.body.avatar_url
+    };
+
+    let check_user_existance = await database.getUserByNodeID(userObj.node_id);
+
+    if (check_user_existance.ok) {
+      logger.generic(4, `User Check Says User Exists: ${userObj.username}`);
+
+      // If we plan to allow updating the user name or image, we would do so here
+      userObj.token = params.token;
+
+      res.status(200).json(userObj);
+      logger.httpLog(req, res);
+      return;
+    }
+
+    let create_user = await database.insertNewUser(userObj);
+
+    if (!create_user.ok) {
+      logger.generic(2, `Creating User Failed! ${userObj.username}`);
+      await common.handleError(req, res, create_user);
+      return;
+    }
+
+    create_user.content.token = params.token;
+    res.status(200).json(create_user.content);
+    logger.httpLog(req, res);
+  } catch(err) {
+    logger.generic(2, "/api/pat Caught an Error!", { type: "error", err: err });
     await common.handleError(req, res, err);
     return;
   }
@@ -169,4 +243,5 @@ async function getOauth(req, res) {
 module.exports = {
   getLogin,
   getOauth,
+  getPat,
 };
