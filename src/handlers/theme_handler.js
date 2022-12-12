@@ -46,7 +46,12 @@ async function getThemes(req, res) {
   res.status(200).json({message: "todo"});
 }
 
+async function getThemesSearch(req, res) {
+  res.status(200).json({ message: "todo" });
+}
+
 module.exports = {
   getThemeFeatured,
   getThemes,
+  getThemesSearch,
 };
