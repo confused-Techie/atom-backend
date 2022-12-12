@@ -94,10 +94,29 @@ app.get("/api/oauth", authLimit, async (req, res) => {
 /**
  * @web
  * @ignore
- * @path /api/packages
+ * @path /api/pat
+ * @desc Pat Token Signup URL.
+ * @method GET
+ * @auth FALSE
+ */
+app.get("/api/pat", authLimit, async (req, res) => {
+  await oauth_handler.getPat(req, res);
+});
+
+/**
+ * @web
+ * @ignore
+ * @path /api/:packType
  * @desc List all packages.
  * @method GET
  * @auth false
+ * @param
+ *   @name packType
+ *   @location path
+ *   @Ptype string
+ *   @required true
+ *   @Pdesc The Package Type you want to request.
+ *   @valid packages, themes
  * @param
  *   @name page
  *   @location query
@@ -125,8 +144,18 @@ app.get("/api/oauth", authLimit, async (req, res) => {
  *   @Rtype application/json
  *   @Rdesc Returns a list of all packages. Paginated 30 at a time. Links to the next and last pages are in the 'Link' Header.
  */
-app.get("/api/packages", genericLimit, async (req, res) => {
-  await package_handler.getPackages(req, res);
+app.get("/api/:packType", genericLimit, async (req, res, next) => {
+  switch (req.params.packType) {
+    case "packages":
+      await package_handler.getPackages(req, res);
+      break;
+    case "themes":
+      await theme_handler.getThemes(req, res);
+      break;
+    default:
+      next();
+      break;
+  }
 });
 
 /**
@@ -136,6 +165,13 @@ app.get("/api/packages", genericLimit, async (req, res) => {
  * @desc Publishes a new Package.
  * @method POST
  * @auth true
+ * @param
+ *   @name packType
+ *   @location path
+ *   @Ptype string
+ *   @required true
+ *   @Pdesc The Package Type you want to request.
+ *   @valid packages, themes
  * @param
  *   @name repository
  *   @Ptype string
@@ -162,32 +198,64 @@ app.get("/api/packages", genericLimit, async (req, res) => {
  *   @Rtype application/json
  *   @Rdesc A package by that name already exists.
  */
-app.post("/api/packages", authLimit, async (req, res) => {
-  await package_handler.postPackages(req, res);
+app.post("/api/:packType", authLimit, async (req, res, next) => {
+  switch (req.params.packType) {
+    case "packages":
+    case "themes":
+      await package_handler.postPackages(req, res);
+      break;
+    default:
+      next();
+      break;
+  }
 });
 
 /**
  * @web
  * @ignore
- * @path /api/packages/featured
+ * @path /api/:packType/featured
  * @desc Previously Undocumented endpoint. Used to return featured packages from all existing packages.
  * @method GET
  * @auth false
+ * @param
+ *   @name packType
+ *   @location path
+ *   @Ptype string
+ *   @valid packages, themes
+ *   @required true
+ *   @Pdesc The Package Type you want to request.
  * @response
  *   @status 200
  *   @Rdesc An array of packages similar to /api/packages endpoint.
  */
-app.get("/api/packages/featured", genericLimit, async (req, res) => {
-  await package_handler.getPackagesFeatured(req, res);
+app.get("/api/:packType/featured", genericLimit, async (req, res, next) => {
+  switch (req.params.packType) {
+    case "packages":
+      await package_handler.getPackagesFeatured(req, res);
+      break;
+    case "themes":
+      await theme_handler.getThemeFeatured(req, res);
+      break;
+    default:
+      next();
+      break;
+  }
 });
 
 /**
  * @web
  * @ignore
- * @path /api/packages/search
+ * @path /api/:packType/search
  * @desc Searches all Packages.
  * @method GET
  * @auth false
+ * @param
+ *   @name packType
+ *   @location path
+ *   @Ptype string
+ *   @required true
+ *   @valid packages, themes
+ *   @Pdesc The Package Type you want.
  * @param
  *   @name q
  *   @Ptype string
@@ -221,8 +289,18 @@ app.get("/api/packages/featured", genericLimit, async (req, res) => {
  *   @Rtype application/json
  *   @Rdesc Same format as listing packages, additionally paginated at 30 items.
  */
-app.get("/api/packages/search", genericLimit, async (req, res) => {
-  await package_handler.getPackagesSearch(req, res);
+app.get("/api/:packType/search", genericLimit, async (req, res, next) => {
+  switch (req.params.packType) {
+    case "packages":
+      await package_handler.getPackagesSearch(req, res);
+      break;
+    case "themes":
+      await theme_handler.getThemesSearch(req, res);
+      break;
+    default:
+      next();
+      break;
+  }
 });
 
 /**
@@ -232,6 +310,13 @@ app.get("/api/packages/search", genericLimit, async (req, res) => {
  * @desc Show package details.
  * @method GET
  * @auth false
+ * @param
+ *   @name packType
+ *   @location path
+ *   @Ptype string
+ *   @required true
+ *   @Pdesc The Package Type you want to request.
+ *   @valid packages, themes
  * @param
  *   @name packageName
  *   @location path
@@ -249,8 +334,18 @@ app.get("/api/packages/search", genericLimit, async (req, res) => {
  *   @Rtype application/json
  *   @Rdesc Returns package details and versions for a single package.
  */
-app.get("/api/packages/:packageName", genericLimit, async (req, res) => {
-  await package_handler.getPackagesDetails(req, res);
+app.get("/api/:packType/:packageName", genericLimit, async (req, res, next) => {
+  switch (req.params.packType) {
+    case "packages":
+    case "themes":
+      // We can use the same handler here because the logic of the return
+      // Will be identical no matter what type of package it is.
+      await package_handler.getPackagesDetails(req, res);
+      break;
+    default:
+      next();
+      break;
+  }
 });
 
 /**
@@ -260,6 +355,13 @@ app.get("/api/packages/:packageName", genericLimit, async (req, res) => {
  * @method DELETE
  * @auth true
  * @desc Delete a package.
+ * @param
+ *   @name packType
+ *   @location path
+ *   @Ptype string
+ *   @required true
+ *   @Pdesc The Package Type you want to request.
+ *   @valid packages, themes
  * @param
  *   @name packageName
  *   @location path
@@ -286,8 +388,16 @@ app.get("/api/packages/:packageName", genericLimit, async (req, res) => {
  *   @Rtype application/json
  *   @Rdesc Unauthorized.
  */
-app.delete("/api/packages/:packageName", authLimit, async (req, res) => {
-  await package_handler.deletePackagesName(req, res);
+app.delete("/api/:packType/:packageName", authLimit, async (req, res, next) => {
+  switch (req.params.packType) {
+    case "packages":
+    case "themes":
+      await package_handler.deletePackagesName(req, res);
+      break;
+    default:
+      next();
+      break;
+  }
 });
 
 /**
@@ -297,6 +407,13 @@ app.delete("/api/packages/:packageName", authLimit, async (req, res) => {
  * @method POST
  * @auth true
  * @desc Star a packge.
+ * @param
+ *   @name packType
+ *   @location path
+ *   @Ptype string
+ *   @required true
+ *   @Pdesc The Package Type you want to request.
+ *   @valid packages, themes
  * @param
  *    @name packageName
  *    @location path
@@ -314,9 +431,21 @@ app.delete("/api/packages/:packageName", authLimit, async (req, res) => {
  *    @Rtype application/json
  *    @Rdesc Returns the package that was stared.
  */
-app.post("/api/packages/:packageName/star", authLimit, async (req, res) => {
-  await package_handler.postPackagesStar(req, res);
-});
+app.post(
+  "/api/:packType/:packageName/star",
+  authLimit,
+  async (req, res, next) => {
+    switch (req.params.packType) {
+      case "packages":
+      case "themes":
+        await package_handler.postPackagesStar(req, res);
+        break;
+      default:
+        next();
+        break;
+    }
+  }
+);
 
 /**
  * @web
@@ -325,6 +454,13 @@ app.post("/api/packages/:packageName/star", authLimit, async (req, res) => {
  * @method DELETE
  * @auth true
  * @desc Unstar a package, requires authentication.
+ * @param
+ *   @name packType
+ *   @location path
+ *   @Ptype string
+ *   @required true
+ *   @Pdesc The Package Type you want to request.
+ *   @valid packages, themes
  * @param
  *  @location header
  *  @Ptype string
@@ -341,9 +477,21 @@ app.post("/api/packages/:packageName/star", authLimit, async (req, res) => {
  *  @status 201
  *  @Rdesc An empty response to convey successfully unstaring a package.
  */
-app.delete("/api/packages/:packageName/star", authLimit, async (req, res) => {
-  await package_handler.deletePackagesStar(req, res);
-});
+app.delete(
+  "/api/:packType/:packageName/star",
+  authLimit,
+  async (req, res, next) => {
+    switch (req.params.packType) {
+      case "packages":
+      case "themes":
+        await package_handler.deletePackagesStar(req, res);
+        break;
+      default:
+        next();
+        break;
+    }
+  }
+);
 
 /**
  * @web
@@ -351,6 +499,13 @@ app.delete("/api/packages/:packageName/star", authLimit, async (req, res) => {
  * @path /api/packages/:packageName/stargazers
  * @method GET
  * @desc List the users that have starred a package.
+ * @param
+ *   @name packType
+ *   @location path
+ *   @Ptype string
+ *   @required true
+ *   @Pdesc The Package Type you want to request.
+ *   @valid packages, themes
  * @param
  *  @location path
  *  @required true
@@ -362,10 +517,18 @@ app.delete("/api/packages/:packageName/star", authLimit, async (req, res) => {
  *  @Rexample [ { "login": "aperson" }, { "login": "anotherperson" } ]
  */
 app.get(
-  "/api/packages/:packageName/stargazers",
+  "/api/:packType/:packageName/stargazers",
   genericLimit,
-  async (req, res) => {
-    await package_handler.getPackagesStargazers(req, res);
+  async (req, res, next) => {
+    switch (req.params.packType) {
+      case "packages":
+      case "themes":
+        await package_handler.getPackagesStargazers(req, res);
+        break;
+      default:
+        next();
+        break;
+    }
   }
 );
 
@@ -376,6 +539,13 @@ app.get(
  * @auth true
  * @method POST
  * @desc Creates a new package version from a git tag. If `rename` is not `true`, the `name` field in `package.json` _must_ match the current package name.
+ * @param
+ *   @name packType
+ *   @location path
+ *   @Ptype string
+ *   @required true
+ *   @Pdesc The Package Type you want to request.
+ *   @valid packages, themes
  * @param
  *  @location path
  *  @name packageName
@@ -406,9 +576,21 @@ app.get(
  *  @status 409
  *  @Rdesc Version exists.
  */
-app.post("/api/packages/:packageName/versions", authLimit, async (req, res) => {
-  await package_handler.postPackagesVersion(req, res);
-});
+app.post(
+  "/api/:packType/:packageName/versions",
+  authLimit,
+  async (req, res, next) => {
+    switch (req.params.packType) {
+      case "packages":
+      case "themes":
+        await package_handler.postPackagesVersion(req, res);
+        break;
+      default:
+        next();
+        break;
+    }
+  }
+);
 
 /**
  * @web
@@ -417,6 +599,13 @@ app.post("/api/packages/:packageName/versions", authLimit, async (req, res) => {
  * @method GET
  * @auth false
  * @desc Returns `package.json` with `dist` key added for tarball download.
+ * @param
+ *   @name packType
+ *   @location path
+ *   @Ptype string
+ *   @required true
+ *   @Pdesc The Package Type you want to request.
+ *   @valid packages, themes
  * @param
  *  @location path
  *  @name packageName
@@ -432,10 +621,18 @@ app.post("/api/packages/:packageName/versions", authLimit, async (req, res) => {
  *  @Rdesc The `package.json` modified as explainged in the endpoint description.
  */
 app.get(
-  "/api/packages/:packageName/versions/:versionName",
+  "/api/:packType/:packageName/versions/:versionName",
   genericLimit,
-  async (req, res) => {
-    await package_handler.getPackagesVersion(req, res);
+  async (req, res, next) => {
+    switch (req.params.packType) {
+      case "packages":
+      case "themes":
+        await package_handler.getPackagesVersion(req, res);
+        break;
+      default:
+        next();
+        break;
+    }
   }
 );
 
@@ -449,6 +646,13 @@ app.get(
  * @method GET
  * @auth false
  * @desc Previously undocumented endpoint. Seems to allow for installation of a package. This is not currently implemented.
+ * @param
+ *   @name packType
+ *   @location path
+ *   @Ptype string
+ *   @required true
+ *   @Pdesc The Package Type you want to request.
+ *   @valid packages, themes
  * @param
  *   @location path
  *   @name packageName
@@ -464,10 +668,18 @@ app.get(
  *   @Rdesc The tarball data for the user to then be able to install.
  */
 app.get(
-  "/api/packages/:packageName/versions/:versionName/tarball",
+  "/api/:packType/:packageName/versions/:versionName/tarball",
   genericLimit,
-  async (req, res) => {
-    await package_handler.getPackagesVersionTarball(req, res);
+  async (req, res, next) => {
+    switch (req.params.packType) {
+      case "packages":
+      case "themes":
+        await package_handler.getPackagesVersionTarball(req, res);
+        break;
+      default:
+        next();
+        break;
+    }
   }
 );
 
@@ -478,6 +690,13 @@ app.get(
  * @method DELETE
  * @auth true
  * @desc Deletes a package version. Note once a version is deleted, that same version should not be reused again.
+ * @param
+ *   @name packType
+ *   @location path
+ *   @Ptype string
+ *   @required true
+ *   @Pdesc The Package Type you want to request.
+ *   @valid packages, themes
  * @param
  *  @location header
  *  @name Authentication
@@ -498,10 +717,18 @@ app.get(
  *  @Rdesc Indicates a successful deletion.
  */
 app.delete(
-  "/api/packages/:packageName/versions/:versionName",
+  "/api/:packType/:packageName/versions/:versionName",
   authLimit,
-  async (req, res) => {
-    await package_handler.deletePackageVersion(req, res);
+  async (req, res, next) => {
+    switch (req.params.packType) {
+      case "packages":
+      case "themes":
+        await package_handler.deletePackageVersion(req, res);
+        break;
+      default:
+        next();
+        break;
+    }
   }
 );
 
@@ -512,6 +739,13 @@ app.delete(
  * @desc Previously undocumented endpoint. BETA: Decreases the packages download count, by one. Indicating an uninstall.
  * @method POST
  * @auth true
+ * @param
+ *   @name packType
+ *   @location path
+ *   @Ptype string
+ *   @required true
+ *   @Pdesc The Package Type you want to request.
+ *   @valid packages, themes
  * @param
  *   @name packageName
  *   @location path
@@ -532,27 +766,20 @@ app.delete(
  *   @Rdesc Returns JSON ok: true
  */
 app.post(
-  "/api/packages/:packageName/versions/:versionName/events/uninstall",
+  "/api/:packType/:packageName/versions/:versionName/events/uninstall",
   authLimit,
-  async (req, res) => {
-    await package_handler.postPackagesEventUninstall(req, res);
+  async (req, res, next) => {
+    switch (req.params.packType) {
+      case "packages":
+      case "themes":
+        await package_handler.postPackagesEventUninstall(req, res);
+        break;
+      default:
+        next();
+        break;
+    }
   }
 );
-
-/**
- * @web
- * @ignore
- * @path /api/themes/featured
- * @desc Previously undocumented endpoint. BETA: Returns 'Featured' Themes from all available themes.
- * @method GET
- * @auth false
- * @response
- *   @status 200
- *   @Rdesc Returns an array of Theme Packages. Similar to the /api/packages Endpoint.
- */
-app.get("/api/themes/featured", genericLimit, async (req, res) => {
-  await theme_handler.getThemeFeatured(req, res);
-});
 
 /**
  * @web

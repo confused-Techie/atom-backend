@@ -1471,6 +1471,7 @@ Endpoint Handlers for Authentication URLs
 * [oauth_handler](#module_oauth_handler)
     * [~getLogin(req, res)](#module_oauth_handler..getLogin)
     * [~getOauth(req, res)](#module_oauth_handler..getOauth)
+    * [~getPat(req, res)](#module_oauth_handler..getPat)
 
 <a name="module_oauth_handler..getLogin"></a>
 
@@ -1510,6 +1511,25 @@ Endpoint intended to use as the actual return from GitHub to login.
 | --- | --- |
 | <code>http\_method</code> | GET |
 | <code>http\_endpoint</code> | /api/oath |
+
+<a name="module_oauth_handler..getPat"></a>
+
+### oauth_handler~getPat(req, res)
+Endpoint intended to Allow users to sign up with a Pat Token.
+
+**Kind**: inner method of [<code>oauth\_handler</code>](#module_oauth_handler)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+**Properties**
+
+| Type | Description |
+| --- | --- |
+| <code>http\_method</code> | GET |
+| <code>http\_endpoint</code> | /api/pat |
 
 <a name="module_package_handler"></a>
 

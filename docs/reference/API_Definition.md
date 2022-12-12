@@ -10,11 +10,20 @@ Auth: `FALSE`
 OAuth Callback URL. Other details TDB.
 
 Auth: `FALSE`
-# **[GET]** /api/packages
+# **[GET]** /api/pat
+Pat Token Signup URL.
+
+Auth: `FALSE`
+# **[GET]** /api/:packType
 List all packages.
 
 Auth: `FALSE`
 Parameters:
+---
+* packType _(required)_ `[string]` | Location: `path`  | Valid: `[packages, themes]`
+  - The Package Type you want to request.
+
+
 ---
 * page _(optional)_ `[integer]` | Location: `query` | Defaults: `1` 
   - Indicate the page number to return.
@@ -46,6 +55,11 @@ Publishes a new Package.
 
 Auth: `true`
 Parameters:
+---
+* packType _(required)_ `[string]` | Location: `path`  | Valid: `[packages, themes]`
+  - The Package Type you want to request.
+
+
 ---
 * repository _(required)_ `[string]` | Location: `query`  
   - The repository containing the plugin, in the form 'owner/repo'.
@@ -87,10 +101,17 @@ A package by that name already exists.
 
 
 ---
-# **[GET]** /api/packages/featured
+# **[GET]** /api/:packType/featured
 Previously Undocumented endpoint. Used to return featured packages from all existing packages.
 
 Auth: `FALSE`
+Parameters:
+---
+* packType _(required)_ `[string]` | Location: `path`  | Valid: `[packages, themes]`
+  - The Package Type you want to request.
+
+
+---
 Responses:
 ---
 **HTTP Status Code:** `200 OK`
@@ -99,11 +120,16 @@ An array of packages similar to /api/packages endpoint.
 
 
 ---
-# **[GET]** /api/packages/search
+# **[GET]** /api/:packType/search
 Searches all Packages.
 
 Auth: `FALSE`
 Parameters:
+---
+* packType _(required)_ `[string]` | Location: `path`  | Valid: `[packages, themes]`
+  - The Package Type you want.
+
+
 ---
 * q _(required)_ `[string]` | Location: `query`  
   - Search query.
@@ -141,6 +167,11 @@ Show package details.
 Auth: `FALSE`
 Parameters:
 ---
+* packType _(required)_ `[string]` | Location: `path`  | Valid: `[packages, themes]`
+  - The Package Type you want to request.
+
+
+---
 * packageName _(required)_ `[string]` | Location: `path`  
   - The name of the package to return details for. URL escaped.
 
@@ -166,6 +197,11 @@ Delete a package.
 
 Auth: `true`
 Parameters:
+---
+* packType _(required)_ `[string]` | Location: `path`  | Valid: `[packages, themes]`
+  - The Package Type you want to request.
+
+
 ---
 * packageName _(required)_ `[string]` | Location: `path`  
   - The name of the package to delete.
@@ -213,6 +249,11 @@ Star a packge.
 Auth: `true`
 Parameters:
 ---
+* packType _(required)_ `[string]` | Location: `path`  | Valid: `[packages, themes]`
+  - The Package Type you want to request.
+
+
+---
 * packageName _(required)_ `[string]` | Location: `path`  
   - The name of the package to star.
 
@@ -239,6 +280,11 @@ Unstar a package, requires authentication.
 Auth: `true`
 Parameters:
 ---
+* packType _(required)_ `[string]` | Location: `path`  | Valid: `[packages, themes]`
+  - The Package Type you want to request.
+
+
+---
 * Authentication _(required)_ `[string]` | Location: `header`  
   - Atom Token, in the Header Authentication Item
 
@@ -263,6 +309,11 @@ List the users that have starred a package.
 Auth: `FALSE`
 Parameters:
 ---
+* packType _(required)_ `[string]` | Location: `path`  | Valid: `[packages, themes]`
+  - The Package Type you want to request.
+
+
+---
 * packageName _(required)_  | Location: `path`  
   - The package name to check for users stars.
 
@@ -285,6 +336,11 @@ Creates a new package version from a git tag. If `rename` is not `true`, the `na
 
 Auth: `true`
 Parameters:
+---
+* packType _(required)_ `[string]` | Location: `path`  | Valid: `[packages, themes]`
+  - The Package Type you want to request.
+
+
 ---
 * packageName _(required)_  | Location: `path`  
   - The Package to modify.
@@ -332,6 +388,11 @@ Returns `package.json` with `dist` key added for tarball download.
 Auth: `FALSE`
 Parameters:
 ---
+* packType _(required)_ `[string]` | Location: `path`  | Valid: `[packages, themes]`
+  - The Package Type you want to request.
+
+
+---
 * packageName _(required)_  | Location: `path`  
   - The package name we want to access
 
@@ -356,6 +417,11 @@ Previously undocumented endpoint. Seems to allow for installation of a package. 
 Auth: `FALSE`
 Parameters:
 ---
+* packType _(required)_ `[string]` | Location: `path`  | Valid: `[packages, themes]`
+  - The Package Type you want to request.
+
+
+---
 * packageName _(required)_  | Location: `path`  
   - The package we want to download.
 
@@ -379,6 +445,11 @@ Deletes a package version. Note once a version is deleted, that same version sho
 
 Auth: `true`
 Parameters:
+---
+* packType _(required)_ `[string]` | Location: `path`  | Valid: `[packages, themes]`
+  - The Package Type you want to request.
+
+
 ---
 * Authentication _(required)_  | Location: `header`  
   - The Authentication header containing a valid Atom Token
@@ -409,6 +480,11 @@ Previously undocumented endpoint. BETA: Decreases the packages download count, b
 Auth: `true`
 Parameters:
 ---
+* packType _(required)_ `[string]` | Location: `path`  | Valid: `[packages, themes]`
+  - The Package Type you want to request.
+
+
+---
 * packageName _(required)_  | Location: `path`  
   - The name of the packge to modify.
 
@@ -429,18 +505,6 @@ Responses:
 **HTTP Status Code:** `200 OK`
 
 Returns JSON ok: true
-
-
----
-# **[GET]** /api/themes/featured
-Previously undocumented endpoint. BETA: Returns 'Featured' Themes from all available themes.
-
-Auth: `FALSE`
-Responses:
----
-**HTTP Status Code:** `200 OK`
-
-Returns an array of Theme Packages. Similar to the /api/packages Endpoint.
 
 
 ---
