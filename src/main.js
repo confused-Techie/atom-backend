@@ -137,8 +137,18 @@ app.get("/api/pat", authLimit, async (req, res) => {
  *   @Rtype application/json
  *   @Rdesc Returns a list of all packages. Paginated 30 at a time. Links to the next and last pages are in the 'Link' Header.
  */
-app.get("/api/packages", genericLimit, async (req, res) => {
-  await package_handler.getPackages(req, res);
+app.get("/api/:packType", genericLimit, async (req, res, next) => {
+  switch(req.params.packType) {
+    case "packages":
+      await package_handler.getPackages(req, res);
+      break;
+    case "themes":
+      await theme_handler.getThemes(req, res);
+      break;
+    default:
+      next();
+      break;
+  }
 });
 
 /**
