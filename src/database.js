@@ -481,7 +481,7 @@ async function getPackageCollectionByName(packArray) {
     // which process the returned content with constructPackageObjectShort(),
     // we select only the needed columns.
     const command = await sqlStorage`
-      SELECT p.data, p.downloads, p.stargazers_count, p.original_stargazers, v.semver
+      SELECT p.data, p.downloads, (p.stargazers_count + p.original_stargazers) AS stargazers_count, v.semver
       FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
       WHERE pointer IN (
         SELECT pointer FROM names
@@ -896,11 +896,7 @@ async function getFeaturedPackages() {
     return featuredArray;
   }
 
-  let allFeatured = await getPackageCollectionByName(featuredArray.content);
-
-  return allFeatured.ok
-    ? { ok: true, content: allFeatured.content }
-    : allFeatured;
+  return await getPackageCollectionByName(featuredArray.content);
 }
 
 /**
@@ -917,13 +913,9 @@ async function getFeaturedThemes() {
     return featuredThemeArray;
   }
 
-  let allFeatured = await getPackageCollectionByName(
+  return await getPackageCollectionByName(
     featuredThemeArray.content
   );
-
-  return allFeatured.ok
-    ? { ok: true, content: allFeatured.content }
-    : allFeatured;
 }
 
 /**
@@ -1263,7 +1255,8 @@ async function simpleSearch(term, page, dir, sort) {
     const lcterm = term.toLowerCase();
 
     const command = await sqlStorage`
-      SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
+      SELECT p.data, p.downloads, (p.stargazers_count + p.original_stargazers) AS stargazers_count, v.semver
+      FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
       WHERE pointer IN (
         SELECT pointer
         FROM names
@@ -1366,9 +1359,9 @@ async function getSortedPackages(page, dir, method) {
     }
 
     const command = await sqlStorage`
-      SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
-      ORDER BY ${orderType}
-      ${dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`}
+      SELECT p.data, p.downloads, (p.stargazers_count + p.original_stargazers) AS stargazers_count, v.semver
+      FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
+      ORDER BY ${orderType} ${dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`}
       LIMIT ${limit}
       OFFSET ${offset};
     `;
