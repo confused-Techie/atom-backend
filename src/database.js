@@ -914,9 +914,7 @@ async function getFeaturedThemes() {
     return featuredThemeArray;
   }
 
-  return await getPackageCollectionByName(
-    featuredThemeArray.content
-  );
+  return await getPackageCollectionByName(featuredThemeArray.content);
 }
 
 /**
@@ -1362,7 +1360,9 @@ async function getSortedPackages(page, dir, method) {
     const command = await sqlStorage`
       SELECT p.data, p.downloads, (p.stargazers_count + p.original_stargazers) AS stargazers_count, v.semver
       FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
-      ORDER BY ${orderType} ${dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`}
+      ORDER BY ${orderType} ${
+      dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`
+    }
       LIMIT ${limit}
       OFFSET ${offset};
     `;

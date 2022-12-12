@@ -129,8 +129,8 @@ describe("Get /api/packages", () => {
     for (const p of res.body) {
       expect(typeof p.name === "string").toBeTruthy();
       // PostgreSQL numeric types are not fully compatible with js Number type
-      expect((`${p.stargazers_count}`).match(/^\d+$/) === null).toBeFalsy();
-      expect((`${p.downloads}`).match(/^\d+$/) === null).toBeFalsy();
+      expect(`${p.stargazers_count}`.match(/^\d+$/) === null).toBeFalsy();
+      expect(`${p.downloads}`.match(/^\d+$/) === null).toBeFalsy();
       expect(typeof p.releases.latest === "string").toBeTruthy();
     }
   });
@@ -258,8 +258,8 @@ describe("GET /api/packages/featured", () => {
     for (const p of res.body) {
       expect(typeof p.name === "string").toBeTruthy();
       // PostgreSQL numeric types are not fully compatible with js Number type
-      expect((`${p.stargazers_count}`).match(/^\d+$/) === null).toBeFalsy();
-      expect((`${p.downloads}`).match(/^\d+$/) === null).toBeFalsy();
+      expect(`${p.stargazers_count}`.match(/^\d+$/) === null).toBeFalsy();
+      expect(`${p.downloads}`.match(/^\d+$/) === null).toBeFalsy();
       expect(typeof p.releases.latest === "string").toBeTruthy();
     }
   });
@@ -286,8 +286,8 @@ describe("GET /api/packages/search", () => {
     for (const p of res.body) {
       expect(typeof p.name === "string").toBeTruthy();
       // PostgreSQL numeric types are not fully compatible with js Number type
-      expect((`${p.stargazers_count}`).match(/^\d+$/) === null).toBeFalsy();
-      expect((`${p.downloads}`).match(/^\d+$/) === null).toBeFalsy();
+      expect(`${p.stargazers_count}`.match(/^\d+$/) === null).toBeFalsy();
+      expect(`${p.downloads}`.match(/^\d+$/) === null).toBeFalsy();
       expect(typeof p.releases.latest === "string").toBeTruthy();
     }
   });
@@ -342,8 +342,8 @@ describe("GET /api/packages/:packageName", () => {
   test("Valid package contains valid data", async () => {
     const res = await request(app).get("/api/packages/language-css");
     // PostgreSQL numeric types are not fully compatible with js Number type
-    expect((`${res.body.stargazers_count}`).match(/^\d+$/) === null).toBeFalsy();
-    expect((`${res.body.downloads}`).match(/^\d+$/) === null).toBeFalsy();
+    expect(`${res.body.stargazers_count}`.match(/^\d+$/) === null).toBeFalsy();
+    expect(`${res.body.downloads}`.match(/^\d+$/) === null).toBeFalsy();
     expect(typeof res.body.releases.latest === "string").toBeTruthy();
     for (const v of Object.keys(res.body.versions)) {
       expect(typeof res.body.versions[v].license === "string").toBeTruthy();

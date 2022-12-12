@@ -104,7 +104,7 @@ async function constructPackageObjectShort(pack) {
       latest: p.semver,
     };
     return newPack;
-  }
+  };
 
   if (Array.isArray(pack)) {
     if (pack.length === 0) {
@@ -167,10 +167,10 @@ async function constructPackageObjectJSON(pack) {
     newPack.engines = v.engine;
     logger.generic(6, "Single Package Object JSON finished without Error");
     return newPack;
-  }
+  };
 
   if (!Array.isArray(pack)) {
-    const newPack = parseVersionObject(pack)
+    const newPack = parseVersionObject(pack);
 
     logger.generic(6, "Single Package Object JSON finished without Error");
     return newPack;

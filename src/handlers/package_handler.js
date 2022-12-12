@@ -53,12 +53,12 @@ async function getPackages(req, res) {
     return;
   }
 
-  const packObjShort = await utils.constructPackageObjectShort(packages.content);
+  const packObjShort = await utils.constructPackageObjectShort(
+    packages.content
+  );
 
   // The endpoint using this function needs an array.
-  const packArray = Array.isArray(packObjShort)
-    ? packObjShort
-    : [packObjShort];
+  const packArray = Array.isArray(packObjShort) ? packObjShort : [packObjShort];
 
   const totalPages = await database.getTotalPackageEstimate();
 
@@ -254,9 +254,7 @@ async function getPackagesFeatured(req, res) {
   const packObjShort = await utils.constructPackageObjectShort(packs.content);
 
   // The endpoint using this function needs an array.
-  const packArray = Array.isArray(packObjShort)
-    ? packObjShort
-    : [packObjShort];
+  const packArray = Array.isArray(packObjShort) ? packObjShort : [packObjShort];
 
   res.status(200).json(packArray);
   logger.httpLog(req, res);
