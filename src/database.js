@@ -443,7 +443,7 @@ async function getPackageVersionByNameAndVersion(name, version) {
     sqlStorage ??= setupSQL();
 
     const command = await sqlStorage`
-      SELECT *
+      SELECT semver, status, license, engine, meta
       FROM versions
       WHERE package IN (
         SELECT pointer

@@ -626,11 +626,21 @@ describe("GET /api/packages/:packageName/versions/:versionName", () => {
     );
     expect(res).toHaveHTTPCode(200);
   });
-  test("Returns Expected Package Name with Valid Params", async () => {
+  test("Returns Valid Data on Expected Package Name with Valid Params", async () => {
     const res = await request(app).get(
       "/api/packages/language-css/versions/0.45.7"
     );
     expect(res.body.name).toEqual("language-css");
+    expect(typeof res.body.dist.tarball === "string").toBeTruthy();
+  });
+  test("Does Not Return Sensible Data on Expected Package Name with Valid Params", async () => {
+    const res = await request(app).get(
+      "/api/packages/language-css/versions/0.45.7"
+    );
+    // Use type coercion to catch also undefined
+    expect(res.body.id == null).toBeTruthy();
+    expect(res.body.package == null).toBeTruthy();
+    expect(res.body.sha == null).toBeTruthy();
   });
 });
 

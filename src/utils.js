@@ -46,7 +46,7 @@ async function isPackageNameBanned(name) {
  * @see {@link https://github.com/confused-Techie/atom-backend/blob/main/docs/queries.md#retrieve-single-package--package-object-full}
  */
 async function constructPackageObjectFull(pack) {
-  const parseVersions = function (vers) {
+  const parseVersions = (vers) => {
     let retVer = {};
 
     for (const v of vers) {
@@ -61,7 +61,7 @@ async function constructPackageObjectFull(pack) {
     return retVer;
   };
 
-  const findLatestVersion = function (vers) {
+  const findLatestVersion = (vers) => {
     for (const v of vers) {
       if (v.status === "latest") {
         return v.semver;
@@ -96,8 +96,18 @@ async function constructPackageObjectFull(pack) {
  * @see {@link https://github.com/confused-Techie/atom-backend/blob/main/docs/queries.md#retrieve-many-sorted-packages--package-object-short}
  */
 async function constructPackageObjectShort(pack) {
+  const parsePackageObject = (p) => {
+    let newPack = p.data;
+    newPack.downloads = p.downloads;
+    newPack.stargazers_count = p.stargazers_count;
+    newPack.releases = {
+      latest: p.semver,
+    };
+    return newPack;
+  }
+
   if (Array.isArray(pack)) {
-    if (pack.length == 0) {
+    if (pack.length === 0) {
       // Sometimes it seems an empty array will be passed here, in that case we will protect against
       // manipulation of `undefined` objects
       logger.generic(
@@ -107,23 +117,17 @@ async function constructPackageObjectShort(pack) {
 
       return pack;
     }
+
     let retPacks = [];
-
     for (const p of pack) {
-      let newPack = p.data;
-      newPack.downloads = p.downloads;
-      newPack.stargazers_count = p.stargazers_count;
-      newPack.releases = {
-        latest: p.semver,
-      };
-      retPacks.push(newPack);
+      retPacks.push(parsePackageObject(p));
     }
-    logger.generic(6, "Array Package Object Short Constructor without Error");
 
+    logger.generic(6, "Array Package Object Short Constructor without Error");
     return retPacks;
   }
 
-  // not an array
+  // Not an array
   if (
     pack.data === undefined ||
     pack.downloads === undefined ||
@@ -138,16 +142,8 @@ async function constructPackageObjectShort(pack) {
     return {};
   }
 
-  let newPack = pack.data;
-  newPack.downloads = pack.downloads;
-  newPack.stargazers_count = pack.stargazers_count;
-  newPack.releases = {
-    latest: pack.semver,
-  };
-
   logger.generic(6, "Single Package Object Short Constructor without Error");
-
-  return newPack;
+  return parsePackageObject(pack);
 }
 
 /**
@@ -161,33 +157,31 @@ async function constructPackageObjectShort(pack) {
  * @see {@link https://github.com/confused-Techie/atom-backend/blob/main/docs/returns.md#package-object-mini}
  */
 async function constructPackageObjectJSON(pack) {
-  if (!Array.isArray(pack)) {
-    let newPack = pack.meta;
+  const parseVersionObject = (v) => {
+    let newPack = v.meta;
     if (newPack.sha) {
       delete newPack.sha;
     }
     newPack.dist ??= {};
-    newPack.dist.tarball = `${server_url}/api/packages/${pack.meta.name}/versions/${pack.semver}/tarball`;
-    newPack.engines = pack.engine;
+    newPack.dist.tarball = `${server_url}/api/packages/${v.meta.name}/versions/${v.semver}/tarball`;
+    newPack.engines = v.engine;
+    logger.generic(6, "Single Package Object JSON finished without Error");
+    return newPack;
+  }
+
+  if (!Array.isArray(pack)) {
+    const newPack = parseVersionObject(pack)
+
     logger.generic(6, "Single Package Object JSON finished without Error");
     return newPack;
   }
 
   let arrPack = [];
-
   for (const p of pack) {
-    let newPack = p.meta;
-    if (newPack.sha) {
-      delete newPack.sha;
-    }
-    newPack.dist ??= {};
-    newPack.dist.tarball = `${server_url}/api/packages/${p.meta.name}/versions/${p.semver}/tarball`;
-    newPack.engines = p.engine;
-    arrPack.push(newPack);
+    arrPack.push(parseVersionObject(p));
   }
 
   logger.generic(66, "Array Package Object JSON finished without Error");
-
   return arrPack;
 }
 
