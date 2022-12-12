@@ -43,7 +43,7 @@ async function getThemeFeatured(req, res) {
 }
 
 async function getThemes(req, res) {
-  res.status(200).json({message: "todo"});
+  res.status(200).json({ message: "todo" });
 }
 
 module.exports = {
