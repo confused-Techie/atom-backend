@@ -49,7 +49,7 @@ async function constructPackageObjectFull(pack) {
   const parseVersions = function (vers) {
     let retVer = {};
 
-    for (let v of vers) {
+    for (const v of vers) {
       retVer[v.semver] = v.meta;
       retVer[v.semver].license = v.license;
       retVer[v.semver].engine = v.engine;
@@ -107,17 +107,16 @@ async function constructPackageObjectShort(pack) {
         "Package Object Short Constructor Protected against 0 Length Array"
       );
 
-      return [];
+      return pack;
     }
     let retPacks = [];
 
-    for (let i = 0; i < pack.length; i++) {
-      let newPack = pack[i].data;
-      newPack.downloads = pack[i].downloads;
-      newPack.stargazers_count =
-        parseInt(pack.stargazers_count, 10) + parseInt(pack.original_stargazers, 10);
+    for (const p of pack) {
+      let newPack = p.data;
+      newPack.downloads = p.downloads;
+      newPack.stargazers_count = p.stargazers_count;
       newPack.releases = {
-        latest: pack[i].semver,
+        latest: p.semver,
       };
       retPacks.push(newPack);
     }
@@ -131,7 +130,6 @@ async function constructPackageObjectShort(pack) {
     pack.data === undefined ||
     pack.downloads === undefined ||
     pack.stargazers_count === undefined ||
-    pack.original_stargazers === undefined ||
     pack.semver === undefined
   ) {
     logger.generic(
@@ -179,14 +177,14 @@ async function constructPackageObjectJSON(pack) {
 
   let arrPack = [];
 
-  for (let i = 0; i < pack.length; i++) {
-    let newPack = pack[i].meta;
+  for (const p of pack) {
+    let newPack = p.meta;
     if (newPack.sha) {
       delete newPack.sha;
     }
     newPack.dist ??= {};
-    newPack.dist.tarball = `${server_url}/api/packages/${pack[i].meta.name}/versions/${pack[i].semver}/tarball`;
-    newPack.engines = pack[i].engine;
+    newPack.dist.tarball = `${server_url}/api/packages/${p.meta.name}/versions/${p.semver}/tarball`;
+    newPack.engines = p.engine;
     arrPack.push(newPack);
   }
 
