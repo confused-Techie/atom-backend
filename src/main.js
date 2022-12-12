@@ -199,7 +199,7 @@ app.get("/api/:packType", genericLimit, async (req, res, next) => {
  *   @Rdesc A package by that name already exists.
  */
 app.post("/api/:packType", authLimit, async (req, res, next) => {
-  switch(req.params.packType) {
+  switch (req.params.packType) {
     case "packages":
     case "themes":
       await package_handler.postPackages(req, res);
@@ -229,7 +229,7 @@ app.post("/api/:packType", authLimit, async (req, res, next) => {
  *   @Rdesc An array of packages similar to /api/packages endpoint.
  */
 app.get("/api/:packType/featured", genericLimit, async (req, res, next) => {
-  switch(req.params.packType) {
+  switch (req.params.packType) {
     case "packages":
       await package_handler.getPackagesFeatured(req, res);
       break;
@@ -290,7 +290,7 @@ app.get("/api/:packType/featured", genericLimit, async (req, res, next) => {
  *   @Rdesc Same format as listing packages, additionally paginated at 30 items.
  */
 app.get("/api/:packType/search", genericLimit, async (req, res, next) => {
-  switch(req.params.packType) {
+  switch (req.params.packType) {
     case "packages":
       await package_handler.getPackagesSearch(req, res);
       break;
@@ -335,7 +335,7 @@ app.get("/api/:packType/search", genericLimit, async (req, res, next) => {
  *   @Rdesc Returns package details and versions for a single package.
  */
 app.get("/api/:packType/:packageName", genericLimit, async (req, res, next) => {
-  switch(req.params.packType) {
+  switch (req.params.packType) {
     case "packages":
     case "themes":
       // We can use the same handler here because the logic of the return
@@ -389,7 +389,7 @@ app.get("/api/:packType/:packageName", genericLimit, async (req, res, next) => {
  *   @Rdesc Unauthorized.
  */
 app.delete("/api/:packType/:packageName", authLimit, async (req, res, next) => {
-  switch(req.params.packType) {
+  switch (req.params.packType) {
     case "packages":
     case "themes":
       await package_handler.deletePackagesName(req, res);
@@ -431,17 +431,21 @@ app.delete("/api/:packType/:packageName", authLimit, async (req, res, next) => {
  *    @Rtype application/json
  *    @Rdesc Returns the package that was stared.
  */
-app.post("/api/:packType/:packageName/star", authLimit, async (req, res, next) => {
-  switch(req.params.packType) {
-    case "packages":
-    case "themes":
-      await package_handler.postPackagesStar(req, res);
-      break;
-    default:
-      next();
-      break;
+app.post(
+  "/api/:packType/:packageName/star",
+  authLimit,
+  async (req, res, next) => {
+    switch (req.params.packType) {
+      case "packages":
+      case "themes":
+        await package_handler.postPackagesStar(req, res);
+        break;
+      default:
+        next();
+        break;
+    }
   }
-});
+);
 
 /**
  * @web
@@ -473,17 +477,21 @@ app.post("/api/:packType/:packageName/star", authLimit, async (req, res, next) =
  *  @status 201
  *  @Rdesc An empty response to convey successfully unstaring a package.
  */
-app.delete("/api/:packType/:packageName/star", authLimit, async (req, res, next) => {
-  switch(req.params.packType) {
-    case "packages":
-    case "themes":
-      await package_handler.deletePackagesStar(req, res);
-      break;
-    default:
-      next();
-      break;
+app.delete(
+  "/api/:packType/:packageName/star",
+  authLimit,
+  async (req, res, next) => {
+    switch (req.params.packType) {
+      case "packages":
+      case "themes":
+        await package_handler.deletePackagesStar(req, res);
+        break;
+      default:
+        next();
+        break;
+    }
   }
-});
+);
 
 /**
  * @web
@@ -512,7 +520,7 @@ app.get(
   "/api/:packType/:packageName/stargazers",
   genericLimit,
   async (req, res, next) => {
-    switch(req.params.packType) {
+    switch (req.params.packType) {
       case "packages":
       case "themes":
         await package_handler.getPackagesStargazers(req, res);
@@ -568,17 +576,21 @@ app.get(
  *  @status 409
  *  @Rdesc Version exists.
  */
-app.post("/api/:packType/:packageName/versions", authLimit, async (req, res, next) => {
-  switch(req.params.packType) {
-    case "packages":
-    case "themes":
-      await package_handler.postPackagesVersion(req, res);
-      break;
-    default:
-      next();
-      break;
+app.post(
+  "/api/:packType/:packageName/versions",
+  authLimit,
+  async (req, res, next) => {
+    switch (req.params.packType) {
+      case "packages":
+      case "themes":
+        await package_handler.postPackagesVersion(req, res);
+        break;
+      default:
+        next();
+        break;
+    }
   }
-});
+);
 
 /**
  * @web
@@ -612,7 +624,7 @@ app.get(
   "/api/:packType/:packageName/versions/:versionName",
   genericLimit,
   async (req, res, next) => {
-    switch(req.params.packType) {
+    switch (req.params.packType) {
       case "packages":
       case "themes":
         await package_handler.getPackagesVersion(req, res);
@@ -659,7 +671,7 @@ app.get(
   "/api/:packType/:packageName/versions/:versionName/tarball",
   genericLimit,
   async (req, res, next) => {
-    switch(req.params.packType) {
+    switch (req.params.packType) {
       case "packages":
       case "themes":
         await package_handler.getPackagesVersionTarball(req, res);
@@ -708,7 +720,7 @@ app.delete(
   "/api/:packType/:packageName/versions/:versionName",
   authLimit,
   async (req, res, next) => {
-    switch(req.params.packType) {
+    switch (req.params.packType) {
       case "packages":
       case "themes":
         await package_handler.deletePackageVersion(req, res);
@@ -757,7 +769,7 @@ app.post(
   "/api/:packType/:packageName/versions/:versionName/events/uninstall",
   authLimit,
   async (req, res, next) => {
-    switch(req.params.packType) {
+    switch (req.params.packType) {
       case "packages":
       case "themes":
         await package_handler.postPackagesEventUninstall(req, res);
