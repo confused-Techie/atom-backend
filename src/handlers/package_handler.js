@@ -38,7 +38,7 @@ async function getPackages(req, res) {
     direction: query.dir(req),
   };
 
-  let packages = await database.getSortedPackages(
+  const packages = await database.getSortedPackages(
     params.page,
     params.direction,
     params.sort
@@ -53,7 +53,12 @@ async function getPackages(req, res) {
     return;
   }
 
-  packages = await utils.constructPackageObjectShort(packages.content);
+  const packObjShort = await utils.constructPackageObjectShort(packages.content);
+
+  // The endpoint using this function needs an array.
+  const packArray = Array.isArray(packObjShort)
+    ? packObjShort
+    : [packObjShort];
 
   const totalPages = await database.getTotalPackageEstimate();
 
@@ -81,7 +86,7 @@ async function getPackages(req, res) {
     }&order=${params.direction}>; rel="next"`
   );
 
-  res.status(200).json(packages);
+  res.status(200).json(packArray);
   logger.httpLog(req, res);
 }
 
@@ -249,11 +254,11 @@ async function getPackagesFeatured(req, res) {
   const packObjShort = await utils.constructPackageObjectShort(packs.content);
 
   // The endpoint using this function needs an array.
-  const respArray = Array.isArray(packObjShort)
+  const packArray = Array.isArray(packObjShort)
     ? packObjShort
     : [packObjShort];
 
-  res.status(200).json(respArray);
+  res.status(200).json(packArray);
   logger.httpLog(req, res);
 }
 
@@ -311,17 +316,22 @@ async function getPackagesSearch(req, res) {
     return;
   }
 
-  let newPacks = await utils.constructPackageObjectShort(packs.content);
+  const newPacks = await utils.constructPackageObjectShort(packs.content);
+  let packArray = null;
 
-  if (Object.keys(newPacks).length < 1) {
+  if (Array.isArray(newPacks)) {
+    packArray = newPacks;
+  } else if (Object.keys(newPacks).length < 1) {
+    packArray = [];
     logger.generic(
       4,
       "getPackagesSearch-simpleSearch Responding with Empty Array for 0 Key Length Object"
     );
-    newPacks = [];
     // This also helps protect against misreturned searches. As in getting a 404 rather
     // than empty search results.
     // See: https://github.com/confused-Techie/atom-backend/issues/59
+  } else {
+    packArray = [newPacks];
   }
 
   const totalPageEstimate = await database.getTotalPackageEstimate();
@@ -347,7 +357,7 @@ async function getPackagesSearch(req, res) {
     }&sort=${params.sort}&order=${params.direction}>; rel="next"`
   );
 
-  res.status(200).json(newPacks);
+  res.status(200).json(packArray);
   logger.httpLog(req, res);
 }
 
