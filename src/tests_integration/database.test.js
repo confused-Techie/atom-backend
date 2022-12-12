@@ -254,13 +254,6 @@ describe("Package Lifecycle Tests", () => {
     );
     expect(getOldVerOnly.content.meta.name).toEqual(pack.createPack.name);
 
-    // === Can we star our package?
-    const starPack = await database.updatePackageIncrementStarByName(NEW_NAME);
-    expect(starPack.ok).toBeTruthy();
-    expect(starPack.content.name).toEqual(NEW_NAME);
-    expect(starPack.content.stargazers_count).toEqual("1");
-    expect(starPack.content.original_stargazers).toEqual("0");
-
     // === Can we add a download to our package?
     const downPack = await database.updatePackageIncrementDownloadByName(
       NEW_NAME
@@ -277,6 +270,20 @@ describe("Package Lifecycle Tests", () => {
     expect(downPackUndo.content.name).toEqual(NEW_NAME);
     expect(downPackUndo.content.downloads).toEqual("0");
 
+    // === Can we get the download count od our package below zero?
+    const downPackReUndo = await database.updatePackageDecrementDownloadByName(
+      NEW_NAME
+    );
+    expect(downPackReUndo.ok).toBeTruthy();
+    expect(downPackReUndo.content.name).toEqual(NEW_NAME);
+    expect(downPackReUndo.content.downloads).toEqual("0");
+
+    // === Can we star our package?
+    const starPack = await database.updatePackageIncrementStarByName(NEW_NAME);
+    expect(starPack.ok).toBeTruthy();
+    expect(starPack.content.name).toEqual(NEW_NAME);
+    expect(starPack.content.stargazers_count).toEqual("1");
+
     // === Can we unstar our package?
     const starPackUndo = await database.updatePackageDecrementStarByName(
       NEW_NAME
@@ -284,7 +291,14 @@ describe("Package Lifecycle Tests", () => {
     expect(starPackUndo.ok).toBeTruthy();
     expect(starPackUndo.content.name).toEqual(NEW_NAME);
     expect(starPackUndo.content.stargazers_count).toEqual("0");
-    expect(starPackUndo.content.original_stargazers).toEqual("0");
+
+    // === Can we get the stars of our package below zero?
+    const starPackReUndo = await database.updatePackageDecrementStarByName(
+      NEW_NAME
+    );
+    expect(starPackReUndo.ok).toBeTruthy();
+    expect(starPackReUndo.content.name).toEqual(NEW_NAME);
+    expect(starPackReUndo.content.stargazers_count).toEqual("0");
 
     // === Can we star by the old name?
     const starPackOld = await database.updatePackageIncrementStarByName(

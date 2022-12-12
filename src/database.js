@@ -509,7 +509,8 @@ async function getPackageCollectionByID(packArray) {
     sqlStorage ??= setupSQL();
 
     const command = await sqlStorage`
-      SELECT data FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
+      SELECT data
+      FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
       WHERE pointer IN ${sqlStorage(packArray)}
     `;
 
@@ -540,7 +541,7 @@ async function updatePackageIncrementStarByName(name) {
         FROM names
         WHERE name = ${name}
       )
-      RETURNING *;
+      RETURNING name, downloads, (stargazers_count + original_stargazers) AS stargazers_count, data;
     `;
 
     return command.count !== 0
@@ -568,13 +569,13 @@ async function updatePackageDecrementStarByName(name) {
 
     const command = await sqlStorage`
       UPDATE packages
-      SET stargazers_count = stargazers_count - 1
+      SET stargazers_count = GREATEST(stargazers_count - 1, 0)
       WHERE pointer IN (
         SELECT pointer
         FROM names
         WHERE name = ${name}
       )
-      RETURNING *;
+      RETURNING name, downloads, (stargazers_count + original_stargazers) AS stargazers_count, data;
     `;
 
     return command.count !== 0
@@ -636,7 +637,7 @@ async function updatePackageDecrementDownloadByName(name) {
 
     const command = await sqlStorage`
       UPDATE packages
-      SET downloads = downloads - 1
+      SET downloads = GREATEST(downloads - 1, 0)
       WHERE pointer IN (
         SELECT pointer
         FROM names
