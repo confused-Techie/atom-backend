@@ -339,9 +339,24 @@ describe("GET /api/packages/:packageName", () => {
     const res = await request(app).get("/api/packages/LanguAge-CSs");
     expect(res.body.name).toBe("language-css");
   });
-  test("Valid package, does not return sensible data (package pointer)", async () => {
+  test("Valid package contains valid data", async () => {
     const res = await request(app).get("/api/packages/language-css");
-    expect(res.body.pointer).toBe(undefined);
+    // PostgreSQL numeric types are not fully compatible with js Number type
+    expect((`${res.body.stargazers_count}`).match(/^\d+$/) === null).toBeFalsy();
+    expect((`${res.body.downloads}`).match(/^\d+$/) === null).toBeFalsy();
+    expect(typeof res.body.releases.latest === "string").toBeTruthy();
+    for (const v of Object.keys(res.body.versions)) {
+      expect(typeof res.body.versions[v].license === "string").toBeTruthy();
+    }
+  });
+  test("Valid package, does not return sensible data", async () => {
+    const res = await request(app).get("/api/packages/language-css");
+    // Use type coercion to catch also undefined
+    expect(res.body.pointer == null).toBeTruthy();
+    for (const v of Object.keys(res.body.versions)) {
+      expect(res.body.versions[v].id == null).toBeTruthy();
+      expect(res.body.versions[v].package == null).toBeTruthy();
+    }
   });
   test("Valid package, gives success status code", async () => {
     const res = await request(app).get("/api/packages/language-css");

@@ -369,8 +369,8 @@ async function getPackageByName(name, user = false) {
       SELECT
         ${
           user ? sqlStorage`` : sqlStorage`p.pointer,`
-        } p.name, p.created, p.updated, p.creation_method,
-        p.downloads, p.stargazers_count, p.original_stargazers, p.data,
+        } p.name, p.created, p.updated, p.creation_method, p.downloads,
+        (p.stargazers_count + p.original_stargazers) AS stargazers_count, p.data,
         JSONB_AGG(
           JSON_BUILD_OBJECT(
             ${

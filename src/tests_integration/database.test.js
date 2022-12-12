@@ -122,8 +122,8 @@ describe("Package Lifecycle Tests", () => {
       pack.createPack.creation_method
     );
     expect(getAfterPublish.content.downloads).toEqual("0");
+    // Original stargazers already added to stargazers count
     expect(getAfterPublish.content.stargazers_count).toEqual("0");
-    expect(getAfterPublish.content.original_stargazers).toEqual("0");
     expect(getAfterPublish.content.data.name).toEqual(pack.createPack.name);
     expect(getAfterPublish.content.data.readme).toEqual(pack.createPack.readme);
     expect(getAfterPublish.content.data.repository).toEqual(
