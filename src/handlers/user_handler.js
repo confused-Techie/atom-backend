@@ -112,7 +112,7 @@ async function getAuthUser(req, res) {
  * @property {http_endpoint} - /api/users/:login
  */
 async function getUser(req, res) {
-  const param = {
+  const params = {
     login: query.login(req)
   };
 

@@ -164,9 +164,9 @@ async function getThemesSearch(req, res) {
     packArray = [newPacks];
   }
 
-  const getTotalPackageEstimate = await database.getTotalPackageEstimate();
+  const totalPackageEstimate = await database.getTotalPackageEstimate();
 
-  const totalPages = !totalPageEstimate.ok ? 1 : totalPageEstimate.content;
+  const totalPages = !totalPackageEstimate.ok ? 1 : totalPackageEstimate.content;
 
   const safeQuery = encodeURIComponent(
     params.query.replace(/[<>"':;\\/]+/g, "")

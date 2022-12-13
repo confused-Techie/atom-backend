@@ -235,4 +235,5 @@ module.exports = {
   rename,
   auth,
   packageName,
+  login,
 };
