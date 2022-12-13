@@ -369,8 +369,8 @@ async function getPackageByName(name, user = false) {
       SELECT
         ${
           user ? sqlStorage`` : sqlStorage`p.pointer,`
-        } p.name, p.created, p.updated, p.creation_method,
-        p.downloads, p.stargazers_count, p.original_stargazers, p.data,
+        } p.name, p.created, p.updated, p.creation_method, p.downloads,
+        (p.stargazers_count + p.original_stargazers) AS stargazers_count, p.data,
         JSONB_AGG(
           JSON_BUILD_OBJECT(
             ${
@@ -443,7 +443,7 @@ async function getPackageVersionByNameAndVersion(name, version) {
     sqlStorage ??= setupSQL();
 
     const command = await sqlStorage`
-      SELECT *
+      SELECT semver, status, license, engine, meta
       FROM versions
       WHERE package IN (
         SELECT pointer
@@ -477,8 +477,11 @@ async function getPackageCollectionByName(packArray) {
   try {
     sqlStorage ??= setupSQL();
 
+    // Since this function is invoked by getFeaturedThemes and getFeaturedPackages
+    // which process the returned content with constructPackageObjectShort(),
+    // we select only the needed columns.
     const command = await sqlStorage`
-      SELECT *
+      SELECT p.data, p.downloads, (p.stargazers_count + p.original_stargazers) AS stargazers_count, v.semver
       FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
       WHERE pointer IN (
         SELECT pointer FROM names
@@ -506,7 +509,8 @@ async function getPackageCollectionByID(packArray) {
     sqlStorage ??= setupSQL();
 
     const command = await sqlStorage`
-      SELECT data FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
+      SELECT data
+      FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
       WHERE pointer IN ${sqlStorage(packArray)}
     `;
 
@@ -537,7 +541,7 @@ async function updatePackageIncrementStarByName(name) {
         FROM names
         WHERE name = ${name}
       )
-      RETURNING *;
+      RETURNING name, downloads, (stargazers_count + original_stargazers) AS stargazers_count, data;
     `;
 
     return command.count !== 0
@@ -565,13 +569,13 @@ async function updatePackageDecrementStarByName(name) {
 
     const command = await sqlStorage`
       UPDATE packages
-      SET stargazers_count = stargazers_count - 1
+      SET stargazers_count = GREATEST(stargazers_count - 1, 0)
       WHERE pointer IN (
         SELECT pointer
         FROM names
         WHERE name = ${name}
       )
-      RETURNING *;
+      RETURNING name, downloads, (stargazers_count + original_stargazers) AS stargazers_count, data;
     `;
 
     return command.count !== 0
@@ -633,7 +637,7 @@ async function updatePackageDecrementDownloadByName(name) {
 
     const command = await sqlStorage`
       UPDATE packages
-      SET downloads = downloads - 1
+      SET downloads = GREATEST(downloads - 1, 0)
       WHERE pointer IN (
         SELECT pointer
         FROM names
@@ -893,19 +897,14 @@ async function getFeaturedPackages() {
     return featuredArray;
   }
 
-  let allFeatured = await getPackageCollectionByName(featuredArray.content);
-
-  return allFeatured.ok
-    ? { ok: true, content: allFeatured.content }
-    : allFeatured;
+  return await getPackageCollectionByName(featuredArray.content);
 }
 
 /**
  * @async
  * @function getFeaturedThemes
- * @desc Collects the hardcoded featured themes array from the sotrage.js
- * module. Then uses this.getPackageCollectionByName to retreive details of the
- * package.
+ * @desc Collects the hardcoded featured themes array from the storage.js module.
+ * Then uses this.getPackageCollectionByName to retreive details of the package.
  * @returns {object} A server status object.
  */
 async function getFeaturedThemes() {
@@ -915,13 +914,7 @@ async function getFeaturedThemes() {
     return featuredThemeArray;
   }
 
-  let allFeatured = await getPackageCollectionByName(
-    featuredThemeArray.content
-  );
-
-  return allFeatured.ok
-    ? { ok: true, content: allFeatured.content }
-    : allFeatured;
+  return await getPackageCollectionByName(featuredThemeArray.content);
 }
 
 /**
@@ -1261,7 +1254,8 @@ async function simpleSearch(term, page, dir, sort) {
     const lcterm = term.toLowerCase();
 
     const command = await sqlStorage`
-      SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
+      SELECT p.data, p.downloads, (p.stargazers_count + p.original_stargazers) AS stargazers_count, v.semver
+      FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
       WHERE pointer IN (
         SELECT pointer
         FROM names
@@ -1364,9 +1358,11 @@ async function getSortedPackages(page, dir, method) {
     }
 
     const command = await sqlStorage`
-      SELECT * FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
-      ORDER BY ${orderType}
-      ${dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`}
+      SELECT p.data, p.downloads, (p.stargazers_count + p.original_stargazers) AS stargazers_count, v.semver
+      FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
+      ORDER BY ${orderType} ${
+      dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`
+    }
       LIMIT ${limit}
       OFFSET ${offset};
     `;

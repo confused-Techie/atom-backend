@@ -46,10 +46,10 @@ async function isPackageNameBanned(name) {
  * @see {@link https://github.com/confused-Techie/atom-backend/blob/main/docs/queries.md#retrieve-single-package--package-object-full}
  */
 async function constructPackageObjectFull(pack) {
-  const parseVersions = function (vers) {
+  const parseVersions = (vers) => {
     let retVer = {};
 
-    for (let v of vers) {
+    for (const v of vers) {
       retVer[v.semver] = v.meta;
       retVer[v.semver].license = v.license;
       retVer[v.semver].engine = v.engine;
@@ -61,7 +61,7 @@ async function constructPackageObjectFull(pack) {
     return retVer;
   };
 
-  const findLatestVersion = function (vers) {
+  const findLatestVersion = (vers) => {
     for (const v of vers) {
       if (v.status === "latest") {
         return v.semver;
@@ -73,9 +73,7 @@ async function constructPackageObjectFull(pack) {
   let newPack = pack.data;
   newPack.name = pack.name;
   newPack.downloads = pack.downloads;
-  newPack.stargazers_count =
-    parseInt(pack.stargazers_count, 10) +
-    parseInt(pack.original_stargazers, 10);
+  newPack.stargazers_count = pack.stargazers_count;
   newPack.versions = parseVersions(pack.versions);
   newPack.releases = {
     latest: findLatestVersion(pack.versions),
@@ -93,13 +91,23 @@ async function constructPackageObjectFull(pack) {
  * construction of package object shorts
  * @param {object} pack - The anticipated raw SQL return that contains all data
  * to construct a Package Object Short.
- * @returns {object} A properly formatted and converted Package Object Short.
+ * @returns {object|array} A properly formatted and converted Package Object Short.
  * @see {@link https://github.com/confused-Techie/atom-backend/blob/main/docs/returns.md#package-object-short}
  * @see {@link https://github.com/confused-Techie/atom-backend/blob/main/docs/queries.md#retrieve-many-sorted-packages--package-object-short}
  */
 async function constructPackageObjectShort(pack) {
+  const parsePackageObject = (p) => {
+    let newPack = p.data;
+    newPack.downloads = p.downloads;
+    newPack.stargazers_count = p.stargazers_count;
+    newPack.releases = {
+      latest: p.semver,
+    };
+    return newPack;
+  };
+
   if (Array.isArray(pack)) {
-    if (pack.length == 0) {
+    if (pack.length === 0) {
       // Sometimes it seems an empty array will be passed here, in that case we will protect against
       // manipulation of `undefined` objects
       logger.generic(
@@ -107,26 +115,19 @@ async function constructPackageObjectShort(pack) {
         "Package Object Short Constructor Protected against 0 Length Array"
       );
 
-      return [];
+      return pack;
     }
+
     let retPacks = [];
-
-    for (let i = 0; i < pack.length; i++) {
-      let newPack = pack[i].data;
-      newPack.downloads = pack[i].downloads;
-      newPack.stargazers_count =
-        parseInt(pack.stargazers_count) + parseInt(pack.original_stargazers);
-      newPack.releases = {
-        latest: pack[i].semver,
-      };
-      retPacks.push(newPack);
+    for (const p of pack) {
+      retPacks.push(parsePackageObject(p));
     }
-    logger.generic(6, "Array Package Object Short Constructor without Error");
 
+    logger.generic(6, "Array Package Object Short Constructor without Error");
     return retPacks;
   }
 
-  // not an array
+  // Not an array
   if (
     pack.data === undefined ||
     pack.downloads === undefined ||
@@ -141,16 +142,8 @@ async function constructPackageObjectShort(pack) {
     return {};
   }
 
-  let newPack = pack.data;
-  newPack.downloads = pack.downloads;
-  newPack.stargazers_count = pack.stargazers_count;
-  newPack.releases = {
-    latest: pack.semver,
-  };
-
   logger.generic(6, "Single Package Object Short Constructor without Error");
-
-  return newPack;
+  return parsePackageObject(pack);
 }
 
 /**
@@ -164,33 +157,31 @@ async function constructPackageObjectShort(pack) {
  * @see {@link https://github.com/confused-Techie/atom-backend/blob/main/docs/returns.md#package-object-mini}
  */
 async function constructPackageObjectJSON(pack) {
-  if (!Array.isArray(pack)) {
-    let newPack = pack.meta;
+  const parseVersionObject = (v) => {
+    let newPack = v.meta;
     if (newPack.sha) {
       delete newPack.sha;
     }
     newPack.dist ??= {};
-    newPack.dist.tarball = `${server_url}/api/packages/${pack.meta.name}/versions/${pack.semver}/tarball`;
-    newPack.engines = pack.engine;
+    newPack.dist.tarball = `${server_url}/api/packages/${v.meta.name}/versions/${v.semver}/tarball`;
+    newPack.engines = v.engine;
+    logger.generic(6, "Single Package Object JSON finished without Error");
+    return newPack;
+  };
+
+  if (!Array.isArray(pack)) {
+    const newPack = parseVersionObject(pack);
+
     logger.generic(6, "Single Package Object JSON finished without Error");
     return newPack;
   }
 
   let arrPack = [];
-
-  for (let i = 0; i < pack.length; i++) {
-    let newPack = pack[i].meta;
-    if (newPack.sha) {
-      delete newPack.sha;
-    }
-    newPack.dist ??= {};
-    newPack.dist.tarball = `${server_url}/api/packages/${pack[i].meta.name}/versions/${pack[i].semver}/tarball`;
-    newPack.engines = pack[i].engine;
-    arrPack.push(newPack);
+  for (const p of pack) {
+    arrPack.push(parseVersionObject(p));
   }
 
   logger.generic(66, "Array Package Object JSON finished without Error");
-
   return arrPack;
 }
 

@@ -406,7 +406,7 @@ app.delete("/api/:packType/:packageName", authLimit, async (req, res, next) => {
  * @path /api/packages/:packageName/star
  * @method POST
  * @auth true
- * @desc Star a packge.
+ * @desc Star a package.
  * @param
  *   @name packType
  *   @location path
@@ -750,7 +750,7 @@ app.delete(
  *   @name packageName
  *   @location path
  *   @required true
- *   @Pdesc The name of the packge to modify.
+ *   @Pdesc The name of the package to modify.
  * @param
  *   @name versionName
  *   @location path

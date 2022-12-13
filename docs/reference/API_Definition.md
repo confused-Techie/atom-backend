@@ -244,7 +244,7 @@ Unauthorized.
 
 ---
 # **[POST]** /api/packages/:packageName/star
-Star a packge.
+Star a package.
 
 Auth: `true`
 Parameters:
@@ -486,7 +486,7 @@ Parameters:
 
 ---
 * packageName _(required)_  | Location: `path`  
-  - The name of the packge to modify.
+  - The name of the package to modify.
 
 
 ---

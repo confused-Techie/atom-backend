@@ -408,9 +408,8 @@ package.
 <a name="module_database..getFeaturedThemes"></a>
 
 ### database~getFeaturedThemes() ⇒ <code>object</code>
-Collects the hardcoded featured themes array from the sotrage.js
-module. Then uses this.getPackageCollectionByName to retreive details of the
-package.
+Collects the hardcoded featured themes array from the storage.js module.
+Then uses this.getPackageCollectionByName to retreive details of the package.
 
 **Kind**: inner method of [<code>database</code>](#module_database)  
 **Returns**: <code>object</code> - A server status object.  
@@ -1089,7 +1088,7 @@ A helper for any functions that are agnostic in handlers.
     * [~StateStore](#module_utils..StateStore)
     * [~isPackageNameBanned(name)](#module_utils..isPackageNameBanned) ⇒ <code>object</code>
     * [~constructPackageObjectFull(pack)](#module_utils..constructPackageObjectFull) ⇒ <code>object</code>
-    * [~constructPackageObjectShort(pack)](#module_utils..constructPackageObjectShort) ⇒ <code>object</code>
+    * [~constructPackageObjectShort(pack)](#module_utils..constructPackageObjectShort) ⇒ <code>object</code> \| <code>array</code>
     * [~constructPackageObjectJSON(pack)](#module_utils..constructPackageObjectJSON) ⇒ <code>object</code>
     * [~engineFilter()](#module_utils..engineFilter) ⇒ <code>object</code>
     * [~semverArray(semver)](#module_utils..semverArray) ⇒ <code>array</code> \| <code>null</code>
@@ -1144,12 +1143,12 @@ otherwise the behavior is unexpected.
 
 <a name="module_utils..constructPackageObjectShort"></a>
 
-### utils~constructPackageObjectShort(pack) ⇒ <code>object</code>
+### utils~constructPackageObjectShort(pack) ⇒ <code>object</code> \| <code>array</code>
 Takes a single or array of rows from the db, and returns a JSON
 construction of package object shorts
 
 **Kind**: inner method of [<code>utils</code>](#module_utils)  
-**Returns**: <code>object</code> - A properly formatted and converted Package Object Short.  
+**Returns**: <code>object</code> \| <code>array</code> - A properly formatted and converted Package Object Short.  
 **See**
 
 - [https://github.com/confused-Techie/atom-backend/blob/main/docs/returns.md#package-object-short](https://github.com/confused-Techie/atom-backend/blob/main/docs/returns.md#package-object-short)
