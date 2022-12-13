@@ -11,6 +11,8 @@ const common = require("./common_handler.js");
 const database = require("../database.js");
 const utils = require("../utils.js");
 const logger = require("../logger.js");
+const query = require("../query.js");
+const { server_url } = require("../config.js").getConfig();
 
 /**
  * @async
@@ -42,8 +44,65 @@ async function getThemeFeatured(req, res) {
   logger.httpLog(req, res);
 }
 
+/**
+  * @async
+  * @function getThemes
+  * @desc Endpoint to return all Themes to the user. Based on any filtering
+  * they'ved applied via query parameters.
+  * @param {object} req - The `Request` object inherited from the Express endpoint.
+  * @param {object} res - The `Response` object inherited from the Express endpoint.
+  * @property {http_method} - GET
+  * @property {http_endpoint} - /api/themes
+  */
 async function getThemes(req, res) {
-  res.status(200).json({ message: "todo" });
+  const params = {
+    page: query.page(req),
+    sort: query.sort(req),
+    direction: query.dir(req)
+  };
+
+  const packages = await database.getSortedPackages(
+    params.page,
+    params.direction,
+    params.sort,
+    true
+  );
+
+  if (!packages.ok) {
+    logger.generic(3, `getThemes-getSortedPackages Not OK: ${packages.content}`);
+    await common.handleError(req, res, packages);
+    return;
+  }
+
+  const packObjShort = await utils.constructPackageObjectShort(packages.content);
+
+  const packArray = Array.isArray(packObjShort) ? packObjShort : [packObjShort];
+
+  const totalPages = await database.getTotalPackageEstimate();
+  
+  if (!totalPages.ok) {
+    logger.generic(3, `getThemes-getTotalPackageEstimate Not OK: ${totalPages.content}`);
+    await common.handleError(req, res, totalPages);
+    return;
+  }
+
+  res.append(
+    "Link",
+    `<${server_url}/api/themes?page=${params.page}&sort=${
+      params.sort
+    }&order=${
+      params.direction
+    }>; rel="self", <${server_url}/api/themes?page=${
+      totalPages.content
+    }&sort=${params.sort}&order=${
+      params.direction
+    }>; rel="last", <${server_url}/api/themes?page=${params.page + 1}&sort=${
+      params.sort
+    }&order=${params.direction}>; rel="next"`
+  );
+
+  res.status(200).json(packArray);
+  logger.httpLog(req, res);
 }
 
 async function getThemesSearch(req, res) {

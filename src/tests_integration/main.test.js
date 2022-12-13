@@ -830,6 +830,17 @@ describe("GET /api/themes/featured", () => {
   });
 });
 
+describe.only("GET /api/themes", () => {
+  test("Returns Successful Status Code", async () => {
+    const res = await request(app).get("/api/themes");
+    expect(res).toHaveHTTPCode(200);
+  });
+  test("Returns Array", async () => {
+    const res = await request(app).get("/api/themes");
+    expect(res.body).toBeArray();
+  });
+});
+
 describe("GET /api/users/:login/stars", () => {
   test("Returns 404 for Bad User", async () => {
     const res = await request(app).get("/api/users/not-a-user/stars");

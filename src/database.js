@@ -1324,9 +1324,10 @@ async function getUserCollectionById(ids) {
  * @param {string} dir - String flag for asc/desc order.
  * @param {string} dir - String flag for asc/desc order.
  * @param {string} method - The column name the results have to be sorted by.
+ * @param {boolean} [themes=false] - Optional Parameter to specify if this should only return themes.
  * @returns {object} A server status object.
  */
-async function getSortedPackages(page, dir, method) {
+async function getSortedPackages(page, dir, method, themes = false) {
   // Here will be a monolithic function for returning sortable packages arrays.
   // We must keep in mind that all the endpoint handler knows is the
   // page, sort method, and direction. We must figure out the rest here.
@@ -1365,6 +1366,7 @@ async function getSortedPackages(page, dir, method) {
     const command = await sqlStorage`
       SELECT p.data, p.downloads, (p.stargazers_count + p.original_stargazers) AS stargazers_count, v.semver
       FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
+      ${ themes === true ? sqlStorage`WHERE package_type = 'theme'` : sqlStorage`` }
       ORDER BY ${orderType} ${
       dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`
     }
