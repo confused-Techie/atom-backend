@@ -114,7 +114,7 @@ async function getThemesSearch(req, res) {
     sort: query.sort(req, "relevance"),
     page: query.page(req),
     direction: query.dir(req),
-    query: query.query(req)
+    query: query.query(req),
   };
 
   const packs = await database.simpleSearch(
@@ -127,7 +127,10 @@ async function getThemesSearch(req, res) {
 
   if (!packs.ok) {
     if (packs.short == "Not Found") {
-      logger.generic(4, "getThemesSearch-simpleSearch Responding with Empty Array for Not Found Status");
+      logger.generic(
+        4,
+        "getThemesSearch-simpleSearch Responding with Empty Array for Not Found Status"
+      );
       res.status(200).json([]);
       logger.httpLog(req, res);
       return;
@@ -144,7 +147,10 @@ async function getThemesSearch(req, res) {
     packArray = newPacks;
   } else if (Object.keys(newPacks).length < 1) {
     packArray = [];
-    logger.generic(4, "getThemesSearch-simpleSearch Responding with Empty Array for 0 key Length Object");
+    logger.generic(
+      4,
+      "getThemesSearch-simpleSearch Responding with Empty Array for 0 key Length Object"
+    );
   } else {
     packArray = [newPacks];
   }
@@ -159,9 +165,9 @@ async function getThemesSearch(req, res) {
   // now to get headers.
   res.append(
     "Link",
-    `<${server_url}/api/themes/search?q=${safeQuery}&page=${
-      params.page
-    }&sort=${params.sort}&order=${
+    `<${server_url}/api/themes/search?q=${safeQuery}&page=${params.page}&sort=${
+      params.sort
+    }&order=${
       params.direction
     }>; rel="self", <${server_url}/api/themes?q=${safeQuery}&page=${
       totalPages.content
