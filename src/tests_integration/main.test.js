@@ -830,7 +830,7 @@ describe("GET /api/themes/featured", () => {
   });
 });
 
-describe.only("GET /api/themes", () => {
+describe("GET /api/themes", () => {
   test("Returns Successful Status Code", async () => {
     const res = await request(app).get("/api/themes");
     expect(res).toHaveHTTPCode(200);
