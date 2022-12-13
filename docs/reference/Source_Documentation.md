@@ -1986,6 +1986,12 @@ update methodology.
 ## user\_handler
 Handler for endpoints whose slug after `/api/` is `user`.
 
+
+* [user_handler](#module_user_handler)
+    * [~getLoginStars(req, res)](#module_user_handler..getLoginStars)
+    * [~getAuthUser(req, res)](#module_user_handler..getAuthUser)
+    * [~getUser(req, res)](#module_user_handler..getUser)
+
 <a name="module_user_handler..getLoginStars"></a>
 
 ### user_handler~getLoginStars(req, res)
@@ -2004,6 +2010,45 @@ Endpoint that returns another users Star Gazers List.
 | --- | --- |
 | <code>http\_method</code> | GET |
 | <code>http\_endpoint</code> | /api/users/:login/stars |
+
+<a name="module_user_handler..getAuthUser"></a>
+
+### user_handler~getAuthUser(req, res)
+Endpoint that returns the currently authenticated Users User Details
+
+**Kind**: inner method of [<code>user\_handler</code>](#module_user_handler)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+**Properties**
+
+| Type | Description |
+| --- | --- |
+| <code>http\_method</code> | GET |
+| <code>http\_endpoint</code> | /api/users |
+
+<a name="module_user_handler..getUser"></a>
+
+### user_handler~getUser(req, res)
+Endpoint that returns the user account details of another user. Including all packages
+published.
+
+**Kind**: inner method of [<code>user\_handler</code>](#module_user_handler)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+**Properties**
+
+| Type | Description |
+| --- | --- |
+| <code>http\_method</code> | GET |
+| <code>http\_endpoint</code> | /api/users/:userName |
 
 <a name="verifyAuth"></a>
 

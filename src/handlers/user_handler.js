@@ -79,9 +79,7 @@ async function getLoginStars(req, res) {
  * @property {http_method} - GET
  * @property {http_endpoint} - /api/users
  */
-async function getAuthUser(req, res) {
-
-}
+async function getAuthUser(req, res) {}
 
 /**
  * @async
@@ -93,12 +91,10 @@ async function getAuthUser(req, res) {
  * @property {http_method} - GET
  * @property {http_endpoint} - /api/users/:userName
  */
-async function getUser(req, res) {
-
-}
+async function getUser(req, res) {}
 
 module.exports = {
   getLoginStars,
   getAuthUser,
-  getUser
+  getUser,
 };
