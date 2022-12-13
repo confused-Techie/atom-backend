@@ -82,13 +82,14 @@ async function insertNewPackage(pack) {
         name: pack.name,
         repository: pack.repository,
         readme: pack.readme,
-        metadata: pack.metadata,
+        metadata: pack.metadata
       };
+      const packageType = (pack.metadata.themes !== null && (pack.metadata.themes == "themes" || pack.metadata.themes == "ui") ? "theme" : "package");
 
       // No need to specify downloads and stargazers. They default at 0 on creation.
       let command = await sqlTrans`
-      INSERT INTO packages (name, creation_method, data)
-      VALUES (${pack.name}, ${pack.creation_method}, ${packData})
+      INSERT INTO packages (name, creation_method, data, package_type)
+      VALUES (${pack.name}, ${pack.creation_method}, ${packData}, ${packageType})
       RETURNING pointer;
     `;
 
