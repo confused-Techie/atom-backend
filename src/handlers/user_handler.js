@@ -20,7 +20,7 @@ const query = require("../query.js");
  */
 async function getLoginStars(req, res) {
   let params = {
-    login: query.login(req)
+    login: query.login(req),
   };
 
   let user = await database.getUserByName(params.login);
@@ -82,7 +82,7 @@ async function getLoginStars(req, res) {
  */
 async function getAuthUser(req, res) {
   const params = {
-    auth: query.auth(req)
+    auth: query.auth(req),
   };
 
   const user = await auth.verifyAuth(params.auth);
@@ -133,7 +133,7 @@ async function getUser(req, res) {
     username: user.content.username,
     avatar: user.content.avatar,
     created_at: user.content.created_at,
-    data: user.content.data
+    data: user.content.data,
   };
 
   res.status(200).json(returnUser);

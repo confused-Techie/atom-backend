@@ -554,13 +554,13 @@ The return Details of the User Account.
 
 
 ---
-# **[GET]** /api/users/:userName
+# **[GET]** /api/users/:login
 Display the details of any user, as well as the packages they have published.
 
 Auth: `FALSE`
 Parameters:
 ---
-* userName _(required)_ `[string]` | Location: `path`  
+* login _(required)_ `[string]` | Location: `path`  
   - The User of which to collect the details of.
 
 
