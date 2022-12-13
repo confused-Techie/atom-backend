@@ -874,6 +874,7 @@ engine(): Returns false if not defined, to allow a fast way to determine if resu
     * [~rename(req)](#module_query..rename) ⇒ <code>boolean</code>
     * [~packageName(req)](#module_query..packageName) ⇒ <code>string</code>
     * [~pathTraversalAttempt(data)](#module_query..pathTraversalAttempt) ⇒ <code>boolean</code>
+    * [~login(req)](#module_query..login) ⇒ <code>string</code>
 
 <a name="module_query..page"></a>
 
@@ -1015,6 +1016,18 @@ exists in the data.
 | Param | Type | Description |
 | --- | --- | --- |
 | data | <code>string</code> | The data to check for possible malicious data. |
+
+<a name="module_query..login"></a>
+
+### query~login(req) ⇒ <code>string</code>
+Returns the User from the URL Path, otherwise ''
+
+**Kind**: inner method of [<code>query</code>](#module_query)  
+**Returns**: <code>string</code> - Returns a valid specified user or ''.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
 
 <a name="module_server"></a>
 
@@ -2048,7 +2061,7 @@ published.
 | Type | Description |
 | --- | --- |
 | <code>http\_method</code> | GET |
-| <code>http\_endpoint</code> | /api/users/:userName |
+| <code>http\_endpoint</code> | /api/users/:login |
 
 <a name="verifyAuth"></a>
 
