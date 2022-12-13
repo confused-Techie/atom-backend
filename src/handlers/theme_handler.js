@@ -109,6 +109,15 @@ async function getThemes(req, res) {
   logger.httpLog(req, res);
 }
 
+/**
+ * @async
+ * @function getThemesSearch
+ * @desc Endpoint to Search from all themes on the registry.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ * @property {http_method} - GET
+ * @property {http_endpoint} - /api/themes/search
+ */
 async function getThemesSearch(req, res) {
   const params = {
     sort: query.sort(req, "relevance"),

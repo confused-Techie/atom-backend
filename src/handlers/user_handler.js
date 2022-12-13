@@ -70,6 +70,16 @@ async function getLoginStars(req, res) {
   logger.httpLog(req, res);
 }
 
+async function getAuthUser(req, res) {
+
+}
+
+async function getUser(req, res) {
+
+}
+
 module.exports = {
   getLoginStars,
+  getAuthUser,
+  getUser
 };
