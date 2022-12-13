@@ -1366,7 +1366,11 @@ async function getSortedPackages(page, dir, method, themes = false) {
     const command = await sqlStorage`
       SELECT p.data, p.downloads, (p.stargazers_count + p.original_stargazers) AS stargazers_count, v.semver
       FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
-      ${ themes === true ? sqlStorage`WHERE package_type = 'theme'` : sqlStorage`` }
+      ${
+        themes === true
+          ? sqlStorage`WHERE package_type = 'theme'`
+          : sqlStorage``
+      }
       ORDER BY ${orderType} ${
       dir === "desc" ? sqlStorage`DESC` : sqlStorage`ASC`
     }

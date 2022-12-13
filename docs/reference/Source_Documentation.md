@@ -186,7 +186,7 @@ with and retreive data from the cloud hosted database instance.
     * [~getStarringUsersByPointer(pointer)](#module_database..getStarringUsersByPointer) ⇒ <code>object</code>
     * [~simpleSearch()](#module_database..simpleSearch) ⇒ <code>object</code>
     * [~getUserCollectionById(ids)](#module_database..getUserCollectionById) ⇒ <code>object</code>
-    * [~getSortedPackages(page, dir, dir, method)](#module_database..getSortedPackages) ⇒ <code>object</code>
+    * [~getSortedPackages(page, dir, dir, method, [themes])](#module_database..getSortedPackages) ⇒ <code>object</code>
 
 <a name="module_database..setupSQL"></a>
 
@@ -529,7 +529,7 @@ Returns an array of Users and their associated data via the ids.
 
 <a name="module_database..getSortedPackages"></a>
 
-### database~getSortedPackages(page, dir, dir, method) ⇒ <code>object</code>
+### database~getSortedPackages(page, dir, dir, method, [themes]) ⇒ <code>object</code>
 Takes the page, direction, and sort method returning the raw sql package
 data for each. This monolithic function handles trunication of the packages,
 and sorting, aiming to provide back the raw data, and allow later functions to
@@ -538,12 +538,13 @@ then reconstruct the JSON as needed.
 **Kind**: inner method of [<code>database</code>](#module_database)  
 **Returns**: <code>object</code> - A server status object.  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| page | <code>int</code> | Page number. |
-| dir | <code>string</code> | String flag for asc/desc order. |
-| dir | <code>string</code> | String flag for asc/desc order. |
-| method | <code>string</code> | The column name the results have to be sorted by. |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| page | <code>int</code> |  | Page number. |
+| dir | <code>string</code> |  | String flag for asc/desc order. |
+| dir | <code>string</code> |  | String flag for asc/desc order. |
+| method | <code>string</code> |  | The column name the results have to be sorted by. |
+| [themes] | <code>boolean</code> | <code>false</code> | Optional Parameter to specify if this should only return themes. |
 
 <a name="module_debug_util"></a>
 
@@ -1878,6 +1879,11 @@ the authenticated user has stared.
 Endpoint Handlers relating to themes only.
 
 **Implements**: <code>command\_handler</code>, <code>database</code>, <code>utils</code>, <code>logger</code>  
+
+* [theme_handler](#module_theme_handler)
+    * [~getThemeFeatured(req, res)](#module_theme_handler..getThemeFeatured)
+    * [~getThemes(req, res)](#module_theme_handler..getThemes)
+
 <a name="module_theme_handler..getThemeFeatured"></a>
 
 ### theme_handler~getThemeFeatured(req, res)
@@ -1904,6 +1910,26 @@ on Atom.io for now. Although there are plans to have this become automatic later
 | --- | --- |
 | <code>http\_method</code> | GET |
 | <code>http\_endpoint</code> | /api/themes/featured |
+
+<a name="module_theme_handler..getThemes"></a>
+
+### theme_handler~getThemes(req, res)
+Endpoint to return all Themes to the user. Based on any filtering
+they'ved applied via query parameters.
+
+**Kind**: inner method of [<code>theme\_handler</code>](#module_theme_handler)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+**Properties**
+
+| Type | Description |
+| --- | --- |
+| <code>http\_method</code> | GET |
+| <code>http\_endpoint</code> | /api/themes |
 
 <a name="module_update_handler"></a>
 
