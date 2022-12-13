@@ -1247,7 +1247,7 @@ async function getStarringUsersByPointer(pointer) {
  * will use a more advanced search method.
  * @returns {object} A server status object.
  */
-async function simpleSearch(term, page, dir, sort) {
+async function simpleSearch(term, page, dir, sort, themes = false) {
   try {
     sqlStorage ??= setupSQL();
 
@@ -1261,6 +1261,11 @@ async function simpleSearch(term, page, dir, sort) {
     const command = await sqlStorage`
       SELECT p.data, p.downloads, (p.stargazers_count + p.original_stargazers) AS stargazers_count, v.semver
       FROM packages AS p INNER JOIN versions AS v ON (p.pointer = v.package) AND (v.status = 'latest')
+      ${
+        themes === true
+          ? sqlStorage`WHERE package_type = 'theme'`
+          : sqlStorage``
+      }
       WHERE pointer IN (
         SELECT pointer
         FROM names

@@ -110,7 +110,70 @@ async function getThemes(req, res) {
 }
 
 async function getThemesSearch(req, res) {
-  res.status(200).json({ message: "todo" });
+  const params = {
+    sort: query.sort(req, "relevance"),
+    page: query.page(req),
+    direction: query.dir(req),
+    query: query.query(req)
+  };
+
+  const packs = await database.simpleSearch(
+    params.query,
+    params.page,
+    params.direction,
+    params.sort,
+    true
+  );
+
+  if (!packs.ok) {
+    if (packs.short == "Not Found") {
+      logger.generic(4, "getThemesSearch-simpleSearch Responding with Empty Array for Not Found Status");
+      res.status(200).json([]);
+      logger.httpLog(req, res);
+      return;
+    }
+    logger.generic(3, `getThemesSearch-simpleSearch Not OK: ${packs.content}`);
+    await common.handleError(req, res, packs);
+    return;
+  }
+
+  const newPacks = await utils.constructPackageObjectShort(packs.content);
+  let packArray = null;
+
+  if (Array.isArray(newPacks)) {
+    packArray = newPacks;
+  } else if (Object.keys(newPacks).length < 1) {
+    packArray = [];
+    logger.generic(4, "getThemesSearch-simpleSearch Responding with Empty Array for 0 key Length Object");
+  } else {
+    packArray = [newPacks];
+  }
+
+  const getTotalPackageEstimate = await database.getTotalPackageEstimate();
+
+  const totalPages = !totalPageEstimate.ok ? 1 : totalPageEstimate.content;
+
+  const safeQuery = encodeURIComponent(
+    params.query.replace(/[<>"':;\\/]+/g, "")
+  );
+  // now to get headers.
+  res.append(
+    "Link",
+    `<${server_url}/api/themes/search?q=${safeQuery}&page=${
+      params.page
+    }&sort=${params.sort}&order=${
+      params.direction
+    }>; rel="self", <${server_url}/api/themes?q=${safeQuery}&page=${
+      totalPages.content
+    }&sort=${params.sort}&order=${
+      params.direction
+    }>; rel="last", <${server_url}/api/themes/search?q=${safeQuery}&page=${
+      params.page + 1
+    }&sort=${params.sort}&order=${params.direction}>; rel="next"`
+  );
+
+  res.status(200).json(packArray);
+  logger.httpLog(req, res);
 }
 
 module.exports = {
