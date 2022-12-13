@@ -214,6 +214,16 @@ function pathTraversalAttempt(data) {
   return data.match(check) !== null;
 }
 
+/**
+ * @function login
+ * @desc Returns the User from the URL Path, otherwise ''
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @returns {string} Returns a valid specified user or ''.
+ */
+function login(req) {
+  return req.params.login ?? "";
+}
+
 module.exports = {
   page,
   sort,

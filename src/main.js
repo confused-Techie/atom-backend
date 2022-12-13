@@ -832,12 +832,12 @@ app.get("/api/users", authLimit, async (req, res) => {
 /**
  * @web
  * @ignore
- * @path /api/users/:userName
+ * @path /api/users/:login
  * @method GET
  * @desc Display the details of any user, as well as the packages they have published.
  * @auth false
  * @param
- *   @name userName
+ *   @name login
  *   @location path
  *   @Ptype string
  *   @required true
@@ -847,7 +847,7 @@ app.get("/api/users", authLimit, async (req, res) => {
  *   @Rdesc The returned details of a specific user, along with the packages they have published.
  *   @Rtype application/json
  */
-app.get("/api/users/:userName", genericLimit, async (req, res) => {
+app.get("/api/users/:login", genericLimit, async (req, res) => {
   await user_handler.getUser(req, res);
 });
 

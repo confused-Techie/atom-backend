@@ -7,6 +7,7 @@ const logger = require("../logger.js");
 const common = require("./common_handler.js");
 const database = require("../database.js");
 const utils = require("../utils.js");
+const query = require("../query.js");
 
 /**
  * @async
@@ -19,7 +20,7 @@ const utils = require("../utils.js");
  */
 async function getLoginStars(req, res) {
   let params = {
-    login: req.params.login,
+    login: query.login(req)
   };
 
   let user = await database.getUserByName(params.login);
@@ -79,7 +80,26 @@ async function getLoginStars(req, res) {
  * @property {http_method} - GET
  * @property {http_endpoint} - /api/users
  */
-async function getAuthUser(req, res) {}
+async function getAuthUser(req, res) {
+  const params = {
+    auth: query.auth(req)
+  };
+
+  const user = await auth.verifyAuth(params.auth);
+
+  if (!user.ok) {
+    await common.handleError(req, res, user);
+    return;
+  }
+
+  // TODO We need to find a way to add the users published pacakges here
+  // When we do we will want to match the schema in ./docs/returns.md#userobjectfull
+  // Until now we will return the public details of their account.
+
+  // Now with the user, since this is the authenticated user we can return all account details.
+  res.status(200).json(user.content);
+  logger.httpLog(req, res);
+}
 
 /**
  * @async
@@ -89,9 +109,36 @@ async function getAuthUser(req, res) {}
  * @param {object} req - The `Request` object inherited from the Express endpoint.
  * @param {object} res - The `Response` object inherited from the Express endpoint.
  * @property {http_method} - GET
- * @property {http_endpoint} - /api/users/:userName
+ * @property {http_endpoint} - /api/users/:login
  */
-async function getUser(req, res) {}
+async function getUser(req, res) {
+  const param = {
+    login: query.login(req)
+  };
+
+  let user = await database.getUserByName(params.login);
+
+  if (!user.ok) {
+    await common.handleError(req, res, user);
+    return;
+  }
+
+  // TODO We need to find a way to add the users published pacakges here
+  // When we do we will want to match the schema in ./docs/returns.md#userobjectfull
+  // Until now we will return the public details of their account.
+
+  // Although now we have a user to return, but we need to ensure to strip any sensitive details
+  // since this return will go to any user.
+  const returnUser = {
+    username: user.content.username,
+    avatar: user.content.avatar,
+    created_at: user.content.created_at,
+    data: user.content.data
+  };
+
+  res.status(200).json(returnUser);
+  logger.httpLog(req, res);
+}
 
 module.exports = {
   getLoginStars,
