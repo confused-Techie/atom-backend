@@ -70,12 +70,35 @@ async function getLoginStars(req, res) {
   logger.httpLog(req, res);
 }
 
-async function getAuthUser(req, res) {}
+/**
+ * @async
+ * @function getAuthUser
+ * @desc Endpoint that returns the currently authenticated Users User Details
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ * @property {http_method} - GET
+ * @property {http_endpoint} - /api/users
+ */
+async function getAuthUser(req, res) {
 
-async function getUser(req, res) {}
+}
+
+/**
+ * @async
+ * @function getUser
+ * @desc Endpoint that returns the user account details of another user. Including all packages
+ * published.
+ * @param {object} req - The `Request` object inherited from the Express endpoint.
+ * @param {object} res - The `Response` object inherited from the Express endpoint.
+ * @property {http_method} - GET
+ * @property {http_endpoint} - /api/users/:userName
+ */
+async function getUser(req, res) {
+
+}
 
 module.exports = {
   getLoginStars,
   getAuthUser,
-  getUser,
+  getUser
 };

@@ -196,3 +196,28 @@ This return is for informing the user about users involved in a package.
 ### Returns Where this is Expected
 
 * GET /api/packages/:packageName/stargazers - Returns an array of User Objects
+
+--
+
+## User Object Full
+
+This return is for informing an authenticated User about their own account, or an un-authenticated user about another account.
+
+### Schema
+
+```json
+{
+  "login": "theirUserName",
+  "created_at": "TIMESTAMP",
+  "avatar": "avatar_url",
+  "data": "extraData",
+  "packages": [
+    ... ( Array of Package Object Shorts that the user has published )
+  ]
+}
+```
+
+### Returns Where this is Expected
+
+* GET /api/users - Returns the currently Authenticated User Details
+* GET /api/users/:userName - Returns another Users Details
