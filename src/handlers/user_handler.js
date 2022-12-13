@@ -113,7 +113,7 @@ async function getAuthUser(req, res) {
  */
 async function getUser(req, res) {
   const params = {
-    login: query.login(req)
+    login: query.login(req),
   };
 
   let user = await database.getUserByName(params.login);
