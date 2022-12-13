@@ -1883,6 +1883,7 @@ Endpoint Handlers relating to themes only.
 * [theme_handler](#module_theme_handler)
     * [~getThemeFeatured(req, res)](#module_theme_handler..getThemeFeatured)
     * [~getThemes(req, res)](#module_theme_handler..getThemes)
+    * [~getThemesSearch(req, res)](#module_theme_handler..getThemesSearch)
 
 <a name="module_theme_handler..getThemeFeatured"></a>
 
@@ -1930,6 +1931,25 @@ they'ved applied via query parameters.
 | --- | --- |
 | <code>http\_method</code> | GET |
 | <code>http\_endpoint</code> | /api/themes |
+
+<a name="module_theme_handler..getThemesSearch"></a>
+
+### theme_handler~getThemesSearch(req, res)
+Endpoint to Search from all themes on the registry.
+
+**Kind**: inner method of [<code>theme\_handler</code>](#module_theme_handler)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| req | <code>object</code> | The `Request` object inherited from the Express endpoint. |
+| res | <code>object</code> | The `Response` object inherited from the Express endpoint. |
+
+**Properties**
+
+| Type | Description |
+| --- | --- |
+| <code>http\_method</code> | GET |
+| <code>http\_endpoint</code> | /api/themes/search |
 
 <a name="module_update_handler"></a>
 

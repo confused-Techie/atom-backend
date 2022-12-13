@@ -805,48 +805,48 @@ app.get("/api/users/:login/stars", genericLimit, async (req, res) => {
 });
 
 /**
-  * @web
-  * @ignore
-  * @path /api/users
-  * @method GET
-  * @desc Display details of the currently authenticated user.
-  * This endpoint is undocumented and technically doesn't exist.
-  * This is a strange endpoint that only exists on the Web version of the upstream
-  * API. Having no equivalent on the backend. This is an inferred implementation.
-  * @auth true
-  * @param
-  *   @name auth
-  *   @location header
-  *   @Ptype string
-  *   @required true
-  *   @Pdesc Authorization Header of valid User Account Token.
-  * @response
-  *   @status 200
-  *   @Rdesc The return Details of the User Account.
-  *   @Rtype application/json
-  */
+ * @web
+ * @ignore
+ * @path /api/users
+ * @method GET
+ * @desc Display details of the currently authenticated user.
+ * This endpoint is undocumented and technically doesn't exist.
+ * This is a strange endpoint that only exists on the Web version of the upstream
+ * API. Having no equivalent on the backend. This is an inferred implementation.
+ * @auth true
+ * @param
+ *   @name auth
+ *   @location header
+ *   @Ptype string
+ *   @required true
+ *   @Pdesc Authorization Header of valid User Account Token.
+ * @response
+ *   @status 200
+ *   @Rdesc The return Details of the User Account.
+ *   @Rtype application/json
+ */
 app.get("/api/users", authLimit, async (req, res) => {
   await user_handler.getAuthUser(req, res);
 });
 
 /**
-  * @web
-  * @ignore
-  * @path /api/users/:userName
-  * @method GET
-  * @desc Display the details of any user, as well as the packages they have published.
-  * @auth false
-  * @param
-  *   @name userName
-  *   @location path
-  *   @Ptype string
-  *   @required true
-  *   @Pdesc The User of which to collect the details of.
-  * @response
-  *   @status 200
-  *   @Rdesc The returned details of a specific user, along with the packages they have published.
-  *   @Rtype application/json
-  */
+ * @web
+ * @ignore
+ * @path /api/users/:userName
+ * @method GET
+ * @desc Display the details of any user, as well as the packages they have published.
+ * @auth false
+ * @param
+ *   @name userName
+ *   @location path
+ *   @Ptype string
+ *   @required true
+ *   @Pdesc The User of which to collect the details of.
+ * @response
+ *   @status 200
+ *   @Rdesc The returned details of a specific user, along with the packages they have published.
+ *   @Rtype application/json
+ */
 app.get("/api/users/:userName", genericLimit, async (req, res) => {
   await user_handler.getUser(req, res);
 });

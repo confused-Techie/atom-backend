@@ -533,6 +533,48 @@ If the login does not exist, a 404 is returned.
 
 
 ---
+# **[GET]** /api/users
+Display details of the currently authenticated user.
+
+Auth: `true`
+Parameters:
+---
+* auth _(required)_ `[string]` | Location: `header`  
+  - Authorization Header of valid User Account Token.
+
+
+---
+Responses:
+---
+**HTTP Status Code:** `200 OK`
+
+**Type:** `[application/json]`
+
+The return Details of the User Account.
+
+
+---
+# **[GET]** /api/users/:userName
+Display the details of any user, as well as the packages they have published.
+
+Auth: `FALSE`
+Parameters:
+---
+* userName _(required)_ `[string]` | Location: `path`  
+  - The User of which to collect the details of.
+
+
+---
+Responses:
+---
+**HTTP Status Code:** `200 OK`
+
+**Type:** `[application/json]`
+
+The returned details of a specific user, along with the packages they have published.
+
+
+---
 # **[GET]** /api/stars
 List the authenticated user's starred packages.
 
