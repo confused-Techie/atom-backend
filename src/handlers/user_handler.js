@@ -83,7 +83,7 @@ async function getLoginStars(req, res) {
  */
 async function getAuthUser(req, res) {
   const params = {
-    auth: query.auth(req),
+    auth: query.auth(req)
   };
 
   const user = await auth.verifyAuth(params.auth);
@@ -103,7 +103,7 @@ async function getAuthUser(req, res) {
     data: user.content.data,
     node_id: user.content.node_id,
     token: user.content.token, // Since this is for the auth user we can provide token
-    packages: [], // Included as it should be used in the future
+    packages: [] // Included as it should be used in the future
   };
 
   // Now with the user, since this is the authenticated user we can return all account details.
@@ -144,7 +144,7 @@ async function getUser(req, res) {
     avatar: user.content.avatar,
     created_at: user.content.created_at,
     data: user.content.data,
-    packages: [], // included as it should be used in the future
+    packages: [] // included as it should be used in the future
   };
 
   res.status(200).json(returnUser);
