@@ -841,6 +841,71 @@ describe("GET /api/themes", () => {
   });
 });
 
+describe("GET /api/themes/search", () => {
+  test("Valid search returns array", async () => {
+    const res = await request(app).get("/api/themes/search?q=syntax");
+    expect(res.body).toBeArray();
+  });
+  test("Valid Search Returns Success Status Code", async () => {
+    const res = await request(app).get("/api/themes/search?q=syntax");
+    expect(res).toHaveHTTPCode(200);
+  });
+  test("Valid Search does not Return Sensitive Data", async () => {
+    const res = await request(app).get("/api/themes/search?q=syntax");
+    for (const p of res.body) {
+      expect(p.pointer == null).toBeTruthy();
+    }
+  });
+  test("Valid Search returns valid data", async () => {
+    const res = await request(app).get("/api/themes/search?q=syntax");
+    for (const p of res.body) {
+      expect(typeof p.name === "string").toBeTruthy();
+      expect(`${p.stargazers_count}`.match(/^\d+$/) === null).toBeFalsy();
+      expect(`${p.downloads}`.match(/^\d+$/) === null).toBeFalsy();
+      expect(typeof p.releases.latest === "string").toBeTruthy();
+    }
+  });
+  test("Invalid Search Returns Array", async () => {
+    const res = await request(app).get("/api/themes/search?q=not-one-match");
+    expect(res.body).toBeArray();
+  });
+  test("Invalid Search Returns Empty Array", async () => {
+    const res = await request(app).get("/api/themes/search?q=not-one-match");
+    expect(res.body.length).toBeLessThan(1);
+  });
+});
+
+describe("Ensure Themes is passed to each endpoint Properly", () => {
+  test("GET /api/themes/:packageName", async () => {
+    const res = await request(app).get("/api/themes/language-css");
+    expect(res).toHaveHTTPCode(200);
+    expect(res.body.name).toBe("language-css");
+    expect(res.body.pointer == null).toBeTruthy();
+  });
+  test("GET /api/themes/:packageName/stargazers", async () => {
+    const res = await request(app).get("/api/themes/language-css/stargazers");
+    expect(res).toHaveHTTPCode(200);
+    expect(res.body).toBeArray();
+    expect(res.body.length).toBeGreaterThan(0);
+    expect(res.body[0].login).toBeTruthy();
+    expect(typeof res.body[0].login === "string").toBeTruthy();
+  });
+  test("GET /api/themes/:packageName/versions/:versionName", async () => {
+    const res = await request(app).get("/api/themes/language-css/versions/0.45.7");
+    expect(res).toHaveHTTPCode(200);
+    expect(res.body.name).toEqual("language-css");
+    expect(typeof res.body.dist.tarball === "string").toBeTruthy();
+    expect(res.body.id == null).toBeTruthy();
+    expect(res.body.package == null).toBeTruthy();
+    expect(res.body.sha == null).toBeTruthy();
+  });
+  test("GET /api/themes/:pakageName/versions/:versionName/tarball", async () => {
+    const res = await request(app).get("/api/themes/language-css/versions/0.45.7/tarball");
+    expect(res).toHaveHTTPCode(302);
+    expect(res.redirect).toBeTruthy();
+  });
+});
+
 describe("GET /api/users/:login/stars", () => {
   test("Returns 404 for Bad User", async () => {
     const res = await request(app).get("/api/users/not-a-user/stars");
@@ -861,6 +926,59 @@ describe("GET /api/users/:login/stars", () => {
   test("Returns an Empty Array for Valid User without Stars", async () => {
     const res = await request(app).get("/api/users/has-no-stars/stars");
     expect(res.body.length).toEqual(0);
+  });
+});
+
+describe("GET /api/users", () => {
+  test("Returns Unauthenticated Status Code for No Creds", async () => {
+    const res = await request(app).get("/api/users");
+    expect(res).toHaveHTTPCode(401);
+  });
+  test("Returns Unauthenticated Message for No Creds", async () => {
+    const res = await request(app).get("/api/users");
+    expect(res.body.message).toEqual(msg.badAuth);
+  });
+  test("Returns Unauthenticated Status Code & Message for Bad Creds", async () => {
+    const res = await request(app).get("/api/users").set("Authorization", "invalid");
+    expect(res).toHaveHTTPCode(401);
+    expect(res.body.message).toEqual(msg.badAuth);
+  });
+  test("Returns User Data and Proper Status Code for Good Creds", async () => {
+    const res = await request(app).get("/api/users").set("Authorization", "valid-token");
+    expect(res).toHaveHTTPCode(200);
+    expect(res.body.username).toEqual("dever");
+    expect(res.body.avatar).toEqual("https://roadtonowhere.com");
+    expect(res.body.created_at).toBeDefined();
+    expect(res.body.data).toBeDefined();
+    expect(res.body.node_id).toEqual("dever-nodeid");
+    expect(res.body.token).toEqual("valid-token");
+    expect(res.body.packages).toBeDefined();
+    expect(res.body.packages).toBeArray();
+  });
+});
+
+describe("GET /api/users/:login", () => {
+  test("Returns 404 && Not Found Message for bad user", async () => {
+    const res = await request(app).get("/api/users/not-a-user");
+    expect(res).toHaveHTTPCode(404);
+    expect(res.body.message).toEqual(msg.notFound);
+  });
+  test("Returns User Object for Valid User", async () => {
+    const res = await request(app).get("/api/users/dever");
+    expect(res).toHaveHTTPCode(200);
+    expect(res.body.username).toEqual("dever");
+    expect(res.body.avatar).toEqual("https://roadtonowhere.com");
+    expect(res.body.created_at).toBeDefined();
+    expect(res.body.data).toBeDefined();
+    expect(res.body.packages).toBeDefined();
+    expect(res.body.packages).toBeArray();
+  });
+  test("Returns No Senstive Data for Valid User", async () => {
+    const res = await request(app).get("/api/users/dever");
+    expect(res).toHaveHTTPCode(200);
+    expect(res.body.token == null).toBeTruthy();
+    expect(res.body.id == null).toBeTruthy();
+    expect(res.body.node_id == null).toBeTruthy();
   });
 });
 

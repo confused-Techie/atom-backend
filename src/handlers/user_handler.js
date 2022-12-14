@@ -8,6 +8,7 @@ const common = require("./common_handler.js");
 const database = require("../database.js");
 const utils = require("../utils.js");
 const query = require("../query.js");
+const auth = require("../auth.js");
 
 /**
  * @async
@@ -82,7 +83,7 @@ async function getLoginStars(req, res) {
  */
 async function getAuthUser(req, res) {
   const params = {
-    auth: query.auth(req),
+    auth: query.auth(req)
   };
 
   const user = await auth.verifyAuth(params.auth);
@@ -95,9 +96,18 @@ async function getAuthUser(req, res) {
   // TODO We need to find a way to add the users published pacakges here
   // When we do we will want to match the schema in ./docs/returns.md#userobjectfull
   // Until now we will return the public details of their account.
+  const returnUser = {
+    username: user.content.username,
+    avatar: user.content.avatar,
+    created_at: user.content.created_at,
+    data: user.content.data,
+    node_id: user.content.node_id,
+    token: user.content.token, // Since this is for the auth user we can provide token
+    packages: [] // Included as it should be used in the future
+  };
 
   // Now with the user, since this is the authenticated user we can return all account details.
-  res.status(200).json(user.content);
+  res.status(200).json(returnUser);
   logger.httpLog(req, res);
 }
 
@@ -134,6 +144,7 @@ async function getUser(req, res) {
     avatar: user.content.avatar,
     created_at: user.content.created_at,
     data: user.content.data,
+    packages: [] // included as it should be used in the future
   };
 
   res.status(200).json(returnUser);
