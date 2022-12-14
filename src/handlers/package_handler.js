@@ -460,19 +460,6 @@ async function postPackagesStar(req, res) {
     return;
   }
 
-  const exists = await database.getPackageByName(params.packageName, true);
-
-  if (!exists.ok) {
-    // The package we are trying to star doesn't exist, resolve with a 404.
-    await common.handleError(
-      req,
-      res,
-      { ok: false, short: "Not Found", content: exists.content },
-      1012
-    );
-    return;
-  }
-
   const star = await database.updateStars(user.content, params.packageName);
 
   if (!star.ok) {
