@@ -460,19 +460,13 @@ async function postPackagesStar(req, res) {
     return;
   }
 
-  const star = await database.updateIncrementStar(user.content, params.packageName);
-
-  if (!star.ok) {
-    await common.handleError(req, res, user, 1009);
-    return;
-  }
-
-  const updatePack = await database.updatePackageIncrementStarByName(
+  const star = await database.updateIncrementStar(
+    user.content,
     params.packageName
   );
 
-  if (!updatePack.ok) {
-    await common.handleError(req, res, updatePack, 1010);
+  if (!star.ok) {
+    await common.handleError(req, res, star, 1009);
     return;
   }
 
@@ -519,15 +513,6 @@ async function deletePackagesStar(req, res) {
 
   if (!unstar.ok) {
     await common.handleError(req, res, unstar);
-    return;
-  }
-
-  const updatePack = await database.updatePackageDecrementStarByName(
-    params.packageName
-  );
-
-  if (!updatePack.ok) {
-    await common.handleError(req, res, updatePack);
     return;
   }
 

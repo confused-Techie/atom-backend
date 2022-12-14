@@ -528,62 +528,43 @@ async function getPackageCollectionByID(packArray) {
 
 /**
  * @async
- * @function updatePackageIncrementStarByName
- * @description Uses the package name to increment it's stargazers count by one.
+ * @function updatePackageStargazers
+ * @description Uses the package name (or pointer if provided) to update its stargazers count.
  * @param {string} name - The package name.
+ * @param {string} pointer - The package id (if given, the search by name is skipped).
  * @returns {object} The effected server status object.
  */
-async function updatePackageIncrementStarByName(name) {
+async function updatePackageStargazers(name, pointer = null) {
   try {
     sqlStorage ??= setupSQL();
 
-    const command = await sqlStorage`
+    if (pointer == null) {
+      packID = await getPackageByNameSimple(name);
+
+      if (!packID.ok) {
+        return packID;
+      }
+
+      pointer = packID.content.pointer;
+    }
+
+    const countStars = await sqlStorage`
+      SELECT COUNT(*) AS stars
+      FROM stars
+      WHERE package = ${pointer};
+    `;
+
+    const starCount = countStars.count !== 0 ? countStars[0].stars : 0;
+
+    const updateStar = await sqlStorage`
       UPDATE packages
-      SET stargazers_count = stargazers_count + 1
-      WHERE pointer IN (
-        SELECT pointer
-        FROM names
-        WHERE name = ${name}
-      )
+      SET stargazers_count = ${starCount}
+      WHERE pointer = ${pointer}
       RETURNING name, downloads, (stargazers_count + original_stargazers) AS stargazers_count, data;
     `;
 
-    return command.count !== 0
-      ? { ok: true, content: command[0] }
-      : {
-          ok: false,
-          content: "Unable to Update Package Stargazers",
-          short: "Server Error",
-        };
-  } catch (err) {
-    return { ok: false, content: err, short: "Server Error" };
-  }
-}
-
-/**
- * @async
- * @function updatePackageDecrementStarByName
- * @description Uses the package name to decrement it's stargazers count by one.
- * @param {string} name - The package name.
- * @returns {object} The effected server status object.
- */
-async function updatePackageDecrementStarByName(name) {
-  try {
-    sqlStorage ??= setupSQL();
-
-    const command = await sqlStorage`
-      UPDATE packages
-      SET stargazers_count = GREATEST(stargazers_count - 1, 0)
-      WHERE pointer IN (
-        SELECT pointer
-        FROM names
-        WHERE name = ${name}
-      )
-      RETURNING name, downloads, (stargazers_count + original_stargazers) AS stargazers_count, data;
-    `;
-
-    return command.count !== 0
-      ? { ok: true, content: command[0] }
+    return updateStar.count !== 0
+      ? { ok: true, content: updateStar[0] }
       : {
           ok: false,
           content: "Unable to Update Package Stargazers",
@@ -1092,6 +1073,13 @@ async function updateIncrementStar(user, pack) {
         };
       }
 
+      // Now update the stargazers count into the packages table
+      const updatePack = await updatePackageStargazers(pack, pointer);
+
+      if (!updatePack.ok) {
+        return updatePack;
+      }
+
       return {
         ok: true,
         content: `Package Successfully Starred`,
@@ -1101,7 +1089,7 @@ async function updateIncrementStar(user, pack) {
       // Sinche the package is already starred by the user, we return ok.
       return {
         ok: true,
-        content: `Package Alredy Starred`,
+        content: `Package Already Starred`,
       };
     }
   } catch (err) {
@@ -1158,9 +1146,16 @@ async function updateDecrementStar(user, pack) {
       };
     }
 
+    // Now update the stargazers count into the packages table
+    const updatePack = await updatePackageStargazers(pack, pointer);
+
+    if (!updatePack.ok) {
+      return updatePack;
+    }
+
     return {
       ok: true,
-      content: "Successfully Unstarred",
+      content: "Package Successfully Unstarred",
     };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
@@ -1400,8 +1395,7 @@ module.exports = {
   getPackageVersionByNameAndVersion,
   updatePackageIncrementDownloadByName,
   updatePackageDecrementDownloadByName,
-  updatePackageIncrementStarByName,
-  updatePackageDecrementStarByName,
+  updatePackageStargazers,
   getFeaturedThemes,
   simpleSearch,
   updateIncrementStar,
