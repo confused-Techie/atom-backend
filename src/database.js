@@ -1266,11 +1266,7 @@ async function simpleSearch(term, page, dir, sort, themes = false) {
         FROM names
         ${sqlStorage`WHERE name LIKE ${"%" + lcterm + "%"}`}
       )
-      ${
-        themes === true
-        ? sqlStorage`AND package_type = 'theme'`
-        : sqlStorage``
-      }
+      ${themes === true ? sqlStorage`AND package_type = 'theme'` : sqlStorage``}
       ORDER BY ${
         sort === "relevance" ? sqlStorage`downloads` : sqlStorage`${sort}`
       }

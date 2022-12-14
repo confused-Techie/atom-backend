@@ -891,7 +891,9 @@ describe("Ensure Themes is passed to each endpoint Properly", () => {
     expect(typeof res.body[0].login === "string").toBeTruthy();
   });
   test("GET /api/themes/:packageName/versions/:versionName", async () => {
-    const res = await request(app).get("/api/themes/language-css/versions/0.45.7");
+    const res = await request(app).get(
+      "/api/themes/language-css/versions/0.45.7"
+    );
     expect(res).toHaveHTTPCode(200);
     expect(res.body.name).toEqual("language-css");
     expect(typeof res.body.dist.tarball === "string").toBeTruthy();
@@ -900,7 +902,9 @@ describe("Ensure Themes is passed to each endpoint Properly", () => {
     expect(res.body.sha == null).toBeTruthy();
   });
   test("GET /api/themes/:pakageName/versions/:versionName/tarball", async () => {
-    const res = await request(app).get("/api/themes/language-css/versions/0.45.7/tarball");
+    const res = await request(app).get(
+      "/api/themes/language-css/versions/0.45.7/tarball"
+    );
     expect(res).toHaveHTTPCode(302);
     expect(res.redirect).toBeTruthy();
   });
@@ -939,12 +943,16 @@ describe("GET /api/users", () => {
     expect(res.body.message).toEqual(msg.badAuth);
   });
   test("Returns Unauthenticated Status Code & Message for Bad Creds", async () => {
-    const res = await request(app).get("/api/users").set("Authorization", "invalid");
+    const res = await request(app)
+      .get("/api/users")
+      .set("Authorization", "invalid");
     expect(res).toHaveHTTPCode(401);
     expect(res.body.message).toEqual(msg.badAuth);
   });
   test("Returns User Data and Proper Status Code for Good Creds", async () => {
-    const res = await request(app).get("/api/users").set("Authorization", "valid-token");
+    const res = await request(app)
+      .get("/api/users")
+      .set("Authorization", "valid-token");
     expect(res).toHaveHTTPCode(200);
     expect(res.body.username).toEqual("dever");
     expect(res.body.avatar).toEqual("https://roadtonowhere.com");
