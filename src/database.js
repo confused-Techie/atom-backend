@@ -1087,7 +1087,7 @@ async function updateIncrementStar(user, pack) {
       if (pointer != commandStar[0].package || user.id != commandStar[0].userid) {
         return {
           ok: false,
-          content: `Failed to Star ${pointer} with ${user.id}`,
+          content: `Failed to Star the Package`,
           short: "Server Error",
         };
       }
@@ -1170,11 +1170,11 @@ async function updateDecrementStar(user, pack) {
       pointer == commandUnstar[0].package
       ? {
           ok: true,
-          content: `Successfully Unstarred ${pointer} with ${user.id}`,
+          content: "Successfully Unstarred",
         }
       : {
           ok: false,
-          content: `Failed to Unstar ${pointer} with ${user.id}`,
+          content: "Failed to Unstar the Package",
           short: "Server Error",
         };
   } catch (err) {

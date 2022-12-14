@@ -480,8 +480,7 @@ describe("Package Lifecycle Tests", () => {
       "language-css"
     );
     expect(remStar.ok).toBeTruthy();
-    expect(remStar.content.startsWith("Successfully Unstarred ")).toBeTruthy();
-    expect(remStar.content.endsWith(` with ${USER_ID}`)).toBeTruthy();
+    expect(remStar.content).toEqual("Successfully Unstarred");
 
     // === Can we remove our User?
     // TODO: Currently there is no way to delete a user account.
