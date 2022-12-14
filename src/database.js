@@ -85,8 +85,7 @@ async function insertNewPackage(pack) {
         metadata: pack.metadata,
       };
       const packageType =
-        pack.metadata.themes !== null &&
-        (pack.metadata.themes == "themes" || pack.metadata.themes == "ui")
+        (typeof pack.metadata.themes === "string" && pack.metadata.themes.match(/^themes|ui$/i) !== null)
           ? "theme"
           : "package";
 
