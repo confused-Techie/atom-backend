@@ -462,13 +462,12 @@ describe("Package Lifecycle Tests", () => {
     expect(getFakeStars.content.length).toEqual(0);
 
     // === Can we star a package with our User?
-    const starPack = await database.updateStars(
+    const starPack = await database.updateIncrementStar(
       getUserID.content,
       "language-css"
     );
     expect(starPack.ok).toBeTruthy();
-    expect(starPack.content.startsWith("Successfully Stared ")).toBeTruthy();
-    expect(starPack.content.endsWith(` with ${USER_ID}`)).toBeTruthy();
+    expect(starPack.content).toEqual("Package Successfully Starred");
 
     // === Does our user now have valid stars?
     const getStars = await database.getStarredPointersByUserID(USER_ID);
@@ -476,7 +475,7 @@ describe("Package Lifecycle Tests", () => {
     expect(getStars.content.length).toEqual(1);
 
     // === Can we remove our star?
-    const remStar = await database.updateDeleteStar(
+    const remStar = await database.updateDecrementStar(
       getUserID.content,
       "language-css"
     );

@@ -1052,13 +1052,13 @@ async function getUserByID(id) {
 
 /**
  * @async
- * @function updateStars
+ * @function updateIncrementStar
  * @description Register the star given by a user to a package.
  * @param {int} user - A User Object that should star the package.
  * @param {string} pack - Package name that get the new star.
  * @returns {object} A server status object.
  */
-async function updateStars(user, pack) {
+async function updateIncrementStar(user, pack) {
   try {
     sqlStorage ??= setupSQL();
 
@@ -1074,25 +1074,36 @@ async function updateStars(user, pack) {
 
     const pointer = packID.content.pointer;
 
-    const commandStar = await sqlStorage`
-      INSERT INTO stars
-      (package, userid) VALUES
-      (${pointer}, ${user.id})
-      RETURNING *;
-    `;
+    try {
+      const commandStar = await sqlStorage`
+        INSERT INTO stars
+        (package, userid) VALUES
+        (${pointer}, ${user.id})
+        RETURNING *;
+      `;
 
-    // Now we expect to get our data right back, and can check the
-    // validity to know if this happened successfully or not.
-    return pointer == commandStar[0].package && user.id == commandStar[0].userid
-      ? {
-          ok: true,
-          content: `Successfully Stared ${pointer} with ${user.id}`,
-        }
-      : {
+      // Now we expect to get our data right back, and can check the
+      // validity to know if this happened successfully or not.
+      if (pointer != commandStar[0].package || user.id != commandStar[0].userid) {
+        return {
           ok: false,
           content: `Failed to Star ${pointer} with ${user.id}`,
           short: "Server Error",
         };
+      }
+
+      return {
+        ok: true,
+        content: `Package Successfully Starred`,
+      };
+    } catch (e) {
+      // Catch the primary key violation on (package, userid),
+      // Sinche the package is already starred by the user, we return ok.
+      return {
+        ok: true,
+        content: `Package Alredy Starred`,
+      };
+    }
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
@@ -1100,13 +1111,13 @@ async function updateStars(user, pack) {
 
 /**
  * @async
- * @function updateDeleteStar
+ * @function updateDecrementStar
  * @description Register the removal of the star on a package by a user.
  * @param {int} user - User Object who remove the star.
  * @param {string} pack - Package name that get the star removed.
  * @returns {object} A server status object.
  */
-async function updateDeleteStar(user, pack) {
+async function updateDecrementStar(user, pack) {
   try {
     sqlStorage ??= setupSQL();
 
@@ -1408,8 +1419,8 @@ module.exports = {
   updatePackageDecrementStarByName,
   getFeaturedThemes,
   simpleSearch,
-  updateStars,
-  updateDeleteStar,
+  updateIncrementStar,
+  updateDecrementStar,
   insertNewUser,
   insertNewPackageName,
   insertNewPackageVersion,

@@ -460,7 +460,7 @@ async function postPackagesStar(req, res) {
     return;
   }
 
-  const star = await database.updateStars(user.content, params.packageName);
+  const star = await database.updateIncrementStar(user.content, params.packageName);
 
   if (!star.ok) {
     await common.handleError(req, res, user, 1009);
@@ -512,7 +512,7 @@ async function deletePackagesStar(req, res) {
     return;
   }
 
-  const unstar = await database.updateDeleteStar(
+  const unstar = await database.updateDecrementStar(
     user.content,
     params.packageName
   );
