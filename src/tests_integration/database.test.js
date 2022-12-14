@@ -480,7 +480,7 @@ describe("Package Lifecycle Tests", () => {
       "language-css"
     );
     expect(remStar.ok).toBeTruthy();
-    expect(remStar.content).toEqual("Successfully Unstarred");
+    expect(remStar.content).toEqual("Package Successfully Unstarred");
 
     // === Can we remove our User?
     // TODO: Currently there is no way to delete a user account.

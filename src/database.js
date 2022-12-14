@@ -1140,43 +1140,28 @@ async function updateDecrementStar(user, pack) {
     `;
 
     if (commandUnstar.length === 0) {
-      // The command failed, let see if its because the data doesn't exist.
-
-      const doesExist = await sqlStorage`
-        SELECT EXISTS (
-          SELECT 1 FROM stars
-          WHERE (package = ${pointer}) AND (userid = ${user.id})
-        );
-      `;
-
-      if (doesExist[0].exists) {
-        // Exists is true, so it failed for some other reason
-        return {
-          ok: false,
-          content: `Failed to Unstar ${pack} with ${user.username}`,
-          short: "Server Error",
-        };
-      }
-
+      // We know user and package exist both, so the fail is because
+      // the star was already missing,
+      // The user expects its star is not given, so we return ok.
       return {
-        ok: false,
-        content: `Failed to Unstar ${pack} with ${user.username} Because it doesn't exist.`,
-        short: "Not Found",
+        ok: true,
+        content: "The Star is Already Missing",
       };
     }
 
-    // if the return matches our input we know it was successful
-    return user.id == commandUnstar[0].userid &&
-      pointer == commandUnstar[0].package
-      ? {
-          ok: true,
-          content: "Successfully Unstarred",
-        }
-      : {
-          ok: false,
-          content: "Failed to Unstar the Package",
-          short: "Server Error",
-        };
+    // If the return does not match our input, it failed.
+    if (user.id != commandUnstar[0].userid || pointer != commandUnstar[0].package) {
+      return {
+        ok: false,
+        content: "Failed to Unstar the Package",
+        short: "Server Error",
+      };
+    }
+
+    return {
+      ok: true,
+      content: "Successfully Unstarred",
+    };
   } catch (err) {
     return { ok: false, content: err, short: "Server Error" };
   }
