@@ -86,7 +86,7 @@ async function insertNewPackage(pack) {
       };
       const packageType =
         typeof pack.metadata.themes === "string" &&
-        pack.metadata.themes.match(/^themes|ui$/i) !== null
+        pack.metadata.themes.match(/^(?:themes|ui)$/i) !== null
           ? "theme"
           : "package";
 
@@ -597,7 +597,7 @@ async function updatePackageStargazers(name, pointer = null) {
     sqlStorage ??= setupSQL();
 
     if (pointer == null) {
-      packID = await getPackageByNameSimple(name);
+      const packID = await getPackageByNameSimple(name);
 
       if (!packID.ok) {
         return packID;
