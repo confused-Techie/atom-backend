@@ -476,9 +476,9 @@ describe("POST /api/packages/:packageName/star", () => {
     expect(res).toHaveHTTPCode(200);
     // DESCRIBE: Returns same Package
     expect(res.body.name).toEqual("language-css");
-    // DESCRIBE: Properly Decreases Star Count
-    expect(parseInt(res.body.stargazers_count, 10)).toBeGreaterThan(
-      parseInt(prev.body.stargazers_count, 10)
+    // DESCRIBE: Properly Increases Star Count
+    expect(parseInt(res.body.stargazers_count, 10)).toEqual(
+      parseInt(prev.body.stargazers_count, 10) + 1
     );
     // DESCRIBE: A duplicate Request Returns Success Status Code
     expect(dup).toHaveHTTPCode(200);

@@ -436,8 +436,16 @@ describe("Package Lifecycle Tests", () => {
       getUserID.content,
       "language-css"
     );
-    //expect(starPack.ok).toBeTruthy();
+    expect(starPack.ok).toBeTruthy();
     expect(starPack.content).toEqual("Package Successfully Starred");
+
+    // === Can we add a new star to the same package with our User?
+    const reStarPack = await database.updateIncrementStar(
+      getUserID.content,
+      "language-css"
+    );
+    expect(reStarPack.ok).toBeTruthy();
+    expect(reStarPack.content).toEqual("Package Already Starred");
 
     // === Does our user now have valid stars?
     const getStars = await database.getStarredPointersByUserID(USER_ID);
@@ -451,6 +459,19 @@ describe("Package Lifecycle Tests", () => {
     );
     expect(remStar.ok).toBeTruthy();
     expect(remStar.content).toEqual("Package Successfully Unstarred");
+
+    // === What happens if the User try to remove a star from un unstarred package?
+    const reRemStar = await database.updateDecrementStar(
+      getUserID.content,
+      "language-css"
+    );
+    expect(reRemStar.ok).toBeTruthy();
+    expect(reRemStar.content).toEqual("The Star is Already Missing");
+
+    // === Does our user now have valid stars?
+    const getNoStars = await database.getStarredPointersByUserID(USER_ID);
+    expect(getNoStars.ok).toBeTruthy();
+    expect(getNoStars.content.length).toEqual(0);
 
     // === Can we remove our User?
     // TODO: Currently there is no way to delete a user account.
