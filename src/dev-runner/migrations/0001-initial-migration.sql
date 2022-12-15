@@ -35,6 +35,19 @@ ALTER TABLE packages
 ALTER COLUMN package_type TYPE packageType USING (package_type::packageType),
 ALTER COLUMN package_type SET NOT NULL;
 
+CREATE FUNCTION now_on_updated_package()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated = NOW();
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER trigger_now_on_updated
+    BEFORE UPDATE ON packages
+    FOR EACH ROW
+EXECUTE PROCEDURE now_on_updated_package();
+
 -- Create names Table
 
 CREATE TABLE names (
