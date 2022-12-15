@@ -20,6 +20,8 @@ After every push, GitHub Actions build several forms of documentation and resour
 
 * Our build guide [build.md](../build.md).
 * Codebase Glossary [glossary.md](./glossary.md).
+* A history of the [Admin_Actions.md](./Admin_Actions.md) that have been taken on the backend.
+* Information on where Pulsar got it's packages and what to do if you do/don't see yours [packages.md](./packages.md).
 * Guide to hosting your own instance of the Atom Backend for your fork of Atom [host_your_own.md](../host_your_own.md).
 * Guide to writing Integration Tests and the data that is available to you within them [writingIntegrationTests.md](../writingIntegrationTests.md).
 * Abstract overview of the codebase's modules and how they rely on each other [quick_source_overview.md](/quick_source_overview.md).
@@ -29,5 +31,5 @@ After every push, GitHub Actions build several forms of documentation and resour
 * Definition and List of the code's Numeric Error codes [numeric_error_codes.md](./numeric_error_codes.md).
 * The definition of the objects returned and handled [returns.md](./returns.md).
 * Details of how the backend SQL Database is configured [database.md](./database.md).
-* Details of some of the common queries used to retreive data from the backend, and the format they are expected to return [queries.md](./queries.md).
+* Details of some of the common queries used to retrieve data from the backend, and the format they are expected to return [queries.md](./queries.md).
 * Finally someone once said to never get rid of the original ReadMe.md because they loved it so much. For them here's the original [README.md](../resources/ORIGINAL_README.md).

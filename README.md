@@ -33,6 +33,7 @@ If you'd like to learn more about the Pulsar / Atom Backend or learn how to cont
 * To read about the original research and code that started the backend, visit [Atom Community Server Backend](https://github.com/confused-Techie/atom-community-server-backend) which was the original codebase of this project written in Golang. This was later switched to JavaScript to provide more broad support from contributors.
 * To visit the source code of the [Pulsar Backend Package Repository](https://github.com/pulsar-edit/package-backend).
 * To visit the source code of the [Atom Backend](https://github.com/confused-Techie/atom-backend).
+* If you're package that was Published to Atom is/isn't available refer to our [docs](/docs/reference/packages.md) on what to do.
 
 ## Contributors ✨
 
