@@ -859,7 +859,7 @@ engine(): Returns false if not defined, to allow a fast way to determine if resu
 
 
 * [query](#module_query)
-    * [~page(req)](#module_query..page) ⇒ <code>string</code>
+    * [~page(req)](#module_query..page) ⇒ <code>number</code>
     * [~sort(req, [def])](#module_query..sort) ⇒ <code>string</code>
     * [~dir(req)](#module_query..dir) ⇒ <code>string</code>
     * [~query(req)](#module_query..query) ⇒ <code>string</code>
@@ -874,11 +874,11 @@ engine(): Returns false if not defined, to allow a fast way to determine if resu
 
 <a name="module_query..page"></a>
 
-### query~page(req) ⇒ <code>string</code>
+### query~page(req) ⇒ <code>number</code>
 Parser of the Page query parameter. Defaulting to 1.
 
 **Kind**: inner method of [<code>query</code>](#module_query)  
-**Returns**: <code>string</code> - Returns the valid page provided in the query parameter or 1, as the default.  
+**Returns**: <code>number</code> - Returns the valid page provided in the query parameter or 1, as the default.  
 
 | Param | Type | Description |
 | --- | --- | --- |
