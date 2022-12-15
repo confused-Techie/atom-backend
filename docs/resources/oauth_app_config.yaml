@@ -1,0 +1,12 @@
+# There is no actual Config Available for this data
+# But in the spirit of full documentation this will be added in a made up format.
+
+client_id: ""
+application_logo:
+  file: pulsar_discord.png
+  background_color: "#fff"
+application_name: "Pulsar"
+homepage_url: "https://pulsar-edit.dev"
+application_description: "A Community-led Hyper-Hackable Text Editor"
+callback_url: "https://api.pulsar-edit.dev/api/oauth"
+enable_device_flow: false

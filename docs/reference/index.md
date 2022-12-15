@@ -20,6 +20,7 @@ After every push, GitHub Actions build several forms of documentation and resour
 
 * Our build guide [build.md](../build.md).
 * Codebase Glossary [glossary.md](./glossary.md).
+* A history of the [Admin_Actions.md](./Admin_Actions.md) that have been taken on the backend.
 * Guide to hosting your own instance of the Atom Backend for your fork of Atom [host_your_own.md](../host_your_own.md).
 * Guide to writing Integration Tests and the data that is available to you within them [writingIntegrationTests.md](../writingIntegrationTests.md).
 * Abstract overview of the codebase's modules and how they rely on each other [quick_source_overview.md](/quick_source_overview.md).
