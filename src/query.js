@@ -150,7 +150,7 @@ function repo(req) {
  * @returns {string} Returns a valid 'tag' query parameter. Or '' if invalid.
  */
 function tag(req) {
-  return req.query.tag ?? "";
+  return typeof req.query.tag !== "string" ? "" : req.query.tag;
 }
 
 /**

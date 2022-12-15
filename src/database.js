@@ -157,15 +157,24 @@ async function insertNewPackage(pack) {
  * @function insertNewPackageVersion
  * @desc Adds a new package version to the db.
  * @param {object} packJSON - A full `package.json` file for the wanted version.
+ * @param {string|null} oldName - If provided, the old name to be replaced for the renaming of the package.
  * @returns {object} A server status object.
  */
-async function insertNewPackageVersion(packJSON) {
+async function insertNewPackageVersion(packJSON, oldName = null) {
   sqlStorage ??= setupSQL();
 
   // We are expected to receive a standard `package.json` file.
+  // Note that, if oldName is provided, here we can be sure oldName !== packJSON.name
+  // because the comparison has been already done in postPackagesVersion()
   return await sqlStorage
     .begin(async (sqlTrans) => {
-      const packID = await getPackageByNameSimple(packJSON.name);
+      const rename = typeof oldName === "string";
+
+      // On renaming, search the package pointer using the oldName,
+      // otherwise use the name in the package object directly.
+      let packName = rename ? oldName : packJSON.name;
+
+      const packID = await getPackageByNameSimple(packName);
 
       if (!packID.ok) {
         return packID;
@@ -173,7 +182,46 @@ async function insertNewPackageVersion(packJSON) {
 
       const pointer = packID.content.pointer;
 
-      // First we need to check if the current latest version is lower than the new one
+      if (rename) {
+        // The flow for renaming the package.
+        // Before inserting the new name, we try to update it into the `packages` table
+        // since we want that column to contain the current name.
+        try {
+          const updateNewName = await sqlTrans`
+          UPDATE packages
+          SET name = ${packJSON.name}
+          WHERE pointer = ${pointer}
+          RETURNING *;
+          `;
+
+          if (updateNewName.count === 0) {
+            throw `Unable to update the package name.`;
+          }
+        } catch (e) {
+          throw `Unable to update the package name. ${packJSON.name} is already used by another package.`;
+        }
+
+        // Now we can finally insert the new name inside the `names` table.
+        try {
+          const newInsertedName = await sqlTrans`
+          INSERT INTO names
+          (name, pointer) VALUES
+          (${packJSON.name}, ${pointer})
+          RETURNING *;
+          `;
+
+          if (newInsertedName.count === 0) {
+            throw `Unable to add the new name: ${packJSON.name}`;
+          }
+        } catch (e) {
+          throw `Unable to add the new name: ${packJSON.name} is already used.`;
+        }
+
+        // After renaming, we can use packJSON.name as the package name.
+        packName = packJSON.name;
+      }
+
+      // Here we need to check if the current latest version is lower than the new one
       // which we want to publish.
       const latestVersion = await sqlTrans`
         SELECT *
@@ -182,7 +230,7 @@ async function insertNewPackageVersion(packJSON) {
       `;
 
       if (latestVersion.count === 0) {
-        throw `There is no current latest version for ${packJSON.name}. The package is broken.`;
+        throw `There is no current latest version for ${packName}. The package is broken.`;
       }
 
       const higherSemver = utils.semverGt(
@@ -202,10 +250,22 @@ async function insertNewPackageVersion(packJSON) {
       `;
 
       if (updateLastVer.count === 0) {
-        throw `Unable to modify last published version ${packJSON.name}`;
+        throw `Unable to modify last published version ${packName}`;
       }
 
-      // We can insert the new latest version
+      // Then update the package object in the related column of packages table.
+      const updatePackageData = await sqlTrans`
+        UPDATE packages
+        SET data = ${packJSON}
+        WHERE pointer = ${pointer}
+        RETURNING *;
+      `;
+
+      if (updatePackageData.count === 0) {
+        throw `Unable to update the full package object of the new version ${packName}`;
+      }
+
+      // We can finally insert the new latest version.
       const license = packJSON.license ?? "NONE";
       const engine = packJSON.engines ?? { atom: "*" };
 
@@ -217,23 +277,23 @@ async function insertNewPackageVersion(packJSON) {
         `;
 
         if (addVer.count === 0) {
-          throw `Unable to create a new version for ${packJSON.name}`;
+          throw `Unable to create a new version for ${packName}`;
         }
       } catch (e) {
         // This occurs when the (package, semver) unique constraint is violated.
-        throw `Not allowed to publish a version previously deleted for ${packJSON.name}`;
+        throw `Not allowed to publish a version previously deleted for ${packName}`;
       }
 
       return {
         ok: true,
-        content: `Successfully added new version: ${packJSON.name}@${packJSON.version}`,
+        content: `Successfully added new version: ${packName}@${packJSON.version}`,
       };
     })
     .catch((err) => {
       const msg =
         typeof err === "string"
           ? err
-          : `A generic error occured while inserting the new package version ${packJSON.name}`;
+          : `A generic error occured while inserting the new package version ${packName}`;
 
       return { ok: false, content: msg, short: "Server Error" };
     });
@@ -247,6 +307,9 @@ async function insertNewPackageVersion(packJSON) {
  * @param {string} newName - The new name to create in the DB.
  * @param {string} oldName - The original name of which to use the pointer of.
  * @returns {object} A server status object.
+ * @todo This function has been left only for testing purpose since it has been integrated
+ * inside insertNewPackageVersion, so it should be removed when we can test the rename process
+ * directly on the endpoint.
  */
 async function insertNewPackageName(newName, oldName) {
   sqlStorage ??= setupSQL();
@@ -844,6 +907,22 @@ async function removePackageVersion(packName, semVer) {
           content: `Unable to remove ${semVer} version of ${packName} package.`,
           short: "Not Found",
         };
+      }
+
+      // Let's save the meta data object of the new latest version so
+      // we can update it inside the packages table since we use the
+      // packages.data column to report the full object of the lastest version.
+      const latestDataObject = commandLatest[0].meta;
+
+      const updatePackageData = await sqlTrans`
+        UPDATE packages
+        SET data = ${latestDataObject}
+        WHERE pointer = ${pointer}
+        RETURNING *;
+      `;
+
+      if (updatePackageData.count === 0) {
+        throw `Unable to update the full package object of the new version ${latestSemver}`;
       }
 
       return {
