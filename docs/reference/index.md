@@ -30,5 +30,5 @@ After every push, GitHub Actions build several forms of documentation and resour
 * Definition and List of the code's Numeric Error codes [numeric_error_codes.md](./numeric_error_codes.md).
 * The definition of the objects returned and handled [returns.md](./returns.md).
 * Details of how the backend SQL Database is configured [database.md](./database.md).
-* Details of some of the common queries used to retreive data from the backend, and the format they are expected to return [queries.md](./queries.md).
+* Details of some of the common queries used to retrieve data from the backend, and the format they are expected to return [queries.md](./queries.md).
 * Finally someone once said to never get rid of the original ReadMe.md because they loved it so much. For them here's the original [README.md](../resources/ORIGINAL_README.md).
