@@ -129,15 +129,9 @@ async function insertNewPackage(pack) {
         // therefore set it as NONE if undefined.
         const license = pv[ver].license ?? "NONE";
 
-        // Save version object into meta, but strip engines and license properties
-        // since we save them into specific separate columns.
-        let meta = pv[ver];
-        delete meta.engines;
-        delete meta.license;
-
         command = await sqlTrans`
         INSERT INTO versions (package, status, semver, license, engine, meta)
-        VALUES (${pointer}, ${status}, ${ver}, ${license}, ${engine}, ${meta})
+        VALUES (${pointer}, ${status}, ${ver}, ${license}, ${engine}, ${pv[ver]})
         RETURNING id;
       `;
 
