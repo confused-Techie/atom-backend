@@ -85,7 +85,8 @@ async function insertNewPackage(pack) {
         metadata: pack.metadata,
       };
       const packageType =
-        (typeof pack.metadata.themes === "string" && pack.metadata.themes.match(/^themes|ui$/i) !== null)
+        typeof pack.metadata.themes === "string" &&
+        pack.metadata.themes.match(/^themes|ui$/i) !== null
           ? "theme"
           : "package";
 
@@ -1138,7 +1139,10 @@ async function updateIncrementStar(user, pack) {
 
       // Now we expect to get our data right back, and can check the
       // validity to know if this happened successfully or not.
-      if (pointer != commandStar[0].package || user.id != commandStar[0].userid) {
+      if (
+        pointer != commandStar[0].package ||
+        user.id != commandStar[0].userid
+      ) {
         return {
           ok: false,
           content: `Failed to Star the Package`,
@@ -1211,7 +1215,10 @@ async function updateDecrementStar(user, pack) {
     }
 
     // If the return does not match our input, it failed.
-    if (user.id != commandUnstar[0].userid || pointer != commandUnstar[0].package) {
+    if (
+      user.id != commandUnstar[0].userid ||
+      pointer != commandUnstar[0].package
+    ) {
       return {
         ok: false,
         content: "Failed to Unstar the Package",
@@ -1256,9 +1263,10 @@ async function getStarredPointersByUserID(userid) {
     // It is likely safe to assume that if nothing matches the userid,
     // then the user hasn't given any star. So instead of server error
     // here we will non-traditionally return an empty array.
-    const packArray = (command.count !== 0 && Array.isArray(command[0].array))
-      ? command[0].array
-      : [];
+    const packArray =
+      command.count !== 0 && Array.isArray(command[0].array)
+        ? command[0].array
+        : [];
 
     return { ok: true, content: packArray };
   } catch (err) {
