@@ -18,5 +18,20 @@
   "ui-theme-template",
   "active-editor-info",
   "ascii-art",
-  "your-name-word-count"
+  "your-name-word-count",
+  "another-user-theme",
+  "out-dated-1",
+  "out-dated-2",
+  "user-package",
+  "first",
+  "not-first",
+  "test-package",
+  "test-package-a",
+  "test-package-b",
+  "test-package-c",
+  "core-theme",
+  "core-package",
+  "user-theme",
+  "dev-theme",
+  "dev-package"
 ]
