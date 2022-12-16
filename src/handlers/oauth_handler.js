@@ -43,7 +43,7 @@ async function getLogin(req, res) {
       res
         .status(302)
         .redirect(
-          `https://github.com/login/oauth/authorize?client_id=${GH_CLIENTID}&redirect_uri=${GH_REDIRECTURI}&state=${state.content}`
+          `https://github.com/login/oauth/authorize?client_id=${GH_CLIENTID}&redirect_uri=${GH_REDIRECTURI}&state=${state.content}?scope=public_repo%20read:org`
         );
       logger.httpLog(req, res);
     })
