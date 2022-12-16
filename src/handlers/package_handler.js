@@ -812,7 +812,7 @@ async function getPackagesVersionTarball(req, res) {
   //let tarballURL = new url((pack.content.meta.tarball_url ? pack.content.meta.tarball_url : ""));
   let tarballURL = pack.content.meta.tarball_url;
 
-  if (tarballURL !== undefined) {
+  if (tarballURL !== undefined && false) { // todo the url feature doesn't work the way we would expect in production
     tarballURL = url.parse(pack.content.meta.tarball_url);
 
     if (
@@ -832,7 +832,7 @@ async function getPackagesVersionTarball(req, res) {
     tarballURL = tarballURL.toString();
   } else {
     // we are likely in a test environment. And will just leave this blank to error out on the client side.
-    tarballURL = "";
+    //tarballURL = "";
   }
 
   res.redirect(tarballURL);
