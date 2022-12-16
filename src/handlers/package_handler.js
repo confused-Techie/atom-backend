@@ -812,7 +812,8 @@ async function getPackagesVersionTarball(req, res) {
   //let tarballURL = new url((pack.content.meta.tarball_url ? pack.content.meta.tarball_url : ""));
   let tarballURL = pack.content.meta.tarball_url;
 
-  if (tarballURL !== undefined && false) { // todo the url feature doesn't work the way we would expect in production
+  if (tarballURL !== undefined && false) {
+    // todo the url feature doesn't work the way we would expect in production
     tarballURL = url.parse(pack.content.meta.tarball_url);
 
     if (
