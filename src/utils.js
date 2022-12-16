@@ -490,11 +490,23 @@ class StateStore {
         3,
         `StateStore.getState() Fail Returning for IP: ${ip} - State: ${state}`
       );
+      logger.generic(
+        3,
+        `StateStore.getState() Fail Return Anyway due to bug: ${ip}`
+      );
       return {
-        ok: false,
-        short: "Not Found",
-        content: "Couldn't find IP within StateStore",
+        ok: true,
+        content: state
       };
+      // The design here is flawed. Essentially it seems that because we are behind a load balancer
+      // the process here needs to retain the stateStore, but there's no guarantee that
+      // one request will hit the same state store, so we will temporarily disable this,
+      // and instead use the state store as a microservice
+      //return {
+      //  ok: false,
+      //  short: "Not Found",
+      //  content: "Couldn't find IP within StateStore",
+      //};
     }
   }
   /**

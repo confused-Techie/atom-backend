@@ -813,7 +813,7 @@ async function getPackagesVersionTarball(req, res) {
   let tarballURL = pack.content.meta.tarball_url;
 
   if (tarballURL !== undefined) {
-    tarballURL = new url(pack.content.meta.tarball_url);
+    tarballURL = url.parse(pack.content.meta.tarball_url);
 
     if (
       url.hostname != "codeload.github.com" ||

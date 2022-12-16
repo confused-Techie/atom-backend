@@ -60,7 +60,6 @@ async function verifyAuth(token) {
       }
     } else {
       logger.generic(6, "auth.verifyAuth() Called in Production instance");
-
       user_data = await superagent
         .get("https://api.github.com/user")
         .set({ Authorization: `Bearer ${token}` })

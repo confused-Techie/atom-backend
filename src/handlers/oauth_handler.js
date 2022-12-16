@@ -66,9 +66,7 @@ async function getOauth(req, res) {
     state: req.query.state ?? "",
     code: req.query.code ?? "",
   };
-  logger.generic(4, `Get OAuth Hit! Pat: ${params.pat}`);
-
-  //throw new Error("Not Supported!"); // WARNING: Turning on before remote depoloyment disables auth during beta
+  logger.generic(4, "Get OAuth Hit!");
 
   // First we want to ensure that our state is still the same.
   let stateCheck = stateStore.getState(req.ip, params.state);
@@ -78,6 +76,8 @@ async function getOauth(req, res) {
     await common.handleError(req, res, stateCheck);
     return;
   }
+
+  logger.generic(4, "StateStore Check Success");
 
   const initial_auth = await superagent
     .post(`https://github.com/login/oauth/access_token`)
@@ -145,7 +145,8 @@ async function getOauth(req, res) {
       // before returning lets append their proper access token to the object.
       userObj.token = access_token;
 
-      res.status(200).json(userObj);
+      // Now we redirect to the frontend site.
+      res.redirect(`https://web.pulsar-edit.dev/users?token=${userObj.token}`);
       logger.httpLog(req, res);
       return;
     }
@@ -165,7 +166,9 @@ async function getOauth(req, res) {
 
     // Before returning, lets append their access token
     create_user.content.token = access_token;
-    res.status(200).json(create_user.content);
+
+    // Now we redirect to the frontend site.
+    res.redirect(`https://web.pulsar-edit.dev/users?token=${create_user.content.token}`);
     logger.httpLog(req, res);
   } catch (err) {
     logger.generic(2, "/api/oauth Caught an Error!", {
@@ -237,7 +240,8 @@ async function getPat(req, res) {
       // If we plan to allow updating the user name or image, we would do so here
       userObj.token = params.token;
 
-      res.status(200).json(userObj);
+      // Now we redirect to the frontend site.
+      res.redirect(`https://web.pulsar-edit.dev/users?token=${userObj.token}`);
       logger.httpLog(req, res);
       return;
     }
@@ -251,7 +255,9 @@ async function getPat(req, res) {
     }
 
     create_user.content.token = params.token;
-    res.status(200).json(create_user.content);
+
+    // Now we redirect to the frontend site
+    res.redirect(`https://web.pulsar-edit.dev/users?token=${create_user.content.token}`);
     logger.httpLog(req, res);
   } catch (err) {
     logger.generic(2, "/api/pat Caught an Error!", { type: "error", err: err });

@@ -16,7 +16,6 @@ const common_handler = require("./handlers/common_handler.js");
 const oauth_handler = require("./handlers/oauth_handler.js");
 const server_version = require("../package.json").version;
 const rateLimit = require("express-rate-limit");
-const cors = require("cors");
 const { MemoryStore } = require("express-rate-limit");
 
 // Define our Basic Rate Limiters
@@ -49,13 +48,6 @@ app.set("trust proxy", true);
 // ^^^ Used to determine the true IP address behind the Google App Engine Load Balancer.
 // This is need for the Authentication features to proper maintain their StateStore
 // Hashmap. https://cloud.google.com/appengine/docs/flexible/nodejs/runtime#https_and_forwarding_proxies
-
-app.use(
-  cors({
-    origin: "https://web.pulsar-edit.dev",
-  })
-);
-// ^^^ We set cors here to ensure any requests from the frontend client side succeed.
 
 app.use((req, res, next) => {
   // This adds a start to the request, logging the exact time a request was received.
@@ -839,7 +831,19 @@ app.get("/api/users/:login/stars", genericLimit, async (req, res) => {
  *   @Rtype application/json
  */
 app.get("/api/users", authLimit, async (req, res) => {
+  res.header("Access-Control-Allow-Methods", "GET");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Access-Control-Allow-Credentials");
+  res.header("Access-Control-Allow-Origin", "https://web.pulsar-edit.dev");
+  res.header("Access-Control-Allow-Credentials", true);
   await user_handler.getAuthUser(req, res);
+});
+
+app.options("/api/users", async (req, res) => {
+  res.header("Access-Control-Allow-Methods", "GET");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Access-Control-Allow-Credentials");
+  res.header("Access-Control-Allow-Origin", "https://web.pulsar-edit.dev");
+  res.header("Access-Control-Allow-Credentials", true);
+  res.send(200);
 });
 
 /**

@@ -107,6 +107,7 @@ async function getAuthUser(req, res) {
   };
 
   // Now with the user, since this is the authenticated user we can return all account details.
+  res.set({ "Access-Control-Allow-Credentials": true });
   res.status(200).json(returnUser);
   logger.httpLog(req, res);
 }
