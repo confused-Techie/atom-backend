@@ -16,6 +16,7 @@ const common_handler = require("./handlers/common_handler.js");
 const oauth_handler = require("./handlers/oauth_handler.js");
 const server_version = require("../package.json").version;
 const rateLimit = require("express-rate-limit");
+const cors = require("cors");
 const { MemoryStore } = require("express-rate-limit");
 
 // Define our Basic Rate Limiters
@@ -43,6 +44,16 @@ const authLimit = rateLimit({
 // The reason being, the original API spec made no mention of rate limiting, so nor will we.
 // But once we have surpassed feature parity, we will instead enable these limits, to help
 // prevent overusage of the api server. With Auth having a lower limit, then non-authed requests.
+
+app.set("trust proxy", true);
+// ^^^ Used to determine the true IP address behind the Google App Engine Load Balancer.
+// This is need for the Authentication features to proper maintain their StateStore
+// Hashmap. https://cloud.google.com/appengine/docs/flexible/nodejs/runtime#https_and_forwarding_proxies
+
+app.use(cors({
+  origin: "https://web.pulsar-edit.dev"
+}));
+// ^^^ We set cors here to ensure any requests from the frontend client side succeed.
 
 app.use((req, res, next) => {
   // This adds a start to the request, logging the exact time a request was received.
