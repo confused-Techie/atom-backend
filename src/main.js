@@ -50,9 +50,11 @@ app.set("trust proxy", true);
 // This is need for the Authentication features to proper maintain their StateStore
 // Hashmap. https://cloud.google.com/appengine/docs/flexible/nodejs/runtime#https_and_forwarding_proxies
 
-app.use(cors({
-  origin: "https://web.pulsar-edit.dev"
-}));
+app.use(
+  cors({
+    origin: "https://web.pulsar-edit.dev",
+  })
+);
 // ^^^ We set cors here to ensure any requests from the frontend client side succeed.
 
 app.use((req, res, next) => {
