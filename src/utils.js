@@ -496,7 +496,7 @@ class StateStore {
       );
       return {
         ok: true,
-        content: state
+        content: state,
       };
       // The design here is flawed. Essentially it seems that because we are behind a load balancer
       // the process here needs to retain the stateStore, but there's no guarantee that

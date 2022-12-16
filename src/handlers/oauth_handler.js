@@ -168,7 +168,9 @@ async function getOauth(req, res) {
     create_user.content.token = access_token;
 
     // Now we redirect to the frontend site.
-    res.redirect(`https://web.pulsar-edit.dev/users?token=${create_user.content.token}`);
+    res.redirect(
+      `https://web.pulsar-edit.dev/users?token=${create_user.content.token}`
+    );
     logger.httpLog(req, res);
   } catch (err) {
     logger.generic(2, "/api/oauth Caught an Error!", {
@@ -257,7 +259,9 @@ async function getPat(req, res) {
     create_user.content.token = params.token;
 
     // Now we redirect to the frontend site
-    res.redirect(`https://web.pulsar-edit.dev/users?token=${create_user.content.token}`);
+    res.redirect(
+      `https://web.pulsar-edit.dev/users?token=${create_user.content.token}`
+    );
     logger.httpLog(req, res);
   } catch (err) {
     logger.generic(2, "/api/pat Caught an Error!", { type: "error", err: err });

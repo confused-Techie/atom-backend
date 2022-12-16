@@ -832,7 +832,10 @@ app.get("/api/users/:login/stars", genericLimit, async (req, res) => {
  */
 app.get("/api/users", authLimit, async (req, res) => {
   res.header("Access-Control-Allow-Methods", "GET");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Access-Control-Allow-Credentials");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, Access-Control-Allow-Credentials"
+  );
   res.header("Access-Control-Allow-Origin", "https://web.pulsar-edit.dev");
   res.header("Access-Control-Allow-Credentials", true);
   await user_handler.getAuthUser(req, res);
@@ -840,7 +843,10 @@ app.get("/api/users", authLimit, async (req, res) => {
 
 app.options("/api/users", async (req, res) => {
   res.header("Access-Control-Allow-Methods", "GET");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Access-Control-Allow-Credentials");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, Access-Control-Allow-Credentials"
+  );
   res.header("Access-Control-Allow-Origin", "https://web.pulsar-edit.dev");
   res.header("Access-Control-Allow-Credentials", true);
   res.send(200);
