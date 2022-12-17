@@ -102,10 +102,13 @@ describe("Get /api/login", () => {
 });
 
 describe("Get /api/oauth", () => {
-  test.failing("Returns Not Found Status Code when provided no State", async () => {
-    const res = await request(app).get("/api/oauth");
-    expect(res).toHaveHTTPCode(404);
-  });
+  test.failing(
+    "Returns Not Found Status Code when provided no State",
+    async () => {
+      const res = await request(app).get("/api/oauth");
+      expect(res).toHaveHTTPCode(404);
+    }
+  );
   test.failing("Returns Not Found Message when provided no State", async () => {
     const res = await request(app).get("/api/oauth");
     expect(res.body.message).toEqual(msg.notFound);
