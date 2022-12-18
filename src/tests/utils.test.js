@@ -247,18 +247,18 @@ describe("Tests against semverLt", () => {
 //  test("Returns a State when handed an IP", () => {
 //    let stateStore = new utils.StateStore();/
 
-  //  return stateStore.setState("8.8.8.8").then((res) => {
-  //    expect(res.ok).toBeTruthy();
-  //    expect(res.content).toBeDefined();
-  //  });
-  //});
-  //test("Returns Bad OK When no IP is in Hashmap", () => {
-  //  let stateStore = new utils.StateStore();
-  //  let res = stateStore.getState("8.8.8.8", "1234");
-    //expect(res.ok).toBeFalsy(); //TODO
-  //});
-  //test("Returns Good OK When Same state is passed to Hashmap", () => {
-  //  let stateStore = new utils.StateStore();/
+//  return stateStore.setState("8.8.8.8").then((res) => {
+//    expect(res.ok).toBeTruthy();
+//    expect(res.content).toBeDefined();
+//  });
+//});
+//test("Returns Bad OK When no IP is in Hashmap", () => {
+//  let stateStore = new utils.StateStore();
+//  let res = stateStore.getState("8.8.8.8", "1234");
+//expect(res.ok).toBeFalsy(); //TODO
+//});
+//test("Returns Good OK When Same state is passed to Hashmap", () => {
+//  let stateStore = new utils.StateStore();/
 
 //    return stateStore.setState("8.8.8.8").then((res) => {
 //      expect(res.ok).toBeTruthy();
@@ -278,7 +278,7 @@ describe("Tests against semverLt", () => {
 
 //      let valid = stateStore.getState("8.8.8.8", "invalid-state");
 
-      //expect(valid.ok).toBeFalsy(); //TODO
+//expect(valid.ok).toBeFalsy(); //TODO
 //    });
 //  });
 //});

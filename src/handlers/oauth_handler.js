@@ -5,8 +5,13 @@
  * @implements {common_handler}
  */
 
-const { GH_CLIENTID, GH_REDIRECTURI, GH_CLIENTSECRET, GH_USERAGENT, STATE_STORE_CODE } =
-  require("../config.js").getConfig();
+const {
+  GH_CLIENTID,
+  GH_REDIRECTURI,
+  GH_CLIENTSECRET,
+  GH_USERAGENT,
+  STATE_STORE_CODE,
+} = require("../config.js").getConfig();
 const common = require("./common_handler.js");
 const utils = require("../utils.js");
 const logger = require("../logger.js");
@@ -38,7 +43,9 @@ async function getLogin(req, res) {
   logger.generic(4, "New Hit on api/login");
   res
     .status(302)
-    .redirect(`https://github.com/login/oauth/authorize?client_id=${GH_CLIENTID}&redirect_uri=${GH_REDIRECTURI}&state=${STATE_STORE_CODE}&scope=public_repo%20read:org`);
+    .redirect(
+      `https://github.com/login/oauth/authorize?client_id=${GH_CLIENTID}&redirect_uri=${GH_REDIRECTURI}&state=${STATE_STORE_CODE}&scope=public_repo%20read:org`
+    );
   logger.httpLog(req, res);
   //stateStore
   //  .setState(req.ip)
@@ -83,7 +90,11 @@ async function getOauth(req, res) {
 
   if (params.state != STATE_STORE_CODE) {
     logger.generic(3, `StateStoreStatic Check Failed!`);
-    await common.handleError(req, res, { ok: false, short: "Not Found", content: ""});
+    await common.handleError(req, res, {
+      ok: false,
+      short: "Not Found",
+      content: "",
+    });
     return;
   }
 
